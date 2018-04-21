@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tags on Adams&#39; Blag</title>
+    <link>http://arm64.ca/tags/</link>
+    <description>Recent content in Tags on Adams&#39; Blag</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-US</language>
+    <lastBuildDate>Sat, 21 Apr 2018 12:41:54 -0500</lastBuildDate>
+    
+	<atom:link href="http://arm64.ca/tags/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Java</title>
+      <link>http://arm64.ca/tags/java/</link>
+      <pubDate>Sat, 21 Apr 2018 12:41:54 -0500</pubDate>
+      
+      <guid>http://arm64.ca/tags/java/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Parquet</title>
+      <link>http://arm64.ca/tags/parquet/</link>
+      <pubDate>Sat, 21 Apr 2018 12:41:54 -0500</pubDate>
+      
+      <guid>http://arm64.ca/tags/parquet/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>
