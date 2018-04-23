@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Parquet on Adams&#39; Blag</title>
-    <link>http://arm64.ca/tags/parquet/</link>
+    <link>https://arm64.ca/tags/parquet/</link>
     <description>Recent content in Parquet on Adams&#39; Blag</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-US</language>
     <lastBuildDate>Sat, 21 Apr 2018 12:41:54 -0500</lastBuildDate>
     
-	<atom:link href="http://arm64.ca/tags/parquet/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://arm64.ca/tags/parquet/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Reading Parquet Files With Java</title>
-      <link>http://arm64.ca/post/reading-parquet-files-java/</link>
+      <link>https://arm64.ca/post/reading-parquet-files-java/</link>
       <pubDate>Sat, 21 Apr 2018 12:41:54 -0500</pubDate>
       
-      <guid>http://arm64.ca/post/reading-parquet-files-java/</guid>
+      <guid>https://arm64.ca/post/reading-parquet-files-java/</guid>
       <description>&lt;p&gt;A simple way of reading Parquet files without the need to use Spark.&lt;/p&gt;
 
 &lt;p&gt;I recently ran into an issue where I needed to read from &lt;a href=&#34;https://parquet.apache.org/&#34;&gt;Parquet&lt;/a&gt; files in a simple way without having to use the entire Spark framework. Though inspecting the contents of a Parquet file turns out to be pretty simple using the &lt;code&gt;spark-shell&lt;/code&gt;, doing so without the framework ended up being more difficult because of a lack of documentation about how to read the actual content of Parquet files, the columnar format used by Hadoop and Spark.&lt;/p&gt;
