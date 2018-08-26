@@ -21,11 +21,29 @@
     </item>
     
     <item>
+      <title>Knuth</title>
+      <link>https://arm64.ca/tags/knuth/</link>
+      <pubDate>Sat, 25 Aug 2018 17:56:57 -0500</pubDate>
+      
+      <guid>https://arm64.ca/tags/knuth/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>Parquet</title>
       <link>https://arm64.ca/tags/parquet/</link>
       <pubDate>Sat, 21 Apr 2018 12:41:54 -0500</pubDate>
       
       <guid>https://arm64.ca/tags/parquet/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Taocp</title>
+      <link>https://arm64.ca/tags/taocp/</link>
+      <pubDate>Sat, 25 Aug 2018 17:56:57 -0500</pubDate>
+      
+      <guid>https://arm64.ca/tags/taocp/</guid>
       <description></description>
     </item>
     

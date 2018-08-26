@@ -4,36 +4,34 @@
     <meta name="generator" content="Hugo 0.47.1" />
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tags | Adams&#39; Blag</title>
-    <meta name="description" content="">
-    <meta name="keywords" content="computer science, technology, ">
+    <title>The Art of Computer Programming | Adams&#39; Blag</title>
+    <meta name="description" content="Making my way through TAOCP">
+    <meta name="keywords" content="taocp, knuth">
     
     
     
-    
-      <meta name="robots" content="noindex">
     
     
 
   <meta name="author" content="">
 
 
-    <meta property="og:title" content="Tags" />
-<meta property="og:description" content="" />
-<meta property="og:type" content="website" />
-<meta property="og:url" content="https://arm64.ca/tags/" />
-<meta property="og:updated_time" content="2018-04-21T12:41:54-05:00"/>
+    <meta property="og:title" content="The Art of Computer Programming" />
+<meta property="og:description" content="Making my way through TAOCP" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://arm64.ca/post/the-art-of-computer-programming/" /><meta property="article:published_time" content="2018-08-25T17:56:57-05:00"/>
+<meta property="article:modified_time" content="2018-08-25T17:56:57-05:00"/>
     <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:image" content="https://source.unsplash.com/category/technology/2000x1322"/>
 
-<meta name="twitter:title" content="Tags"/>
-<meta name="twitter:description" content=""/>
+<meta name="twitter:title" content="The Art of Computer Programming"/>
+<meta name="twitter:description" content="Making my way through TAOCP"/>
 
     
 
+
+
   <meta property="og:image" content="https://source.unsplash.com/category/technology/2000x1322">
-
-
 
 
     <meta name="theme-color" content="#000">
@@ -41,9 +39,7 @@
     
     
     
-      <link href="https://arm64.ca/tags/index.xml" rel="alternate" type="application/rss+xml" title="Adams&#39; Blag" />
-    
-    <link rel="canonical" href="https://arm64.ca/tags/">
+    <link rel="canonical" href="https://arm64.ca/post/the-art-of-computer-programming/">
     
     
     <link rel="icon" sizes="any" href="data:image/svg+xml,%3Csvg%20viewBox='0%200%2046%2045'%20xmlns='http://www.w3.org/2000/svg'%3E%3Ctitle%3EAfter%20Dark%3C/title%3E%3Cpath%20d='M.708%2045L23%20.416%2045.292%2045H.708zM35%2038L23%2019%2011%2038h24z'%20fill='%23000'/%3E%3C/svg%3E">
@@ -199,20 +195,152 @@ article header img {
 
 </header>
     <main>
-  <header>
-    <h1>Tags</h1>
-  </header>
-  <ul>
+  <article itemscope itemtype="http://schema.org/BlogPosting">
     
-      <li><a href="java">java</a> (1)
+<meta itemprop="name" content="The Art of Computer Programming">
+<meta itemprop="description" content="Making my way through TAOCP">
+
+
+<meta itemprop="datePublished" content="2018-08-25T17:56:57-05:00" />
+<meta itemprop="dateModified" content="2018-08-25T17:56:57-05:00" />
+<meta itemprop="wordCount" content="1271">
+
+
+
+<meta itemprop="keywords" content="taocp,knuth," />
+
+    <header>
+      <h1 itemprop="headline">The Art of Computer Programming</h1>
+      <p class="muted">
+        <svg style="margin-bottom:-3px" class="i-clock" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="6.25%">
+  <circle cx="16" cy="16" r="14" />
+  <path d="M16 8 L16 16 20 20" />
+</svg>
+<span>6 minute read</span>
+<svg style="margin-bottom: -3px" class="i-edit" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="6.25%">
+  <path d="M30 7 L25 2 5 22 3 29 10 27 Z M21 6 L26 11 Z M5 22 L10 27 Z" />
+</svg>
+
+  Published: <time datetime="2018-08-25T17:56:57-05:00">25 Aug, 2018</time>
+
+
+      </p>
+      
+        <blockquote itemprop="description">Making my way through TAOCP</blockquote>
+      
+      
+    </header>
     
-      <li><a href="knuth">knuth</a> (1)
+
+    <div itemprop="articleBody">
+      <p>An attempt at making my way through one of the most infamous computer science books</p>
+
+<p>I was recently gifted the first volume of Donald Knuth&rsquo;s: The Art of Computer Programming. Being computer geek that I am, I have never been so excited yet, intimidated about sitting down and working through what some people would call a Reference book.</p>
+
+<p></p>
+
+<h2 id="reading-the-book">Reading the book</h2>
+
+<p>The biggest misconception that I had about this book was that I thought it would be more like a reference book, something you can quickly open, flip to the table of contents, and then over to page 254 for linked lists (or linked allocation in this case) and learn everything there is to know about linked lists. As stated by peers, stack overflow posts, reddit, and hacker news users, it&rsquo;s not something you would want to actually go about reading through. It&rsquo;s long, highly technical, and full of math equations. I suspect that the average reader would quickly get lost the first time Knuth shows off an lgorithm in a custom assembly language written specifically for this book (yes, really). To put this more plainly: <b>Reading through TAOCP is an NP hard problem</b>. Naturally, I couldn&rsquo;t wait to read through it. So how should we go about reading the book? Luckily for us Knuth provides the reader with instructions, and of course, being the computer scientist that he is, a helpful algorithm flow chart to guide the reader through the process of reading the books which looks something like this:</p>
+
+<pre><code>           +
+           |
+           |
+     +-----v-----+
+     |1. Start in|
+     +-----+-----+
+           |
+           |
++----------v-----------+
+|                      |
+| 2. Read pp xv - xvii |
+|                      |
++----------+-----------+
+           |
+           |
+     +-----v------+
+     |            |
+     | 3. N &lt;- 1  |
+     |            |
+     +-----+------+
+           |
+           |
+  +--------v---------+
+  |4. Begin Chapter N|
+  +--------+---------+
+           |
+           |
+   +-------v-------+ Yes       +---------------------------------------+
+   |5. Interesting?+----------&gt;| 6. Read until Exhaustion or Whatever  |
+   +---------------+           | the CS equivalent of Nirvana might be |
+           |No                 +---------------------------------------+
+           |                                        ^
+           |                                        |
+           +----------------------------------------+
+</code></pre>
+
+<p>The flow chart and written procedure following this contains other suggestions on how to read through the book based on if you&rsquo;ve read through it before or just based on what your interests are.</p>
+
+<h3 id="exercises">Exercises</h3>
+
+<p>A large portion of this book is dedicated to exercises as well as the included solutions in the back. <b><i>Ugh, homework</i></b>. One of the more helpful things that Knuth does is break down the relative difficulty of each problem using this notation:</p>
+
+<pre><code>00 Immediate                        &gt; Recommended
+10 Simple (one minute)                M Mathematically oriented
+20 Medium (15 minutes)                HM Requiring &quot;higher math&quot;
+30 Moderately Hard
+40 Term Project 
+50 Research problem
+</code></pre>
+
+<p>In his reasoning for breaking down exercises this way, Knuth includes an anecdote about how Richard Bellman&rsquo;s book <i>Dynamic Programming</i> mixed trivial problems with research problems with no indication about which problems were solvable or not. <b><i>I bet his students loved that</i></b>. Though I wanted to get a lot out of this book the first time round I don&rsquo;t expect to go through all of these. Probably the easier ones to get the idea of it, but also doing a little bit of searching about the more Research type problems is certainly interesting.</p>
+
+<h2 id="induction-combinations-harmonic-numbers-and-other-basic-concepts">Induction, Combinations, Harmonic numbers, and Other Basic Concepts</h2>
+
+<p>This is where I imagine most people would stop. After a lengthy dissection of what algorithms are as well as the history behind the word Algorithm, Section 1.2 includes a lot of the foundational math behind computer sciences, induction, permutations and combinations, harmonic numbers, and elementary number theory; All the things you tried to wrap your head around in Algorithms I through III that you thought you could forget about have come back with a vengeance. I&rsquo;ll admit that when I started reading the introduction to this chapter and flipped through the next 10 pages or so I considered picking up some supplementary materials on the math involved. After some searching I came across some of his other works and I almost picked up his book on <a href="https://www.amazon.com/dp/0201558025/">concrete mathematics</a>. It was at this point that my adventures in computer science had started to look a lot like <a href="https://www.youtube.com/watch?v=AbSehcT19u0">this</a>. I resisted the temptation a bit and pressed on which I&rsquo;m glad I did because two paragraphs down Knuth suggests you lightly skim this the first time you read through the book otherwise you might never get around to reading the actual computer science topics. <b><i>Hmmm&hellip; yeah that checks out</i></b></p>
+
+<h2 id="mix">MIX</h2>
+
+<p>Not only did Knuth have to <a href="https://en.wikipedia.org/wiki/TeX#History">create a typesetting language after the second edition of the second volume was created</a> but he also set about creating an instruction set and assembly language for a made up machine called MIX, reasoning that programming languages tend to influence the way that an engineer might code so having a more pure language to work with might solve that issue. <i><a href="https://www.youtube.com/watch?v=AbSehcT19u0">Hmm&hellip; That sounds familiar</a></i>. You can find the entire set of instructions and and diagram of the machine architecture <a href="https://en.wikipedia.org/wiki/MIX">here</a> although if you can find a copy of the book I recommend looking at the diagram given in the book itself because it&rsquo;s beautiful. What I found particularly interesting is that this architecture is actually supported by <a href="https://gcc.gnu.org/onlinedocs/gcc/MMIX-Options.html">gcc</a> meaning we can compile code for the theoretical computer. Knuth describes this computer, the MIX 1009 that runs MIX assembly code as:</p>
+
+<p><i>MIX is very much like nearly every computer of the 1960&rsquo;s and 70&rsquo;s. except that it is, perhaps, nicer.</i></p>
+
+<p>There you have it. Throw out that new Macbook pro you bought for $3000 and <i>rm -rf</i> that Vue JS project you&rsquo;ve been working on because it&rsquo;s time we threw something new into the MIX! Knuth does admit that at this point MIX is a bit antequated so naturally he notes that a new version, dubbed <a href="http://mmix.cs.hm.edu/index.html">MMIX</a>, based on RISC, has been created and will likely be included in subsequent editions of the book, just as soon as they rewrite all of the algorithms in MMMIX assembly.</p>
+
+<h2 id="concluding-thoughts">Concluding thoughts</h2>
+
+<p>At this point we might as well say it. Completing this book seems to be an impossible task, before Knuth can document everything, previous parts of it have already started to go out of date and the various <i>&ldquo;Under construction&rdquo;</i> sections throughout the book highlight just how quickly, and how much information there really is about this field of study, though that&rsquo;s not particularly that surprising to anyone who&rsquo;s spent time trying to include the newest npm module into their React project. I spent the better part of 4 years studying computer science in school yet barely scratched the surface of what the field has to offer and years later I&rsquo;m still finding the need to learn more about it. At times it can feel overwhelming just trying to keep up with learning the basics of the newest language, the hottest Javascript framework or the the newest trends. Software engineering, web development, and computer sciences are moving at blazingly fast speeds with nary an end in sight.</p>
+
+<p>So why read this then? Though the book is quite old I still think that there is a lot of value in reading through it. Much of it is still relevant today as data structures and basic algorithms (the underpinning of everything we still use daily) have not changed much, and more than that; Knuth is actually a fantastic writer. Though the material may be heavy, Knuth has a sort of dry humor that I&rsquo;ve come to appreciate that has made reading this volume enjoyable. Though I don&rsquo;t think that <a href="https://www.businessinsider.com/bill-gates-loves-donald-knuth-the-art-of-computer-programming-2016-4">reading TAOCP alone will get you a job</a>, I recommend reading TAOCP for anyone who wishes to pique their intellectual curiosities about the field of computer science.</p>
+    </div>
     
-      <li><a href="parquet">parquet</a> (1)
+    <footer>
+      <hr>
+      <p>
+  Published
+  
     
-      <li><a href="taocp">taocp</a> (1)
+      by <span itemprop="author"></span>
     
-  </ul>
+  
+  <time itemprop="datePublished" datetime="2018-08-25T17:56:57-05:00">
+    25 Aug, 2018
+  </time>
+  
+    in <span itemprop="articleSection"><a href="/categories/computer-science/">computer science</a></span>
+  
+  
+    and tagged <a href="/tags/knuth/">knuth</a> and <a href="/tags/taocp/">taocp</a>
+  
+  using <span itemprop="wordCount">1271</span> words.
+</p>
+
+      
+
+
+
+    </footer>
+  </article>
 </main>
     <footer>
   
