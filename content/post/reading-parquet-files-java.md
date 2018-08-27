@@ -6,9 +6,7 @@ draft = false
 toc = false
 categories = ["technology"]
 tags = ["Java", "Parquet"]
-images = [
-  "https://source.unsplash.com/category/technology/1600x900"
-] # overrides the site-wide open graph image
+images = [] # overrides the site-wide open graph image
 +++
 
 A simple way of reading Parquet files without the need to use Spark.

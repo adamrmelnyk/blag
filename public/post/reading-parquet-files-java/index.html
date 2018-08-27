@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en-US">
   <head>
-    <meta name="generator" content="Hugo 0.39" />
+    <meta name="generator" content="Hugo 0.47.1" />
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reading Parquet Files With Java | Adams&#39; Blag</title>
+    <title>Reading Parquet Files With Java | Adam&#39;s Blag</title>
     <meta name="description" content="How to read Parquet Files in Java without Spark">
     <meta name="keywords" content="Java, Parquet">
     
@@ -19,28 +19,10 @@
     <meta property="og:title" content="Reading Parquet Files With Java" />
 <meta property="og:description" content="How to read Parquet Files in Java without Spark" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://arm64.ca/post/reading-parquet-files-java/" />
-
-  <meta property="og:image" content="https://source.unsplash.com/category/technology/1600x900" />
-
-
-
-<meta property="article:published_time" content="2018-04-21T12:41:54-05:00"/>
-
+<meta property="og:url" content="https://arm64.ca/post/reading-parquet-files-java/" /><meta property="article:published_time" content="2018-04-21T12:41:54-05:00"/>
 <meta property="article:modified_time" content="2018-04-21T12:41:54-05:00"/>
-
-
-
-
-
-
-
-
-
-
-
     <meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:image" content="https://source.unsplash.com/category/technology/1600x900"/>
+<meta name="twitter:image" content="https://source.unsplash.com/category/technology/2000x1322"/>
 
 <meta name="twitter:title" content="Reading Parquet Files With Java"/>
 <meta name="twitter:description" content="How to read Parquet Files in Java without Spark"/>
@@ -48,6 +30,8 @@
     
 
 
+
+  <meta property="og:image" content="https://source.unsplash.com/category/technology/2000x1322">
 
 
     <meta name="theme-color" content="#000">
@@ -221,8 +205,6 @@ article header img {
 <meta itemprop="dateModified" content="2018-04-21T12:41:54-05:00" />
 <meta itemprop="wordCount" content="530">
 
-  <meta itemprop="image" content="https://source.unsplash.com/category/technology/1600x900">
-
 
 
 <meta itemprop="keywords" content="Java,Parquet," />
@@ -299,7 +281,7 @@ scala&gt; allrecords.show<span style="color:#f92672">()</span></code></pre></div
 </div>
 </div></p>
 
-<p><div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
 <table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
 <pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 1
 </span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79"> 2
@@ -382,7 +364,7 @@ scala&gt; allrecords.show<span style="color:#f92672">()</span></code></pre></div
     <span style="color:#f92672">}</span>
 <span style="color:#f92672">}</span></code></pre></td></tr></table>
 </div>
-</div></p>
+</div>
 
 <p>And to make things easier A Parquet data object
 <div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
@@ -438,7 +420,7 @@ scala&gt; allrecords.show<span style="color:#f92672">()</span></code></pre></div
 
 <p>Once we return the Parquet Object we can read whats inside each of the SimpleGroups like so:</p>
 
-<p><div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
 <table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
 <pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1
 </span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2
@@ -449,11 +431,11 @@ scala&gt; allrecords.show<span style="color:#f92672">()</span></code></pre></div
   SimpleGroup simpleGroup <span style="color:#f92672">=</span> parquet<span style="color:#f92672">.</span><span style="color:#a6e22e">getData</span><span style="color:#f92672">().</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>0<span style="color:#f92672">)</span>
   String storedString <span style="color:#f92672">=</span> simpleGroups<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>0<span style="color:#f92672">).</span><span style="color:#a6e22e">getString</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;theFieldIWant&#34;</span><span style="color:#f92672">,</span> 0<span style="color:#f92672">);</span></code></pre></td></tr></table>
 </div>
-</div></p>
+</div>
 
 <p>The only caveat here being, we must determine the name of the field as well as the type in order to extract it. The fields we already have from the schema we stored on the Parquet object, however the type we may want to determine by manually inspecting the data with a debugger, though it can be determined dynamically using</p>
 
-<p><div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
 <table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
 <pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">1
 </span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7c7c79">2
@@ -462,7 +444,7 @@ scala&gt; allrecords.show<span style="color:#f92672">()</span></code></pre></div
 <pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">  parquet<span style="color:#f92672">.</span><span style="color:#a6e22e">getSchema</span><span style="color:#f92672">().</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>0<span style="color:#f92672">).</span><span style="color:#a6e22e">getOriginalType</span><span style="color:#f92672">();</span>
   parquet<span style="color:#f92672">.</span><span style="color:#a6e22e">getSchema</span><span style="color:#f92672">().</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>0<span style="color:#f92672">).</span><span style="color:#a6e22e">asPrimitiveType</span><span style="color:#f92672">();</span></code></pre></td></tr></table>
 </div>
-</div></p>
+</div>
     </div>
     
     <footer>
