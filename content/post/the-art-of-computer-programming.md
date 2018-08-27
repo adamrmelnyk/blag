@@ -5,19 +5,19 @@ description = "Making my way through TAOCP"
 draft = false
 toc = false
 categories = ["computer science"]
-tags = ["taocp", "knuth"]
+tags = ["taocp", "knuth", "vol1"]
 images = [] # overrides the site-wide open graph image
 +++
 
 An attempt at making my way through one of the most infamous computer science books
 
-I was recently gifted the first volume of Donald Knuth's: The Art of Computer Programming. Being computer geek that I am, I have never been so excited yet, intimidated about sitting down and working through what some people would call a Reference book.
+I was recently gifted the first volume of Donald Knuth's: "The Art of Computer Programming". Being the computer geek that I am, I have never been so excited yet, intimidated about sitting down and working through what some people would call a Reference book.
 
 <!--more-->
 
 ## Reading the book
 
-The biggest misconception that I had about this book was that I thought it would be more like a reference book, something you can quickly open, flip to the table of contents, and then over to page 254 for linked lists (or linked allocation in this case) and learn everything there is to know about linked lists. As stated by peers, stack overflow posts, reddit, and hacker news users, it's not something you would want to actually go about reading through. It's long, highly technical, and full of math equations. I suspect that the average reader would quickly get lost the first time Knuth shows off an lgorithm in a custom assembly language written specifically for this book (yes, really). To put this more plainly: <b>Reading through TAOCP is an NP hard problem</b>. Naturally, I couldn't wait to read through it. So how should we go about reading the book? Luckily for us Knuth provides the reader with instructions, and of course, being the computer scientist that he is, a helpful algorithm flow chart to guide the reader through the process of reading the books which looks something like this:
+The biggest misconception that I had about this book was that I thought it would be more like a reference book, something you can quickly open, flip to the table of contents, and then over to page 254 for linked lists (or linked allocation in this case) and learn everything there is to know about linked lists. As stated by peers, Stack Overflow posts, Reddit, and Hacker News users, it's not something you would want to actually go about reading through. It's long, highly technical, and full of math equations. I suspect that the average reader would quickly get lost the first time Knuth shows off an lgorithm in a custom assembly language written specifically for this book (yes, really). To put this more plainly: <b>Reading through TAOCP is an NP hard problem</b>. Naturally, I couldn't wait to read through it. So how should we go about reading the book? Luckily for us Knuth provides the reader with instructions, and of course, being the computer scientist that he is, a helpful algorithm flow chart to guide the reader through the process of reading the books which looks something like this:
 
 ```
            +
@@ -79,13 +79,13 @@ This is where I imagine most people would stop. After a lengthy dissection of wh
 
 ## MIX
 
-Not only did Knuth have to [create a typesetting language after the second edition of the second volume was created](https://en.wikipedia.org/wiki/TeX#History) but he also set about creating an instruction set and assembly language for a made up machine called MIX, reasoning that programming languages tend to influence the way that an engineer might code so having a more pure language to work with might solve that issue. <i>[Hmm... That sounds familiar](https://www.youtube.com/watch?v=AbSehcT19u0)</i>. You can find the entire set of instructions and and diagram of the machine architecture [here](https://en.wikipedia.org/wiki/MIX) although if you can find a copy of the book I recommend looking at the diagram given in the book itself because it's beautiful. What I found particularly interesting is that this architecture is actually supported by [gcc](https://gcc.gnu.org/onlinedocs/gcc/MMIX-Options.html) meaning we can compile code for the theoretical computer. Knuth describes this computer, the MIX 1009 that runs MIX assembly code as:
+Not only did Knuth have to [create a typesetting language after the second edition of the second volume was created](https://en.wikipedia.org/wiki/TeX#History) but he also set about creating an instruction set and assembly language for a made up machine called MIX, reasoning that programming languages tend to influence the way that an engineer might code so having a more pure language to work with might solve that issue. <i>[Hmm... That sounds familiar](https://www.youtube.com/watch?v=AbSehcT19u0)</i>. You can find the entire set of instructions and diagram of the machine architecture [here](https://en.wikipedia.org/wiki/MIX) although if you can find a copy of the book I recommend looking at the diagram given in the book itself because it's beautiful. What I found particularly interesting is that this architecture is actually supported by [gcc](https://gcc.gnu.org/onlinedocs/gcc/MMIX-Options.html) meaning we can compile code for the theoretical computer. Knuth describes this computer, the MIX 1009 that runs MIX assembly code as:
 
-<i>MIX is very much like nearly every computer of the 1960's and 70's. except that it is, perhaps, nicer.</i>
+<i>MIX is very much like nearly every computer of the 1960's and 70's, except that it is, perhaps, nicer.</i>
 
 There you have it. Throw out that new Macbook pro you bought for $3000 and <i>rm -rf</i> that Vue JS project you've been working on because it's time we threw something new into the MIX! Knuth does admit that at this point MIX is a bit antequated so naturally he notes that a new version, dubbed [MMIX](http://mmix.cs.hm.edu/index.html), based on RISC, has been created and will likely be included in subsequent editions of the book, just as soon as they rewrite all of the algorithms in MMMIX assembly.
 
-## Concluding thoughts
+## Concluding Thoughts
 
 At this point we might as well say it. Completing this book seems to be an impossible task, before Knuth can document everything, previous parts of it have already started to go out of date and the various <i>"Under construction"</i> sections throughout the book highlight just how quickly, and how much information there really is about this field of study, though that's not particularly that surprising to anyone who's spent time trying to include the newest npm module into their React project. I spent the better part of 4 years studying computer science in school yet barely scratched the surface of what the field has to offer and years later I'm still finding the need to learn more about it. At times it can feel overwhelming just trying to keep up with learning the basics of the newest language, the hottest Javascript framework or the the newest trends. Software engineering, web development, and computer sciences are moving at blazingly fast speeds with nary an end in sight. 
 

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Tags on Adams&#39; Blag</title>
+    <title>Tags on Adam&#39;s Blag</title>
     <link>https://arm64.ca/tags/</link>
-    <description>Recent content in Tags on Adams&#39; Blag</description>
+    <description>Recent content in Tags on Adam&#39;s Blag</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-US</language>
     <lastBuildDate>Sat, 21 Apr 2018 12:41:54 -0500</lastBuildDate>
@@ -44,6 +44,15 @@
       <pubDate>Sat, 25 Aug 2018 17:56:57 -0500</pubDate>
       
       <guid>https://arm64.ca/tags/taocp/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Vol1</title>
+      <link>https://arm64.ca/tags/vol1/</link>
+      <pubDate>Sat, 25 Aug 2018 17:56:57 -0500</pubDate>
+      
+      <guid>https://arm64.ca/tags/vol1/</guid>
       <description></description>
     </item>
     
