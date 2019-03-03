@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://arm64.ca/post/functional-programming-in-racket/</loc>
+    <lastmod>2019-03-03T11:14:34-06:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://arm64.ca/post/the-art-of-computer-programming/</loc>
     <lastmod>2018-08-25T17:56:57-05:00</lastmod>
   </url>
@@ -14,7 +19,7 @@
   
   <url>
     <loc>https://arm64.ca/</loc>
-    <lastmod>2018-08-25T17:56:57-05:00</lastmod>
+    <lastmod>2019-03-03T11:14:34-06:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -26,6 +31,12 @@
   <url>
     <loc>https://arm64.ca/categories/computer-science/</loc>
     <lastmod>2018-08-25T17:56:57-05:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://arm64.ca/tags/functional/</loc>
+    <lastmod>2019-03-03T11:14:34-06:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -42,6 +53,12 @@
   </url>
   
   <url>
+    <loc>https://arm64.ca/categories/languages/</loc>
+    <lastmod>2019-03-03T11:14:34-06:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>https://arm64.ca/tags/parquet/</loc>
     <lastmod>2018-04-21T12:41:54-05:00</lastmod>
     <priority>0</priority>
@@ -49,13 +66,19 @@
   
   <url>
     <loc>https://arm64.ca/post/</loc>
-    <lastmod>2018-08-25T17:56:57-05:00</lastmod>
+    <lastmod>2019-03-03T11:14:34-06:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://arm64.ca/tags/racket/</loc>
+    <lastmod>2019-03-03T11:14:34-06:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://arm64.ca/tags/</loc>
-    <lastmod>2018-04-21T12:41:54-05:00</lastmod>
+    <lastmod>2019-03-03T11:14:34-06:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -67,7 +90,7 @@
   
   <url>
     <loc>https://arm64.ca/categories/technology/</loc>
-    <lastmod>2018-04-21T12:41:54-05:00</lastmod>
+    <lastmod>2019-03-03T11:14:34-06:00</lastmod>
     <priority>0</priority>
   </url>
   

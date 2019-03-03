@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Functional on Adam&#39;s Blag</title>
+    <link>https://arm64.ca/tags/functional/</link>
+    <description>Recent content in Functional on Adam&#39;s Blag</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-US</language>
+    <lastBuildDate>Sun, 03 Mar 2019 11:14:34 -0600</lastBuildDate>
+    
+	<atom:link href="https://arm64.ca/tags/functional/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Functional Programming in Racket</title>
+      <link>https://arm64.ca/post/functional-programming-in-racket/</link>
+      <pubDate>Sun, 03 Mar 2019 11:14:34 -0600</pubDate>
+      
+      <guid>https://arm64.ca/post/functional-programming-in-racket/</guid>
+      <description>A dive into functional programming in Racket.
+Preface I&amp;rsquo;ve been playing around with functional languages for a few years now; I&amp;rsquo;d pick up an ebook on scala or Clojure some Saturday afternoon and try going through a tutorial or two. Maybe attend a workshop on it over a weekend with a friend who found the event on meetup.com and get a somewhat shallow overview of the language. The next weekend I&amp;rsquo;d look at it again and see if I could get a small webpage up and running or maybe a small command line tool but for the most part, its always ended there.</description>
+    </item>
+    
+  </channel>
+</rss>

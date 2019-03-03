@@ -4,9 +4,9 @@
     <meta name="generator" content="Hugo 0.54.0" />
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Art of Computer Programming | Adam&#39;s Blag</title>
-    <meta name="description" content="Making my way through TAOCP">
-    <meta name="keywords" content="taocp, knuth, vol1">
+    <title>Functional Programming in Racket | Adam&#39;s Blag</title>
+    <meta name="description" content="A short dive into Racket">
+    <meta name="keywords" content="Functional, Racket">
     
     
     
@@ -16,18 +16,18 @@
   <meta name="author" content="">
 
 
-    <meta property="og:title" content="The Art of Computer Programming" />
-<meta property="og:description" content="Making my way through TAOCP" />
+    <meta property="og:title" content="Functional Programming in Racket" />
+<meta property="og:description" content="A short dive into Racket" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://arm64.ca/post/the-art-of-computer-programming/" />
-<meta property="article:published_time" content="2018-08-25T17:56:57-05:00"/>
-<meta property="article:modified_time" content="2018-08-25T17:56:57-05:00"/>
+<meta property="og:url" content="https://arm64.ca/post/functional-programming-in-racket/" />
+<meta property="article:published_time" content="2019-03-03T11:14:34-06:00"/>
+<meta property="article:modified_time" content="2019-03-03T11:14:34-06:00"/>
 
     <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:image" content="https://source.unsplash.com/category/technology/2000x1322"/>
 
-<meta name="twitter:title" content="The Art of Computer Programming"/>
-<meta name="twitter:description" content="Making my way through TAOCP"/>
+<meta name="twitter:title" content="Functional Programming in Racket"/>
+<meta name="twitter:description" content="A short dive into Racket"/>
 
     
 
@@ -41,7 +41,7 @@
     
     
     
-    <link rel="canonical" href="https://arm64.ca/post/the-art-of-computer-programming/">
+    <link rel="canonical" href="https://arm64.ca/post/functional-programming-in-racket/">
     
     
     <link rel="icon" sizes="any" href="data:image/svg+xml,%3Csvg%20viewBox='0%200%2046%2045'%20xmlns='http://www.w3.org/2000/svg'%3E%3Ctitle%3EAfter%20Dark%3C/title%3E%3Cpath%20d='M.708%2045L23%20.416%2045.292%2045H.708zM35%2038L23%2019%2011%2038h24z'%20fill='%23000'/%3E%3C/svg%3E">
@@ -199,119 +199,189 @@ article header img {
     <main>
   <article itemscope itemtype="http://schema.org/BlogPosting">
     
-<meta itemprop="name" content="The Art of Computer Programming">
-<meta itemprop="description" content="Making my way through TAOCP">
+<meta itemprop="name" content="Functional Programming in Racket">
+<meta itemprop="description" content="A short dive into Racket">
 
 
-<meta itemprop="datePublished" content="2018-08-25T17:56:57-05:00" />
-<meta itemprop="dateModified" content="2018-08-25T17:56:57-05:00" />
-<meta itemprop="wordCount" content="1332">
+<meta itemprop="datePublished" content="2019-03-03T11:14:34-06:00" />
+<meta itemprop="dateModified" content="2019-03-03T11:14:34-06:00" />
+<meta itemprop="wordCount" content="1724">
 
 
 
-<meta itemprop="keywords" content="taocp,knuth,vol1," />
+<meta itemprop="keywords" content="Functional,Racket," />
 
     <header>
-      <h1 itemprop="headline">The Art of Computer Programming</h1>
+      <h1 itemprop="headline">Functional Programming in Racket</h1>
       <p class="muted">
         <svg style="margin-bottom:-3px" class="i-clock" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="6.25%">
   <circle cx="16" cy="16" r="14" />
   <path d="M16 8 L16 16 20 20" />
 </svg>
-<span>7 minute read</span>
+<span>9 minute read</span>
 <svg style="margin-bottom: -3px" class="i-edit" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="6.25%">
   <path d="M30 7 L25 2 5 22 3 29 10 27 Z M21 6 L26 11 Z M5 22 L10 27 Z" />
 </svg>
 
-  Published: <time datetime="2018-08-25T17:56:57-05:00">25 Aug, 2018</time>
+  Published: <time datetime="2019-03-03T11:14:34-06:00">3 Mar, 2019</time>
 
 
       </p>
       
-        <blockquote itemprop="description">Making my way through TAOCP</blockquote>
+        <blockquote itemprop="description">A short dive into Racket</blockquote>
       
       
     </header>
     
 
     <div itemprop="articleBody">
-      <p>An attempt at making my way through one of the most infamous computer science books</p>
+      
 
-<p>I was recently gifted the first volume of Donald Knuth&rsquo;s: &ldquo;The Art of Computer Programming&rdquo;. Being the computer geek that I am, I have never been so excited yet, intimidated about sitting down and working through what some people would call a Reference book.</p>
+<p>A dive into functional programming in Racket.</p>
 
-<h2 id="reading-the-book">Reading the book</h2>
+<h1 id="preface">Preface</h1>
 
-<p>The biggest misconception that I had about this book was that I thought it would be more like a reference book, something you can quickly open, flip to the table of contents, and then over to page 254 for linked lists (or linked allocation in this case) and learn everything there is to know about linked lists. As stated by peers, Stack Overflow posts, Reddit, and Hacker News users, it&rsquo;s not something you would want to actually go about reading through. It&rsquo;s long, highly technical, and full of math equations. I suspect that the average reader would quickly get lost the first time Knuth shows off an algorithm in a custom assembly language written specifically for this book (yes, really). To put this more plainly: <b>Reading through TAOCP is an NP hard problem</b>. Naturally, I couldn&rsquo;t wait to read through it. So how should we go about reading the book? Luckily for us Knuth provides the reader with instructions, and of course, being the computer scientist that he is, a helpful algorithm flow chart to guide the reader through the process of reading the books which looks something like this:</p>
+<p>I&rsquo;ve been playing around with functional languages for a few years now; I&rsquo;d pick up an ebook on scala or Clojure some Saturday afternoon and try going through a tutorial or two. Maybe attend a workshop on it over a weekend with a friend who found the event on meetup.com and get a somewhat shallow overview of the language. The next weekend I&rsquo;d look at it again and see if I could get a small webpage up and running or maybe a small command line tool but for the most part, its always ended there. I rarely end up going back the environment because I inevitably get distracted by another cool technology. What follows is an attempt to remedy that and do a deeper dive over a period of a month and a half.</p>
 
-<pre><code>           +
-           |
-           |
-     +-----v-----+
-     |1. Start in|
-     +-----+-----+
-           |
-           |
-+----------v-----------+
-|                      |
-| 2. Read pp xv - xvii |
-|                      |
-+----------+-----------+
-           |
-           |
-     +-----v------+
-     |            |
-     | 3. N &lt;- 1  |
-     |            |
-     +-----+------+
-           |
-           |
-  +--------v---------+
-  |4. Begin Chapter N|
-  +--------+---------+
-           |
-           |
-   +-------v-------+ Yes       +---------------------------------------+
-   |5. Interesting?+----------&gt;| 6. Read until Exhaustion or Whatever  |
-   +---------------+           | the CS equivalent of Nirvana might be |
-           |No                 +---------------------------------------+
-           |                                        ^
-           |                                        |
-           +----------------------------------------+
-</code></pre>
+<h1 id="why-racket-why-not-x">Why Racket? Why not X</h1>
 
-<p>The flow chart and written procedure following this contains other suggestions on how to read through the book based on if you&rsquo;ve read through it before or just based on what your interests are.</p>
+<p>Almost two years ago, I found about about the Racket language and worked through the <a href="https://beautifulracket.com/">Beautiful Racket</a> tutorial. I found the language to actually be pretty fun to work with and was interested in writing a DSL which Racket was built for. Though I have used Clojure and scala before as well, I had written more code in Racket as well as some Chez-Scheme (which is quite similar) in school. Between that and <a href="https://twitter.com/ID_AA_Carmack/status/577877590070919168">John Carmacks tweet from a few years ago</a>, Racket seemed like a good choice.</p>
 
-<h3 id="exercises">Exercises</h3>
+<h1 id="getting-started">Getting started</h1>
 
-<p>A large portion of this book is dedicated to exercises as well as the included solutions in the back. <b><i>Ugh, homework</i></b>. One of the more helpful things that Knuth does is break down the relative difficulty of each problem using this notation:</p>
+<p>Before I start building something I want to get a feel for the language so I started by making a simple FizzBuzz function. The code is simple enough to read, define the function, which loops through 0 to some given argument and prints when certain conditions are met. I&rsquo;m not sure if this is idiomatic Racket but I&rsquo;m not concerned about that just yet.</p>
 
-<pre><code>00 Immediate                        &gt; Recommended
-10 Simple (one minute)                M Mathematically oriented
-20 Medium (15 minutes)                HM Requiring &quot;higher math&quot;
-30 Moderately Hard
-40 Term Project 
-50 Research problem
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-racket" data-lang="racket"><span style="color:#f92672">#lang </span>racket
+(<span style="color:#66d9ef">define</span> (fizz-buzz num)
+  (<span style="color:#66d9ef">for</span> ([i num])
+    (<span style="color:#66d9ef">cond</span>
+      [(= i <span style="color:#ae81ff">0</span>)]
+      [(<span style="color:#66d9ef">and</span> (= (modulo i <span style="color:#ae81ff">3</span>) <span style="color:#ae81ff">0</span>) (= (modulo i <span style="color:#ae81ff">5</span>) <span style="color:#ae81ff">0</span>)) (println <span style="color:#e6db74">&#34;FizzBuzz&#34;</span>)]
+      [(= (modulo i <span style="color:#ae81ff">3</span>) <span style="color:#ae81ff">0</span>) (println <span style="color:#e6db74">&#34;Fizz&#34;</span>)]
+      [(= (modulo i <span style="color:#ae81ff">5</span>) <span style="color:#ae81ff">0</span>) (println <span style="color:#e6db74">&#34;Buzz&#34;</span>)]
+      [<span style="color:#66d9ef">else</span> (println i)])))
 
-<p>In his reasoning for breaking down exercises this way, Knuth includes an anecdote about how Richard Bellman&rsquo;s book <i>Dynamic Programming</i> mixed trivial problems with research problems with no indication about which problems were solvable or not. <b><i>I bet his students loved that</i></b>. Though I wanted to get a lot out of this book the first time round I don&rsquo;t expect to go through all of these. Probably the easier ones to get the idea of it, but also doing a little bit of searching about the more Research type problems is certainly interesting.</p>
+(fizz-buzz <span style="color:#ae81ff">20</span>)</code></pre></div>
 
-<h2 id="induction-combinations-harmonic-numbers-and-other-basic-concepts">Induction, Combinations, Harmonic numbers, and Other Basic Concepts</h2>
+<h1 id="diving-into-the-documentation">Diving into the documentation</h1>
 
-<p>This is where I imagine most people would stop. After a lengthy dissection of what algorithms are as well as the history behind the word Algorithm, Section 1.2 includes a lot of the foundational math behind computer sciences, induction, permutations and combinations, harmonic numbers, and elementary number theory; All the things you tried to wrap your head around in Algorithms I through III that you thought you could forget about have come back with a vengeance. I&rsquo;ll admit that when I started reading the introduction to this chapter and flipped through the next 10 pages or so I considered picking up some supplementary materials on the math involved. After some searching I came across some of his other works and I almost picked up his book on <a href="https://www.amazon.com/dp/0201558025/">concrete mathematics</a>. It was at this point that my adventures in computer science had started to look a lot like <a href="https://www.youtube.com/watch?v=AbSehcT19u0">this</a>. I resisted the temptation a bit and pressed on which I&rsquo;m glad I did because two paragraphs down Knuth suggests you lightly skim this the first time you read through the book otherwise you might never get around to reading the actual computer science topics. <b><i>Hmmm&hellip; yeah that checks out</i></b></p>
+<p>I wouldn&rsquo;t usually do it this way, but I decided I should read through the docs, more specifically the <a href="https://docs.racket-lang.org/guide/index.html?q=loop">Racket guide</a> on the language before continuing on to something slightly larger. There was a lot of information there but here were some of things that I found interesting.</p>
 
-<h2 id="mix">MIX</h2>
+<h1 id="getting-started-a-few-things-i-noticed">Getting started: A few things I noticed</h1>
 
-<p>Not only did Knuth have to <a href="https://en.wikipedia.org/wiki/TeX#History">create a typesetting language after the second edition of the second volume was created</a> but he also set about creating an instruction set and assembly language for a made up machine called MIX, reasoning that programming languages tend to influence the way that an engineer might code so having a more pure language to work with might solve that issue. <i><a href="https://www.youtube.com/watch?v=AbSehcT19u0">Hmm&hellip; That sounds familiar</a></i>. You can find the entire set of instructions and diagram of the machine architecture <a href="https://en.wikipedia.org/wiki/MIX">here</a> although if you can find a copy of the book I recommend looking at the diagram given in the book itself because it&rsquo;s beautiful. What I found particularly interesting is that this architecture is actually supported by <a href="https://gcc.gnu.org/onlinedocs/gcc/MMIX-Options.html">gcc</a> meaning we can compile code for the theoretical computer. Knuth describes this computer, the MIX 1009 that runs MIX assembly code as:</p>
+<ul>
+<li><p>The guide is actually pretty thorough, giving examples of by showing how functions in the standard language can be formed using other calls which I feel is really in the spirit of using a recursive language. <!-- reword --></p></li>
 
-<p><i>MIX is very much like nearly every computer of the 1960&rsquo;s and 70&rsquo;s, except that it is, perhaps, nicer.</i></p>
+<li><p>Development in Dr Racket, although dated looking is nice. There interactive shell at the bottom makes it easy to experiment while you&rsquo;re building without having to rebuild or reload the file. Hitting <code>Ctrl + ?</code> in the shell will also give you suggestions for words. I thought that tab completion was working at some point as well but when I updated to the latest version of DrRacket it seemed to stop working for whatever reason.</p></li>
 
-<p>There you have it. Throw out that new Macbook pro you bought for $3000 and <i>rm -rf</i> that Vue JS project you&rsquo;ve been working on because it&rsquo;s time we threw something new into the MIX! Knuth does admit that at this point MIX is a bit antequated so naturally he notes that a new version, dubbed <a href="http://mmix.cs.hm.edu/index.html">MMIX</a>, based on RISC, has been created and will likely be included in subsequent editions of the book&hellip; just as soon as they get around to rewriting all of the algorithms in MMMIX assembly.</p>
+<li><p><code>car</code>, and <code>cdr</code>, one of the things I remembered from using scheme in college, can still be used though they can be swapped for the more intuitive <code>first</code> and <code>rest</code> when working with lists.</p></li>
 
-<h2 id="concluding-thoughts">Concluding Thoughts</h2>
+<li><p>I kind of love the conciseness the comes from using ternaries in other programs, but because it&rsquo;s a functional language, pretty much everything has that feel to it. <code>(if (&gt; 3 4) &quot;greater&quot; &quot;less&quot;)</code> looks a lot like a ternary. The only caveat here is that you need to return something for where it&rsquo;s true or false. When you want just and if you need to use something like when: <code>(when (condition) body)</code>.</p></li>
 
-<p>Though the book provides a very comprehensive and deep dive into every topic, the book is still missing some information. Completing this book proved to be an impossible task for Knuth and others; before Knuth can document everything, previous parts of it have already started to go out of date and the various <i>&ldquo;Under construction&rdquo;</i> sections throughout the book highlight just how quickly, and how much information there really is about this field of study. This doesn&rsquo;t come as particularly surprising to anyone who&rsquo;s spent time trying to include the newest npm module into their web project, only to find out it&rsquo;s unsupported three months later. I spent the better part of 4 years studying computer science in school yet barely scratched the surface of what the field has to offer and years later I&rsquo;m still finding the need to learn more about it. At times it can feel overwhelming just trying to keep up with learning the basics of the newest language, the hottest Javascript framework or the the newest trends. Software engineering, web development, and computer sciences are moving at blazingly fast speeds with nary an end in sight. Even at it&rsquo;s most basic levels described here in the first volume, it&rsquo;s still being worked on let alone the work on the remaining volumes following volume 4, which have yet to be released.</p>
+<li><p>There is no while loop: I spend a lot of time working on OO programming in my daily life, so I found on a few occasions after making a few searches, trying to figure out why something so simple doesn&rsquo;t exist, I realized my mistake. Getting out of the trap of OO thinking takes some getting used to but turns out to be really powerful. Being able to pass along a function instead of just data really does simplify logic and saves you a lot of boiler plate code that OO langues like Java are notorious for.</p></li>
 
-<p>So why read this then? Though the book is quite old I still think that there is a lot of value in reading through it. Much of it is still relevant today as data structures and basic algorithms (the underpinning of everything we still use daily) have not changed much, and more than that; Knuth is actually a fantastic writer. Though the material may be heavy, Knuth has a sort of dry humor that I&rsquo;ve come to appreciate that has made reading this volume enjoyable. Though I don&rsquo;t think that <a href="https://www.businessinsider.com/bill-gates-loves-donald-knuth-the-art-of-computer-programming-2016-4">reading TAOCP alone will get you a job</a>, I recommend reading TAOCP for anyone who wishes to pique their intellectual curiosities about the field of computer science.</p>
+<li><p>cond is particularly useful as a more useful switch than many other languages provide. Instead of passing in a single arg and checking the value like Java does you can test for any condition you want, similar to <code>else if</code> statements.</p></li>
+
+<li><p>Though most OO languages have some aspects of functional programming with lambdas, it&rsquo;s no where near as intuitive. Treating functions are arguments allows you to things you would never even think about in Object Oriented programming. Instead of checking if an argument was a string or an Integer, casting it and then applying the correct function we check if it&rsquo;s a string and pass the function along to the two arguments.</p></li>
+</ul>
+
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-racket" data-lang="racket">(<span style="color:#66d9ef">define</span> (double v)
+    ((<span style="color:#66d9ef">if</span> (string? v) string-append +) v v))</code></pre></div>
+
+<ul>
+<li>Racket is almost syntaxless; whereas many languages have different structures, rules and often shortcuts for defining variables, checking conditionals, creating switches, or creating functions is all the same. Not having to look up syntax greatly simplified the process of learning the language.</li>
+</ul>
+
+<h1 id="something-slightly-larger">Something Slightly Larger</h1>
+
+<p>Naturally, I want to be able to work on something slightly larger next so I started with something I&rsquo;ve already worked on before and I set out creating a script for parsing and making small edits to gif files. To my surprise working at the byte level in racket is fairly simple.</p>
+
+<h2 id="byte-ing-off-more-than-i-can-chew">Byte-ing off more than I can chew</h2>
+
+<p>This may have not been the best choice for the first thing I should try to build, but I wanted to pick something somewhat off the beaten path to see what kind of problems I might run into. I thought I might run into issues with bracket completion, but that never really happened even though there wasn&rsquo;t any bracket completion turned on. The majority of the issues that I ran into where more or less around using functions properly such as returning an expression or passing in the correct types to a function (even though it&rsquo;s untyped there are functions that return errors if passed the wrong type).</p>
+
+<h2 id="getting-to-work">Getting to work</h2>
+
+<p>Bytes can be read using <code>read-bytes</code> and passes an input port which in this case was made from opening a file, and reads bytes in octal. I won&rsquo;t include the entire script here, just enough to show off the simplicity of Racket.</p>
+
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-racket" data-lang="racket">(<span style="color:#66d9ef">define</span> in (open-input-file <span style="color:#e6db74">&#34;gif.gif&#34;</span>))</code></pre></div>
+
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-racket" data-lang="racket"><span style="color:#f92672">#lang </span>racket
+
+(<span style="color:#66d9ef">define</span> (size-of-color-table-from-packed-field bstr bytes-before-pf)
+  (<span style="color:#66d9ef">define</span> packed-field (extract-packed-field bstr bytes-before-pf))
+  (* <span style="color:#ae81ff">3</span> (expt <span style="color:#ae81ff">2</span> (+ (bitwise-and (integer-bytes-&gt;integer packed-field <span style="color:#66d9ef">#f</span>) least-three-sig-mask) <span style="color:#ae81ff">1</span>))))
+
+(<span style="color:#66d9ef">define</span> (extract-packed-field bstr bytes-before-pf)
+  (<span style="color:#66d9ef">define</span> in (open-input-bytes bstr))
+  (read-bytes bytes-before-pf in) <span style="color:#75715e">;; The number of bytes in front of the packed field in the bstr</span>
+  (read-bytes <span style="color:#ae81ff">1</span> in))
+
+(<span style="color:#66d9ef">provide</span> size-of-color-table-from-packed-field
+         extract-packed-field)</code></pre></div>
+
+<h3 id="testing">Testing</h3>
+
+<p>If I&rsquo;m going to want to use this for anything useful, a good test suite is an important consideration. Luckily testing was pretty straightforward as well, just make sure you provide the functions you intend to expose and <a href="https://docs.racket-lang.org/rackunit/index.html">rackUnit</a> provides easy methods for testing.</p>
+
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-racket" data-lang="racket"><span style="color:#f92672">#lang </span>racket
+
+(<span style="color:#66d9ef">require</span> rackunit <span style="color:#e6db74">&#34;readgif.rkt&#34;</span>)
+
+(<span style="color:#66d9ef">define</span> readgif-tests
+  (test-suite <span style="color:#e6db74">&#34;Tests for readgif&#34;</span>
+              (test-case <span style="color:#e6db74">&#34;Extracting Size of color table&#34;</span>
+                         (check-equal?
+                          (size-of-color-table-from-packed-field <span style="color:#e6db74">#&#34;</span><span style="color:#ae81ff">\360\24\253</span><span style="color:#e6db74">;</span><span style="color:#ae81ff">\344\21</span><span style="color:#e6db74">O</span><span style="color:#ae81ff">\262\20\227</span><span style="color:#e6db74">&#34;</span> <span style="color:#ae81ff">4</span>)
+                          <span style="color:#ae81ff">96</span>))
+              (test-case <span style="color:#e6db74">&#34;Extracting the packed-field from a bstr&#34;</span>
+                         (check-equal?
+                          (extract-packed-field <span style="color:#e6db74">#&#34;</span><span style="color:#ae81ff">\314\1\367\0\367\377\0</span><span style="color:#e6db74">&#34;</span> <span style="color:#ae81ff">4</span>)
+                          <span style="color:#e6db74">#&#34;</span><span style="color:#ae81ff">\367</span><span style="color:#e6db74">&#34;</span>)))</code></pre></div>
+
+<p>You of course don&rsquo;t need all of this, the <code>check-equal?</code> is enough, but being able to organize the test suites like this is nice if you want to run just one of them. Though I don&rsquo;t know exactly how complicated a larger test suite would be overall, I&rsquo;m happy with the minimal test framework that racket provides.</p>
+
+<h2 id="web-development">Web development</h2>
+
+<p>I&rsquo;m primarily a web developer, and I had heard that Hackernews was written in racket or, more accurately, written arc, a language written in Racket so I wanted to see how easy it would be to write a webpage in racket. The docs again shine through here with instant web servlets:</p>
+
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-racket" data-lang="racket"><span style="color:#f92672">#lang </span>web-server/insta
+ 
+(<span style="color:#66d9ef">define</span> (start req)
+  (response/xexpr
+   <span style="color:#f92672">`</span>(<span style="color:#e6db74">html</span> (<span style="color:#e6db74">head</span> (<span style="color:#e6db74">title</span> <span style="color:#e6db74">&#34;Hello world!&#34;</span>))
+          (<span style="color:#e6db74">body</span> (<span style="color:#e6db74">p</span> <span style="color:#e6db74">&#34;This website was made with Racket!&#34;</span>)))))</code></pre></div>
+
+<p>This is nice of course, but ideally I don&rsquo;t want to have to roll everything myself, luckily there are a few different web frameworks on github though a few of them are in early stages or don&rsquo;t seem to have too many contributions:</p>
+
+<ul>
+<li><a href="https://github.com/nihirash/holy">https://github.com/nihirash/holy</a></li>
+<li><a href="https://github.com/dmac/spin">https://github.com/dmac/spin</a></li>
+</ul>
+
+<h3 id="taking-spin-for-a-whirl">Taking Spin for a whirl</h3>
+
+<p>I decided to take a look at spin mostly because it reminded me a lot of the minimalist framework <a href="http://sinatrarb.com/">Sinatra</a> which I have used before.</p>
+
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-racket" data-lang="racket"><span style="color:#f92672">#lang </span>racket
+
+(<span style="color:#66d9ef">require</span> (<span style="color:#66d9ef">planet</span> dmac/spin))
+(<span style="color:#66d9ef">require</span> web-server/templates)
+
+(get <span style="color:#e6db74">&#34;/&#34;</span>
+  (<span style="color:#66d9ef">λ</span> () <span style="color:#e6db74">&#34;Hello!&#34;</span>))
+
+(get <span style="color:#e6db74">&#34;/hi/:name&#34;</span> (<span style="color:#66d9ef">λ</span> (req)
+  (string-append <span style="color:#e6db74">&#34;Hello, &#34;</span> (params req <span style="color:#f92672">&#39;</span><span style="color:#e6db74">name</span>) <span style="color:#e6db74">&#34;!&#34;</span>)))
+
+(run)</code></pre></div>
+
+<p>Boom! This was more what I was looking for: Throw down some routes and then then the use whatever logic needs to run. The framework also includes templating and the like if you need something a little more complicated but there doesn&rsquo;t really seem to be anything in the way of react, rails, spring, or anything in the realm of fully fleshed out web frameworks. That really shouldn&rsquo;t be that surprising considering how small the userbase is, and what the typical use case for the language is, so I didn&rsquo;t go much further in the way of creating a more robust web application though there is a static site generator <a href="https://docs.racket-lang.org/frog/index.html">Frog</a>. Though I probably won&rsquo;t consider moving over to Frog from the current static site generator I use for this site: <a href="https://gohugo.io/">Hugo</a>. It looked like it had some thorough documentation and room for customization.</p>
+
+<h1 id="conclusion">Conclusion</h1>
+
+<p>This is easily the fastest I&rsquo;ve become productive in any particular language. The biggest strength of racket is being largely syntaxless meaning the only real learning that I needed to do was find out what functions were available through the base racket language. The docs were thorough, and though there were a lot of functions, the language still felt small enough that I started to feel like I knew what I was doing relatively quickly. I&rsquo;m not sure that I would build a website from Racket at the moment, but I think that it does make a great general purpose langauge, and the next time I write a script or tool, I might just try using Racket first.</p>
+
     </div>
     
     <footer>
@@ -323,16 +393,16 @@ article header img {
       by <span itemprop="author"></span>
     
   
-  <time itemprop="datePublished" datetime="2018-08-25T17:56:57-05:00">
-    25 Aug, 2018
+  <time itemprop="datePublished" datetime="2019-03-03T11:14:34-06:00">
+    3 Mar, 2019
   </time>
   
-    in <span itemprop="articleSection"><a href="/categories/computer-science/">computer science</a></span>
+    in <span itemprop="articleSection"><a href="/categories/languages/">languages</a> and <a href="/categories/technology/">technology</a></span>
   
   
-    and tagged <a href="/tags/knuth/">knuth</a>, <a href="/tags/taocp/">taocp</a> and <a href="/tags/vol1/">vol1</a>
+    and tagged <a href="/tags/functional/">Functional</a> and <a href="/tags/racket/">Racket</a>
   
-  using <span itemprop="wordCount">1332</span> words.
+  using <span itemprop="wordCount">1724</span> words.
 </p>
 
       
