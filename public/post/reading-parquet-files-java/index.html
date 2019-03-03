@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en-US">
   <head>
-    <meta name="generator" content="Hugo 0.49" />
+    <meta name="generator" content="Hugo 0.54.0" />
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reading Parquet Files With Java | Adam&#39;s Blag</title>
@@ -19,7 +19,8 @@
     <meta property="og:title" content="Reading Parquet Files With Java" />
 <meta property="og:description" content="How to read Parquet Files in Java without Spark" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://arm64.ca/post/reading-parquet-files-java/" /><meta property="article:published_time" content="2018-04-21T12:41:54-05:00"/>
+<meta property="og:url" content="https://arm64.ca/post/reading-parquet-files-java/" />
+<meta property="article:published_time" content="2018-04-21T12:41:54-05:00"/>
 <meta property="article:modified_time" content="2018-04-21T12:41:54-05:00"/>
 
     <meta name="twitter:card" content="summary_large_image"/>
@@ -237,8 +238,6 @@ article header img {
       <p>A simple way of reading Parquet files without the need to use Spark.</p>
 
 <p>I recently ran into an issue where I needed to read from <a href="https://parquet.apache.org/">Parquet</a> files in a simple way without having to use the entire Spark framework. Though inspecting the contents of a Parquet file turns out to be pretty simple using the <code>spark-shell</code>, doing so without the framework ended up being more difficult because of a lack of documentation about how to read the actual content of Parquet files, the columnar format used by Hadoop and Spark.</p>
-
-<p></p>
 
 <p>If all you need to do is inspect the contents of a parquet file you can do so pretty easily if you already have spark set up like so
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ spark-shell
