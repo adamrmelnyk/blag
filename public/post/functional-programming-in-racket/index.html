@@ -205,7 +205,7 @@ article header img {
 
 <meta itemprop="datePublished" content="2019-03-03T11:14:34-06:00" />
 <meta itemprop="dateModified" content="2019-03-03T11:14:34-06:00" />
-<meta itemprop="wordCount" content="1724">
+<meta itemprop="wordCount" content="1904">
 
 
 
@@ -378,6 +378,23 @@ article header img {
 
 <p>Boom! This was more what I was looking for: Throw down some routes and then then the use whatever logic needs to run. The framework also includes templating and the like if you need something a little more complicated but there doesn&rsquo;t really seem to be anything in the way of react, rails, spring, or anything in the realm of fully fleshed out web frameworks. That really shouldn&rsquo;t be that surprising considering how small the userbase is, and what the typical use case for the language is, so I didn&rsquo;t go much further in the way of creating a more robust web application though there is a static site generator <a href="https://docs.racket-lang.org/frog/index.html">Frog</a>. Though I probably won&rsquo;t consider moving over to Frog from the current static site generator I use for this site: <a href="https://gohugo.io/">Hugo</a>. It looked like it had some thorough documentation and room for customization.</p>
 
+<h3 id="making-web-requests">Making web requests</h3>
+
+<p>A lot of applications depend on making calls to third party apis, so I wanted to see what parsing json was like. There are a number of useful libraries for making <a href="https://github.com/jackfirth/racket-request">rest requests</a> with racket, but I wanted to use just the base language. There were a few different ways to make requests but I found this to be the most intuitive and relevant to the majority of my use cases.</p>
+
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-racket" data-lang="racket"><span style="color:#f92672">#lang </span>racket
+(<span style="color:#66d9ef">require</span> net/http-client
+         json)
+
+(<span style="color:#66d9ef">define-values</span> (status header response)
+  (http-sendrecv <span style="color:#e6db74">&#34;api.github.com&#34;</span> <span style="color:#e6db74">&#34;/users&#34;</span> <span style="color:#66d9ef">#:ssl?</span> <span style="color:#f92672">&#39;</span><span style="color:#e6db74">auto</span>))
+(<span style="color:#66d9ef">define</span> data (read-json response))
+
+(<span style="color:#66d9ef">when</span> (jsexpr? data)
+    (hash-ref (first data) <span style="color:#f92672">&#39;</span><span style="color:#e6db74">login</span>))</code></pre></div>
+
+<p>Here the <code>http-sendrecv</code> produces three values: status, header, and response. The function then returns an input port which we can read as json. Really it builds a <code>#hasheq</code> type or a list of hashes depending on the results, so the Racket libraries for getting information from hashes makes this pretty simple to read from. In this example the json is a list of several results, so we read the first hash from the list in order to access the <code>'login</code> element.</p>
+
 <h1 id="conclusion">Conclusion</h1>
 
 <p>This is easily the fastest I&rsquo;ve become productive in any particular language. The biggest strength of racket is being largely syntaxless meaning the only real learning that I needed to do was find out what functions were available through the base racket language. The docs were thorough, and though there were a lot of functions, the language still felt small enough that I started to feel like I knew what I was doing relatively quickly. I&rsquo;m not sure that I would build a website from Racket at the moment, but I think that it does make a great general purpose langauge, and the next time I write a script or tool, I might just try using Racket first.</p>
@@ -402,7 +419,7 @@ article header img {
   
     and tagged <a href="/tags/functional/">Functional</a> and <a href="/tags/racket/">Racket</a>
   
-  using <span itemprop="wordCount">1724</span> words.
+  using <span itemprop="wordCount">1904</span> words.
 </p>
 
       

@@ -158,6 +158,25 @@ I decided to take a look at spin mostly because it reminded me a lot of the mini
 
 Boom! This was more what I was looking for: Throw down some routes and then then the use whatever logic needs to run. The framework also includes templating and the like if you need something a little more complicated but there doesn't really seem to be anything in the way of react, rails, spring, or anything in the realm of fully fleshed out web frameworks. That really shouldn't be that surprising considering how small the userbase is, and what the typical use case for the language is, so I didn't go much further in the way of creating a more robust web application though there is a static site generator [Frog](https://docs.racket-lang.org/frog/index.html). Though I probably won't consider moving over to Frog from the current static site generator I use for this site: [Hugo](https://gohugo.io/). It looked like it had some thorough documentation and room for customization.
 
+### Making web requests
+
+A lot of applications depend on making calls to third party apis, so I wanted to see what parsing json was like. There are a number of useful libraries for making [rest requests](https://github.com/jackfirth/racket-request) with racket, but I wanted to use just the base language. There were a few different ways to make requests but I found this to be the most intuitive and relevant to the majority of my use cases.
+
+{{< highlight racket >}}
+#lang racket
+(require net/http-client
+         json)
+
+(define-values (status header response)
+  (http-sendrecv "api.github.com" "/users" #:ssl? 'auto))
+(define data (read-json response))
+
+(when (jsexpr? data)
+    (hash-ref (first data) 'login))
+{{< / highlight >}}
+
+Here the `http-sendrecv` produces three values: status, header, and response. The function then returns an input port which we can read as json. Really it builds a `#hasheq` type or a list of hashes depending on the results, so the Racket libraries for getting information from hashes makes this pretty simple to read from. In this example the json is a list of several results, so we read the first hash from the list in order to access the `'login` element.
+
 # Conclusion
 
 This is easily the fastest I've become productive in any particular language. The biggest strength of racket is being largely syntaxless meaning the only real learning that I needed to do was find out what functions were available through the base racket language. The docs were thorough, and though there were a lot of functions, the language still felt small enough that I started to feel like I knew what I was doing relatively quickly. I'm not sure that I would build a website from Racket at the moment, but I think that it does make a great general purpose langauge, and the next time I write a script or tool, I might just try using Racket first.
