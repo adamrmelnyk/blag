@@ -45,18 +45,17 @@ I wouldn't usually do it this way, but I decided I should read through the docs,
 
 * The guide is actually pretty thorough, giving examples of by showing how functions in the standard language can be formed using other calls which I feel is really in the spirit of using a recursive language. <!-- reword -->
 
-* Development in Dr Racket, although dated looking is nice. There interactive shell at the bottom makes it easy to experiment while you're building without having to rebuild or reload the file. Hitting `Ctrl + ?` in the shell will also give you suggestions for words. I thought that tab completion was working at some point as well but when I updated to the latest version of DrRacket it seemed to stop working for whatever reason.
+* Development in Dr Racket, although dated looking is nice. The interactive shell at the bottom makes it easy to experiment while you're building without having to rebuild or reload the file. Hitting `Ctrl + ?` in the shell will also give you suggestions for words. I thought that tab completion was working at some point as well but, when I updated to the latest version of DrRacket it seemed to stop working for whatever reason.
 
 * `car`, and `cdr`, one of the things I remembered from using scheme in college, can still be used though they can be swapped for the more intuitive `first` and `rest` when working with lists.
 
-* I kind of love the conciseness the comes from using ternaries in other programs, but because it's a functional language, pretty much everything has that feel to it. `(if (> 3 4) "greater" "less")` looks a lot like a ternary. The only caveat here is that you need to return something for where it's true or false. When you want just and if you need to use something like when: `(when (condition) body)`.
+* I kind of love the conciseness that comes from using ternaries in other languages, but because it's a functional language, pretty much everything has that feel to it. The statement: `(if (> 3 4) "greater" "less")` looks a lot like a ternary. The only caveat here is that you need to return something for where it's true or false. When you want just and if you need to use something like when: `(when (condition) body)`.
 
-* There is no while loop: I spend a lot of time working on OO programming in my daily life, so I found on a few occasions after making a few searches, trying to figure out why something so simple doesn't exist, I realized my mistake. Getting out of the trap of OO thinking takes some getting used to but turns out to be really powerful. Being able to pass along a function instead of just data really does simplify logic and saves you a lot of boilerplate code that OO languages like Java are notorious for.
+* There is no while loop: I spend a lot of time working on OO programming in my daily life, so I found on a few occasions after making a few searches, trying to figure out why something so simple doesn't exist, I finally realized my mistake. Getting out of the trap of OO thinking takes some getting used to but, it turns out to be really powerful. Being able to pass along a function instead of just data really does simplify logic and saves you a lot of boilerplate code that OO languages like Java are notorious for.
 
-* cond is particularly useful as a more useful switch than many other languages provide. Instead of passing in a single arg and checking the value like Java does you can test for any condition you want, similar to `else if` statements.
+* `cond` is particularly useful; in a number of cases and I found it to be much more expressive than the switches than many other languages provide. Instead of passing in a single arg and checking the value like Java does you can test for any condition you want, similar to chaining several `else if` statements, though much more powerful, as it can be passed like any other function.
 
-* Though most OO languages have some aspects of functional programming with lambdas, it's nowhere near as intuitive. Treating functions are arguments allows you to things you would never even think about in Object Oriented programming. Instead of checking if an argument was a string or an Integer, casting it and then applying the correct function we check if it's a string and pass the function along to the two arguments.
-
+* Though most OO languages have some aspects of functional programming with lambdas, it's nowhere near as intuitive. Treating functions are arguments allows you to things you would never even think about in Object Oriented programming. Instead of checking if an argument was a string or an Integer, casting it and then applying the correct function we check if it's a string and pass the function along to the two arguments. This isn't something unique to Racket, but it is something that I appreciated a lot the longer I used it. The example taken from the docs here, shows off just how easy it is:
 
 {{< highlight racket>}}
 (define (double v)
@@ -67,11 +66,11 @@ I wouldn't usually do it this way, but I decided I should read through the docs,
 
 # Something Slightly Larger
 
-Naturally, I want to be able to work on something slightly larger next so I started with something I've already worked on before and I set out creating a script for parsing and making small edits to gif files. To my surprise working at the byte level in racket is fairly simple.
+Naturally, I want to be able to work on something slightly larger next so I started with something I've already worked on before, and I set out creating a script for parsing and making small edits to gif files. To my surprise working at the byte level in racket is fairly simple.
 
 ## Byte-ing off more than I can chew
 
-This may have not been the best choice for the first thing I should try to build, but I wanted to pick something somewhat off the beaten path to see what kind of problems I might run into. I thought I might run into issues with bracket completion, but that never really happened even though there wasn't any bracket completion turned on. The majority of the issues that I ran into where more or less around using functions properly such as returning an expression or passing in the correct types to a function (even though it's untyped there are functions that return errors if passed the wrong type).
+This may have not been the best choice for the first thing I should try to build, but I wanted to pick something somewhat off the beaten path to see what kind of problems I might run into. I thought I might run into issues with bracket completion, but that never really happened even though there wasn't any bracket completion turned on. The majority of the issues that I ran into where more or less around using functions properly such as returning an expression or passing in the correct types to a function as even though the language is untyped there are functions that return errors if passed the wrong type of data.
 
 ## Getting to work
 
@@ -122,7 +121,7 @@ You of course don't need all of this, the `check-equal?` is enough, but being ab
 
 ## Web development
 
-I'm primarily a web developer, and I had heard that Hackernews was written in racket or, more accurately, written arc, a language written in Racket so I wanted to see how easy it would be to write a webpage in racket. The docs again shine through here with instant web servlets:
+The majority of my experience is in web development so the next step was to create a small website or an api. I had heard that Hackernews was written in racket or, more accurately, written arc, a language written in Racket, so I wanted to see how easy it would be to write a webpage in racket. The docs again shine through here with instant web servlets:
 
 {{< highlight racket >}}
 #lang web-server/insta
@@ -133,7 +132,7 @@ I'm primarily a web developer, and I had heard that Hackernews was written in ra
           (body (p "This website was made with Racket!")))))
 {{< / highlight >}}
 
-This is nice of course, but ideally I don't want to have to roll everything myself, luckily there are a few different web frameworks on github though a few of them are in early stages or don't seem to have too many contributions:
+Thi is nice of course, but ideally I don't want to have to roll everything myself. Luckily there are a few different web frameworks on github, though a few of them are in early stages or don't seem to have many contributions:
 
 * https://github.com/nihirash/holy
 * https://github.com/dmac/spin
