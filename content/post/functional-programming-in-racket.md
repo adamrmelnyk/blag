@@ -13,7 +13,7 @@ A dive into functional programming in Racket.
 
 # Preface
 
-I've been playing around with functional languages for a few years now; I'd pick up an ebook on scala or Clojure some Saturday afternoon and try going through a tutorial or two. Maybe attend a workshop on it over a weekend with a friend who found the event on meetup.com and get a somewhat shallow overview of the language. The next weekend I'd look at it again and see if I could get a small webpage up and running or maybe a small command line tool but for the most part, its always ended there. I rarely end up going back the environment because I inevitably get distracted by another cool technology. What follows is an attempt to remedy that and do a deeper dive over a period of a month and a half.
+I've been playing around with functional languages for a few years now; I'd pick up an ebook on scala or Clojure some Saturday afternoon and try going through a tutorial or two. Maybe attend a workshop on it over a weekend with a friend who found the event on meetup.com and get a somewhat shallow overview of the language. The next weekend I'd look at it again and see if I could get a small webpage up and running or maybe a small command line tool but for the most part, it has always ended there. I rarely end up going back the environment because I inevitably get distracted by another cool technology. What follows is an attempt to remedy that and do a deeper dive over a period of a month and a half.
 
 # Why Racket? Why not X
 
@@ -51,18 +51,19 @@ I wouldn't usually do it this way, but I decided I should read through the docs,
 
 * I kind of love the conciseness the comes from using ternaries in other programs, but because it's a functional language, pretty much everything has that feel to it. `(if (> 3 4) "greater" "less")` looks a lot like a ternary. The only caveat here is that you need to return something for where it's true or false. When you want just and if you need to use something like when: `(when (condition) body)`.
 
-* There is no while loop: I spend a lot of time working on OO programming in my daily life, so I found on a few occasions after making a few searches, trying to figure out why something so simple doesn't exist, I realized my mistake. Getting out of the trap of OO thinking takes some getting used to but turns out to be really powerful. Being able to pass along a function instead of just data really does simplify logic and saves you a lot of boiler plate code that OO langues like Java are notorious for.
+* There is no while loop: I spend a lot of time working on OO programming in my daily life, so I found on a few occasions after making a few searches, trying to figure out why something so simple doesn't exist, I realized my mistake. Getting out of the trap of OO thinking takes some getting used to but turns out to be really powerful. Being able to pass along a function instead of just data really does simplify logic and saves you a lot of boilerplate code that OO languages like Java are notorious for.
 
 * cond is particularly useful as a more useful switch than many other languages provide. Instead of passing in a single arg and checking the value like Java does you can test for any condition you want, similar to `else if` statements.
 
-* Though most OO languages have some aspects of functional programming with lambdas, it's no where near as intuitive. Treating functions are arguments allows you to things you would never even think about in Object Oriented programming. Instead of checking if an argument was a string or an Integer, casting it and then applying the correct function we check if it's a string and pass the function along to the two arguments.
+* Though most OO languages have some aspects of functional programming with lambdas, it's nowhere near as intuitive. Treating functions are arguments allows you to things you would never even think about in Object Oriented programming. Instead of checking if an argument was a string or an Integer, casting it and then applying the correct function we check if it's a string and pass the function along to the two arguments.
+
 
 {{< highlight racket>}}
 (define (double v)
     ((if (string? v) string-append +) v v))
 {{< / highlight >}}
 
-* Racket is almost syntaxless; whereas many languages have different structures, rules and often shortcuts for defining variables, checking conditionals, creating switches, or creating functions is all the same. Not having to look up syntax greatly simplified the process of learning the language.
+* Racket is almost syntax-less; whereas many languages have different structures, rules and often shortcuts for defining variables, checking conditionals, creating switches, or creating functions is all the same. Not having to look up syntax greatly simplified the process of learning the language.
 
 # Something Slightly Larger
 
@@ -156,7 +157,7 @@ I decided to take a look at spin mostly because it reminded me a lot of the mini
 (run)
 {{< / highlight >}}
 
-Boom! This was more what I was looking for: Throw down some routes and then then the use whatever logic needs to run. The framework also includes templating and the like if you need something a little more complicated but there doesn't really seem to be anything in the way of react, rails, spring, or anything in the realm of fully fleshed out web frameworks. That really shouldn't be that surprising considering how small the userbase is, and what the typical use case for the language is, so I didn't go much further in the way of creating a more robust web application though there is a static site generator [Frog](https://docs.racket-lang.org/frog/index.html). Though I probably won't consider moving over to Frog from the current static site generator I use for this site: [Hugo](https://gohugo.io/). It looked like it had some thorough documentation and room for customization.
+Boom! This was more what I was looking for: Throw down some routes and then then the use whatever logic needs to run. The framework also includes templating and the like if you need something a little more complicated but there doesn't really seem to be anything in the way of react, rails, spring, or anything in the realm of fully fleshed out web frameworks. That really shouldn't be that surprising considering how small the user base is, and what the typical use case for the language is, so I didn't go much further in the way of creating a more robust web application though there is a static site generator [Frog](https://docs.racket-lang.org/frog/index.html). Though I probably won't consider moving over to Frog from the current static site generator I use for this site: [Hugo](https://gohugo.io/). It looked like it had some thorough documentation and room for customization.
 
 ### Making web requests
 
@@ -179,4 +180,4 @@ Here the `http-sendrecv` produces three values: status, header, and response. Th
 
 # Conclusion
 
-This is easily the fastest I've become productive in any particular language. The biggest strength of racket is being largely syntaxless meaning the only real learning that I needed to do was find out what functions were available through the base racket language. The docs were thorough, and though there were a lot of functions, the language still felt small enough that I started to feel like I knew what I was doing relatively quickly. I'm not sure that I would build a website from Racket at the moment, but I think that it does make a great general purpose langauge, and the next time I write a script or tool, I might just try using Racket first.
+This is easily the fastest I've become productive in any particular language. The biggest strength of racket is being largely syntax-less meaning the only real learning that I needed to do was find out what functions were available through the base racket language. The docs were thorough, and though there were a lot of functions, the language still felt small enough that I started to feel like I knew what I was doing relatively quickly. I'm not sure that I would build a website from Racket at the moment, but I think that it does make a great general purpose language, and the next time I write a script or tool, I might just try using Racket first.
