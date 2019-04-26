@@ -15,7 +15,7 @@ An overview of the second volume of The art of Computer Programming.
 
 # Prelude to the Second Volume
 
-It's been about eight months (As of April) since I finished reading the first volume. Though it's likely not a surprise to many, I'll admit that it was one of the more challenging reads and though I've read through my share of books on computer algorithms, they really can't compare to the TAOCP. Though the language itself is fairly the simple, the content was some of the heaviest I've encountered. [My summary of the experience reading through the first volume](/post/the-art-of-computer-programming/) was more or less my thoughts on the book, but didn't offer a lot in terms of the content that was covered or any interesting material that was gleamed from its pages; perhaps I'll remedy that when I have time for a second read through. Admittedly, there was quite a bit of content and I don't think I wanted to post a section by section summary of the volume, especially when you consider that much of the first volume was devoted to stacks, trees, linked lists, and other data structures, something most software engineers and programmers are familiar with. Luckily the second volume is far less familiar territory and may be more interesting to talk about. <!-- re-write this last part -->.
+It's been about eight months (As of April) since I finished reading the first volume. Though it's likely not a surprise to many, I'll admit that it was one of the more challenging reads and though I've read through my share of books on computer algorithms, they really can't compare to the TAOCP. Though the language itself is fairly the simple, the content was some of the heaviest I've encountered. [My summary of the experience reading through the first volume](/post/the-art-of-computer-programming/) was more or less my thoughts on the book, but didn't offer a lot in terms of the content that was covered or any interesting material that was gleamed from its pages; perhaps I'll remedy that when I have time for a second read through. Admittedly, there was quite a bit of content and I don't think I wanted to post a section by section summary of the volume, especially when you consider that much of the first volume was devoted to stacks, trees, linked lists, and other data structures, something most software engineers and programmers are familiar with. Luckily the second volume is far less familiar territory and may be more interesting to write about. <!-- re-write this last part -->
 
 # Seminumerical Algorithms
 
@@ -32,27 +32,36 @@ The most common pseudorandom number generator (according to Knuth) is a [Linear 
 
 <b><i>X</i></b><sub><i>n</i> + 1</sub> = (<i>a</i><b>X</b><sub><i>n</i></sub> + <i>c</i>) mod <i>m</i>
 
-The equation isn't difficult to explain; numbers for m,a, and c are chosen and set in the compiler and a seed is chosen for the first value of Xn. This being a recurrence relation, the result of each run then becomes the next seed or starting value for a subsequent run. Choosing the same seed number will always produce the same result as shown by this C code:
+The equation isn't difficult to explain; numbers for m,a, and c are chosen and set in the compiler and a seed is chosen for the first value of Xn. This being a recurrence relation, the result of each run then becomes the next seed or starting value for a subsequent run. You can see this in the code below:
 
-{{< highlight c>}}
-#include <stdio.h>
-#include <stdlib.h>
+{{< highlight racket>}}
+#lang racket
 
-int main()
-{
-    srand(0);
-    int value = rand();
-    printf("value is %d\n", value);
-}
+(define next (current-seconds))
+
+(define (my-random)
+  (set! next (modulo
+              (+ (* next 6364136223846793005) 1442695040888963407)
+              (expt 2 64)))
+  next)
 {{< / highlight >}}
 
-<!-- TODO: Explain that other languages use different algos -->
+You can see the output this produces from the racket repl here:
 
-  * the most common pseudorandom number generator
-  * A recurrence relation: Each preceding iteration is defined as a function of the preceding terms.
-  * has a seed / start value. I think this is how C does it? (I'm less sure after looking at the racket implementation)
+{{< highlight shell>}}
+> (my-random)
+14843871667761315205
+> (my-random)
+534325907729616048
+> (my-random)
+5734414832404007999
+{{< / highlight >}}
+
+Of course this isn't how Racket generates its random numbers (Racket uses and implementation of the MRG32k3a algorithm), however this method is used by other languages such as the function defined in [glibc](https://sourceware.org/git/?p=glibc.git;a=blob;f=stdlib/random_r.c;hb=glibc-2.26#l362)
+
+<!-- MISC Notes
   * Racket uses a different algorithm: MRG32k3a
     * https://github.com/racket/racket/blob/5bb837661c12a9752c6a99f952c0e1b267645b33/racket/src/cs/rumble/random.ss
     * https://software.intel.com/en-us/mkl-vsnotes-mrg32k3a
     * https://stackoverflow.com/questions/11075833/lecuyers-mrg32k3a-random-number-generator-in-cuda-c
-    * https://srfi.schemers.org/srfi-27/
+    * https://srfi.schemers.org/srfi-27/ -->
