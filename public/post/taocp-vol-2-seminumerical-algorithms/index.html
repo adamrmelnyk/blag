@@ -205,7 +205,7 @@ article header img {
 
 <meta itemprop="datePublished" content="2019-04-03T16:27:33-05:00" />
 <meta itemprop="dateModified" content="2019-04-03T16:27:33-05:00" />
-<meta itemprop="wordCount" content="428">
+<meta itemprop="wordCount" content="588">
 
 
 
@@ -239,7 +239,7 @@ article header img {
 
 <h1 id="prelude-to-the-second-volume">Prelude to the Second Volume</h1>
 
-<p>It&rsquo;s been about eight months (As of April) since I finished reading the first volume. Though it&rsquo;s likely not a surprise to many, I&rsquo;ll admit that it was one of the more challenging reads and though I&rsquo;ve read through my share of books on computer algorithms, they really can&rsquo;t compare to the TAOCP. Though the language itself is fairly the simple, the content was some of the heaviest I&rsquo;ve encountered. <a href="/post/the-art-of-computer-programming/">My summary of the experience reading through the first volume</a> was more or less my thoughts on the book, but didn&rsquo;t offer a lot in terms of the content that was covered or any interesting material that was gleamed from its pages; perhaps I&rsquo;ll remedy that when I have time for a second read through. Admittedly, there was quite a bit of content and I don&rsquo;t think I wanted to post a section by section summary of the volume, especially when you consider that much of the first volume was devoted to stacks, trees, linked lists, and other data structures, something most software engineers and programmers are familiar with. Luckily the second volume is far less familiar territory and may be more interesting to talk about. <!-- re-write this last part -->.</p>
+<p>It&rsquo;s been about eight months (As of April) since I finished reading the first volume. Though it&rsquo;s likely not a surprise to many, I&rsquo;ll admit that it was one of the more challenging reads and though I&rsquo;ve read through my share of books on computer algorithms, they really can&rsquo;t compare to the TAOCP. Though the language itself is fairly the simple, the content was some of the heaviest I&rsquo;ve encountered. <a href="/post/the-art-of-computer-programming/">My summary of the experience reading through the first volume</a> was more or less my thoughts on the book, but didn&rsquo;t offer a lot in terms of the content that was covered or any interesting material that was gleamed from its pages; perhaps I&rsquo;ll remedy that when I have time for a second read through. Admittedly, there was quite a bit of content and I don&rsquo;t think I wanted to post a section by section summary of the volume, especially when you consider that much of the first volume was devoted to stacks, trees, linked lists, and other data structures, something most software engineers and programmers are familiar with. Luckily the second volume is far less familiar territory and may be more interesting to write about. <!-- re-write this last part --></p>
 
 <h1 id="seminumerical-algorithms">Seminumerical Algorithms</h1>
 
@@ -262,33 +262,70 @@ article header img {
 
 <p>The most common pseudorandom number generator (according to Knuth) is a <a href="https://en.wikipedia.org/wiki/Linear_congruential_generator">Linear congruential generator</a>, which has the following equation:</p>
 
-<p><b><i>X</i></b><sub><i>n</i> + 1</sub> = (<i>a</i><b>X</b><sub><i>n</i></sub> + <i>c</i>) mod <i>m</i></p>
+<p style="text-align: center;"><b><i>X</i></b><sub><i>n</i> + 1</sub> = (<i>a</i><b>X</b><sub><i>n</i></sub> + <i>c</i>) mod <i>m</i></p>
 
-<p>The equation isn&rsquo;t difficult to explain; numbers for m,a, and c are chosen and set in the compiler and a seed is chosen for the first value of Xn. This being a recurrence relation, the result of each run then becomes the next seed or starting value for a subsequent run. Choosing the same seed number will always produce the same result as shown by this C code:</p>
+<p>The equation isn&rsquo;t difficult to explain; numbers for m,a, and c are chosen and set in the compiler (hopefully not randomly) and a seed is chosen for the first value of Xn. This being a recurrence relation, the result of each run then becomes the next seed or starting value for a subsequent run. You can see this in the code below:</p>
 
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdio.h&gt;</span><span style="color:#75715e">
-</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdlib.h&gt;</span><span style="color:#75715e">
-</span><span style="color:#75715e"></span>
-<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>()
-{
-    srand(<span style="color:#ae81ff">0</span>);
-    <span style="color:#66d9ef">int</span> value <span style="color:#f92672">=</span> rand();
-    printf(<span style="color:#e6db74">&#34;value is %d</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, value);
-}</code></pre></div>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-racket" data-lang="racket"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">9
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-racket" data-lang="racket"><span style="color:#f92672">#lang </span>racket
 
-<!-- TODO: Explain that other languages use different algos -->
+(<span style="color:#66d9ef">define</span> next (current-seconds))
+
+(<span style="color:#66d9ef">define</span> (my-random)
+  (<span style="color:#66d9ef">set!</span> next (modulo
+              (+ (* next <span style="color:#ae81ff">6364136223846793005</span>) <span style="color:#ae81ff">1442695040888963407</span>)
+              (expt <span style="color:#ae81ff">2</span> <span style="color:#ae81ff">64</span>)))
+  next)</code></pre></td></tr></table>
+</div>
+</div>
+
+<p>You can see the output this produces from the racket repl here:</p>
+
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">&gt; <span style="color:#f92672">(</span>my-random<span style="color:#f92672">)</span>
+<span style="color:#ae81ff">14843871667761315205</span>
+&gt; <span style="color:#f92672">(</span>my-random<span style="color:#f92672">)</span>
+<span style="color:#ae81ff">534325907729616048</span>
+&gt; <span style="color:#f92672">(</span>my-random<span style="color:#f92672">)</span>
+<span style="color:#ae81ff">5734414832404007999</span></code></pre></div>
+
+<p>Of course this isn&rsquo;t how Racket generates its random numbers (Racket uses and implementation of the MRG32k3a algorithm), however this method is used by other languages such as the function defined in <a href="https://sourceware.org/git/?p=glibc.git;a=blob;f=stdlib/random_r.c;hb=glibc-2.26#l362">glibc</a></p>
+
+<h3 id="choosing-our-i-m-i-and-i-a-i-values">Choosing our <i>m</i> and <i>a</i> values</h3>
+
+<!-- MISC Notes
+  * Racket uses a different algorithm: MRG32k3a
+    * https://github.com/racket/racket/blob/5bb837661c12a9752c6a99f952c0e1b267645b33/racket/src/cs/rumble/random.ss
+    * https://software.intel.com/en-us/mkl-vsnotes-mrg32k3a
+    * https://stackoverflow.com/questions/11075833/lecuyers-mrg32k3a-random-number-generator-in-cuda-c
+    * https://srfi.schemers.org/srfi-27/ -->
 
 <ul>
-<li>the most common pseudorandom number generator</li>
-<li>A recurrence relation: Each preceding iteration is defined as a function of the preceding terms.</li>
-<li>has a seed / start value. I think this is how C does it? (I&rsquo;m less sure after looking at the racket implementation)</li>
-<li>Racket uses a different algorithm: MRG32k3a
+<li>Choosing and m value:
 
 <ul>
-<li><a href="https://github.com/racket/racket/blob/5bb837661c12a9752c6a99f952c0e1b267645b33/racket/src/cs/rumble/random.ss">https://github.com/racket/racket/blob/5bb837661c12a9752c6a99f952c0e1b267645b33/racket/src/cs/rumble/random.ss</a></li>
-<li><a href="https://software.intel.com/en-us/mkl-vsnotes-mrg32k3a">https://software.intel.com/en-us/mkl-vsnotes-mrg32k3a</a></li>
-<li><a href="https://stackoverflow.com/questions/11075833/lecuyers-mrg32k3a-random-number-generator-in-cuda-c">https://stackoverflow.com/questions/11075833/lecuyers-mrg32k3a-random-number-generator-in-cuda-c</a></li>
-<li><a href="https://srfi.schemers.org/srfi-27/">https://srfi.schemers.org/srfi-27/</a></li>
+<li>Should be large since the period cannot be larger than m. ie. if you choose m = 2, you&rsquo;ll end up with something like 0,1,0,1,0,1&hellip;</li>
+<li>division is a comparatively slow operation so you should choose something that makes division easy. in this case a good choice is the word size
+of your computer. For most people then you should be using 2 ^ 64.</li>
+<li>Or use the largest prime number smaller than than 2 ^ 64.</li>
+</ul></li>
+<li>Choosing the multiplier / a value:
+
+<ul>
+<li>when m is the product of distinct primes, a only a = 1 will produce the full period, but when m is divisble by a high power of some prime there is considerable latitude in the choice of a.</li>
+<li>the proof for this is a few pages long, and I&rsquo;m no mathematician so it won&rsquo;t be included or explained here.</li>
+<li>JK I might</li>
 </ul></li>
 </ul>
     </div>
@@ -311,7 +348,7 @@ article header img {
   
     and tagged <a href="/tags/knuth/">knuth</a>, <a href="/tags/taocp/">taocp</a> and <a href="/tags/vol2/">vol2</a>
   
-  using <span itemprop="wordCount">428</span> words.
+  using <span itemprop="wordCount">588</span> words.
 </p>
 
       
