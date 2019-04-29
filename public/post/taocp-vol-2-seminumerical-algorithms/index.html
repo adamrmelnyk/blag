@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en-US">
   <head>
-    <meta name="generator" content="Hugo 0.55.1" />
+    <meta name="generator" content="Hugo 0.55.4" />
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Seminumerical Algorithms | Adam&#39;s Blag</title>
@@ -205,7 +205,7 @@ article header img {
 
 <meta itemprop="datePublished" content="2019-04-03T16:27:33-05:00" />
 <meta itemprop="dateModified" content="2019-04-03T16:27:33-05:00" />
-<meta itemprop="wordCount" content="588">
+<meta itemprop="wordCount" content="1138">
 
 
 
@@ -218,7 +218,7 @@ article header img {
   <circle cx="16" cy="16" r="14" />
   <path d="M16 8 L16 16 20 20" />
 </svg>
-<span>3 minute read</span>
+<span>6 minute read</span>
 <svg style="margin-bottom: -3px" class="i-edit" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="6.25%">
   <path d="M30 7 L25 2 5 22 3 29 10 27 Z M21 6 L26 11 Z M5 22 L10 27 Z" />
 </svg>
@@ -241,30 +241,217 @@ article header img {
 
 <p>It&rsquo;s been about eight months (As of April) since I finished reading the first volume. Though it&rsquo;s likely not a surprise to many, I&rsquo;ll admit that it was one of the more challenging reads and though I&rsquo;ve read through my share of books on computer algorithms, they really can&rsquo;t compare to the TAOCP. Though the language itself is fairly the simple, the content was some of the heaviest I&rsquo;ve encountered. <a href="/post/the-art-of-computer-programming/">My summary of the experience reading through the first volume</a> was more or less my thoughts on the book, but didn&rsquo;t offer a lot in terms of the content that was covered or any interesting material that was gleamed from its pages; perhaps I&rsquo;ll remedy that when I have time for a second read through. Admittedly, there was quite a bit of content and I don&rsquo;t think I wanted to post a section by section summary of the volume, especially when you consider that much of the first volume was devoted to stacks, trees, linked lists, and other data structures, something most software engineers and programmers are familiar with. Luckily the second volume is far less familiar territory and may be more interesting to write about. <!-- re-write this last part --></p>
 
-<h1 id="seminumerical-algorithms">Seminumerical Algorithms</h1>
+<h2 id="seminumerical-algorithms">Seminumerical Algorithms</h2>
 
 <ul>
-<li><p>What does seminumerical mean (the borderline of numeric and symbolic)</p>
+<li>What does seminumerical mean (the borderline of numeric and symbolic)
 
 <ul>
 <li>Numeric vs symbolic calculations</li>
 </ul></li>
-
-<li><p>Making a complicated procedure will not always result in something random</p>
-
-<ul>
-<li>use the example of the K algorithm.</li>
-<li>you need statistical analysis to determine if something is sufficiently random.</li>
-</ul></li>
 </ul>
 
-<h2 id="linear-congruential-generator">Linear Congruential Generator</h2>
+<h3 id="not-so-random-number-generators">Not So Random Number Generators</h3>
+
+<p>Early in the volume Knuth shows how difficult it is to create a sufficiently random pseudorandom number generator. Simply adding a number of complicated steps will may not yield truly random numbers. Knuth includes the following algorithm <b><i>K</i></b> to illustrate this point. You can find an excerpt of the algorithm <a href="http://www.informit.com/articles/article.aspx?p=2221790">here</a>.</p>
+
+<h4 id="algorithm-k">Algorithm K</h4>
+
+<p>For the purposes of demonstration I&rsquo;ve implemented the algorithm below. The steps aren&rsquo;t particularly important, but as you can see it&rsquo;s a fairly involved algorithm that looks like it might produce something random.</p>
+
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-racket" data-lang="racket"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">36
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">37
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">38
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">39
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">40
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">41
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">42
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">43
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">44
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">45
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">46
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">47
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">48
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">49
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">50
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">51
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">52
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">53
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">54
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">55
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">56
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">57
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">58
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">59
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">60
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">61
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">62
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">63
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">64
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">65
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">66
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">67
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">68
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">69
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">70
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">71
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">72
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">73
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">74
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">75
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">76
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">77
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">78
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">79
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">80
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">81
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">82
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-racket" data-lang="racket"><span style="color:#f92672">#lang </span>racket
+
+(<span style="color:#66d9ef">define</span> (algorithm-k x)
+  (do-algorithm-k x (+ <span style="color:#ae81ff">1</span> (floor (/ x (expt <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">9</span>))))))
+
+(<span style="color:#66d9ef">define</span> (do-algorithm-k x iterations)
+  (<span style="color:#66d9ef">define</span> step (string-append
+                <span style="color:#e6db74">&#34;k&#34;</span>
+                (number-&gt;string
+                 (+ (modulo (floor (/ x (expt <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">8</span>))) <span style="color:#ae81ff">10</span>) <span style="color:#ae81ff">3</span>))))
+  (<span style="color:#66d9ef">define</span> test (eq? step <span style="color:#e6db74">&#34;k3&#34;</span>))
+  (<span style="color:#66d9ef">if</span> (eq? iterations <span style="color:#ae81ff">0</span>)
+      x
+      (<span style="color:#66d9ef">cond</span> [(equal? step <span style="color:#e6db74">&#34;k3&#34;</span>) (k3 x iterations)]
+            [(equal? step <span style="color:#e6db74">&#34;k4&#34;</span>) (k4 x iterations)]
+            [(equal? step <span style="color:#e6db74">&#34;k5&#34;</span>) (k5 x iterations)]
+            [(equal? step <span style="color:#e6db74">&#34;k6&#34;</span>) (k6 x iterations)]
+            [(equal? step <span style="color:#e6db74">&#34;k7&#34;</span>) (k7 x iterations)]
+            [(equal? step <span style="color:#e6db74">&#34;k8&#34;</span>) (k8 x iterations)]
+            [(equal? step <span style="color:#e6db74">&#34;k9&#34;</span>) (k9 x iterations)]
+            [(equal? step <span style="color:#e6db74">&#34;k10&#34;</span>) (k10 x iterations)]
+            [(equal? step <span style="color:#e6db74">&#34;k11&#34;</span>) (k11 x iterations)]
+            [(equal? step <span style="color:#e6db74">&#34;k12&#34;</span>) (k12 x iterations)])))
+
+<span style="color:#75715e">;; Ensure &gt;= 5 x 10^9</span>
+(<span style="color:#66d9ef">define</span> (k3 x iterations)
+  (<span style="color:#66d9ef">if</span> (&gt; x <span style="color:#ae81ff">5000000000</span>)
+      (k4 x iterations)
+      (k4 (+ x <span style="color:#ae81ff">5000000000</span>) iterations)))
+
+<span style="color:#75715e">;; Middle square</span>
+(<span style="color:#66d9ef">define</span> (k4 x iterations)
+  (k5 (modulo (floor (/ (expt x <span style="color:#ae81ff">2</span>) (expt <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">5</span>))) (expt <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">10</span>)) iterations))
+
+<span style="color:#75715e">;; Multiply</span>
+(<span style="color:#66d9ef">define</span> (k5 x iterations)
+  (k6 (modulo (* x <span style="color:#ae81ff">1001001001</span>) (expt <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">10</span>)) iterations))
+
+<span style="color:#75715e">;; Psuedo-complement</span>
+(<span style="color:#66d9ef">define</span> (k6 x iterations)
+  (<span style="color:#66d9ef">if</span> (&lt; x <span style="color:#ae81ff">100000000</span>)
+      (k7 (+ x <span style="color:#ae81ff">9814055677</span>) iterations)
+      (k7 (- (expt <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">10</span>) x) iterations)))
+
+<span style="color:#75715e">;; Interchange halves</span>
+<span style="color:#75715e">;; ie 1234567890 -&gt; 6789012345</span>
+(<span style="color:#66d9ef">define</span> (k7 x iterations)
+  (k8 (+
+       (* (expt <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">5</span>) (modulo x (expt <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">5</span>)))
+       (floor (/ x (expt <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">5</span>)))) iterations))
+
+<span style="color:#75715e">;; Multiply / same as k5</span>
+(<span style="color:#66d9ef">define</span> (k8 x iterations)
+  (k9 (modulo (* x <span style="color:#ae81ff">1001001001</span>) (expt <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">10</span>)) iterations))
+
+<span style="color:#75715e">;; Decrease digits</span>
+(<span style="color:#66d9ef">define</span> (k9 x iterations)<span style="color:#ae81ff">6065038420</span>
+  (k10 (sub-one x <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">0</span>) iterations))
+
+(<span style="color:#66d9ef">define</span> (sub-one x sum mult)
+  (<span style="color:#66d9ef">if</span> (eq? x <span style="color:#ae81ff">0</span>)
+      sum
+      (<span style="color:#66d9ef">if</span> (eq? (modulo x <span style="color:#ae81ff">10</span>) <span style="color:#ae81ff">0</span>)
+          (sub-one (floor (/ x <span style="color:#ae81ff">10</span>)) (+ (* (modulo x <span style="color:#ae81ff">10</span>) (expt <span style="color:#ae81ff">10</span> mult)) sum) (+ <span style="color:#ae81ff">1</span> mult))
+          (sub-one (floor (/ x <span style="color:#ae81ff">10</span>)) (+ (* (- (modulo x <span style="color:#ae81ff">10</span>) <span style="color:#ae81ff">1</span>) (expt <span style="color:#ae81ff">10</span> mult)) sum) (+ <span style="color:#ae81ff">1</span> mult)))))
+
+<span style="color:#75715e">;; 99999 modify</span>
+(<span style="color:#66d9ef">define</span> (k10 x iterations)
+  (<span style="color:#66d9ef">if</span> (&lt; x (expt <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">5</span>))
+      (k11 (+ (expt x <span style="color:#ae81ff">2</span>) <span style="color:#ae81ff">99999</span>) iterations)
+      (k11 (- x <span style="color:#ae81ff">99999</span>) iterations)))
+
+<span style="color:#75715e">;; Normalize</span>
+(<span style="color:#66d9ef">define</span> (k11 x iterations)
+  (k12 (go-until x) iterations))
+
+(<span style="color:#66d9ef">define</span> (go-until x)
+  (<span style="color:#66d9ef">if</span> (&lt; x (expt <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">9</span>)) (go-until (* x <span style="color:#ae81ff">10</span>)) x))
+
+<span style="color:#75715e">;; Modified middle square</span>
+(<span style="color:#66d9ef">define</span> (k12 x iterations)
+  (do-algorithm-k (modulo (floor (* x (/ (- x <span style="color:#ae81ff">1</span>) (expt <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">5</span>)))) (expt <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">10</span>)) (- iterations <span style="color:#ae81ff">1</span>)))</code></pre></td></tr></table>
+</div>
+</div>
+
+<p>The results however random seeming do present a problem:</p>
+
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">&gt; <span style="color:#f92672">(</span>algorithm-k <span style="color:#ae81ff">1</span><span style="color:#f92672">)</span>
+<span style="color:#ae81ff">3831577709</span>
+&gt; <span style="color:#f92672">(</span>algorithm-k <span style="color:#ae81ff">12345</span><span style="color:#f92672">)</span>
+<span style="color:#ae81ff">5827337884</span>
+&gt; <span style="color:#f92672">(</span>algorithm-k <span style="color:#ae81ff">6065038420</span><span style="color:#f92672">)</span>
+<span style="color:#ae81ff">6065038420</span></code></pre></div>
+
+<p>The first two examples produce what one might expect, but the third produces itself. Knuth points out that the algorithm happens to converge on 6065038420 the lesson being:</p>
+
+<p style="text-align: center;"><b><i>"Random numbers should not be generated with a method chosen at random"</b></i></p>
+
+<p>Besides coincidentally converging on a seemingly random number, Algorithm K has a number of other downsides, it&rsquo;s difficult to implement and because it iterates a certain amount of times depending on the input, could take a relatively long time to produce a single random number. Fortunately the most common number generator is far simpler to implement and much faster.</p>
+
+<h3 id="linear-congruential-generator">Linear Congruential Generator</h3>
 
 <p>The most common pseudorandom number generator (according to Knuth) is a <a href="https://en.wikipedia.org/wiki/Linear_congruential_generator">Linear congruential generator</a>, which has the following equation:</p>
 
 <p style="text-align: center;"><b><i>X</i></b><sub><i>n</i> + 1</sub> = (<i>a</i><b>X</b><sub><i>n</i></sub> + <i>c</i>) mod <i>m</i></p>
 
-<p>The equation isn&rsquo;t difficult to explain; numbers for m,a, and c are chosen and set in the compiler (hopefully not randomly) and a seed is chosen for the first value of Xn. This being a recurrence relation, the result of each run then becomes the next seed or starting value for a subsequent run. You can see this in the code below:</p>
+<p>Unlike the previous algorithm, the equation isn&rsquo;t difficult to explain; numbers for m,a, and c are chosen and set in the compiler (hopefully not randomly) and a seed is chosen for the first value of Xn. This being a recurrence relation, the result of each run then becomes the next seed or starting value for a subsequent run. You can see this in the code below:</p>
 
 <div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
 <table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
@@ -300,9 +487,9 @@ article header img {
 &gt; <span style="color:#f92672">(</span>my-random<span style="color:#f92672">)</span>
 <span style="color:#ae81ff">5734414832404007999</span></code></pre></div>
 
-<p>Of course this isn&rsquo;t how Racket generates its random numbers (Racket uses and implementation of the MRG32k3a algorithm), however this method is used by other languages such as the function defined in <a href="https://sourceware.org/git/?p=glibc.git;a=blob;f=stdlib/random_r.c;hb=glibc-2.26#l362">glibc</a></p>
+<p>This isn&rsquo;t how Racket generates its random numbers (it uses an implementation of the <a href="https://github.com/racket/racket/blob/5bb837661c12a9752c6a99f952c0e1b267645b33/racket/src/cs/rumble/random.ss">MRG32k3a algorithm</a>), however this method is used by other languages such as the function defined in <a href="https://sourceware.org/git/?p=glibc.git;a=blob;f=stdlib/random_r.c;hb=glibc-2.26#l362">glibc</a></p>
 
-<h3 id="choosing-our-i-m-i-and-i-a-i-values">Choosing our <i>m</i> and <i>a</i> values</h3>
+<h4 id="choosing-our-i-m-i-and-i-a-i-values">Choosing our <i>m</i> and <i>a</i> values</h4>
 
 <!-- MISC Notes
   * Racket uses a different algorithm: MRG32k3a
@@ -311,23 +498,34 @@ article header img {
     * https://stackoverflow.com/questions/11075833/lecuyers-mrg32k3a-random-number-generator-in-cuda-c
     * https://srfi.schemers.org/srfi-27/ -->
 
-<ul>
-<li>Choosing and m value:
+<!-- * Choosing and m value:
+  * Should be large since the period cannot be larger than m. ie. if you choose m = 2, you'll end up with something like 0,1,0,1,0,1...
+  * division is a comparatively slow operation so you should choose something that makes division easy. in this case a good choice is the word size
+    of your computer. For most people then you should be using 2 ^ 64.
+    * Or use the largest prime number smaller than than 2 ^ 64.
+* Choosing the multiplier / a value:
+  * when m is the product of distinct primes, a only a = 1 will produce the full period, but when m is divisble by a high power of some prime there is considerable latitude in the choice of a.
+  * the proof for this is a few pages long, and I'm no mathematician so it won't be included or explained here.
+    * JK I might
+* Potency
+  * Add explaination here and why it's important -->
+
+<h3 id="combing-random-number-generators">Combing random number generators</h3>
 
 <ul>
-<li>Should be large since the period cannot be larger than m. ie. if you choose m = 2, you&rsquo;ll end up with something like 0,1,0,1,0,1&hellip;</li>
-<li>division is a comparatively slow operation so you should choose something that makes division easy. in this case a good choice is the word size
-of your computer. For most people then you should be using 2 ^ 64.</li>
-<li>Or use the largest prime number smaller than than 2 ^ 64.</li>
+<li>Algorithm M
+
+<ul>
+<li>And the one that came after it that only uses one algorithm</li>
 </ul></li>
-<li>Choosing the multiplier / a value:
+<li>The monty carlo method and just throwing results away (so long as we have a long period we can do this fairly well)
 
 <ul>
-<li>when m is the product of distinct primes, a only a = 1 will produce the full period, but when m is divisble by a high power of some prime there is considerable latitude in the choice of a.</li>
-<li>the proof for this is a few pages long, and I&rsquo;m no mathematician so it won&rsquo;t be included or explained here.</li>
-<li>JK I might</li>
+<li>generating 500 numbers, using the first 55, then throwing out the rest and generating another 500</li>
 </ul></li>
 </ul>
+
+<h2 id="statistical-tests">Statistical Tests</h2>
     </div>
     
     <footer>
@@ -348,7 +546,7 @@ of your computer. For most people then you should be using 2 ^ 64.</li>
   
     and tagged <a href="/tags/knuth/">knuth</a>, <a href="/tags/taocp/">taocp</a> and <a href="/tags/vol2/">vol2</a>
   
-  using <span itemprop="wordCount">588</span> words.
+  using <span itemprop="wordCount">1138</span> words.
 </p>
 
       
