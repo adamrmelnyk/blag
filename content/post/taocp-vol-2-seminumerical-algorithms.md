@@ -15,7 +15,7 @@ An overview of the second volume of The art of Computer Programming.
 
 # Prelude to the Second Volume
 
-It's been about eight months (As of April) since I finished reading the first volume. Though it's likely not a surprise to many, I'll admit that it was one of the more challenging reads and though I've read through my share of books on computer algorithms, they really can't compare to the TAOCP. Though the language itself is fairly the simple, the content was some of the heaviest I've encountered. [My summary of the experience reading through the first volume](/post/the-art-of-computer-programming/) was more or less my thoughts on the book, but didn't offer a lot in terms of the content that was covered or any interesting material that was gleamed from its pages; perhaps I'll remedy that when I have time for a second read through. Admittedly, there was quite a bit of content and I don't think I wanted to post a section by section summary of the volume, especially when you consider that much of the first volume was devoted to stacks, trees, linked lists, and other data structures, something most software engineers and programmers are familiar with. Luckily the second volume is far less familiar territory and may be more interesting to write about. <!-- re-write this last part -->
+It's been about eight months (As of April) since I finished reading the first volume. Though it's likely not a surprise to many, I'll admit that it was one of the more challenging reads as well as being surprisingly entertaining and well written. [My summary of the experience reading through the first volume](/post/the-art-of-computer-programming/) was more or less my thoughts on the book, but didn't offer a lot in terms of the content that was covered or any interesting material that was gleamed from its pages; perhaps I'll remedy that when I have time for a second read through. Admittedly, there was quite a bit of content and I don't think I wanted to post a section by section summary of the volume, especially when you consider that much of the first volume was devoted to stacks, trees, linked lists, and other data structures, something most software engineers and programmers are familiar with. Luckily the second volume is far less familiar territory (at least to me) and may be more interesting to write about.
 
 ## Seminumerical Algorithms
 
@@ -36,24 +36,20 @@ For the purposes of demonstration I've implemented the algorithm below. The step
 (define (algorithm-k x)
   (do-algorithm-k x (+ 1 (floor (/ x (expt 10 9))))))
 
+(define ns (variable-reference->namespace (#%variable-reference)))
+
+(define (string->procedure s)
+  (define sym (string->symbol s))
+  (eval sym ns))
+
 (define (do-algorithm-k x iterations)
   (define step (string-append
                 "k"
                 (number->string
                  (+ (modulo (floor (/ x (expt 10 8))) 10) 3))))
-  (define test (eq? step "k3"))
   (if (eq? iterations 0)
       x
-      (cond [(equal? step "k3") (k3 x iterations)]
-            [(equal? step "k4") (k4 x iterations)]
-            [(equal? step "k5") (k5 x iterations)]
-            [(equal? step "k6") (k6 x iterations)]
-            [(equal? step "k7") (k7 x iterations)]
-            [(equal? step "k8") (k8 x iterations)]
-            [(equal? step "k9") (k9 x iterations)]
-            [(equal? step "k10") (k10 x iterations)]
-            [(equal? step "k11") (k11 x iterations)]
-            [(equal? step "k12") (k12 x iterations)])))
+      ((string->procedure step) x iterations)))
 
 ;; Ensure >= 5 x 10^9
 (define (k3 x iterations)
@@ -87,7 +83,7 @@ For the purposes of demonstration I've implemented the algorithm below. The step
   (k9 (modulo (* x 1001001001) (expt 10 10)) iterations))
 
 ;; Decrease digits
-(define (k9 x iterations)6065038420
+(define (k9 x iterations)
   (k10 (sub-one x 0 0) iterations))
 
 (define (sub-one x sum mult)
@@ -130,7 +126,7 @@ The first two examples produce what one might expect, but the third produces its
 
 <p style="text-align: center;"><b><i>"Random numbers should not be generated with a method chosen at random"</b></i></p>
 
-Besides coincidentally converging on a seemingly random number, Algorithm K has a number of other downsides, it's difficult to implement and because it iterates a certain amount of times depending on the input, could take a relatively long time to produce a single random number. Fortunately the most common number generator is far simpler to implement and much faster.
+Besides coincidentally converging on a seemingly random number, Algorithm K has a number of other downsides, it's difficult to implement and because it iterates a certain amount of times depending on the input, could take a relatively long time to produce a single random number. Somewhere inside that complexity there is a reason why the generator converges on 6065038420. In order to be usable we need to be able to easily prove that won't happen. The key take away from that is that we need this to be fast and simple.
 
 ### Linear Congruential Generator
 

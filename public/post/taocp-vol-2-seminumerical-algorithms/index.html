@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en-US">
   <head>
-    <meta name="generator" content="Hugo 0.55.4" />
+    <meta name="generator" content="Hugo 0.55.5" />
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Seminumerical Algorithms | Adam&#39;s Blag</title>
@@ -205,7 +205,7 @@ article header img {
 
 <meta itemprop="datePublished" content="2019-04-03T16:27:33-05:00" />
 <meta itemprop="dateModified" content="2019-04-03T16:27:33-05:00" />
-<meta itemprop="wordCount" content="1138">
+<meta itemprop="wordCount" content="1095">
 
 
 
@@ -239,7 +239,7 @@ article header img {
 
 <h1 id="prelude-to-the-second-volume">Prelude to the Second Volume</h1>
 
-<p>It&rsquo;s been about eight months (As of April) since I finished reading the first volume. Though it&rsquo;s likely not a surprise to many, I&rsquo;ll admit that it was one of the more challenging reads and though I&rsquo;ve read through my share of books on computer algorithms, they really can&rsquo;t compare to the TAOCP. Though the language itself is fairly the simple, the content was some of the heaviest I&rsquo;ve encountered. <a href="/post/the-art-of-computer-programming/">My summary of the experience reading through the first volume</a> was more or less my thoughts on the book, but didn&rsquo;t offer a lot in terms of the content that was covered or any interesting material that was gleamed from its pages; perhaps I&rsquo;ll remedy that when I have time for a second read through. Admittedly, there was quite a bit of content and I don&rsquo;t think I wanted to post a section by section summary of the volume, especially when you consider that much of the first volume was devoted to stacks, trees, linked lists, and other data structures, something most software engineers and programmers are familiar with. Luckily the second volume is far less familiar territory and may be more interesting to write about. <!-- re-write this last part --></p>
+<p>It&rsquo;s been about eight months (As of April) since I finished reading the first volume. Though it&rsquo;s likely not a surprise to many, I&rsquo;ll admit that it was one of the more challenging reads as well as being surprisingly entertaining and well written. <a href="/post/the-art-of-computer-programming/">My summary of the experience reading through the first volume</a> was more or less my thoughts on the book, but didn&rsquo;t offer a lot in terms of the content that was covered or any interesting material that was gleamed from its pages; perhaps I&rsquo;ll remedy that when I have time for a second read through. Admittedly, there was quite a bit of content and I don&rsquo;t think I wanted to post a section by section summary of the volume, especially when you consider that much of the first volume was devoted to stacks, trees, linked lists, and other data structures, something most software engineers and programmers are familiar with. Luckily the second volume is far less familiar territory (at least to me) and may be more interesting to write about.</p>
 
 <h2 id="seminumerical-algorithms">Seminumerical Algorithms</h2>
 
@@ -339,10 +339,6 @@ article header img {
 </span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">76
 </span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">77
 </span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">78
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">79
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">80
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">81
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">82
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;">
 <pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-racket" data-lang="racket"><span style="color:#f92672">#lang </span>racket
@@ -350,24 +346,20 @@ article header img {
 (<span style="color:#66d9ef">define</span> (algorithm-k x)
   (do-algorithm-k x (+ <span style="color:#ae81ff">1</span> (floor (/ x (expt <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">9</span>))))))
 
+(<span style="color:#66d9ef">define</span> ns (variable-reference-&gt;namespace (<span style="color:#66d9ef">#%variable-reference</span>)))
+
+(<span style="color:#66d9ef">define</span> (string-&gt;procedure s)
+  (<span style="color:#66d9ef">define</span> sym (string-&gt;symbol s))
+  (eval sym ns))
+
 (<span style="color:#66d9ef">define</span> (do-algorithm-k x iterations)
   (<span style="color:#66d9ef">define</span> step (string-append
                 <span style="color:#e6db74">&#34;k&#34;</span>
                 (number-&gt;string
                  (+ (modulo (floor (/ x (expt <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">8</span>))) <span style="color:#ae81ff">10</span>) <span style="color:#ae81ff">3</span>))))
-  (<span style="color:#66d9ef">define</span> test (eq? step <span style="color:#e6db74">&#34;k3&#34;</span>))
   (<span style="color:#66d9ef">if</span> (eq? iterations <span style="color:#ae81ff">0</span>)
       x
-      (<span style="color:#66d9ef">cond</span> [(equal? step <span style="color:#e6db74">&#34;k3&#34;</span>) (k3 x iterations)]
-            [(equal? step <span style="color:#e6db74">&#34;k4&#34;</span>) (k4 x iterations)]
-            [(equal? step <span style="color:#e6db74">&#34;k5&#34;</span>) (k5 x iterations)]
-            [(equal? step <span style="color:#e6db74">&#34;k6&#34;</span>) (k6 x iterations)]
-            [(equal? step <span style="color:#e6db74">&#34;k7&#34;</span>) (k7 x iterations)]
-            [(equal? step <span style="color:#e6db74">&#34;k8&#34;</span>) (k8 x iterations)]
-            [(equal? step <span style="color:#e6db74">&#34;k9&#34;</span>) (k9 x iterations)]
-            [(equal? step <span style="color:#e6db74">&#34;k10&#34;</span>) (k10 x iterations)]
-            [(equal? step <span style="color:#e6db74">&#34;k11&#34;</span>) (k11 x iterations)]
-            [(equal? step <span style="color:#e6db74">&#34;k12&#34;</span>) (k12 x iterations)])))
+      ((string-&gt;procedure step) x iterations)))
 
 <span style="color:#75715e">;; Ensure &gt;= 5 x 10^9</span>
 (<span style="color:#66d9ef">define</span> (k3 x iterations)
@@ -401,7 +393,7 @@ article header img {
   (k9 (modulo (* x <span style="color:#ae81ff">1001001001</span>) (expt <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">10</span>)) iterations))
 
 <span style="color:#75715e">;; Decrease digits</span>
-(<span style="color:#66d9ef">define</span> (k9 x iterations)<span style="color:#ae81ff">6065038420</span>
+(<span style="color:#66d9ef">define</span> (k9 x iterations)
   (k10 (sub-one x <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">0</span>) iterations))
 
 (<span style="color:#66d9ef">define</span> (sub-one x sum mult)
@@ -443,7 +435,7 @@ article header img {
 
 <p style="text-align: center;"><b><i>"Random numbers should not be generated with a method chosen at random"</b></i></p>
 
-<p>Besides coincidentally converging on a seemingly random number, Algorithm K has a number of other downsides, it&rsquo;s difficult to implement and because it iterates a certain amount of times depending on the input, could take a relatively long time to produce a single random number. Fortunately the most common number generator is far simpler to implement and much faster.</p>
+<p>Besides coincidentally converging on a seemingly random number, Algorithm K has a number of other downsides, it&rsquo;s difficult to implement and because it iterates a certain amount of times depending on the input, could take a relatively long time to produce a single random number. Somewhere inside that complexity there is a reason why the generator converges on 6065038420. In order to be usable we need to be able to easily prove that won&rsquo;t happen. The key take away from that is that we need this to be fast and simple.</p>
 
 <h3 id="linear-congruential-generator">Linear Congruential Generator</h3>
 
@@ -546,7 +538,7 @@ article header img {
   
     and tagged <a href="/tags/knuth/">knuth</a>, <a href="/tags/taocp/">taocp</a> and <a href="/tags/vol2/">vol2</a>
   
-  using <span itemprop="wordCount">1138</span> words.
+  using <span itemprop="wordCount">1095</span> words.
 </p>
 
       
