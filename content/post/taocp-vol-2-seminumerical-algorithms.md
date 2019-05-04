@@ -113,7 +113,7 @@ For the purposes of demonstration I've implemented the algorithm below. The step
 
 The results however random seeming do present a problem:
 
-{{<highlight shell>}}
+{{< highlight shell >}}
 > (algorithm-k 1)
 3831577709
 > (algorithm-k 12345)
@@ -180,7 +180,7 @@ This isn't how Racket generates its random numbers (it uses an implementation of
   * the proof for this is a few pages long, and I'm no mathematician so it won't be included or explained here.
     * JK I might
 * Potency
-  * Add explaination here and why it's important -->
+  * Add explanation here and why it's important -->
 
 ### Combing random number generators
 
@@ -189,4 +189,30 @@ This isn't how Racket generates its random numbers (it uses an implementation of
 * The monty carlo method and just throwing results away (so long as we have a long period we can do this fairly well)
   * generating 500 numbers, using the first 55, then throwing out the rest and generating another 500
 
-## Statistical Tests
+## Statistical Tests Or How do we know it's <i>really</i> random
+
+Once we've created a random number generator, we need a way to decided if it's actually random or not. Knuth suggests we run a battery of tests on the generator in order to determine that it's satisfactorily random. He also humorously suggests that if the tests don't come out the way we want to try reading [another book](https://en.wikipedia.org/wiki/How_to_Lie_with_Statistics).
+
+To thoroughly evaluate a random number generator he suggests running the following tests multiple times:
+
+* Equidistribution test (Frequency Test)
+* Serial Test: <!-- TODO: this needs some explanation -->
+* Gap Test
+* Poker Test:
+* Coupon Collectors Test: How many times do you need to run until you have one of each of the possible values.
+* Permutation Test
+* Runs test: can be runs up or runs down, finding the lengths of all runs such as 1298567 would have runs |129|8|567|
+* maximum of t test: 
+* collision test: Testing how often we get the same number in a set. ie if we have 2^20 possibilities and we run 2^14 times we would expect that on average, each number would appear 2^6 times.
+* Birthday Spacings test:
+* Serial correlation test
+* tests on subsequences
+
+Then analyzing them using the [chi-squared test](https://en.wikipedia.org/wiki/Chi-squared_test) and the [Kolmogorov–Smirnov test](https://en.wikipedia.org/wiki/Kolmogorov%E2%80%93Smirnov_test) to analyze the results of the tests.
+
+<!-- TODO: Add a little more briefly explaining each test -->
+<!-- TODO: recheck to see if I'm correct abut how these tests are being applied -->
+
+### Why So Many Tests?
+
+True randomness is difficult to obtain, some might argue that it may be impossible. This is even more true because we are working with computers after all which <i>should</i> not behave randomly. For this reason we need to determine that they are significantly random enough. To determine this we need to use thorough statistical analysis to show us in a quantifiable way how random they are. This can be difficult and time consuming to prove as it turns out even using just a few of these tests presents problems as some random generators will pass a few of these tests, yet completely fail others. Luckily most of the math here has been done for us, and we are unlikely to use our own, but there are a few notable examples where this happened to fail such as [RANDU](https://en.wikipedia.org/wiki/RANDU) which Knuth called "truly horrible".

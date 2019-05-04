@@ -205,7 +205,7 @@ article header img {
 
 <meta itemprop="datePublished" content="2019-04-03T16:27:33-05:00" />
 <meta itemprop="dateModified" content="2019-04-03T16:27:33-05:00" />
-<meta itemprop="wordCount" content="1095">
+<meta itemprop="wordCount" content="1445">
 
 
 
@@ -218,7 +218,7 @@ article header img {
   <circle cx="16" cy="16" r="14" />
   <path d="M16 8 L16 16 20 20" />
 </svg>
-<span>6 minute read</span>
+<span>7 minute read</span>
 <svg style="margin-bottom: -3px" class="i-edit" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="6.25%">
   <path d="M30 7 L25 2 5 22 3 29 10 27 Z M21 6 L26 11 Z M5 22 L10 27 Z" />
 </svg>
@@ -500,7 +500,7 @@ article header img {
   * the proof for this is a few pages long, and I'm no mathematician so it won't be included or explained here.
     * JK I might
 * Potency
-  * Add explaination here and why it's important -->
+  * Add explanation here and why it's important -->
 
 <h3 id="combing-random-number-generators">Combing random number generators</h3>
 
@@ -517,7 +517,36 @@ article header img {
 </ul></li>
 </ul>
 
-<h2 id="statistical-tests">Statistical Tests</h2>
+<h2 id="statistical-tests-or-how-do-we-know-it-s-i-really-i-random">Statistical Tests Or How do we know it&rsquo;s <i>really</i> random</h2>
+
+<p>Once we&rsquo;ve created a random number generator, we need a way to decided if it&rsquo;s actually random or not. Knuth suggests we run a battery of tests on the generator in order to determine that it&rsquo;s satisfactorily random. He also humorously suggests that if the tests don&rsquo;t come out the way we want to try reading <a href="https://en.wikipedia.org/wiki/How_to_Lie_with_Statistics">another book</a>.</p>
+
+<p>To thoroughly evaluate a random number generator he suggests running the following tests multiple times:</p>
+
+<ul>
+<li>Equidistribution test (Frequency Test)</li>
+<li>Serial Test: <!-- TODO: this needs some explanation --></li>
+<li>Gap Test</li>
+<li>Poker Test:</li>
+<li>Coupon Collectors Test: How many times do you need to run until you have one of each of the possible values.</li>
+<li>Permutation Test</li>
+<li>Runs test: can be runs up or runs down, finding the lengths of all runs such as 1298567 would have runs |129|8|567|</li>
+<li>maximum of t test:</li>
+<li>collision test: Testing how often we get the same number in a set. ie if we have 2^20 possibilities and we run 2^14 times we would expect that on average, each number would appear 2^6 times.</li>
+<li>Birthday Spacings test:</li>
+<li>Serial correlation test</li>
+<li>tests on subsequences</li>
+</ul>
+
+<p>Then analyzing them using the <a href="https://en.wikipedia.org/wiki/Chi-squared_test">chi-squared test</a> and the <a href="https://en.wikipedia.org/wiki/Kolmogorov%E2%80%93Smirnov_test">Kolmogorov–Smirnov test</a> to analyze the results of the tests.</p>
+
+<!-- TODO: Add a little more briefly explaining each test -->
+
+<!-- TODO: recheck to see if I'm correct abut how these tests are being applied -->
+
+<h3 id="why-so-many-tests">Why So Many Tests?</h3>
+
+<p>True randomness is difficult to obtain, some might argue that it may be impossible. This is even more true because we are working with computers after all which <i>should</i> not behave randomly. For this reason we need to determine that they are significantly random enough. To determine this we need to use thorough statistical analysis to show us in a quantifiable way how random they are. This can be difficult and time consuming to prove as it turns out even using just a few of these tests presents problems as some random generators will pass a few of these tests, yet completely fail others. Luckily most of the math here has been done for us, and we are unlikely to use our own, but there are a few notable examples where this happened to fail such as <a href="https://en.wikipedia.org/wiki/RANDU">RANDU</a> which Knuth called &ldquo;truly horrible&rdquo;.</p>
     </div>
     
     <footer>
@@ -538,7 +567,7 @@ article header img {
   
     and tagged <a href="/tags/knuth/">knuth</a>, <a href="/tags/taocp/">taocp</a> and <a href="/tags/vol2/">vol2</a>
   
-  using <span itemprop="wordCount">1095</span> words.
+  using <span itemprop="wordCount">1445</span> words.
 </p>
 
       
