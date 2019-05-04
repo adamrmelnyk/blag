@@ -163,33 +163,23 @@ This isn't how Racket generates its random numbers (it uses an implementation of
 
 #### Choosing our <i>m</i> and <i>a</i> values
 
-<!-- MISC Notes
-  * Racket uses a different algorithm: MRG32k3a
-    * https://github.com/racket/racket/blob/5bb837661c12a9752c6a99f952c0e1b267645b33/racket/src/cs/rumble/random.ss
-    * https://software.intel.com/en-us/mkl-vsnotes-mrg32k3a
-    * https://stackoverflow.com/questions/11075833/lecuyers-mrg32k3a-random-number-generator-in-cuda-c
-    * https://srfi.schemers.org/srfi-27/ -->
+It's important to note here that the numbers used above were not chosen by random, in particular it is important to pay extra attention to the numbers we choose for <i>m</i> and <i>a</i>.
 
-<!-- * Choosing and m value:
-  * Should be large since the period cannot be larger than m. ie. if you choose m = 2, you'll end up with something like 0,1,0,1,0,1...
-  * division is a comparatively slow operation so you should choose something that makes division easy. in this case a good choice is the word size
-    of your computer. For most people then you should be using 2 ^ 64.
-    * Or use the largest prime number smaller than than 2 ^ 64.
-* Choosing the multiplier / a value:
-  * when m is the product of distinct primes, a only a = 1 will produce the full period, but when m is divisble by a high power of some prime there is considerable latitude in the choice of a.
-  * the proof for this is a few pages long, and I'm no mathematician so it won't be included or explained here.
-    * JK I might
-* Potency
-  * Add explanation here and why it's important -->
+* our m value controls the "period" of the random number generator which is how long it takes for it to start repeating. ie if we should choose something such as 2, we'll end up producing: 0,1,0,1,0... so choosing a larger number is ideal.
+* m should also be a number that will make division quick since it is a comparatively slow operation. Knuth suggests that you use the word size of the computer ie. 2<sup>64</sup> or use the largest prime smaller than the word size.
+* Choosing the a value is more complicated than m but equally important as poor choices for a have historically resulted in poor generators. The rules are dependant on the values of c, and m but are too long to include and explain here. [The wiki entry](https://en.wikipedia.org/wiki/Linear_congruential_generator) contains a more detailed explanation of the choices when it comes to choosing a.
 
-### Combing random number generators
+### Combining random number generators
+
+<!-- TODO: Finish this section -->
+<!-- Knuth mentions that putting two of them together obliterates any feelings that they may not be random enough -->
 
 * Algorithm M
   * And the one that came after it that only uses one algorithm
 * The monty carlo method and just throwing results away (so long as we have a long period we can do this fairly well)
   * generating 500 numbers, using the first 55, then throwing out the rest and generating another 500
 
-## Statistical Tests Or How do we know it's <i>really</i> random
+## Statistical Tests Or How we can prove what's <i>really</i> random
 
 Once we've created a random number generator, we need a way to decided if it's actually random or not. Knuth suggests we run a battery of tests on the generator in order to determine that it's satisfactorily random. He also humorously suggests that if the tests don't come out the way we want to try reading [another book](https://en.wikipedia.org/wiki/How_to_Lie_with_Statistics).
 
@@ -215,4 +205,4 @@ Then analyzing them using the [chi-squared test](https://en.wikipedia.org/wiki/C
 
 ### Why So Many Tests?
 
-True randomness is difficult to obtain, some might argue that it may be impossible. This is even more true because we are working with computers after all which <i>should</i> not behave randomly. For this reason we need to determine that they are significantly random enough. To determine this we need to use thorough statistical analysis to show us in a quantifiable way how random they are. This can be difficult and time consuming to prove as it turns out even using just a few of these tests presents problems as some random generators will pass a few of these tests, yet completely fail others. Luckily most of the math here has been done for us, and we are unlikely to use our own, but there are a few notable examples where this happened to fail such as [RANDU](https://en.wikipedia.org/wiki/RANDU) which Knuth called "truly horrible".
+True randomness is difficult to obtain, some might argue that it may be impossible. This is even more true because we are working with computers after all which <i>should</i> not behave randomly. For this reason we need to determine that they are significantly random enough. To determine this we need to use thorough statistical analysis to show us in a quantifiable way how random they are. This can be difficult and time consuming to prove as it turns out even using just a few of these tests presents problems as some random generators will pass a few of these tests, yet completely fail others. Luckily most of the math here has been done for us, and we are unlikely to be developing our own, but there are a few notable examples where this happened to fail such as [RANDU](https://en.wikipedia.org/wiki/RANDU) which Knuth called "truly horrible".

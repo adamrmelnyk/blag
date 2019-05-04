@@ -205,7 +205,7 @@ article header img {
 
 <meta itemprop="datePublished" content="2019-04-03T16:27:33-05:00" />
 <meta itemprop="dateModified" content="2019-04-03T16:27:33-05:00" />
-<meta itemprop="wordCount" content="1445">
+<meta itemprop="wordCount" content="1623">
 
 
 
@@ -218,7 +218,7 @@ article header img {
   <circle cx="16" cy="16" r="14" />
   <path d="M16 8 L16 16 20 20" />
 </svg>
-<span>7 minute read</span>
+<span>8 minute read</span>
 <svg style="margin-bottom: -3px" class="i-edit" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="6.25%">
   <path d="M30 7 L25 2 5 22 3 29 10 27 Z M21 6 L26 11 Z M5 22 L10 27 Z" />
 </svg>
@@ -483,26 +483,19 @@ article header img {
 
 <h4 id="choosing-our-i-m-i-and-i-a-i-values">Choosing our <i>m</i> and <i>a</i> values</h4>
 
-<!-- MISC Notes
-  * Racket uses a different algorithm: MRG32k3a
-    * https://github.com/racket/racket/blob/5bb837661c12a9752c6a99f952c0e1b267645b33/racket/src/cs/rumble/random.ss
-    * https://software.intel.com/en-us/mkl-vsnotes-mrg32k3a
-    * https://stackoverflow.com/questions/11075833/lecuyers-mrg32k3a-random-number-generator-in-cuda-c
-    * https://srfi.schemers.org/srfi-27/ -->
+<p>It&rsquo;s important to note here that the numbers used above were not chosen by random, in particular it is important to pay extra attention to the numbers we choose for <i>m</i> and <i>a</i>.</p>
 
-<!-- * Choosing and m value:
-  * Should be large since the period cannot be larger than m. ie. if you choose m = 2, you'll end up with something like 0,1,0,1,0,1...
-  * division is a comparatively slow operation so you should choose something that makes division easy. in this case a good choice is the word size
-    of your computer. For most people then you should be using 2 ^ 64.
-    * Or use the largest prime number smaller than than 2 ^ 64.
-* Choosing the multiplier / a value:
-  * when m is the product of distinct primes, a only a = 1 will produce the full period, but when m is divisble by a high power of some prime there is considerable latitude in the choice of a.
-  * the proof for this is a few pages long, and I'm no mathematician so it won't be included or explained here.
-    * JK I might
-* Potency
-  * Add explanation here and why it's important -->
+<ul>
+<li>our m value controls the &ldquo;period&rdquo; of the random number generator which is how long it takes for it to start repeating. ie if we should choose something such as 2, we&rsquo;ll end up producing: 0,1,0,1,0&hellip; so choosing a larger number is ideal.</li>
+<li>m should also be a number that will make division quick since it is a comparatively slow operation. Knuth suggests that you use the word size of the computer ie. 2<sup>64</sup> or use the largest prime smaller than the word size.</li>
+<li>Choosing the a value is more complicated than m but equally important as poor choices for a have historically resulted in poor generators. The rules are dependant on the values of c, and m but are too long to include and explain here. <a href="https://en.wikipedia.org/wiki/Linear_congruential_generator">The wiki entry</a> contains a more detailed explanation of the choices when it comes to choosing a.</li>
+</ul>
 
-<h3 id="combing-random-number-generators">Combing random number generators</h3>
+<h3 id="combining-random-number-generators">Combining random number generators</h3>
+
+<!-- TODO: Finish this section -->
+
+<!-- Knuth mentions that putting two of them together obliterates any feelings that they may not be random enough -->
 
 <ul>
 <li>Algorithm M
@@ -517,7 +510,7 @@ article header img {
 </ul></li>
 </ul>
 
-<h2 id="statistical-tests-or-how-do-we-know-it-s-i-really-i-random">Statistical Tests Or How do we know it&rsquo;s <i>really</i> random</h2>
+<h2 id="statistical-tests-or-how-we-can-prove-what-s-i-really-i-random">Statistical Tests Or How we can prove what&rsquo;s <i>really</i> random</h2>
 
 <p>Once we&rsquo;ve created a random number generator, we need a way to decided if it&rsquo;s actually random or not. Knuth suggests we run a battery of tests on the generator in order to determine that it&rsquo;s satisfactorily random. He also humorously suggests that if the tests don&rsquo;t come out the way we want to try reading <a href="https://en.wikipedia.org/wiki/How_to_Lie_with_Statistics">another book</a>.</p>
 
@@ -546,7 +539,7 @@ article header img {
 
 <h3 id="why-so-many-tests">Why So Many Tests?</h3>
 
-<p>True randomness is difficult to obtain, some might argue that it may be impossible. This is even more true because we are working with computers after all which <i>should</i> not behave randomly. For this reason we need to determine that they are significantly random enough. To determine this we need to use thorough statistical analysis to show us in a quantifiable way how random they are. This can be difficult and time consuming to prove as it turns out even using just a few of these tests presents problems as some random generators will pass a few of these tests, yet completely fail others. Luckily most of the math here has been done for us, and we are unlikely to use our own, but there are a few notable examples where this happened to fail such as <a href="https://en.wikipedia.org/wiki/RANDU">RANDU</a> which Knuth called &ldquo;truly horrible&rdquo;.</p>
+<p>True randomness is difficult to obtain, some might argue that it may be impossible. This is even more true because we are working with computers after all which <i>should</i> not behave randomly. For this reason we need to determine that they are significantly random enough. To determine this we need to use thorough statistical analysis to show us in a quantifiable way how random they are. This can be difficult and time consuming to prove as it turns out even using just a few of these tests presents problems as some random generators will pass a few of these tests, yet completely fail others. Luckily most of the math here has been done for us, and we are unlikely to be developing our own, but there are a few notable examples where this happened to fail such as <a href="https://en.wikipedia.org/wiki/RANDU">RANDU</a> which Knuth called &ldquo;truly horrible&rdquo;.</p>
     </div>
     
     <footer>
@@ -567,7 +560,7 @@ article header img {
   
     and tagged <a href="/tags/knuth/">knuth</a>, <a href="/tags/taocp/">taocp</a> and <a href="/tags/vol2/">vol2</a>
   
-  using <span itemprop="wordCount">1445</span> words.
+  using <span itemprop="wordCount">1623</span> words.
 </p>
 
       
