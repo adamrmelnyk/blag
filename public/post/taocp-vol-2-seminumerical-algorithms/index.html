@@ -205,7 +205,7 @@ article header img {
 
 <meta itemprop="datePublished" content="2019-04-03T16:27:33-05:00" />
 <meta itemprop="dateModified" content="2019-04-03T16:27:33-05:00" />
-<meta itemprop="wordCount" content="1623">
+<meta itemprop="wordCount" content="4170">
 
 
 
@@ -218,7 +218,7 @@ article header img {
   <circle cx="16" cy="16" r="14" />
   <path d="M16 8 L16 16 20 20" />
 </svg>
-<span>8 minute read</span>
+<span>20 minute read</span>
 <svg style="margin-bottom: -3px" class="i-edit" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="6.25%">
   <path d="M30 7 L25 2 5 22 3 29 10 27 Z M21 6 L26 11 Z M5 22 L10 27 Z" />
 </svg>
@@ -431,11 +431,11 @@ article header img {
 &gt; <span style="color:#f92672">(</span>algorithm-k <span style="color:#ae81ff">6065038420</span><span style="color:#f92672">)</span>
 <span style="color:#ae81ff">6065038420</span></code></pre></div>
 
-<p>The first two examples produce what one might expect, but the third produces itself. Knuth points out that the algorithm happens to converge on 6065038420 the lesson being:</p>
+<p>The first two examples produce what one might expect, but the third produces itself. Knuth points out that the algorithm happens to degenerate to 6065038420, with the lesson being:</p>
 
 <p style="text-align: center;"><b><i>"Random numbers should not be generated with a method chosen at random"</b></i></p>
 
-<p>Besides coincidentally converging on a seemingly random number, Algorithm K has a number of other downsides, it&rsquo;s difficult to implement and because it iterates a certain amount of times depending on the input, could take a relatively long time to produce a single random number. Somewhere inside that complexity there is a reason why the generator converges on 6065038420. In order to be usable we need to be able to easily prove that won&rsquo;t happen. The key take away from that is that we need this to be fast and simple.</p>
+<p>Besides coincidentally degenerates to a seemingly random number, Algorithm K has a number of other downsides, it&rsquo;s difficult to implement and because it iterates a certain amount of times depending on the input, could take a relatively long time to produce a single random number. Somewhere inside that complexity there is a reason why the generator degenerates to 6065038420. In order to be usable we need to be able to easily prove that won&rsquo;t happen. The key take away from that is that we need this to be fast and simple.</p>
 
 <h3 id="linear-congruential-generator">Linear Congruential Generator</h3>
 
@@ -491,24 +491,11 @@ article header img {
 <li>Choosing the a value is more complicated than m but equally important as poor choices for a have historically resulted in poor generators. The rules are dependant on the values of c, and m but are too long to include and explain here. <a href="https://en.wikipedia.org/wiki/Linear_congruential_generator">The wiki entry</a> contains a more detailed explanation of the choices when it comes to choosing a.</li>
 </ul>
 
-<h3 id="combining-random-number-generators">Combining random number generators</h3>
+<h3 id="why-not-both">Why not both?</h3>
 
-<!-- TODO: Finish this section -->
+<!-- TODO: include the math.random which combines two but doesn't really work -->
 
-<!-- Knuth mentions that putting two of them together obliterates any feelings that they may not be random enough -->
-
-<ul>
-<li>Algorithm M
-
-<ul>
-<li>And the one that came after it that only uses one algorithm</li>
-</ul></li>
-<li>The monty carlo method and just throwing results away (so long as we have a long period we can do this fairly well)
-
-<ul>
-<li>generating 500 numbers, using the first 55, then throwing out the rest and generating another 500</li>
-</ul></li>
-</ul>
+<p>The LCG is just one form of PRNG such as <a href="https://en.wikipedia.org/wiki/Xorshift">xorshift</a>, <a href="https://en.wikipedia.org/wiki/Well_equidistributed_long-period_linear">WELL</a>, or the <a href="https://en.wikipedia.org/wiki/Mersenne_Twister">Mersenne Twister</a> so, if having one random number generator produces something fairly random, would two random number generators produce something even more random? As it turns out yes, but only if applied properly otherwise you could cause issues <a href="https://medium.com/@betable/tifu-by-using-math-random-f1c308c4fd9d">like the one seen in Javascripts Math.random() library</a>. If a person is unconvinced that a random number generator is not sufficiently random Putting two generators together should in Knuth words &ldquo;convince all but the most hardened of skeptics&rdquo;. One method involves taking two generators and shuffling them together, it&rsquo;s only weakness being that it does not change the number themselves, only the sequence so this may still fail the <a href="https://www.cs.indiana.edu/~kapadia/project2/node21.html">Birthday spacings</a> test. Knuth suggest instead that we use an even simpler method by combining results from the same generator, producing 500 or so results, choosing the first 55, then throwing the rest away and repeating the process.</p>
 
 <h2 id="statistical-tests-or-how-we-can-prove-what-s-i-really-i-random">Statistical Tests Or How we can prove what&rsquo;s <i>really</i> random</h2>
 
@@ -518,17 +505,17 @@ article header img {
 
 <ul>
 <li>Equidistribution test (Frequency Test)</li>
-<li>Serial Test: <!-- TODO: this needs some explanation --></li>
+<li>Serial Test</li>
 <li>Gap Test</li>
-<li>Poker Test:</li>
+<li>Poker Test</li>
 <li>Coupon Collectors Test: How many times do you need to run until you have one of each of the possible values.</li>
 <li>Permutation Test</li>
-<li>Runs test: can be runs up or runs down, finding the lengths of all runs such as 1298567 would have runs |129|8|567|</li>
-<li>maximum of t test:</li>
-<li>collision test: Testing how often we get the same number in a set. ie if we have 2^20 possibilities and we run 2^14 times we would expect that on average, each number would appear 2^6 times.</li>
-<li>Birthday Spacings test:</li>
+<li>Runs test</li>
+<li>Maximum of t test</li>
+<li>Collision test</li>
+<li>Birthday Spacings test</li>
 <li>Serial correlation test</li>
-<li>tests on subsequences</li>
+<li>Tests on subsequences</li>
 </ul>
 
 <p>Then analyzing them using the <a href="https://en.wikipedia.org/wiki/Chi-squared_test">chi-squared test</a> and the <a href="https://en.wikipedia.org/wiki/Kolmogorov%E2%80%93Smirnov_test">Kolmogorov–Smirnov test</a> to analyze the results of the tests.</p>
@@ -537,9 +524,673 @@ article header img {
 
 <!-- TODO: recheck to see if I'm correct abut how these tests are being applied -->
 
+<h3 id="spectral-test">Spectral test</h3>
+
+<p>The most important of all the tests is the Spectral test. This test is make or break for random number generators. All good PRNG&rsquo;s will pass this test, and more importantly, bad PRNG&rsquo;s will fail.</p>
+
 <h3 id="why-so-many-tests">Why So Many Tests?</h3>
 
 <p>True randomness is difficult to obtain, some might argue that it may be impossible. This is even more true because we are working with computers after all which <i>should</i> not behave randomly. For this reason we need to determine that they are significantly random enough. To determine this we need to use thorough statistical analysis to show us in a quantifiable way how random they are. This can be difficult and time consuming to prove as it turns out even using just a few of these tests presents problems as some random generators will pass a few of these tests, yet completely fail others. Luckily most of the math here has been done for us, and we are unlikely to be developing our own, but there are a few notable examples where this happened to fail such as <a href="https://en.wikipedia.org/wiki/RANDU">RANDU</a> which Knuth called &ldquo;truly horrible&rdquo;.</p>
+
+<h3 id="running-some-tests">Running some tests</h3>
+
+<p>Reading about these tests was interesting, but what would be more interesting is to run it on the two generators I had used above, as well as RANDU which is shown below. Comparing the results should illustrate the differences between the generators that ought to be good, and those that we know will preform poorly. There are a number of random number generator testers out there but the one I used was <code>dieharder</code> based on a suite of tests called diehard. For each run I generated 1,000,0000 random numbers (algorithm k took significantly longer ~20 min) and fed it to diehard. You can see the results here:</p>
+
+<h1 id="standard-lcg">Standard LCG</h1>
+
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 10
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 11
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 12
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 13
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 14
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 15
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 16
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 17
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 18
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 19
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 20
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 21
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 22
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 23
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 24
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 25
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 26
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 27
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 28
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 29
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 30
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 31
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 32
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 33
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 34
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 35
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 36
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 37
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 38
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 39
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 40
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 41
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 42
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 43
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 44
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 45
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 46
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 47
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 48
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 49
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 50
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 51
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 52
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 53
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 54
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 55
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 56
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 57
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 58
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 59
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 60
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 61
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 62
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 63
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 64
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 65
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 66
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 67
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 68
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 69
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 70
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 71
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 72
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 73
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 74
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 75
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 76
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 77
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 78
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 79
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 80
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 81
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 82
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 83
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 84
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 85
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 86
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 87
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 88
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 89
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 90
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 91
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 92
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 93
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 94
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 95
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 96
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 97
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 98
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 99
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">100
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">101
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#75715e">#=============================================================================#</span>
+<span style="color:#75715e">#            dieharder version 3.31.1 Copyright 2003 Robert G. Brown          #</span>
+<span style="color:#75715e">#=============================================================================#</span>
+   rng_name    |           filename             |rands/second|
+     file_input|                   example.input|  <span style="color:#ae81ff">6</span>.15e+06  |
+<span style="color:#75715e">#=============================================================================#</span>
+        test_name   |ntup| tsamples |psamples|  p-value |Assessment
+<span style="color:#75715e">#=============================================================================#</span>
+<span style="color:#75715e"># The file file_input was rewound 1 times</span>
+   diehard_birthdays|   <span style="color:#ae81ff">0</span>|       <span style="color:#ae81ff">100</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.72874473|  PASSED  
+<span style="color:#75715e"># The file file_input was rewound 11 times</span>
+      diehard_operm5|   <span style="color:#ae81ff">0</span>|   <span style="color:#ae81ff">1000000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00008973|   WEAK   
+<span style="color:#75715e"># The file file_input was rewound 24 times</span>
+  diehard_rank_32x32|   <span style="color:#ae81ff">0</span>|     <span style="color:#ae81ff">40000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.24249094|  PASSED  
+<span style="color:#75715e"># The file file_input was rewound 30 times</span>
+    diehard_rank_6x8|   <span style="color:#ae81ff">0</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 32 times</span>
+   diehard_bitstream|   <span style="color:#ae81ff">0</span>|   <span style="color:#ae81ff">2097152</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 53 times</span>
+        diehard_opso|   <span style="color:#ae81ff">0</span>|   <span style="color:#ae81ff">2097152</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 67 times</span>
+        diehard_oqso|   <span style="color:#ae81ff">0</span>|   <span style="color:#ae81ff">2097152</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 74 times</span>
+         diehard_dna|   <span style="color:#ae81ff">0</span>|   <span style="color:#ae81ff">2097152</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 74 times</span>
+diehard_count_1s_str|   <span style="color:#ae81ff">0</span>|    <span style="color:#ae81ff">256000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 87 times</span>
+diehard_count_1s_byt|   <span style="color:#ae81ff">0</span>|    <span style="color:#ae81ff">256000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 87 times</span>
+ diehard_parking_lot|   <span style="color:#ae81ff">0</span>|     <span style="color:#ae81ff">12000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.33164281|  PASSED  
+<span style="color:#75715e"># The file file_input was rewound 88 times</span>
+    diehard_2dsphere|   <span style="color:#ae81ff">2</span>|      <span style="color:#ae81ff">8000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.08003531|  PASSED  
+<span style="color:#75715e"># The file file_input was rewound 88 times</span>
+    diehard_3dsphere|   <span style="color:#ae81ff">3</span>|      <span style="color:#ae81ff">4000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.55288986|  PASSED  
+<span style="color:#75715e"># The file file_input was rewound 111 times</span>
+     diehard_squeeze|   <span style="color:#ae81ff">0</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00371770|   WEAK   
+<span style="color:#75715e"># The file file_input was rewound 111 times</span>
+        diehard_sums|   <span style="color:#ae81ff">0</span>|       <span style="color:#ae81ff">100</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.06120371|  PASSED  
+<span style="color:#75715e"># The file file_input was rewound 112 times</span>
+        diehard_runs|   <span style="color:#ae81ff">0</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.35781871|  PASSED  
+        diehard_runs|   <span style="color:#ae81ff">0</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.07426726|  PASSED  
+<span style="color:#75715e"># The file file_input was rewound 125 times</span>
+       diehard_craps|   <span style="color:#ae81ff">0</span>|    <span style="color:#ae81ff">200000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00004611|   WEAK   
+       diehard_craps|   <span style="color:#ae81ff">0</span>|    <span style="color:#ae81ff">200000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.44395534|  PASSED  
+<span style="color:#75715e"># The file file_input was rewound 325 times</span>
+ marsaglia_tsang_gcd|   <span style="color:#ae81ff">0</span>|  <span style="color:#ae81ff">10000000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+ marsaglia_tsang_gcd|   <span style="color:#ae81ff">0</span>|  <span style="color:#ae81ff">10000000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 326 times</span>
+         sts_monobit|   <span style="color:#ae81ff">1</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.34446776|  PASSED  
+<span style="color:#75715e"># The file file_input was rewound 327 times</span>
+            sts_runs|   <span style="color:#ae81ff">2</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.34889544|  PASSED  
+<span style="color:#75715e"># The file file_input was rewound 330 times</span>
+         rgb_bitdist|   <span style="color:#ae81ff">1</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 334 times</span>
+         rgb_bitdist|   <span style="color:#ae81ff">2</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 340 times</span>
+         rgb_bitdist|   <span style="color:#ae81ff">3</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 348 times</span>
+         rgb_bitdist|   <span style="color:#ae81ff">4</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 358 times</span>
+         rgb_bitdist|   <span style="color:#ae81ff">5</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 370 times</span>
+         rgb_bitdist|   <span style="color:#ae81ff">6</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 384 times</span>
+         rgb_bitdist|   <span style="color:#ae81ff">7</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 400 times</span>
+         rgb_bitdist|   <span style="color:#ae81ff">8</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 418 times</span>
+         rgb_bitdist|   <span style="color:#ae81ff">9</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00005693|   WEAK   
+<span style="color:#75715e"># The file file_input was rewound 438 times</span>
+         rgb_bitdist|  <span style="color:#ae81ff">10</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.53597412|  PASSED  
+<span style="color:#75715e"># The file file_input was rewound 460 times</span>
+         rgb_bitdist|  <span style="color:#ae81ff">11</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.89275780|  PASSED  
+<span style="color:#75715e"># The file file_input was rewound 484 times</span>
+         rgb_bitdist|  <span style="color:#ae81ff">12</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.01596294|  PASSED  
+<span style="color:#75715e"># The file file_input was rewound 486 times</span>
+rgb_minimum_distance|   <span style="color:#ae81ff">2</span>|     <span style="color:#ae81ff">10000</span>|    <span style="color:#ae81ff">1000</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 489 times</span>
+rgb_minimum_distance|   <span style="color:#ae81ff">3</span>|     <span style="color:#ae81ff">10000</span>|    <span style="color:#ae81ff">1000</span>|<span style="color:#ae81ff">0</span>.00020551|   WEAK   
+<span style="color:#75715e"># The file file_input was rewound 493 times</span>
+rgb_minimum_distance|   <span style="color:#ae81ff">4</span>|     <span style="color:#ae81ff">10000</span>|    <span style="color:#ae81ff">1000</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 498 times</span>
+rgb_minimum_distance|   <span style="color:#ae81ff">5</span>|     <span style="color:#ae81ff">10000</span>|    <span style="color:#ae81ff">1000</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 500 times</span>
+    rgb_permutations|   <span style="color:#ae81ff">2</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.27181166|  PASSED  
+<span style="color:#75715e"># The file file_input was rewound 503 times</span>
+    rgb_permutations|   <span style="color:#ae81ff">3</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.67601712|  PASSED  
+<span style="color:#75715e"># The file file_input was rewound 507 times</span>
+    rgb_permutations|   <span style="color:#ae81ff">4</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.05999982|  PASSED  
+<span style="color:#75715e"># The file file_input was rewound 512 times</span>
+    rgb_permutations|   <span style="color:#ae81ff">5</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.16764489|  PASSED  
+<span style="color:#75715e"># The file file_input was rewound 522 times</span>
+      rgb_lagged_sum|   <span style="color:#ae81ff">0</span>|   <span style="color:#ae81ff">1000000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00003809|   WEAK   
+<span style="color:#75715e"># The file file_input was rewound 542 times</span>
+      rgb_lagged_sum|   <span style="color:#ae81ff">1</span>|   <span style="color:#ae81ff">1000000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 572 times</span>
+      rgb_lagged_sum|   <span style="color:#ae81ff">2</span>|   <span style="color:#ae81ff">1000000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000015|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 612 times</span>
+      rgb_lagged_sum|   <span style="color:#ae81ff">3</span>|   <span style="color:#ae81ff">1000000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 662 times</span>
+      rgb_lagged_sum|   <span style="color:#ae81ff">4</span>|   <span style="color:#ae81ff">1000000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED</code></pre></td></tr></table>
+</div>
+</div>
+
+<h1 id="randu">RANDU</h1>
+
+<p><div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-racket" data-lang="racket"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-racket" data-lang="racket"><span style="color:#f92672">#lang </span>racket
+
+(<span style="color:#66d9ef">define</span> next <span style="color:#ae81ff">1090815429</span>)
+
+(<span style="color:#66d9ef">define</span> (randu)
+  (<span style="color:#66d9ef">set!</span> next (modulo (* next <span style="color:#ae81ff">65539</span>) (expt <span style="color:#ae81ff">2</span> <span style="color:#ae81ff">31</span>)))
+  next)</code></pre></td></tr></table>
+</div>
+</div>
+</br>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 10
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 11
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 12
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 13
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 14
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 15
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 16
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 17
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 18
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 19
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 20
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 21
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 22
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 23
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 24
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 25
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 26
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 27
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 28
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 29
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 30
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 31
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 32
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 33
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 34
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 35
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 36
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 37
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 38
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 39
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 40
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 41
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 42
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 43
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 44
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 45
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 46
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 47
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 48
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 49
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 50
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 51
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 52
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 53
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 54
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 55
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 56
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 57
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 58
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 59
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 60
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 61
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 62
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 63
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 64
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 65
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 66
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 67
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 68
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 69
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 70
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 71
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 72
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 73
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 74
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 75
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 76
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 77
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 78
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 79
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 80
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 81
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 82
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 83
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 84
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 85
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 86
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 87
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 88
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 89
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 90
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 91
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 92
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 93
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 94
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 95
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 96
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 97
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 98
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 99
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">100
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">101
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#75715e">#=============================================================================#</span>
+<span style="color:#75715e">#            dieharder version 3.31.1 Copyright 2003 Robert G. Brown          #</span>
+<span style="color:#75715e">#=============================================================================#</span>
+   rng_name    |           filename             |rands/second|
+     file_input|                     randu.input|  <span style="color:#ae81ff">7</span>.94e+06  |
+<span style="color:#75715e">#=============================================================================#</span>
+        test_name   |ntup| tsamples |psamples|  p-value |Assessment
+<span style="color:#75715e">#=============================================================================#</span>
+<span style="color:#75715e"># The file file_input was rewound 1 times</span>
+   diehard_birthdays|   <span style="color:#ae81ff">0</span>|       <span style="color:#ae81ff">100</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000053|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 11 times</span>
+      diehard_operm5|   <span style="color:#ae81ff">0</span>|   <span style="color:#ae81ff">1000000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 24 times</span>
+  diehard_rank_32x32|   <span style="color:#ae81ff">0</span>|     <span style="color:#ae81ff">40000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 30 times</span>
+    diehard_rank_6x8|   <span style="color:#ae81ff">0</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 32 times</span>
+   diehard_bitstream|   <span style="color:#ae81ff">0</span>|   <span style="color:#ae81ff">2097152</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 53 times</span>
+        diehard_opso|   <span style="color:#ae81ff">0</span>|   <span style="color:#ae81ff">2097152</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 67 times</span>
+        diehard_oqso|   <span style="color:#ae81ff">0</span>|   <span style="color:#ae81ff">2097152</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 74 times</span>
+         diehard_dna|   <span style="color:#ae81ff">0</span>|   <span style="color:#ae81ff">2097152</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 74 times</span>
+diehard_count_1s_str|   <span style="color:#ae81ff">0</span>|    <span style="color:#ae81ff">256000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 87 times</span>
+diehard_count_1s_byt|   <span style="color:#ae81ff">0</span>|    <span style="color:#ae81ff">256000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 87 times</span>
+ diehard_parking_lot|   <span style="color:#ae81ff">0</span>|     <span style="color:#ae81ff">12000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 88 times</span>
+    diehard_2dsphere|   <span style="color:#ae81ff">2</span>|      <span style="color:#ae81ff">8000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 88 times</span>
+    diehard_3dsphere|   <span style="color:#ae81ff">3</span>|      <span style="color:#ae81ff">4000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 101 times</span>
+     diehard_squeeze|   <span style="color:#ae81ff">0</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 101 times</span>
+        diehard_sums|   <span style="color:#ae81ff">0</span>|       <span style="color:#ae81ff">100</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 102 times</span>
+        diehard_runs|   <span style="color:#ae81ff">0</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00055174|   WEAK   
+        diehard_runs|   <span style="color:#ae81ff">0</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00915037|  PASSED  
+<span style="color:#75715e"># The file file_input was rewound 118 times</span>
+       diehard_craps|   <span style="color:#ae81ff">0</span>|    <span style="color:#ae81ff">200000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+       diehard_craps|   <span style="color:#ae81ff">0</span>|    <span style="color:#ae81ff">200000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 318 times</span>
+ marsaglia_tsang_gcd|   <span style="color:#ae81ff">0</span>|  <span style="color:#ae81ff">10000000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+ marsaglia_tsang_gcd|   <span style="color:#ae81ff">0</span>|  <span style="color:#ae81ff">10000000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 319 times</span>
+         sts_monobit|   <span style="color:#ae81ff">1</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 320 times</span>
+            sts_runs|   <span style="color:#ae81ff">2</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 323 times</span>
+         rgb_bitdist|   <span style="color:#ae81ff">1</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 327 times</span>
+         rgb_bitdist|   <span style="color:#ae81ff">2</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 333 times</span>
+         rgb_bitdist|   <span style="color:#ae81ff">3</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 341 times</span>
+         rgb_bitdist|   <span style="color:#ae81ff">4</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 351 times</span>
+         rgb_bitdist|   <span style="color:#ae81ff">5</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 363 times</span>
+         rgb_bitdist|   <span style="color:#ae81ff">6</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 377 times</span>
+         rgb_bitdist|   <span style="color:#ae81ff">7</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 393 times</span>
+         rgb_bitdist|   <span style="color:#ae81ff">8</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 411 times</span>
+         rgb_bitdist|   <span style="color:#ae81ff">9</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 431 times</span>
+         rgb_bitdist|  <span style="color:#ae81ff">10</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 453 times</span>
+         rgb_bitdist|  <span style="color:#ae81ff">11</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 477 times</span>
+         rgb_bitdist|  <span style="color:#ae81ff">12</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 479 times</span>
+rgb_minimum_distance|   <span style="color:#ae81ff">2</span>|     <span style="color:#ae81ff">10000</span>|    <span style="color:#ae81ff">1000</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 482 times</span>
+rgb_minimum_distance|   <span style="color:#ae81ff">3</span>|     <span style="color:#ae81ff">10000</span>|    <span style="color:#ae81ff">1000</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 486 times</span>
+rgb_minimum_distance|   <span style="color:#ae81ff">4</span>|     <span style="color:#ae81ff">10000</span>|    <span style="color:#ae81ff">1000</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 491 times</span>
+rgb_minimum_distance|   <span style="color:#ae81ff">5</span>|     <span style="color:#ae81ff">10000</span>|    <span style="color:#ae81ff">1000</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 493 times</span>
+    rgb_permutations|   <span style="color:#ae81ff">2</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.14813789|  PASSED  
+<span style="color:#75715e"># The file file_input was rewound 496 times</span>
+    rgb_permutations|   <span style="color:#ae81ff">3</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.49241270|  PASSED  
+<span style="color:#75715e"># The file file_input was rewound 500 times</span>
+    rgb_permutations|   <span style="color:#ae81ff">4</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00108537|   WEAK   
+<span style="color:#75715e"># The file file_input was rewound 505 times</span>
+    rgb_permutations|   <span style="color:#ae81ff">5</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 515 times</span>
+      rgb_lagged_sum|   <span style="color:#ae81ff">0</span>|   <span style="color:#ae81ff">1000000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 535 times</span>
+      rgb_lagged_sum|   <span style="color:#ae81ff">1</span>|   <span style="color:#ae81ff">1000000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 565 times</span>
+      rgb_lagged_sum|   <span style="color:#ae81ff">2</span>|   <span style="color:#ae81ff">1000000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 605 times</span>
+      rgb_lagged_sum|   <span style="color:#ae81ff">3</span>|   <span style="color:#ae81ff">1000000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 655 times</span>
+      rgb_lagged_sum|   <span style="color:#ae81ff">4</span>|   <span style="color:#ae81ff">1000000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  </code></pre></td></tr></table>
+</div>
+</div></p>
+
+<h1 id="algorithm-k-1">Algorithm-k</h1>
+
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 10
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 11
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 12
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 13
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 14
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 15
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 16
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 17
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 18
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 19
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 20
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 21
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 22
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 23
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 24
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 25
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 26
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 27
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 28
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 29
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 30
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 31
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 32
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 33
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 34
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 35
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 36
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 37
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 38
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 39
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 40
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 41
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 42
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 43
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 44
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 45
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 46
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 47
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 48
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 49
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 50
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 51
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 52
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 53
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 54
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 55
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 56
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 57
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 58
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 59
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 60
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 61
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 62
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 63
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 64
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 65
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 66
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 67
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 68
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 69
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 70
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 71
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 72
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 73
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 74
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 75
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 76
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 77
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 78
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 79
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 80
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 81
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 82
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 83
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 84
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 85
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 86
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 87
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 88
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 89
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 90
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 91
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 92
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 93
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 94
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 95
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 96
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 97
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 98
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 99
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">100
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">101
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#75715e">#=============================================================================#</span>
+<span style="color:#75715e">#            dieharder version 3.31.1 Copyright 2003 Robert G. Brown          #</span>
+<span style="color:#75715e">#=============================================================================#</span>
+   rng_name    |           filename             |rands/second|
+     file_input|                    backup.input|  <span style="color:#ae81ff">7</span>.99e+06  |
+<span style="color:#75715e">#=============================================================================#</span>
+        test_name   |ntup| tsamples |psamples|  p-value |Assessment
+<span style="color:#75715e">#=============================================================================#</span>
+<span style="color:#75715e"># The file file_input was rewound 1 times</span>
+   diehard_birthdays|   <span style="color:#ae81ff">0</span>|       <span style="color:#ae81ff">100</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 11 times</span>
+      diehard_operm5|   <span style="color:#ae81ff">0</span>|   <span style="color:#ae81ff">1000000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 24 times</span>
+  diehard_rank_32x32|   <span style="color:#ae81ff">0</span>|     <span style="color:#ae81ff">40000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 30 times</span>
+    diehard_rank_6x8|   <span style="color:#ae81ff">0</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 32 times</span>
+   diehard_bitstream|   <span style="color:#ae81ff">0</span>|   <span style="color:#ae81ff">2097152</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 53 times</span>
+        diehard_opso|   <span style="color:#ae81ff">0</span>|   <span style="color:#ae81ff">2097152</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 67 times</span>
+        diehard_oqso|   <span style="color:#ae81ff">0</span>|   <span style="color:#ae81ff">2097152</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 74 times</span>
+         diehard_dna|   <span style="color:#ae81ff">0</span>|   <span style="color:#ae81ff">2097152</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 74 times</span>
+diehard_count_1s_str|   <span style="color:#ae81ff">0</span>|    <span style="color:#ae81ff">256000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 87 times</span>
+diehard_count_1s_byt|   <span style="color:#ae81ff">0</span>|    <span style="color:#ae81ff">256000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 87 times</span>
+ diehard_parking_lot|   <span style="color:#ae81ff">0</span>|     <span style="color:#ae81ff">12000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 88 times</span>
+    diehard_2dsphere|   <span style="color:#ae81ff">2</span>|      <span style="color:#ae81ff">8000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 88 times</span>
+    diehard_3dsphere|   <span style="color:#ae81ff">3</span>|      <span style="color:#ae81ff">4000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 108 times</span>
+     diehard_squeeze|   <span style="color:#ae81ff">0</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 108 times</span>
+        diehard_sums|   <span style="color:#ae81ff">0</span>|       <span style="color:#ae81ff">100</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000018|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 109 times</span>
+        diehard_runs|   <span style="color:#ae81ff">0</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+        diehard_runs|   <span style="color:#ae81ff">0</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 123 times</span>
+       diehard_craps|   <span style="color:#ae81ff">0</span>|    <span style="color:#ae81ff">200000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+       diehard_craps|   <span style="color:#ae81ff">0</span>|    <span style="color:#ae81ff">200000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 323 times</span>
+ marsaglia_tsang_gcd|   <span style="color:#ae81ff">0</span>|  <span style="color:#ae81ff">10000000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+ marsaglia_tsang_gcd|   <span style="color:#ae81ff">0</span>|  <span style="color:#ae81ff">10000000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 324 times</span>
+         sts_monobit|   <span style="color:#ae81ff">1</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 325 times</span>
+            sts_runs|   <span style="color:#ae81ff">2</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 328 times</span>
+         rgb_bitdist|   <span style="color:#ae81ff">1</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 332 times</span>
+         rgb_bitdist|   <span style="color:#ae81ff">2</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 338 times</span>
+         rgb_bitdist|   <span style="color:#ae81ff">3</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 346 times</span>
+         rgb_bitdist|   <span style="color:#ae81ff">4</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 356 times</span>
+         rgb_bitdist|   <span style="color:#ae81ff">5</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 368 times</span>
+         rgb_bitdist|   <span style="color:#ae81ff">6</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 382 times</span>
+         rgb_bitdist|   <span style="color:#ae81ff">7</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 398 times</span>
+         rgb_bitdist|   <span style="color:#ae81ff">8</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 416 times</span>
+         rgb_bitdist|   <span style="color:#ae81ff">9</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 436 times</span>
+         rgb_bitdist|  <span style="color:#ae81ff">10</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 458 times</span>
+         rgb_bitdist|  <span style="color:#ae81ff">11</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 482 times</span>
+         rgb_bitdist|  <span style="color:#ae81ff">12</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 484 times</span>
+rgb_minimum_distance|   <span style="color:#ae81ff">2</span>|     <span style="color:#ae81ff">10000</span>|    <span style="color:#ae81ff">1000</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 487 times</span>
+rgb_minimum_distance|   <span style="color:#ae81ff">3</span>|     <span style="color:#ae81ff">10000</span>|    <span style="color:#ae81ff">1000</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 491 times</span>
+rgb_minimum_distance|   <span style="color:#ae81ff">4</span>|     <span style="color:#ae81ff">10000</span>|    <span style="color:#ae81ff">1000</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 496 times</span>
+rgb_minimum_distance|   <span style="color:#ae81ff">5</span>|     <span style="color:#ae81ff">10000</span>|    <span style="color:#ae81ff">1000</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 498 times</span>
+    rgb_permutations|   <span style="color:#ae81ff">2</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 501 times</span>
+    rgb_permutations|   <span style="color:#ae81ff">3</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 505 times</span>
+    rgb_permutations|   <span style="color:#ae81ff">4</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 510 times</span>
+    rgb_permutations|   <span style="color:#ae81ff">5</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 520 times</span>
+      rgb_lagged_sum|   <span style="color:#ae81ff">0</span>|   <span style="color:#ae81ff">1000000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 540 times</span>
+      rgb_lagged_sum|   <span style="color:#ae81ff">1</span>|   <span style="color:#ae81ff">1000000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 570 times</span>
+      rgb_lagged_sum|   <span style="color:#ae81ff">2</span>|   <span style="color:#ae81ff">1000000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 610 times</span>
+      rgb_lagged_sum|   <span style="color:#ae81ff">3</span>|   <span style="color:#ae81ff">1000000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 660 times</span>
+      rgb_lagged_sum|   <span style="color:#ae81ff">4</span>|   <span style="color:#ae81ff">1000000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED</code></pre></td></tr></table>
+</div>
+</div>
+
+<p>There&rsquo;s already quite a bit to digest here so I didn&rsquo;t include all of the test results as the first few are enough to illustrate the differences between the three algorithms. One thing you will notice is that the standard LCG used actually failed a lot of tests. After doing a little testing and some digging it seems that dieharder will also fail these tests with its own generator with the same amount of numbers. In fact, you can really only expect good results with about 10 million or more numbers, but because diehard runs on a single cpu this would have taken a considerable amount of time to run. The comparison is really what we&rsquo;re after and from the results it&rsquo;s clear that algorithm-k is not suitable, nor is RANDU much better.</p>
     </div>
     
     <footer>
@@ -560,7 +1211,7 @@ article header img {
   
     and tagged <a href="/tags/knuth/">knuth</a>, <a href="/tags/taocp/">taocp</a> and <a href="/tags/vol2/">vol2</a>
   
-  using <span itemprop="wordCount">1623</span> words.
+  using <span itemprop="wordCount">4170</span> words.
 </p>
 
       
