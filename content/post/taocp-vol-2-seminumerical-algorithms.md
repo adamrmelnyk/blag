@@ -1,6 +1,6 @@
 ---
-title: "Seminumerical Algorithms"
-date: 2019-04-03T16:27:33-05:00
+title: "Random Numbers"
+date: 2019-05-08T15:30:34-05:00
 description: "Working through Volume 2 of TAOCP"
 draft: false
 toc: false
@@ -9,22 +9,15 @@ tags: ["taocp", "knuth", "vol2"]
 images: []
 ---
 
-An overview of the second volume of The art of Computer Programming.
+Random numbers from the second volume of TAOCP and experimentation with PRNGs.
+
+It's been about nine months since I finished reading the first volume. Though it's likely not a surprise to many, it's one of the more daunting reads, but is surprisingly entertaining and well written. [My summary of the experience reading through the first volume](/post/the-art-of-computer-programming/) was more or less my thoughts on the book, but didn't offer a lot in terms of the content that was covered or any interesting material that was gleamed from its pages; perhaps I'll remedy that when I have time for a second read through. Admittedly, there was quite a bit of content and I don't think I wanted to post a section by section summary of the volume, especially when you consider that much of the first volume was devoted to stacks, trees, linked lists, and other data structures, something most software engineers and programmers are familiar with. Luckily the second volume is far less familiar territory (at least to me) and may be more interesting to write about.
 
 <!--more-->
 
-# Prelude to the Second Volume
-
-It's been about eight months (As of April) since I finished reading the first volume. Though it's likely not a surprise to many, I'll admit that it was one of the more challenging reads as well as being surprisingly entertaining and well written. [My summary of the experience reading through the first volume](/post/the-art-of-computer-programming/) was more or less my thoughts on the book, but didn't offer a lot in terms of the content that was covered or any interesting material that was gleamed from its pages; perhaps I'll remedy that when I have time for a second read through. Admittedly, there was quite a bit of content and I don't think I wanted to post a section by section summary of the volume, especially when you consider that much of the first volume was devoted to stacks, trees, linked lists, and other data structures, something most software engineers and programmers are familiar with. Luckily the second volume is far less familiar territory (at least to me) and may be more interesting to write about.
-
-## Seminumerical Algorithms
-
-* What does seminumerical mean (the borderline of numeric and symbolic)
-  * Numeric vs symbolic calculations
-
 ### Not So Random Number Generators
 
-Early in the volume Knuth shows how difficult it is to create a sufficiently random pseudorandom number generator. Simply adding a number of complicated steps will may not yield truly random numbers. Knuth includes the following algorithm <b><i>K</i></b> to illustrate this point. You can find an excerpt of the algorithm [here](http://www.informit.com/articles/article.aspx?p=2221790).
+Early in the volume Knuth shows how difficult it is to create a sufficiently random pseudorandom number generator. Simply adding a number of complicated steps will may not yield truly random numbers. Knuth includes the following algorithm, <b><i>Algorithm-K</i></b>, to illustrate this point. You can find an excerpt of the algorithm [here](http://www.informit.com/articles/article.aspx?p=2221790).
 
 #### Algorithm K
 
@@ -126,7 +119,7 @@ The first two examples produce what one might expect, but the third produces its
 
 <p style="text-align: center;"><b><i>"Random numbers should not be generated with a method chosen at random"</b></i></p>
 
-Besides coincidentally degenerates to a seemingly random number, Algorithm K has a number of other downsides, it's difficult to implement and because it iterates a certain amount of times depending on the input, could take a relatively long time to produce a single random number. Somewhere inside that complexity there is a reason why the generator degenerates to 6065038420. In order to be usable we need to be able to easily prove that won't happen. The key take away from that is that we need this to be fast and simple.
+Besides coincidentally degenerating to a seemingly random number, Algorithm K has a number of other downsides, it's difficult to implement and because it iterates a certain amount of times depending on the input, takes a relatively long time to produce a single random number. Somewhere inside that complexity there is a reason why the generator degenerates to 6065038420. In order to be usable we need to be able to easily prove that won't happen. The key take away from that is that we need this to be fast and simple.
 
 ### Linear Congruential Generator
 
@@ -167,11 +160,10 @@ It's important to note here that the numbers used above were not chosen by rando
 
 * our m value controls the "period" of the random number generator which is how long it takes for it to start repeating. ie if we should choose something such as 2, we'll end up producing: 0,1,0,1,0... so choosing a larger number is ideal.
 * m should also be a number that will make division quick since it is a comparatively slow operation. Knuth suggests that you use the word size of the computer ie. 2<sup>64</sup> or use the largest prime smaller than the word size.
-* Choosing the a value is more complicated than m but equally important as poor choices for a have historically resulted in poor generators. The rules are dependant on the values of c, and m but are too long to include and explain here. [The wiki entry](https://en.wikipedia.org/wiki/Linear_congruential_generator) contains a more detailed explanation of the choices when it comes to choosing a.
+* if m is a power of 2, pick a so that a % 8 = 5. This is to ensure that we produce all m possible values and gives our generator "high potency". There is a proof for this but it's far too long to include. In general it would seem that choosing the a value is more complicated than m but equally important as poor choices for a have historically resulted in poor generators. The rules are dependant on the values of m, and c but are too long to include and explain here. [The wiki entry](https://en.wikipedia.org/wiki/Linear_congruential_generator) contains a more detailed explanation of the choices when it comes to choosing a.
 
 ### Why not both?
 
-<!-- TODO: include the math.random which combines two but doesn't really work -->
 The LCG is just one form of PRNG such as [xorshift](https://en.wikipedia.org/wiki/Xorshift), [WELL](https://en.wikipedia.org/wiki/Well_equidistributed_long-period_linear), or the [Mersenne Twister](https://en.wikipedia.org/wiki/Mersenne_Twister) so, if having one random number generator produces something fairly random, would two random number generators produce something even more random? As it turns out yes, but only if applied properly otherwise you could cause issues [like the one seen in Javascripts Math.random() library](https://medium.com/@betable/tifu-by-using-math-random-f1c308c4fd9d). If a person is unconvinced that a random number generator is not sufficiently random Putting two generators together should in Knuth words "convince all but the most hardened of skeptics". One method involves taking two generators and shuffling them together, it's only weakness being that it does not change the number themselves, only the sequence so this may still fail the [Birthday spacings](https://www.cs.indiana.edu/~kapadia/project2/node21.html) test. Knuth suggest instead that we use an even simpler method by combining results from the same generator, producing 500 or so results, choosing the first 55, then throwing the rest away and repeating the process.
 
 ## Statistical Tests Or How we can prove what's <i>really</i> random
@@ -184,7 +176,7 @@ To thoroughly evaluate a random number generator he suggests running the followi
 * Serial Test
 * Gap Test
 * Poker Test
-* Coupon Collectors Test: How many times do you need to run until you have one of each of the possible values.
+* Coupon Collectors Test
 * Permutation Test
 * Runs test
 * Maximum of t test
@@ -195,12 +187,9 @@ To thoroughly evaluate a random number generator he suggests running the followi
 
 Then analyzing them using the [chi-squared test](https://en.wikipedia.org/wiki/Chi-squared_test) and the [Kolmogorov–Smirnov test](https://en.wikipedia.org/wiki/Kolmogorov%E2%80%93Smirnov_test) to analyze the results of the tests.
 
-<!-- TODO: Add a little more briefly explaining each test -->
-<!-- TODO: recheck to see if I'm correct abut how these tests are being applied -->
-
 ### Spectral test
 
-The most important of all the tests is the Spectral test. This test is make or break for random number generators. All good PRNG's will pass this test, and more importantly, bad PRNG's will fail.
+The most important of all the tests is the Spectral test. This test is make or break for random number generators. All good PRNG's will pass this test, and more importantly, bad PRNG's will fail. There are various examples of this online but one of the more interesting that I came across was of the RANDU generator and why it fails the spectral test can be seen [here](https://www.youtube.com/watch?v=7wVk_XsxyNk)
 
 ### Why So Many Tests?
 
@@ -317,7 +306,6 @@ rgb_minimum_distance|   5|     10000|    1000|0.00000000|  FAILED
 {{< / highlight>}}
 
 # RANDU
-
 {{< highlight racket "linenos=table,linenostart=1">}}
 #lang racket
 
@@ -486,6 +474,7 @@ diehard_count_1s_byt|   0|    256000|     100|0.00000000|  FAILED
 # The file file_input was rewound 324 times
          sts_monobit|   1|    100000|     100|0.00000000|  FAILED  
 # The file file_input was rewound 325 times
+      diehard_operm5|   0|   1000000|     100|0.34393548|  PASSED  
             sts_runs|   2|    100000|     100|0.00000000|  FAILED  
 # The file file_input was rewound 328 times
          rgb_bitdist|   1|    100000|     100|0.00000000|  FAILED  
@@ -539,4 +528,117 @@ rgb_minimum_distance|   5|     10000|    1000|0.00000000|  FAILED
       rgb_lagged_sum|   4|   1000000|     100|0.00000000|  FAILED
 {{</ highlight >}}
 
-There's already quite a bit to digest here so I didn't include all of the test results as the first few are enough to illustrate the differences between the three algorithms. One thing you will notice is that the standard LCG used actually failed a lot of tests. After doing a little testing and some digging it seems that dieharder will also fail these tests with its own generator with the same amount of numbers. In fact, you can really only expect good results with about 10 million or more numbers, but because diehard runs on a single cpu this would have taken a considerable amount of time to run. The comparison is really what we're after and from the results it's clear that algorithm-k is not suitable, nor is RANDU much better.
+There's already quite a bit to digest here so I didn't include all of the test results as the first few are enough to illustrate the differences between the three algorithms. One thing you will notice is that the standard LCG used actually failed a lot of tests. After doing a little testing and some digging it seems that dieharder will also fail these tests with its own generator with the same amount of numbers. In fact, you can really only expect good results with about 10 million or more numbers, but because diehard runs on a single cpu this would have taken a considerable amount of time to run. The comparison is really what we're after and from the results it's clear that algorithm-k is not suitable, nor is RANDU much better. I want to be able to see what kind of results I would see from running a much larger set so I ran one last run with 100,000,000 which shows that the lcg faired a little bit better.
+
+{{< highlight shell >}}
+#=============================================================================#
+#            dieharder version 3.31.1 Copyright 2003 Robert G. Brown          #
+#=============================================================================#
+   rng_name    |           filename             |rands/second|
+     file_input|                   example.input|  6.16e+06  |
+#=============================================================================#
+        test_name   |ntup| tsamples |psamples|  p-value |Assessment
+#=============================================================================#
+   diehard_birthdays|   0|       100|     100|0.50369944|  PASSED  
+# The file file_input was rewound 1 times
+      diehard_operm5|   0|   1000000|     100|0.34393548|  PASSED  
+# The file file_input was rewound 2 times
+  diehard_rank_32x32|   0|     40000|     100|0.76284541|  PASSED  
+# The file file_input was rewound 3 times
+    diehard_rank_6x8|   0|    100000|     100|0.00000000|  FAILED  
+# The file file_input was rewound 3 times
+   diehard_bitstream|   0|   2097152|     100|0.00000000|  FAILED  
+# The file file_input was rewound 5 times
+        diehard_opso|   0|   2097152|     100|0.00000000|  FAILED  
+# The file file_input was rewound 6 times
+        diehard_oqso|   0|   2097152|     100|0.00000000|  FAILED  
+# The file file_input was rewound 7 times
+         diehard_dna|   0|   2097152|     100|0.00000000|  FAILED  
+# The file file_input was rewound 7 times
+diehard_count_1s_str|   0|    256000|     100|0.00000000|  FAILED  
+# The file file_input was rewound 8 times
+diehard_count_1s_byt|   0|    256000|     100|0.00000000|  FAILED  
+# The file file_input was rewound 8 times
+ diehard_parking_lot|   0|     12000|     100|0.82658516|  PASSED  
+# The file file_input was rewound 8 times
+    diehard_2dsphere|   2|      8000|     100|0.48942059|  PASSED  
+# The file file_input was rewound 8 times
+    diehard_3dsphere|   3|      4000|     100|0.95108230|  PASSED  
+# The file file_input was rewound 11 times
+     diehard_squeeze|   0|    100000|     100|0.38225241|  PASSED  
+# The file file_input was rewound 11 times
+        diehard_sums|   0|       100|     100|0.07389024|  PASSED  
+# The file file_input was rewound 11 times
+        diehard_runs|   0|    100000|     100|0.69622840|  PASSED  
+        diehard_runs|   0|    100000|     100|0.74440767|  PASSED  
+# The file file_input was rewound 12 times
+       diehard_craps|   0|    200000|     100|0.34755313|  PASSED  
+       diehard_craps|   0|    200000|     100|0.93778967|  PASSED  
+# The file file_input was rewound 32 times
+ marsaglia_tsang_gcd|   0|  10000000|     100|0.00000000|  FAILED  
+ marsaglia_tsang_gcd|   0|  10000000|     100|0.00000000|  FAILED  
+# The file file_input was rewound 32 times
+         sts_monobit|   1|    100000|     100|0.13113454|  PASSED  
+# The file file_input was rewound 32 times
+            sts_runs|   2|    100000|     100|0.22502954|  PASSED  
+# The file file_input was rewound 33 times
+         rgb_bitdist|   1|    100000|     100|0.00000000|  FAILED  
+# The file file_input was rewound 33 times
+         rgb_bitdist|   2|    100000|     100|0.00000000|  FAILED  
+# The file file_input was rewound 34 times
+         rgb_bitdist|   3|    100000|     100|0.00000000|  FAILED  
+# The file file_input was rewound 34 times
+         rgb_bitdist|   4|    100000|     100|0.00000000|  FAILED  
+# The file file_input was rewound 35 times
+         rgb_bitdist|   5|    100000|     100|0.00000000|  FAILED  
+# The file file_input was rewound 37 times
+         rgb_bitdist|   6|    100000|     100|0.00000000|  FAILED  
+# The file file_input was rewound 38 times
+         rgb_bitdist|   7|    100000|     100|0.00000000|  FAILED  
+^[[1;5D# The file file_input was rewound 40 times
+         rgb_bitdist|   8|    100000|     100|0.00000000|  FAILED  
+# The file file_input was rewound 41 times
+         rgb_bitdist|   9|    100000|     100|0.00048263|   WEAK   
+# The file file_input was rewound 43 times
+         rgb_bitdist|  10|    100000|     100|0.00000207|   WEAK   
+# The file file_input was rewound 46 times
+         rgb_bitdist|  11|    100000|     100|0.11712560|  PASSED  
+# The file file_input was rewound 48 times
+         rgb_bitdist|  12|    100000|     100|0.00070481|   WEAK   
+# The file file_input was rewound 48 times
+rgb_minimum_distance|   2|     10000|    1000|0.00000000|  FAILED  
+# The file file_input was rewound 48 times
+rgb_minimum_distance|   3|     10000|    1000|0.00073621|   WEAK   
+# The file file_input was rewound 49 times
+rgb_minimum_distance|   4|     10000|    1000|0.00000000|  FAILED  
+# The file file_input was rewound 49 times
+rgb_minimum_distance|   5|     10000|    1000|0.00000148|   WEAK   
+# The file file_input was rewound 50 times
+    rgb_permutations|   2|    100000|     100|0.64531526|  PASSED  
+# The file file_input was rewound 50 times
+    rgb_permutations|   3|    100000|     100|0.12491885|  PASSED  
+# The file file_input was rewound 50 times
+    rgb_permutations|   4|    100000|     100|0.29544943|  PASSED  
+# The file file_input was rewound 51 times
+    rgb_permutations|   5|    100000|     100|0.57519225|  PASSED  
+# The file file_input was rewound 52 times
+      rgb_lagged_sum|   0|   1000000|     100|0.42557400|  PASSED  
+# The file file_input was rewound 54 times
+      rgb_lagged_sum|   1|   1000000|     100|0.94028320|  PASSED  
+# The file file_input was rewound 57 times
+      rgb_lagged_sum|   2|   1000000|     100|0.34329913|  PASSED  
+# The file file_input was rewound 61 times
+      rgb_lagged_sum|   3|   1000000|     100|0.02887377|  PASSED  
+# The file file_input was rewound 66 times
+      rgb_lagged_sum|   4|   1000000|     100|0.02328575|  PASSED  
+# The file file_input was rewound 72 times
+      rgb_lagged_sum|   5|   1000000|     100|0.10863760|  PASSED  
+{{</ highlight >}}
+
+Here we can see the larger set actually did quite a bit better, passing where it was either weak or had even failed before. It's not perfect of course, and certainly not suitable for cryptographic use but we can see that the generator works well enough. I would have liked to have run more tests and tried a few different random number generators, but testing with dieharder was taking quite a long time on my underpowered laptop CPU. Of course no generator is going to pass every test as Knuth states: <i>"A truly random sequence will exhibit local non-randomness"</i>. Proving that a generator is suitable would require many more multiple runs on larger data sets. Only then might say that the PRNG is satisfiably random.
+
+## Not So Random Musings
+
+In a set of infinite numbers we might expect to see 1,000,000 7's or 8's in a row at some point. Maybe the numbers, viewed in a single line would map to ascii values that could print the works of Shakespeare. It may not be desirable for applications, but it would be consistent with a truly random number generator. Though the math was certainly beyond me, the first half of volume 2 was incredibly interesting. If anything it's made me question how random numbers are generated a little more, forcing me to dig through the random number generators that I have trusted. A simple mistake could result in unexpected deterministic behaviour. Though this is unlikely to be a problem in my day to day life as a web developer, it will still make me think the next time I need to rely on random behaviour. Further fueling my paranoia, Knuth gives some great advice to summarise the learnings of the chapter:
+
+<p style="text-align: center;"><b><i>"Look at the subroutine library of each computer installation in your organization, and replace the random number generators by good ones. Try to avoid being too shocked at what you find."</i></b></p>

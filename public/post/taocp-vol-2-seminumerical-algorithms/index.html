@@ -4,7 +4,7 @@
     <meta name="generator" content="Hugo 0.55.5" />
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Seminumerical Algorithms | Adam&#39;s Blag</title>
+    <title>Random Numbers | Adam&#39;s Blag</title>
     <meta name="description" content="Working through Volume 2 of TAOCP">
     <meta name="keywords" content="taocp, knuth, vol2">
     
@@ -16,17 +16,17 @@
   <meta name="author" content="">
 
 
-    <meta property="og:title" content="Seminumerical Algorithms" />
+    <meta property="og:title" content="Random Numbers" />
 <meta property="og:description" content="Working through Volume 2 of TAOCP" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://arm64.ca/post/taocp-vol-2-seminumerical-algorithms/" />
-<meta property="article:published_time" content="2019-04-03T16:27:33-05:00"/>
-<meta property="article:modified_time" content="2019-04-03T16:27:33-05:00"/>
+<meta property="article:published_time" content="2019-05-08T15:30:34-05:00"/>
+<meta property="article:modified_time" content="2019-05-08T15:30:34-05:00"/>
 
     <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:image" content="https://source.unsplash.com/category/technology/2000x1322"/>
 
-<meta name="twitter:title" content="Seminumerical Algorithms"/>
+<meta name="twitter:title" content="Random Numbers"/>
 <meta name="twitter:description" content="Working through Volume 2 of TAOCP"/>
 
     
@@ -199,31 +199,31 @@ article header img {
     <main>
   <article itemscope itemtype="http://schema.org/BlogPosting">
     
-<meta itemprop="name" content="Seminumerical Algorithms">
+<meta itemprop="name" content="Random Numbers">
 <meta itemprop="description" content="Working through Volume 2 of TAOCP">
 
 
-<meta itemprop="datePublished" content="2019-04-03T16:27:33-05:00" />
-<meta itemprop="dateModified" content="2019-04-03T16:27:33-05:00" />
-<meta itemprop="wordCount" content="4170">
+<meta itemprop="datePublished" content="2019-05-08T15:30:34-05:00" />
+<meta itemprop="dateModified" content="2019-05-08T15:30:34-05:00" />
+<meta itemprop="wordCount" content="5204">
 
 
 
 <meta itemprop="keywords" content="taocp,knuth,vol2," />
 
     <header>
-      <h1 itemprop="headline">Seminumerical Algorithms</h1>
+      <h1 itemprop="headline">Random Numbers</h1>
       <p class="muted">
         <svg style="margin-bottom:-3px" class="i-clock" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="6.25%">
   <circle cx="16" cy="16" r="14" />
   <path d="M16 8 L16 16 20 20" />
 </svg>
-<span>20 minute read</span>
+<span>25 minute read</span>
 <svg style="margin-bottom: -3px" class="i-edit" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="6.25%">
   <path d="M30 7 L25 2 5 22 3 29 10 27 Z M21 6 L26 11 Z M5 22 L10 27 Z" />
 </svg>
 
-  Published: <time datetime="2019-04-03T16:27:33-05:00">3 Apr, 2019</time>
+  Published: <time datetime="2019-05-08T15:30:34-05:00">8 May, 2019</time>
 
 
       </p>
@@ -235,25 +235,13 @@ article header img {
     
 
     <div itemprop="articleBody">
-      <p>An overview of the second volume of The art of Computer Programming.</p>
+      <p>Random numbers from the second volume of TAOCP and experimentation with PRNGs.</p>
 
-<h1 id="prelude-to-the-second-volume">Prelude to the Second Volume</h1>
-
-<p>It&rsquo;s been about eight months (As of April) since I finished reading the first volume. Though it&rsquo;s likely not a surprise to many, I&rsquo;ll admit that it was one of the more challenging reads as well as being surprisingly entertaining and well written. <a href="/post/the-art-of-computer-programming/">My summary of the experience reading through the first volume</a> was more or less my thoughts on the book, but didn&rsquo;t offer a lot in terms of the content that was covered or any interesting material that was gleamed from its pages; perhaps I&rsquo;ll remedy that when I have time for a second read through. Admittedly, there was quite a bit of content and I don&rsquo;t think I wanted to post a section by section summary of the volume, especially when you consider that much of the first volume was devoted to stacks, trees, linked lists, and other data structures, something most software engineers and programmers are familiar with. Luckily the second volume is far less familiar territory (at least to me) and may be more interesting to write about.</p>
-
-<h2 id="seminumerical-algorithms">Seminumerical Algorithms</h2>
-
-<ul>
-<li>What does seminumerical mean (the borderline of numeric and symbolic)
-
-<ul>
-<li>Numeric vs symbolic calculations</li>
-</ul></li>
-</ul>
+<p>It&rsquo;s been about nine months since I finished reading the first volume. Though it&rsquo;s likely not a surprise to many, it&rsquo;s one of the more daunting reads, but is surprisingly entertaining and well written. <a href="/post/the-art-of-computer-programming/">My summary of the experience reading through the first volume</a> was more or less my thoughts on the book, but didn&rsquo;t offer a lot in terms of the content that was covered or any interesting material that was gleamed from its pages; perhaps I&rsquo;ll remedy that when I have time for a second read through. Admittedly, there was quite a bit of content and I don&rsquo;t think I wanted to post a section by section summary of the volume, especially when you consider that much of the first volume was devoted to stacks, trees, linked lists, and other data structures, something most software engineers and programmers are familiar with. Luckily the second volume is far less familiar territory (at least to me) and may be more interesting to write about.</p>
 
 <h3 id="not-so-random-number-generators">Not So Random Number Generators</h3>
 
-<p>Early in the volume Knuth shows how difficult it is to create a sufficiently random pseudorandom number generator. Simply adding a number of complicated steps will may not yield truly random numbers. Knuth includes the following algorithm <b><i>K</i></b> to illustrate this point. You can find an excerpt of the algorithm <a href="http://www.informit.com/articles/article.aspx?p=2221790">here</a>.</p>
+<p>Early in the volume Knuth shows how difficult it is to create a sufficiently random pseudorandom number generator. Simply adding a number of complicated steps will may not yield truly random numbers. Knuth includes the following algorithm, <b><i>Algorithm-K</i></b>, to illustrate this point. You can find an excerpt of the algorithm <a href="http://www.informit.com/articles/article.aspx?p=2221790">here</a>.</p>
 
 <h4 id="algorithm-k">Algorithm K</h4>
 
@@ -435,7 +423,7 @@ article header img {
 
 <p style="text-align: center;"><b><i>"Random numbers should not be generated with a method chosen at random"</b></i></p>
 
-<p>Besides coincidentally degenerates to a seemingly random number, Algorithm K has a number of other downsides, it&rsquo;s difficult to implement and because it iterates a certain amount of times depending on the input, could take a relatively long time to produce a single random number. Somewhere inside that complexity there is a reason why the generator degenerates to 6065038420. In order to be usable we need to be able to easily prove that won&rsquo;t happen. The key take away from that is that we need this to be fast and simple.</p>
+<p>Besides coincidentally degenerating to a seemingly random number, Algorithm K has a number of other downsides, it&rsquo;s difficult to implement and because it iterates a certain amount of times depending on the input, takes a relatively long time to produce a single random number. Somewhere inside that complexity there is a reason why the generator degenerates to 6065038420. In order to be usable we need to be able to easily prove that won&rsquo;t happen. The key take away from that is that we need this to be fast and simple.</p>
 
 <h3 id="linear-congruential-generator">Linear Congruential Generator</h3>
 
@@ -488,12 +476,10 @@ article header img {
 <ul>
 <li>our m value controls the &ldquo;period&rdquo; of the random number generator which is how long it takes for it to start repeating. ie if we should choose something such as 2, we&rsquo;ll end up producing: 0,1,0,1,0&hellip; so choosing a larger number is ideal.</li>
 <li>m should also be a number that will make division quick since it is a comparatively slow operation. Knuth suggests that you use the word size of the computer ie. 2<sup>64</sup> or use the largest prime smaller than the word size.</li>
-<li>Choosing the a value is more complicated than m but equally important as poor choices for a have historically resulted in poor generators. The rules are dependant on the values of c, and m but are too long to include and explain here. <a href="https://en.wikipedia.org/wiki/Linear_congruential_generator">The wiki entry</a> contains a more detailed explanation of the choices when it comes to choosing a.</li>
+<li>if m is a power of 2, pick a so that a % 8 = 5. This is to ensure that we produce all m possible values and gives our generator &ldquo;high potency&rdquo;. There is a proof for this but it&rsquo;s far too long to include. In general it would seem that choosing the a value is more complicated than m but equally important as poor choices for a have historically resulted in poor generators. The rules are dependant on the values of m, and c but are too long to include and explain here. <a href="https://en.wikipedia.org/wiki/Linear_congruential_generator">The wiki entry</a> contains a more detailed explanation of the choices when it comes to choosing a.</li>
 </ul>
 
 <h3 id="why-not-both">Why not both?</h3>
-
-<!-- TODO: include the math.random which combines two but doesn't really work -->
 
 <p>The LCG is just one form of PRNG such as <a href="https://en.wikipedia.org/wiki/Xorshift">xorshift</a>, <a href="https://en.wikipedia.org/wiki/Well_equidistributed_long-period_linear">WELL</a>, or the <a href="https://en.wikipedia.org/wiki/Mersenne_Twister">Mersenne Twister</a> so, if having one random number generator produces something fairly random, would two random number generators produce something even more random? As it turns out yes, but only if applied properly otherwise you could cause issues <a href="https://medium.com/@betable/tifu-by-using-math-random-f1c308c4fd9d">like the one seen in Javascripts Math.random() library</a>. If a person is unconvinced that a random number generator is not sufficiently random Putting two generators together should in Knuth words &ldquo;convince all but the most hardened of skeptics&rdquo;. One method involves taking two generators and shuffling them together, it&rsquo;s only weakness being that it does not change the number themselves, only the sequence so this may still fail the <a href="https://www.cs.indiana.edu/~kapadia/project2/node21.html">Birthday spacings</a> test. Knuth suggest instead that we use an even simpler method by combining results from the same generator, producing 500 or so results, choosing the first 55, then throwing the rest away and repeating the process.</p>
 
@@ -508,7 +494,7 @@ article header img {
 <li>Serial Test</li>
 <li>Gap Test</li>
 <li>Poker Test</li>
-<li>Coupon Collectors Test: How many times do you need to run until you have one of each of the possible values.</li>
+<li>Coupon Collectors Test</li>
 <li>Permutation Test</li>
 <li>Runs test</li>
 <li>Maximum of t test</li>
@@ -520,13 +506,9 @@ article header img {
 
 <p>Then analyzing them using the <a href="https://en.wikipedia.org/wiki/Chi-squared_test">chi-squared test</a> and the <a href="https://en.wikipedia.org/wiki/Kolmogorov%E2%80%93Smirnov_test">Kolmogorov–Smirnov test</a> to analyze the results of the tests.</p>
 
-<!-- TODO: Add a little more briefly explaining each test -->
-
-<!-- TODO: recheck to see if I'm correct abut how these tests are being applied -->
-
 <h3 id="spectral-test">Spectral test</h3>
 
-<p>The most important of all the tests is the Spectral test. This test is make or break for random number generators. All good PRNG&rsquo;s will pass this test, and more importantly, bad PRNG&rsquo;s will fail.</p>
+<p>The most important of all the tests is the Spectral test. This test is make or break for random number generators. All good PRNG&rsquo;s will pass this test, and more importantly, bad PRNG&rsquo;s will fail. There are various examples of this online but one of the more interesting that I came across was of the RANDU generator and why it fails the spectral test can be seen <a href="https://www.youtube.com/watch?v=7wVk_XsxyNk">here</a></p>
 
 <h3 id="why-so-many-tests">Why So Many Tests?</h3>
 
@@ -1084,6 +1066,7 @@ rgb_minimum_distance|   <span style="color:#ae81ff">5</span>|     <span style="c
 </span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 99
 </span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">100
 </span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">101
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">102
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;">
 <pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#75715e">#=============================================================================#</span>
@@ -1136,6 +1119,7 @@ diehard_count_1s_byt|   <span style="color:#ae81ff">0</span>|    <span style="co
 <span style="color:#75715e"># The file file_input was rewound 324 times</span>
          sts_monobit|   <span style="color:#ae81ff">1</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
 <span style="color:#75715e"># The file file_input was rewound 325 times</span>
+      diehard_operm5|   <span style="color:#ae81ff">0</span>|   <span style="color:#ae81ff">1000000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.34393548|  PASSED  
             sts_runs|   <span style="color:#ae81ff">2</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
 <span style="color:#75715e"># The file file_input was rewound 328 times</span>
          rgb_bitdist|   <span style="color:#ae81ff">1</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
@@ -1190,7 +1174,118 @@ rgb_minimum_distance|   <span style="color:#ae81ff">5</span>|     <span style="c
 </div>
 </div>
 
-<p>There&rsquo;s already quite a bit to digest here so I didn&rsquo;t include all of the test results as the first few are enough to illustrate the differences between the three algorithms. One thing you will notice is that the standard LCG used actually failed a lot of tests. After doing a little testing and some digging it seems that dieharder will also fail these tests with its own generator with the same amount of numbers. In fact, you can really only expect good results with about 10 million or more numbers, but because diehard runs on a single cpu this would have taken a considerable amount of time to run. The comparison is really what we&rsquo;re after and from the results it&rsquo;s clear that algorithm-k is not suitable, nor is RANDU much better.</p>
+<p>There&rsquo;s already quite a bit to digest here so I didn&rsquo;t include all of the test results as the first few are enough to illustrate the differences between the three algorithms. One thing you will notice is that the standard LCG used actually failed a lot of tests. After doing a little testing and some digging it seems that dieharder will also fail these tests with its own generator with the same amount of numbers. In fact, you can really only expect good results with about 10 million or more numbers, but because diehard runs on a single cpu this would have taken a considerable amount of time to run. The comparison is really what we&rsquo;re after and from the results it&rsquo;s clear that algorithm-k is not suitable, nor is RANDU much better. I want to be able to see what kind of results I would see from running a much larger set so I ran one last run with 100,000,000 which shows that the lcg faired a little bit better.</p>
+
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#75715e">#=============================================================================#</span>
+<span style="color:#75715e">#            dieharder version 3.31.1 Copyright 2003 Robert G. Brown          #</span>
+<span style="color:#75715e">#=============================================================================#</span>
+   rng_name    |           filename             |rands/second|
+     file_input|                   example.input|  <span style="color:#ae81ff">6</span>.16e+06  |
+<span style="color:#75715e">#=============================================================================#</span>
+        test_name   |ntup| tsamples |psamples|  p-value |Assessment
+<span style="color:#75715e">#=============================================================================#</span>
+   diehard_birthdays|   <span style="color:#ae81ff">0</span>|       <span style="color:#ae81ff">100</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.50369944|  PASSED  
+<span style="color:#75715e"># The file file_input was rewound 1 times</span>
+      diehard_operm5|   <span style="color:#ae81ff">0</span>|   <span style="color:#ae81ff">1000000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.34393548|  PASSED  
+<span style="color:#75715e"># The file file_input was rewound 2 times</span>
+  diehard_rank_32x32|   <span style="color:#ae81ff">0</span>|     <span style="color:#ae81ff">40000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.76284541|  PASSED  
+<span style="color:#75715e"># The file file_input was rewound 3 times</span>
+    diehard_rank_6x8|   <span style="color:#ae81ff">0</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 3 times</span>
+   diehard_bitstream|   <span style="color:#ae81ff">0</span>|   <span style="color:#ae81ff">2097152</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 5 times</span>
+        diehard_opso|   <span style="color:#ae81ff">0</span>|   <span style="color:#ae81ff">2097152</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 6 times</span>
+        diehard_oqso|   <span style="color:#ae81ff">0</span>|   <span style="color:#ae81ff">2097152</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 7 times</span>
+         diehard_dna|   <span style="color:#ae81ff">0</span>|   <span style="color:#ae81ff">2097152</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 7 times</span>
+diehard_count_1s_str|   <span style="color:#ae81ff">0</span>|    <span style="color:#ae81ff">256000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 8 times</span>
+diehard_count_1s_byt|   <span style="color:#ae81ff">0</span>|    <span style="color:#ae81ff">256000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 8 times</span>
+ diehard_parking_lot|   <span style="color:#ae81ff">0</span>|     <span style="color:#ae81ff">12000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.82658516|  PASSED  
+<span style="color:#75715e"># The file file_input was rewound 8 times</span>
+    diehard_2dsphere|   <span style="color:#ae81ff">2</span>|      <span style="color:#ae81ff">8000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.48942059|  PASSED  
+<span style="color:#75715e"># The file file_input was rewound 8 times</span>
+    diehard_3dsphere|   <span style="color:#ae81ff">3</span>|      <span style="color:#ae81ff">4000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.95108230|  PASSED  
+<span style="color:#75715e"># The file file_input was rewound 11 times</span>
+     diehard_squeeze|   <span style="color:#ae81ff">0</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.38225241|  PASSED  
+<span style="color:#75715e"># The file file_input was rewound 11 times</span>
+        diehard_sums|   <span style="color:#ae81ff">0</span>|       <span style="color:#ae81ff">100</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.07389024|  PASSED  
+<span style="color:#75715e"># The file file_input was rewound 11 times</span>
+        diehard_runs|   <span style="color:#ae81ff">0</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.69622840|  PASSED  
+        diehard_runs|   <span style="color:#ae81ff">0</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.74440767|  PASSED  
+<span style="color:#75715e"># The file file_input was rewound 12 times</span>
+       diehard_craps|   <span style="color:#ae81ff">0</span>|    <span style="color:#ae81ff">200000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.34755313|  PASSED  
+       diehard_craps|   <span style="color:#ae81ff">0</span>|    <span style="color:#ae81ff">200000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.93778967|  PASSED  
+<span style="color:#75715e"># The file file_input was rewound 32 times</span>
+ marsaglia_tsang_gcd|   <span style="color:#ae81ff">0</span>|  <span style="color:#ae81ff">10000000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+ marsaglia_tsang_gcd|   <span style="color:#ae81ff">0</span>|  <span style="color:#ae81ff">10000000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 32 times</span>
+         sts_monobit|   <span style="color:#ae81ff">1</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.13113454|  PASSED  
+<span style="color:#75715e"># The file file_input was rewound 32 times</span>
+            sts_runs|   <span style="color:#ae81ff">2</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.22502954|  PASSED  
+<span style="color:#75715e"># The file file_input was rewound 33 times</span>
+         rgb_bitdist|   <span style="color:#ae81ff">1</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 33 times</span>
+         rgb_bitdist|   <span style="color:#ae81ff">2</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 34 times</span>
+         rgb_bitdist|   <span style="color:#ae81ff">3</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 34 times</span>
+         rgb_bitdist|   <span style="color:#ae81ff">4</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 35 times</span>
+         rgb_bitdist|   <span style="color:#ae81ff">5</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 37 times</span>
+         rgb_bitdist|   <span style="color:#ae81ff">6</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 38 times</span>
+         rgb_bitdist|   <span style="color:#ae81ff">7</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+^<span style="color:#f92672">[[</span><span style="color:#ae81ff">1</span>;5D# The file file_input was rewound <span style="color:#ae81ff">40</span> times
+         rgb_bitdist|   <span style="color:#ae81ff">8</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 41 times</span>
+         rgb_bitdist|   <span style="color:#ae81ff">9</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00048263|   WEAK   
+<span style="color:#75715e"># The file file_input was rewound 43 times</span>
+         rgb_bitdist|  <span style="color:#ae81ff">10</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00000207|   WEAK   
+<span style="color:#75715e"># The file file_input was rewound 46 times</span>
+         rgb_bitdist|  <span style="color:#ae81ff">11</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.11712560|  PASSED  
+<span style="color:#75715e"># The file file_input was rewound 48 times</span>
+         rgb_bitdist|  <span style="color:#ae81ff">12</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.00070481|   WEAK   
+<span style="color:#75715e"># The file file_input was rewound 48 times</span>
+rgb_minimum_distance|   <span style="color:#ae81ff">2</span>|     <span style="color:#ae81ff">10000</span>|    <span style="color:#ae81ff">1000</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 48 times</span>
+rgb_minimum_distance|   <span style="color:#ae81ff">3</span>|     <span style="color:#ae81ff">10000</span>|    <span style="color:#ae81ff">1000</span>|<span style="color:#ae81ff">0</span>.00073621|   WEAK   
+<span style="color:#75715e"># The file file_input was rewound 49 times</span>
+rgb_minimum_distance|   <span style="color:#ae81ff">4</span>|     <span style="color:#ae81ff">10000</span>|    <span style="color:#ae81ff">1000</span>|<span style="color:#ae81ff">0</span>.00000000|  FAILED  
+<span style="color:#75715e"># The file file_input was rewound 49 times</span>
+rgb_minimum_distance|   <span style="color:#ae81ff">5</span>|     <span style="color:#ae81ff">10000</span>|    <span style="color:#ae81ff">1000</span>|<span style="color:#ae81ff">0</span>.00000148|   WEAK   
+<span style="color:#75715e"># The file file_input was rewound 50 times</span>
+    rgb_permutations|   <span style="color:#ae81ff">2</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.64531526|  PASSED  
+<span style="color:#75715e"># The file file_input was rewound 50 times</span>
+    rgb_permutations|   <span style="color:#ae81ff">3</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.12491885|  PASSED  
+<span style="color:#75715e"># The file file_input was rewound 50 times</span>
+    rgb_permutations|   <span style="color:#ae81ff">4</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.29544943|  PASSED  
+<span style="color:#75715e"># The file file_input was rewound 51 times</span>
+    rgb_permutations|   <span style="color:#ae81ff">5</span>|    <span style="color:#ae81ff">100000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.57519225|  PASSED  
+<span style="color:#75715e"># The file file_input was rewound 52 times</span>
+      rgb_lagged_sum|   <span style="color:#ae81ff">0</span>|   <span style="color:#ae81ff">1000000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.42557400|  PASSED  
+<span style="color:#75715e"># The file file_input was rewound 54 times</span>
+      rgb_lagged_sum|   <span style="color:#ae81ff">1</span>|   <span style="color:#ae81ff">1000000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.94028320|  PASSED  
+<span style="color:#75715e"># The file file_input was rewound 57 times</span>
+      rgb_lagged_sum|   <span style="color:#ae81ff">2</span>|   <span style="color:#ae81ff">1000000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.34329913|  PASSED  
+<span style="color:#75715e"># The file file_input was rewound 61 times</span>
+      rgb_lagged_sum|   <span style="color:#ae81ff">3</span>|   <span style="color:#ae81ff">1000000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.02887377|  PASSED  
+<span style="color:#75715e"># The file file_input was rewound 66 times</span>
+      rgb_lagged_sum|   <span style="color:#ae81ff">4</span>|   <span style="color:#ae81ff">1000000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.02328575|  PASSED  
+<span style="color:#75715e"># The file file_input was rewound 72 times</span>
+      rgb_lagged_sum|   <span style="color:#ae81ff">5</span>|   <span style="color:#ae81ff">1000000</span>|     <span style="color:#ae81ff">100</span>|<span style="color:#ae81ff">0</span>.10863760|  PASSED  </code></pre></div>
+
+<p>Here we can see the larger set actually did quite a bit better, passing where it was either weak or had even failed before. It&rsquo;s not perfect of course, and certainly not suitable for cryptographic use but we can see that the generator works well enough. I would have liked to have run more tests and tried a few different random number generators, but testing with dieharder was taking quite a long time on my underpowered laptop CPU. Of course no generator is going to pass every test as Knuth states: <i>&ldquo;A truly random sequence will exhibit local non-randomness&rdquo;</i>. Proving that a generator is suitable would require many more multiple runs on larger data sets. Only then might say that the PRNG is satisfiably random.</p>
+
+<h2 id="not-so-random-musings">Not So Random Musings</h2>
+
+<p>In a set of infinite numbers we might expect to see 1,000,000 7&rsquo;s or 8&rsquo;s in a row at some point. Maybe the numbers, viewed in a single line would map to ascii values that could print the works of Shakespeare. It may not be desirable for applications, but it would be consistent with a truly random number generator. Though the math was certainly beyond me, the first half of volume 2 was incredibly interesting. If anything it&rsquo;s made me question how random numbers are generated a little more, forcing me to dig through the random number generators that I have trusted. A simple mistake could result in unexpected deterministic behaviour. Though this is unlikely to be a problem in my day to day life as a web developer, it will still make me think the next time I need to rely on random behaviour. Further fueling my paranoia, Knuth gives some great advice to summarise the learnings of the chapter:</p>
+
+<p style="text-align: center;"><b><i>"Look at the subroutine library of each computer installation in your organization, and replace the random number generators by good ones. Try to avoid being too shocked at what you find."</i></b></p>
     </div>
     
     <footer>
@@ -1202,8 +1297,8 @@ rgb_minimum_distance|   <span style="color:#ae81ff">5</span>|     <span style="c
       by <span itemprop="author"></span>
     
   
-  <time itemprop="datePublished" datetime="2019-04-03T16:27:33-05:00">
-    3 Apr, 2019
+  <time itemprop="datePublished" datetime="2019-05-08T15:30:34-05:00">
+    8 May, 2019
   </time>
   
     in <span itemprop="articleSection"><a href="/categories/computer-science/">computer science</a></span>
@@ -1211,7 +1306,7 @@ rgb_minimum_distance|   <span style="color:#ae81ff">5</span>|     <span style="c
   
     and tagged <a href="/tags/knuth/">knuth</a>, <a href="/tags/taocp/">taocp</a> and <a href="/tags/vol2/">vol2</a>
   
-  using <span itemprop="wordCount">4170</span> words.
+  using <span itemprop="wordCount">5204</span> words.
 </p>
 
       
