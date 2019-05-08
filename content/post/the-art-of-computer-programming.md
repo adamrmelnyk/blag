@@ -67,7 +67,7 @@ A large portion of this book is dedicated to exercises as well as the included s
 10 Simple (one minute)                M Mathematically oriented
 20 Medium (15 minutes)                HM Requiring "higher math"
 30 Moderately Hard
-40 Term Project 
+40 Term Project
 50 Research problem
 ```
 
