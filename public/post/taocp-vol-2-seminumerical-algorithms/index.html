@@ -205,7 +205,7 @@ article header img {
 
 <meta itemprop="datePublished" content="2019-05-08T15:30:34-05:00" />
 <meta itemprop="dateModified" content="2019-05-08T15:30:34-05:00" />
-<meta itemprop="wordCount" content="5204">
+<meta itemprop="wordCount" content="5207">
 
 
 
@@ -237,11 +237,11 @@ article header img {
     <div itemprop="articleBody">
       <p>Random numbers from the second volume of TAOCP and experimentation with PRNGs.</p>
 
-<p>It&rsquo;s been about nine months since I finished reading the first volume. Though it&rsquo;s likely not a surprise to many, it&rsquo;s one of the more daunting reads, but is surprisingly entertaining and well written. <a href="/post/the-art-of-computer-programming/">My summary of the experience reading through the first volume</a> was more or less my thoughts on the book, but didn&rsquo;t offer a lot in terms of the content that was covered or any interesting material that was gleamed from its pages; perhaps I&rsquo;ll remedy that when I have time for a second read through. Admittedly, there was quite a bit of content and I don&rsquo;t think I wanted to post a section by section summary of the volume, especially when you consider that much of the first volume was devoted to stacks, trees, linked lists, and other data structures, something most software engineers and programmers are familiar with. Luckily the second volume is far less familiar territory (at least to me) and may be more interesting to write about.</p>
+<p>It&rsquo;s been about nine months since I finished reading the first volume. Though it&rsquo;s likely not a surprise to many, it&rsquo;s one of the more daunting reads however, I found it to be surprisingly entertaining and well written. <a href="/post/the-art-of-computer-programming/">My summary of the experience reading through the first volume</a> was more or less my thoughts on the book, but didn&rsquo;t offer a lot in terms of the content that was covered or, nor did I highlight a lot of interesting material that was gleaned from its pages – perhaps I&rsquo;ll remedy that when I have time for a second read through. Admittedly, there was quite a bit of content and I don&rsquo;t think I wanted to post a section by section summary of the volume, especially when you consider that much of the first volume was devoted to stacks, trees, linked lists, and other data structures, something familiar to most software engineers and programmers. Luckily the second volume is far less familiar territory (at least to me) and may be more interesting to write about.</p>
 
 <h3 id="not-so-random-number-generators">Not So Random Number Generators</h3>
 
-<p>Early in the volume Knuth shows how difficult it is to create a sufficiently random pseudorandom number generator. Simply adding a number of complicated steps will may not yield truly random numbers. Knuth includes the following algorithm, <b><i>Algorithm-K</i></b>, to illustrate this point. You can find an excerpt of the algorithm <a href="http://www.informit.com/articles/article.aspx?p=2221790">here</a>.</p>
+<p>Early in the volume Knuth shows how difficult it is to create a sufficiently random pseudorandom number generator. Simply adding a number of complicated steps will not yield truly random numbers. Knuth includes the following algorithm, <b><i>Algorithm-K</i></b>, to illustrate this point. You can find an excerpt of the algorithm <a href="http://www.informit.com/articles/article.aspx?p=2221790">here</a>.</p>
 
 <h4 id="algorithm-k">Algorithm K</h4>
 
@@ -481,11 +481,11 @@ article header img {
 
 <h3 id="why-not-both">Why not both?</h3>
 
-<p>The LCG is just one form of PRNG such as <a href="https://en.wikipedia.org/wiki/Xorshift">xorshift</a>, <a href="https://en.wikipedia.org/wiki/Well_equidistributed_long-period_linear">WELL</a>, or the <a href="https://en.wikipedia.org/wiki/Mersenne_Twister">Mersenne Twister</a> so, if having one random number generator produces something fairly random, would two random number generators produce something even more random? As it turns out yes, but only if applied properly otherwise you could cause issues <a href="https://medium.com/@betable/tifu-by-using-math-random-f1c308c4fd9d">like the one seen in Javascripts Math.random() library</a>. If a person is unconvinced that a random number generator is not sufficiently random Putting two generators together should in Knuth words &ldquo;convince all but the most hardened of skeptics&rdquo;. One method involves taking two generators and shuffling them together, it&rsquo;s only weakness being that it does not change the number themselves, only the sequence so this may still fail the <a href="https://www.cs.indiana.edu/~kapadia/project2/node21.html">Birthday spacings</a> test. Knuth suggest instead that we use an even simpler method by combining results from the same generator, producing 500 or so results, choosing the first 55, then throwing the rest away and repeating the process.</p>
+<p>The LCG is just one form of PRNG such as <a href="https://en.wikipedia.org/wiki/Xorshift">xorshift</a>, <a href="https://en.wikipedia.org/wiki/Well_equidistributed_long-period_linear">WELL</a>, or the <a href="https://en.wikipedia.org/wiki/Mersenne_Twister">Mersenne Twister</a> so, if having one random number generator produces something fairly random, would two random number generators produce something even more random? As it turns out yes, but only if applied properly otherwise you could cause issues <a href="https://medium.com/@betable/tifu-by-using-math-random-f1c308c4fd9d">like the one seen in Javascripts Math.random() library</a>. If a person is unconvinced that a random number generator is not sufficiently random, putting two generators together should in Knuth words &ldquo;convince all but the most hardened of skeptics&rdquo;. One method involves taking two generators and shuffling them together, it&rsquo;s only weakness being that it does not change the number themselves, only the sequence so this may still fail the <a href="https://www.cs.indiana.edu/~kapadia/project2/node21.html">Birthday spacings</a> test. Knuth suggest instead that we use an even simpler method by combining results from the same generator, producing 500 or so results, choosing the first 55, then throwing the rest away and repeating the process.</p>
 
 <h2 id="statistical-tests-or-how-we-can-prove-what-s-i-really-i-random">Statistical Tests Or How we can prove what&rsquo;s <i>really</i> random</h2>
 
-<p>Once we&rsquo;ve created a random number generator, we need a way to decided if it&rsquo;s actually random or not. Knuth suggests we run a battery of tests on the generator in order to determine that it&rsquo;s satisfactorily random. He also humorously suggests that if the tests don&rsquo;t come out the way we want to try reading <a href="https://en.wikipedia.org/wiki/How_to_Lie_with_Statistics">another book</a>.</p>
+<p>Once we&rsquo;ve created a random number generator, we need a way to decide if it&rsquo;s actually random or not. Knuth suggests we run a battery of tests on the generator in order to determine that it&rsquo;s satisfactorily random. He also humorously suggests that if the tests don&rsquo;t come out the way we want to try reading <a href="https://en.wikipedia.org/wiki/How_to_Lie_with_Statistics">another book</a>.</p>
 
 <p>To thoroughly evaluate a random number generator he suggests running the following tests multiple times:</p>
 
@@ -512,11 +512,11 @@ article header img {
 
 <h3 id="why-so-many-tests">Why So Many Tests?</h3>
 
-<p>True randomness is difficult to obtain, some might argue that it may be impossible. This is even more true because we are working with computers after all which <i>should</i> not behave randomly. For this reason we need to determine that they are significantly random enough. To determine this we need to use thorough statistical analysis to show us in a quantifiable way how random they are. This can be difficult and time consuming to prove as it turns out even using just a few of these tests presents problems as some random generators will pass a few of these tests, yet completely fail others. Luckily most of the math here has been done for us, and we are unlikely to be developing our own, but there are a few notable examples where this happened to fail such as <a href="https://en.wikipedia.org/wiki/RANDU">RANDU</a> which Knuth called &ldquo;truly horrible&rdquo;.</p>
+<p>True randomness is difficult to obtain, some might argue that it may be impossible. This is even more true because after all, we are working with computers which <i>should</i> not behave randomly. For this reason we need to determine that they are significantly random enough. To determine this we need to use thorough statistical analysis to show us in a quantifiable way, how random they are. This can be difficult and time consuming to prove as it turns some random generators will pass a few of these tests, yet completely fail others. Luckily most of the math here has been done for us, and we are unlikely to be developing our own, but there are a few notable examples where this happened to fail tests but, still seemed random such as <a href="https://en.wikipedia.org/wiki/RANDU">RANDU</a> which Knuth called &ldquo;truly horrible&rdquo;.</p>
 
 <h3 id="running-some-tests">Running some tests</h3>
 
-<p>Reading about these tests was interesting, but what would be more interesting is to run it on the two generators I had used above, as well as RANDU which is shown below. Comparing the results should illustrate the differences between the generators that ought to be good, and those that we know will preform poorly. There are a number of random number generator testers out there but the one I used was <code>dieharder</code> based on a suite of tests called diehard. For each run I generated 1,000,0000 random numbers (algorithm k took significantly longer ~20 min) and fed it to diehard. You can see the results here:</p>
+<p>Reading about these tests was interesting, but what would be more interesting is to run it on the two generators I had used above, as well as RANDU which is shown below. Comparing the results should highlight the differences between the generators that we expect to preform well, and those that we know will preform poorly. There are a number of random number generator testers out there but the one I used was <code>dieharder</code> based on a suite of tests called diehard. For each run I generated 1,000,0000 random numbers (algorithm k took significantly longer ~20 min) and fed it to diehard. You can see the results here:</p>
 
 <h1 id="standard-lcg">Standard LCG</h1>
 
@@ -1174,7 +1174,7 @@ rgb_minimum_distance|   <span style="color:#ae81ff">5</span>|     <span style="c
 </div>
 </div>
 
-<p>There&rsquo;s already quite a bit to digest here so I didn&rsquo;t include all of the test results as the first few are enough to illustrate the differences between the three algorithms. One thing you will notice is that the standard LCG used actually failed a lot of tests. After doing a little testing and some digging it seems that dieharder will also fail these tests with its own generator with the same amount of numbers. In fact, you can really only expect good results with about 10 million or more numbers, but because diehard runs on a single cpu this would have taken a considerable amount of time to run. The comparison is really what we&rsquo;re after and from the results it&rsquo;s clear that algorithm-k is not suitable, nor is RANDU much better. I want to be able to see what kind of results I would see from running a much larger set so I ran one last run with 100,000,000 which shows that the lcg faired a little bit better.</p>
+<p>There&rsquo;s already quite a bit to digest here so I didn&rsquo;t include all of the test results as the first few are enough to illustrate the differences between the three algorithms. One thing you will notice is that the standard LCG used actually failed a lot of tests. After doing a little testing and some digging it seems that dieharder will also fail these tests with its own generator with the same amount of numbers. In fact, you can really only expect good results with about 10 million or more numbers, but because diehard runs on a single cpu this would have taken a considerable amount of time to run. The comparison is really what we&rsquo;re after and from the results it&rsquo;s clear that algorithm-k is not suitable, nor is RANDU much better. I wanted to be able to see what kind of results I would see from running a much larger set so I ran one last run with 100,000,000 which shows that the lcg faired a little bit better.</p>
 
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#75715e">#=============================================================================#</span>
 <span style="color:#75715e">#            dieharder version 3.31.1 Copyright 2003 Robert G. Brown          #</span>
@@ -1306,7 +1306,7 @@ rgb_minimum_distance|   <span style="color:#ae81ff">5</span>|     <span style="c
   
     and tagged <a href="/tags/knuth/">knuth</a>, <a href="/tags/taocp/">taocp</a> and <a href="/tags/vol2/">vol2</a>
   
-  using <span itemprop="wordCount">5204</span> words.
+  using <span itemprop="wordCount">5207</span> words.
 </p>
 
       
