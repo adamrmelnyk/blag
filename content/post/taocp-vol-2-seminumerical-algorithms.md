@@ -127,7 +127,7 @@ The most common pseudorandom number generator (according to Knuth) is a [Linear 
 
 <p style="text-align: center;"><b><i>X</i></b><sub><i>n</i> + 1</sub> = (<i>a</i><b>X</b><sub><i>n</i></sub> + <i>c</i>) mod <i>m</i></p>
 
-Unlike the previous algorithm, the equation isn't difficult to explain; numbers for m,a, and c are chosen and set in the compiler (hopefully not randomly) and a seed is chosen for the first value of Xn. This being a recurrence relation, the result of each run then becomes the next seed or starting value for a subsequent run. You can see this in the code below:
+Unlike the previous algorithm, the equation isn't difficult to explain; numbers for m,a, and c are chosen and set by the language or library designers (hopefully not randomly) and a seed is chosen for the first value of Xn. This being a recurrence relation, the result of each run then becomes the next seed or starting value for a subsequent run. You can see this in the code below:
 
 {{< highlight racket "linenos=table,linenostart=1">}}
 #lang racket
