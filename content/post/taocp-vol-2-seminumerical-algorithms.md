@@ -17,13 +17,13 @@ It's been about nine months since I finished reading the first volume. Though it
 
 ### Not So Random Number Generators
 
-Early in the volume Knuth shows how difficult it is to create a sufficiently random pseudorandom number generator. Simply adding a number of complicated steps will not yield truly random numbers. Knuth includes the following algorithm, <b><i>Algorithm-K</i></b>, to illustrate this point. You can find an excerpt of the algorithm [here](http://www.informit.com/articles/article.aspx?p=2221790).
+Early in the volume Knuth shows how difficult it is to create a sufficiently random pseudorandom number generator. Simply adding a number of complicated steps will not yield truly random numbers. Knuth includes the following algorithm, *Algorithm-K*, to illustrate this point. You can find an excerpt of the algorithm [here](http://www.informit.com/articles/article.aspx?p=2221790).
 
 #### Algorithm K
 
 For the purposes of demonstration I've implemented the algorithm below. The steps aren't particularly important, but as you can see it's a fairly involved algorithm that looks like it might produce something random.
 
-{{<highlight racket "linenos=table,linenostart=1">}}
+```scheme
 #lang racket
 
 (define (algorithm-k x)
@@ -102,22 +102,22 @@ For the purposes of demonstration I've implemented the algorithm below. The step
 ;; Modified middle square
 (define (k12 x iterations)
   (do-algorithm-k (modulo (floor (* x (/ (- x 1) (expt 10 5)))) (expt 10 10)) (- iterations 1)))
-{{< / highlight >}}
+```
 
 The results however random seeming do present a problem:
 
-{{< highlight shell >}}
+```shell
 > (algorithm-k 1)
 3831577709
 > (algorithm-k 12345)
 5827337884
 > (algorithm-k 6065038420)
 6065038420
-{{< / highlight >}}
+```
 
 The first two examples produce what one might expect, but the third produces itself. Knuth points out that the algorithm happens to degenerate to 6065038420, with the lesson being:
 
-<p style="text-align: center;"><b><i>"Random numbers should not be generated with a method chosen at random"</b></i></p>
+*"Random numbers should not be generated with a method chosen at random"*
 
 Besides coincidentally degenerating to a seemingly random number, Algorithm K has a number of other downsides, it's difficult to implement and because it iterates a certain amount of times depending on the input, takes a relatively long time to produce a single random number. Somewhere inside that complexity there is a reason why the generator degenerates to 6065038420. In order to be usable we need to be able to easily prove that won't happen. The key take away from that is that we need this to be fast and simple.
 
@@ -125,11 +125,11 @@ Besides coincidentally degenerating to a seemingly random number, Algorithm K ha
 
 The most common pseudorandom number generator (according to Knuth) is a [Linear congruential generator](https://en.wikipedia.org/wiki/Linear_congruential_generator), which has the following equation:
 
-<p style="text-align: center;"><b><i>X</i></b><sub><i>n</i> + 1</sub> = (<i>a</i><b>X</b><sub><i>n</i></sub> + <i>c</i>) mod <i>m</i></p>
+*Xn + 1 = (a * Xn + c) mod m*
 
 Unlike the previous algorithm, the equation isn't difficult to explain; numbers for m,a, and c are chosen and set by the language or library designers (hopefully not randomly) and a seed is chosen for the first value of Xn. This being a recurrence relation, the result of each run then becomes the next seed or starting value for a subsequent run. You can see this in the code below:
 
-{{< highlight racket "linenos=table,linenostart=1">}}
+```scheme
 #lang racket
 
 (define next (current-seconds))
@@ -139,34 +139,34 @@ Unlike the previous algorithm, the equation isn't difficult to explain; numbers 
               (+ (* next 6364136223846793005) 1442695040888963407)
               (expt 2 64)))
   next)
-{{< / highlight >}}
+```
 
 You can see the output this produces from the racket repl here:
 
-{{< highlight shell>}}
+```shell
 > (my-random)
 14843871667761315205
 > (my-random)
 534325907729616048
 > (my-random)
 5734414832404007999
-{{< / highlight >}}
+```
 
 This isn't how Racket generates its random numbers (it uses an implementation of the [MRG32k3a algorithm](https://github.com/racket/racket/blob/5bb837661c12a9752c6a99f952c0e1b267645b33/racket/src/cs/rumble/random.ss)), however this method is used by other languages such as the function defined in [glibc](https://sourceware.org/git/?p=glibc.git;a=blob;f=stdlib/random_r.c;hb=glibc-2.26#l362)
 
-#### Choosing our <i>m</i> and <i>a</i> values
+#### Choosing our *m* and *a* values
 
-It's important to note here that the numbers used above were not chosen by random, in particular it is important to pay extra attention to the numbers we choose for <i>m</i> and <i>a</i>.
+It's important to note here that the numbers used above were not chosen by random, in particular it is important to pay extra attention to the numbers we choose for *m* and *a*.
 
 * our m value controls the "period" of the random number generator which is how long it takes for it to start repeating. ie if we should choose something such as 2, we'll end up producing: 0,1,0,1,0... so choosing a larger number is ideal.
-* m should also be a number that will make division quick since it is a comparatively slow operation. Knuth suggests that you use the word size of the computer ie. 2<sup>64</sup> or use the largest prime smaller than the word size.
+* m should also be a number that will make division quick since it is a comparatively slow operation. Knuth suggests that you use the word size of the computer ie. *2^64* or use the largest prime smaller than the word size.
 * if m is a power of 2, pick a so that a % 8 = 5. This is to ensure that we produce all m possible values and gives our generator "high potency". There is a proof for this but it's far too long to include. In general it would seem that choosing the a value is more complicated than m but equally important as poor choices for a have historically resulted in poor generators. The rules are dependant on the values of m, and c but are too long to include and explain here. [The wiki entry](https://en.wikipedia.org/wiki/Linear_congruential_generator) contains a more detailed explanation of the choices when it comes to choosing a.
 
 ### Why not both?
 
 The LCG is just one form of PRNG such as [xorshift](https://en.wikipedia.org/wiki/Xorshift), [WELL](https://en.wikipedia.org/wiki/Well_equidistributed_long-period_linear), or the [Mersenne Twister](https://en.wikipedia.org/wiki/Mersenne_Twister) so, if having one random number generator produces something fairly random, would two random number generators produce something even more random? As it turns out yes, but only if applied properly otherwise you could cause issues [like the one seen in Javascripts Math.random() library](https://medium.com/@betable/tifu-by-using-math-random-f1c308c4fd9d). If a person is unconvinced that a random number generator is not sufficiently random, putting two generators together should in Knuth words "convince all but the most hardened of skeptics". One method involves taking two generators and shuffling them together, it's only weakness being that it does not change the number themselves, only the sequence so this may still fail the [Birthday spacings](https://www.cs.indiana.edu/~kapadia/project2/node21.html) test. Knuth suggest instead that we use an even simpler method by combining results from the same generator, producing 500 or so results, choosing the first 55, then throwing the rest away and repeating the process.
 
-## Statistical Tests Or How we can prove what's <i>really</i> random
+## Statistical Tests Or How we can prove what's *really* random
 
 Once we've created a random number generator, we need a way to decide if it's actually random or not. Knuth suggests we run a battery of tests on the generator in order to determine that it's satisfactorily random. He also humorously suggests that if the tests don't come out the way we want to try reading [another book](https://en.wikipedia.org/wiki/How_to_Lie_with_Statistics).
 
@@ -193,7 +193,7 @@ The most important of all the tests is the Spectral test. This test is make or b
 
 ### Why So Many Tests?
 
-True randomness is difficult to obtain, some might argue that it may be impossible. This is even more true because after all, we are working with computers which <i>should</i> not behave randomly. For this reason we need to determine that they are significantly random enough. To determine this we need to use thorough statistical analysis to show us in a quantifiable way, how random they are. This can be difficult and time consuming to prove as it turns some random generators will pass a few of these tests, yet completely fail others. Luckily most of the math here has been done for us, and we are unlikely to be developing our own, but there are a few notable examples where this happened to fail tests but, still seemed random such as [RANDU](https://en.wikipedia.org/wiki/RANDU) which Knuth called "truly horrible".
+True randomness is difficult to obtain, some might argue that it may be impossible. This is even more true because after all, we are working with computers which *should* not behave randomly. For this reason we need to determine that they are significantly random enough. To determine this we need to use thorough statistical analysis to show us in a quantifiable way, how random they are. This can be difficult and time consuming to prove as it turns some random generators will pass a few of these tests, yet completely fail others. Luckily most of the math here has been done for us, and we are unlikely to be developing our own, but there are a few notable examples where this happened to fail tests but, still seemed random such as [RANDU](https://en.wikipedia.org/wiki/RANDU) which Knuth called "truly horrible".
 
 ### Running some tests
 
@@ -201,7 +201,7 @@ Reading about these tests was interesting, but what would be more interesting is
 
 # Standard LCG
 
-{{< highlight shell "linenos=table,linenostart=1">}}
+```shell
 #=============================================================================#
 #            dieharder version 3.31.1 Copyright 2003 Robert G. Brown          #
 #=============================================================================#
@@ -303,10 +303,10 @@ rgb_minimum_distance|   5|     10000|    1000|0.00000000|  FAILED
       rgb_lagged_sum|   3|   1000000|     100|0.00000000|  FAILED  
 # The file file_input was rewound 662 times
       rgb_lagged_sum|   4|   1000000|     100|0.00000000|  FAILED
-{{< / highlight>}}
+```
 
 # RANDU
-{{< highlight racket "linenos=table,linenostart=1">}}
+```scheme
 #lang racket
 
 (define next 1090815429)
@@ -314,9 +314,9 @@ rgb_minimum_distance|   5|     10000|    1000|0.00000000|  FAILED
 (define (randu)
   (set! next (modulo (* next 65539) (expt 2 31)))
   next)
-{{< / highlight >}}
+```
 </br>
-{{< highlight shell "linenos=table,linenostart=1">}}
+```shell
 #=============================================================================#
 #            dieharder version 3.31.1 Copyright 2003 Robert G. Brown          #
 #=============================================================================#
@@ -418,12 +418,12 @@ rgb_minimum_distance|   5|     10000|    1000|0.00000000|  FAILED
       rgb_lagged_sum|   3|   1000000|     100|0.00000000|  FAILED  
 # The file file_input was rewound 655 times
       rgb_lagged_sum|   4|   1000000|     100|0.00000000|  FAILED  
-{{< / highlight >}}
+```
 
 
 # Algorithm-k
 
-{{< highlight shell "linenos=table,linenostart=1">}}
+```shell
 #=============================================================================#
 #            dieharder version 3.31.1 Copyright 2003 Robert G. Brown          #
 #=============================================================================#
@@ -526,11 +526,11 @@ rgb_minimum_distance|   5|     10000|    1000|0.00000000|  FAILED
       rgb_lagged_sum|   3|   1000000|     100|0.00000000|  FAILED  
 # The file file_input was rewound 660 times
       rgb_lagged_sum|   4|   1000000|     100|0.00000000|  FAILED
-{{</ highlight >}}
+```
 
 There's already quite a bit to digest here so I didn't include all of the test results as the first few are enough to illustrate the differences between the three algorithms. One thing you will notice is that the standard LCG used actually failed a lot of tests. After doing a little testing and some digging it seems that dieharder will also fail these tests with its own generator with the same amount of numbers. In fact, you can really only expect good results with about 10 million or more numbers, but because diehard runs on a single cpu this would have taken a considerable amount of time to run. The comparison is really what we're after and from the results it's clear that algorithm-k is not suitable, nor is RANDU much better. I wanted to be able to see what kind of results I would see from running a much larger set so I ran one last run with 100,000,000 which shows that the lcg faired a little bit better.
 
-{{< highlight shell >}}
+```shell
 #=============================================================================#
 #            dieharder version 3.31.1 Copyright 2003 Robert G. Brown          #
 #=============================================================================#
@@ -633,12 +633,12 @@ rgb_minimum_distance|   5|     10000|    1000|0.00000148|   WEAK
       rgb_lagged_sum|   4|   1000000|     100|0.02328575|  PASSED  
 # The file file_input was rewound 72 times
       rgb_lagged_sum|   5|   1000000|     100|0.10863760|  PASSED  
-{{</ highlight >}}
+```
 
-Here we can see the larger set actually did quite a bit better, passing where it was either weak or had even failed before. It's not perfect of course, and certainly not suitable for cryptographic use but we can see that the generator works well enough. I would have liked to have run more tests and tried a few different random number generators, but testing with dieharder was taking quite a long time on my underpowered laptop CPU. Of course no generator is going to pass every test as Knuth states: <i>"A truly random sequence will exhibit local non-randomness"</i>. Proving that a generator is suitable would require many more multiple runs on larger data sets. Only then might say that the PRNG is satisfiably random.
+Here we can see the larger set actually did quite a bit better, passing where it was either weak or had even failed before. It's not perfect of course, and certainly not suitable for cryptographic use but we can see that the generator works well enough. I would have liked to have run more tests and tried a few different random number generators, but testing with dieharder was taking quite a long time on my underpowered laptop CPU. Of course no generator is going to pass every test as Knuth states: *"A truly random sequence will exhibit local non-randomness"*. Proving that a generator is suitable would require many more multiple runs on larger data sets. Only then might say that the PRNG is satisfiably random.
 
 ## Not So Random Musings
 
 In a set of infinite numbers we might expect to see 1,000,000 7's or 8's in a row at some point. Maybe the numbers, viewed in a single line would map to ascii values that could print the works of Shakespeare. It may not be desirable for applications, but it would be consistent with a truly random number generator. Though the math was certainly beyond me, the first half of volume 2 was incredibly interesting. If anything it's made me question how random numbers are generated a little more, forcing me to dig through the random number generators that I have trusted. A simple mistake could result in unexpected deterministic behaviour. Though this is unlikely to be a problem in my day to day life as a web developer, it will still make me think the next time I need to rely on random behaviour. Further fueling my paranoia, Knuth gives some great advice to summarise the learnings of the chapter:
 
-<p style="text-align: center;"><b><i>"Look at the subroutine library of each computer installation in your organization, and replace the random number generators by good ones. Try to avoid being too shocked at what you find."</i></b></p>
+*"Look at the subroutine library of each computer installation in your organization, and replace the random number generators by good ones. Try to avoid being too shocked at what you find."*

@@ -150,18 +150,18 @@ Preface I&amp;rsquo;ve been playing around with functional languages for a few y
 <p>Almost two years ago, I found about about the Racket language and worked through the <a href="https://beautifulracket.com/">Beautiful Racket</a> tutorial. I found the language to actually be pretty fun to work with and was interested in writing a DSL which Racket was built for. Though I have used Clojure and scala before as well, I had written more code in Racket as well as some Chez-Scheme (which is quite similar) in school. Between that and <a href="https://twitter.com/ID_AA_Carmack/status/577877590070919168">John Carmacks tweet from a few years ago</a>, Racket seemed like a good choice.</p>
 <h1 id="getting-started">Getting started<a href="#getting-started" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
 <p>Before I start building something I want to get a feel for the language so I started by making a simple FizzBuzz function. The code is simple enough to read, define the function, which loops through 0 to some given argument and prints when certain conditions are met. I&rsquo;m not sure if this is idiomatic Racket but I&rsquo;m not concerned about that just yet.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-racket" data-lang="racket"><span style="color:#f92672">#lang </span>racket
-(<span style="color:#66d9ef">define</span> (fizz-buzz num)
-  (<span style="color:#66d9ef">for</span> ([i num])
-    (<span style="color:#66d9ef">cond</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scheme" data-lang="scheme"><span style="color:#f92672">#</span>lang racket
+(<span style="color:#66d9ef">define </span>(<span style="color:#a6e22e">fizz-buzz</span> num)
+  (<span style="color:#a6e22e">for</span> ([i num])
+    (<span style="color:#a6e22e">cond</span>
       [(= i <span style="color:#ae81ff">0</span>)]
-      [(<span style="color:#66d9ef">and</span> (= (modulo i <span style="color:#ae81ff">3</span>) <span style="color:#ae81ff">0</span>) (= (modulo i <span style="color:#ae81ff">5</span>) <span style="color:#ae81ff">0</span>)) (println <span style="color:#e6db74">&#34;FizzBuzz&#34;</span>)]
-      [(= (modulo i <span style="color:#ae81ff">3</span>) <span style="color:#ae81ff">0</span>) (println <span style="color:#e6db74">&#34;Fizz&#34;</span>)]
-      [(= (modulo i <span style="color:#ae81ff">5</span>) <span style="color:#ae81ff">0</span>) (println <span style="color:#e6db74">&#34;Buzz&#34;</span>)]
-      [<span style="color:#66d9ef">else</span> (println i)])))
+      [(<span style="color:#66d9ef">and </span>(= (modulo i <span style="color:#ae81ff">3</span>) <span style="color:#ae81ff">0</span>) (= (modulo i <span style="color:#ae81ff">5</span>) <span style="color:#ae81ff">0</span>)) (<span style="color:#a6e22e">println</span> <span style="color:#e6db74">&#34;FizzBuzz&#34;</span>)]
+      [(= (modulo i <span style="color:#ae81ff">3</span>) <span style="color:#ae81ff">0</span>) (<span style="color:#a6e22e">println</span> <span style="color:#e6db74">&#34;Fizz&#34;</span>)]
+      [(= (modulo i <span style="color:#ae81ff">5</span>) <span style="color:#ae81ff">0</span>) (<span style="color:#a6e22e">println</span> <span style="color:#e6db74">&#34;Buzz&#34;</span>)]
+      [<span style="color:#66d9ef">else </span>(<span style="color:#a6e22e">println</span> i)])))
 
-(fizz-buzz <span style="color:#ae81ff">20</span>)</code></pre></div>
-<h1 id="diving-into-the-documentation">Diving into the documentation<a href="#diving-into-the-documentation" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+(<span style="color:#a6e22e">fizz-buzz</span> <span style="color:#ae81ff">20</span>)
+</code></pre></div><h1 id="diving-into-the-documentation">Diving into the documentation<a href="#diving-into-the-documentation" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
 <p>I wouldn&rsquo;t usually do it this way, but I decided I should read through the docs, more specifically the <a href="https://docs.racket-lang.org/guide/index.html?q=loop">Racket guide</a> on the language before continuing on to something slightly larger. There was a lot of information there but here were some of things that I found interesting.</p>
 <h1 id="getting-started-a-few-things-i-noticed">Getting started: A few things I noticed<a href="#getting-started-a-few-things-i-noticed" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
 <ul>
@@ -187,9 +187,9 @@ Preface I&amp;rsquo;ve been playing around with functional languages for a few y
 <p>Though most OO languages have some aspects of functional programming with lambdas, it&rsquo;s nowhere near as intuitive. Treating functions are arguments allows you to things you would never even think about in Object Oriented programming. Instead of checking if an argument was a string or an Integer, casting it and then applying the correct function we check if it&rsquo;s a string and pass the function along to the two arguments. This isn&rsquo;t something unique to Racket, but it is something that I appreciated a lot the longer I used it. The example taken from the docs here, shows off just how easy it is:</p>
 </li>
 </ul>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-racket" data-lang="racket">(<span style="color:#66d9ef">define</span> (double v)
-    ((<span style="color:#66d9ef">if</span> (string? v) string-append +) v v))</code></pre></div>
-<ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scheme" data-lang="scheme">(<span style="color:#66d9ef">define </span>(<span style="color:#a6e22e">double</span> v)
+    ((<span style="color:#66d9ef">if </span>(string? v) string-append +) v v))
+</code></pre></div><ul>
 <li>Racket is almost syntax-less; whereas many languages have different structures, rules and often shortcuts for defining variables, checking conditionals, creating switches, or creating functions is all the same. Not having to look up syntax greatly simplified the process of learning the language.</li>
 </ul>
 <h1 id="something-slightly-larger">Something Slightly Larger<a href="#something-slightly-larger" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
@@ -198,78 +198,78 @@ Preface I&amp;rsquo;ve been playing around with functional languages for a few y
 <p>This may have not been the best choice for the first thing I should try to build, but I wanted to pick something somewhat off the beaten path to see what kind of problems I might run into. I thought I might run into issues with bracket completion, but that never really happened even though there wasn&rsquo;t any bracket completion turned on. The majority of the issues that I ran into where more or less around using functions properly such as returning an expression or passing in the correct types to a function as even though the language is untyped there are functions that return errors if passed the wrong type of data.</p>
 <h2 id="getting-to-work">Getting to work<a href="#getting-to-work" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
 <p>Bytes can be read using <code>read-bytes</code> and passes an input port which in this case was made from opening a file, and reads bytes in octal. I won&rsquo;t include the entire script here, just enough to show off the simplicity of Racket.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-racket" data-lang="racket">(<span style="color:#66d9ef">define</span> in (open-input-file <span style="color:#e6db74">&#34;gif.gif&#34;</span>))</code></pre></div>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-racket" data-lang="racket"><span style="color:#f92672">#lang </span>racket
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scheme" data-lang="scheme">(<span style="color:#66d9ef">define </span>in (open-input-file <span style="color:#e6db74">&#34;gif.gif&#34;</span>))
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scheme" data-lang="scheme"><span style="color:#f92672">#</span>lang racket
 
-(<span style="color:#66d9ef">define</span> (size-of-color-table-from-packed-field bstr bytes-before-pf)
-  (<span style="color:#66d9ef">define</span> packed-field (extract-packed-field bstr bytes-before-pf))
-  (* <span style="color:#ae81ff">3</span> (expt <span style="color:#ae81ff">2</span> (+ (bitwise-and (integer-bytes-&gt;integer packed-field <span style="color:#66d9ef">#f</span>) least-three-sig-mask) <span style="color:#ae81ff">1</span>))))
+(<span style="color:#66d9ef">define </span>(<span style="color:#a6e22e">size-of-color-table-from-packed-field</span> bstr bytes-before-pf)
+  (<span style="color:#66d9ef">define </span>packed-field (<span style="color:#a6e22e">extract-packed-field</span> bstr bytes-before-pf))
+  (* <span style="color:#ae81ff">3</span> (expt <span style="color:#ae81ff">2</span> (+ (<span style="color:#a6e22e">bitwise-and</span> (<span style="color:#a6e22e">integer-bytes-&gt;integer</span> packed-field <span style="color:#66d9ef">#f</span>) least-three-sig-mask) <span style="color:#ae81ff">1</span>))))
 
-(<span style="color:#66d9ef">define</span> (extract-packed-field bstr bytes-before-pf)
-  (<span style="color:#66d9ef">define</span> in (open-input-bytes bstr))
-  (read-bytes bytes-before-pf in) <span style="color:#75715e">;; The number of bytes in front of the packed field in the bstr</span>
-  (read-bytes <span style="color:#ae81ff">1</span> in))
+(<span style="color:#66d9ef">define </span>(<span style="color:#a6e22e">extract-packed-field</span> bstr bytes-before-pf)
+  (<span style="color:#66d9ef">define </span>in (<span style="color:#a6e22e">open-input-bytes</span> bstr))
+  (<span style="color:#a6e22e">read-bytes</span> bytes-before-pf in) <span style="color:#75715e">;; The number of bytes in front of the packed field in the bstr</span>
+  (<span style="color:#a6e22e">read-bytes</span> <span style="color:#ae81ff">1</span> in))
 
-(<span style="color:#66d9ef">provide</span> size-of-color-table-from-packed-field
-         extract-packed-field)</code></pre></div>
-<h3 id="testing">Testing<a href="#testing" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+(<span style="color:#a6e22e">provide</span> size-of-color-table-from-packed-field
+         extract-packed-field)
+</code></pre></div><h3 id="testing">Testing<a href="#testing" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
 <p>If I&rsquo;m going to want to use this for anything useful, a good test suite is an important consideration. Luckily testing was pretty straightforward as well, just make sure you provide the functions you intend to expose and <a href="https://docs.racket-lang.org/rackunit/index.html">rackUnit</a> provides easy methods for testing.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-racket" data-lang="racket"><span style="color:#f92672">#lang </span>racket
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scheme" data-lang="scheme"><span style="color:#f92672">#</span>lang racket
 
-(<span style="color:#66d9ef">require</span> rackunit <span style="color:#e6db74">&#34;readgif.rkt&#34;</span>)
+(<span style="color:#a6e22e">require</span> rackunit <span style="color:#e6db74">&#34;readgif.rkt&#34;</span>)
 
-(<span style="color:#66d9ef">define</span> readgif-tests
-  (test-suite <span style="color:#e6db74">&#34;Tests for readgif&#34;</span>
-              (test-case <span style="color:#e6db74">&#34;Extracting Size of color table&#34;</span>
-                         (check-equal?
-                          (size-of-color-table-from-packed-field <span style="color:#e6db74">#&#34;</span><span style="color:#ae81ff">\360\24\253</span><span style="color:#e6db74">;</span><span style="color:#ae81ff">\344\21</span><span style="color:#e6db74">O</span><span style="color:#ae81ff">\262\20\227</span><span style="color:#e6db74">&#34;</span> <span style="color:#ae81ff">4</span>)
+(<span style="color:#66d9ef">define </span>readgif-tests
+  (<span style="color:#a6e22e">test-suite</span> <span style="color:#e6db74">&#34;Tests for readgif&#34;</span>
+              (<span style="color:#a6e22e">test-case</span> <span style="color:#e6db74">&#34;Extracting Size of color table&#34;</span>
+                         (<span style="color:#a6e22e">check-equal?</span>
+                          (<span style="color:#a6e22e">size-of-color-table-from-packed-field</span> <span style="color:#f92672">#</span><span style="color:#e6db74">&#34;\360\24\253;\344\21O\262\20\227&#34;</span> <span style="color:#ae81ff">4</span>)
                           <span style="color:#ae81ff">96</span>))
-              (test-case <span style="color:#e6db74">&#34;Extracting the packed-field from a bstr&#34;</span>
-                         (check-equal?
-                          (extract-packed-field <span style="color:#e6db74">#&#34;</span><span style="color:#ae81ff">\314\1\367\0\367\377\0</span><span style="color:#e6db74">&#34;</span> <span style="color:#ae81ff">4</span>)
-                          <span style="color:#e6db74">#&#34;</span><span style="color:#ae81ff">\367</span><span style="color:#e6db74">&#34;</span>)))</code></pre></div>
-<p>You of course don&rsquo;t need all of this, the <code>check-equal?</code> is enough, but being able to organize the test suites like this is nice if you want to run just one of them. Though I don&rsquo;t know exactly how complicated a larger test suite would be overall, I&rsquo;m happy with the minimal test framework that racket provides.</p>
+              (<span style="color:#a6e22e">test-case</span> <span style="color:#e6db74">&#34;Extracting the packed-field from a bstr&#34;</span>
+                         (<span style="color:#a6e22e">check-equal?</span>
+                          (<span style="color:#a6e22e">extract-packed-field</span> <span style="color:#f92672">#</span><span style="color:#e6db74">&#34;\314\1\367\0\367\377\0&#34;</span> <span style="color:#ae81ff">4</span>)
+                          <span style="color:#f92672">#</span><span style="color:#e6db74">&#34;\367&#34;</span>)))
+</code></pre></div><p>You of course don&rsquo;t need all of this, the <code>check-equal?</code> is enough, but being able to organize the test suites like this is nice if you want to run just one of them. Though I don&rsquo;t know exactly how complicated a larger test suite would be overall, I&rsquo;m happy with the minimal test framework that racket provides.</p>
 <h2 id="web-development">Web development<a href="#web-development" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
 <p>The majority of my experience is in web development so the next step was to create a small website or an api. I had heard that Hackernews was written in racket or, more accurately, written arc, a language written in Racket, so I wanted to see how easy it would be to write a webpage in racket. The docs again shine through here with instant web servlets:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-racket" data-lang="racket"><span style="color:#f92672">#lang </span>web-server/insta
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scheme" data-lang="scheme"><span style="color:#f92672">#</span>lang web-server/insta
  
-(<span style="color:#66d9ef">define</span> (start req)
-  (response/xexpr
-   <span style="color:#f92672">`</span>(<span style="color:#e6db74">html</span> (<span style="color:#e6db74">head</span> (<span style="color:#e6db74">title</span> <span style="color:#e6db74">&#34;Hello world!&#34;</span>))
-          (<span style="color:#e6db74">body</span> (<span style="color:#e6db74">p</span> <span style="color:#e6db74">&#34;This website was made with Racket!&#34;</span>)))))</code></pre></div>
-<p>Thi is nice of course, but ideally I don&rsquo;t want to have to roll everything myself. Luckily there are a few different web frameworks on github, though a few of them are in early stages or don&rsquo;t seem to have many contributions:</p>
+(<span style="color:#66d9ef">define </span>(<span style="color:#a6e22e">start</span> req)
+  (<span style="color:#a6e22e">response/xexpr</span>
+   <span style="color:#f92672">`</span>(<span style="color:#a6e22e">html</span> (<span style="color:#a6e22e">head</span> (<span style="color:#a6e22e">title</span> <span style="color:#e6db74">&#34;Hello world!&#34;</span>))
+          (<span style="color:#a6e22e">body</span> (<span style="color:#a6e22e">p</span> <span style="color:#e6db74">&#34;This website was made with Racket!&#34;</span>)))))
+</code></pre></div><p>Thi is nice of course, but ideally I don&rsquo;t want to have to roll everything myself. Luckily there are a few different web frameworks on github, though a few of them are in early stages or don&rsquo;t seem to have many contributions:</p>
 <ul>
 <li><a href="https://github.com/nihirash/holy">https://github.com/nihirash/holy</a></li>
 <li><a href="https://github.com/dmac/spin">https://github.com/dmac/spin</a></li>
 </ul>
 <h3 id="taking-spin-for-a-whirl">Taking Spin for a whirl<a href="#taking-spin-for-a-whirl" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
 <p>I decided to take a look at spin mostly because it reminded me a lot of the minimalist framework <a href="http://sinatrarb.com/">Sinatra</a> which I have used before.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-racket" data-lang="racket"><span style="color:#f92672">#lang </span>racket
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scheme" data-lang="scheme"><span style="color:#f92672">#</span>lang racket
 
-(<span style="color:#66d9ef">require</span> (<span style="color:#66d9ef">planet</span> dmac/spin))
-(<span style="color:#66d9ef">require</span> web-server/templates)
+(<span style="color:#a6e22e">require</span> (<span style="color:#a6e22e">planet</span> dmac/spin))
+(<span style="color:#a6e22e">require</span> web-server/templates)
 
-(get <span style="color:#e6db74">&#34;/&#34;</span>
-  (<span style="color:#66d9ef">λ</span> () <span style="color:#e6db74">&#34;Hello!&#34;</span>))
+(<span style="color:#a6e22e">get</span> <span style="color:#e6db74">&#34;/&#34;</span>
+  (<span style="color:#a6e22e">λ</span> () <span style="color:#e6db74">&#34;Hello!&#34;</span>))
 
-(get <span style="color:#e6db74">&#34;/hi/:name&#34;</span> (<span style="color:#66d9ef">λ</span> (req)
-  (string-append <span style="color:#e6db74">&#34;Hello, &#34;</span> (params req <span style="color:#f92672">&#39;</span><span style="color:#e6db74">name</span>) <span style="color:#e6db74">&#34;!&#34;</span>)))
+(<span style="color:#a6e22e">get</span> <span style="color:#e6db74">&#34;/hi/:name&#34;</span> (<span style="color:#a6e22e">λ</span> (<span style="color:#a6e22e">req</span>)
+  (string-append <span style="color:#e6db74">&#34;Hello, &#34;</span> (<span style="color:#a6e22e">params</span> req <span style="color:#e6db74">&#39;name</span>) <span style="color:#e6db74">&#34;!&#34;</span>)))
 
-(run)</code></pre></div>
-<p>Boom! This was more what I was looking for: Throw down some routes and then then the use whatever logic needs to run. The framework also includes templating and the like if you need something a little more complicated but there doesn&rsquo;t really seem to be anything in the way of react, rails, spring, or anything in the realm of fully fleshed out web frameworks. That really shouldn&rsquo;t be that surprising considering how small the user base is, and what the typical use case for the language is, so I didn&rsquo;t go much further in the way of creating a more robust web application though there is a static site generator <a href="https://docs.racket-lang.org/frog/index.html">Frog</a>. Though I probably won&rsquo;t consider moving over to Frog from the current static site generator I use for this site: <a href="https://gohugo.io/">Hugo</a>. It looked like it had some thorough documentation and room for customization.</p>
+(<span style="color:#a6e22e">run</span>)
+</code></pre></div><p>Boom! This was more what I was looking for: Throw down some routes and then then the use whatever logic needs to run. The framework also includes templating and the like if you need something a little more complicated but there doesn&rsquo;t really seem to be anything in the way of react, rails, spring, or anything in the realm of fully fleshed out web frameworks. That really shouldn&rsquo;t be that surprising considering how small the user base is, and what the typical use case for the language is, so I didn&rsquo;t go much further in the way of creating a more robust web application though there is a static site generator <a href="https://docs.racket-lang.org/frog/index.html">Frog</a>. Though I probably won&rsquo;t consider moving over to Frog from the current static site generator I use for this site: <a href="https://gohugo.io/">Hugo</a>. It looked like it had some thorough documentation and room for customization.</p>
 <h3 id="making-web-requests">Making web requests<a href="#making-web-requests" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
 <p>A lot of applications depend on making calls to third party apis, so I wanted to see what parsing json was like. There are a number of useful libraries for making <a href="https://github.com/jackfirth/racket-request">rest requests</a> with racket, but I wanted to use just the base language. There were a few different ways to make requests but I found this to be the most intuitive and relevant to the majority of my use cases.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-racket" data-lang="racket"><span style="color:#f92672">#lang </span>racket
-(<span style="color:#66d9ef">require</span> net/http-client
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scheme" data-lang="scheme"><span style="color:#f92672">#</span>lang racket
+(<span style="color:#a6e22e">require</span> net/http-client
          json)
 
-(<span style="color:#66d9ef">define-values</span> (status header response)
-  (http-sendrecv <span style="color:#e6db74">&#34;api.github.com&#34;</span> <span style="color:#e6db74">&#34;/users&#34;</span> <span style="color:#66d9ef">#:ssl?</span> <span style="color:#f92672">&#39;</span><span style="color:#e6db74">auto</span>))
-(<span style="color:#66d9ef">define</span> data (read-json response))
+(<span style="color:#a6e22e">define-values</span> (<span style="color:#a6e22e">status</span> header response)
+  (<span style="color:#a6e22e">http-sendrecv</span> <span style="color:#e6db74">&#34;api.github.com&#34;</span> <span style="color:#e6db74">&#34;/users&#34;</span> <span style="color:#f92672">#</span>:ssl? <span style="color:#e6db74">&#39;auto</span>))
+(<span style="color:#66d9ef">define </span>data (<span style="color:#a6e22e">read-json</span> response))
 
-(<span style="color:#66d9ef">when</span> (jsexpr? data)
-    (hash-ref (first data) <span style="color:#f92672">&#39;</span><span style="color:#e6db74">login</span>))</code></pre></div>
-<p>Here the <code>http-sendrecv</code> produces three values: status, header, and response. The function then returns an input port which we can read as json. Really it builds a <code>#hasheq</code> type or a list of hashes depending on the results, so the Racket libraries for getting information from hashes makes this pretty simple to read from. In this example the json is a list of several results, so we read the first hash from the list in order to access the <code>'login</code> element.</p>
+(<span style="color:#a6e22e">when</span> (<span style="color:#a6e22e">jsexpr?</span> data)
+    (<span style="color:#a6e22e">hash-ref</span> (<span style="color:#a6e22e">first</span> data) <span style="color:#e6db74">&#39;login</span>))
+</code></pre></div><p>Here the <code>http-sendrecv</code> produces three values: status, header, and response. The function then returns an input port which we can read as json. Really it builds a <code>#hasheq</code> type or a list of hashes depending on the results, so the Racket libraries for getting information from hashes makes this pretty simple to read from. In this example the json is a list of several results, so we read the first hash from the list in order to access the <code>'login</code> element.</p>
 <h1 id="conclusion">Conclusion<a href="#conclusion" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
 <p>This is easily the fastest I&rsquo;ve become productive in any particular language. The biggest strength of racket is being largely syntax-less meaning the only real learning that I needed to do was find out what functions were available through the base racket language. The docs were thorough, and though there were a lot of functions, the language still felt small enough that I started to feel like I knew what I was doing relatively quickly. I&rsquo;m not sure that I would build a website from Racket at the moment, but I think that it does make a great general purpose language, and the next time I write a script or tool, I might just try using Racket first.</p>
 

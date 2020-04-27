@@ -147,227 +147,128 @@ It&amp;rsquo;s been about nine months since I finished reading the first volume.
         <p>Random numbers from the second volume of TAOCP and experimentation with PRNGs.</p>
 <p>It&rsquo;s been about nine months since I finished reading the first volume. Though it&rsquo;s likely not a surprise to many, it&rsquo;s one of the more daunting reads however, I found it to be surprisingly entertaining and well written. <a href="/post/the-art-of-computer-programming/">My summary of the experience reading through the first volume</a> was more or less my thoughts on the book, but didn&rsquo;t offer a lot in terms of the content that was covered, nor did I highlight a lot of interesting material that was gleaned from its pages – perhaps I&rsquo;ll remedy that when I have time for a second read through. Admittedly, there was quite a bit of content and I don&rsquo;t think I wanted to post a section by section summary of the volume, especially when you consider that much of the first volume was devoted to stacks, trees, linked lists, and other data structures, something familiar to most software engineers and programmers. Luckily the second volume is far less familiar territory (at least to me) and may be more interesting to write about.</p>
 <h3 id="not-so-random-number-generators">Not So Random Number Generators<a href="#not-so-random-number-generators" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
-<p>Early in the volume Knuth shows how difficult it is to create a sufficiently random pseudorandom number generator. Simply adding a number of complicated steps will not yield truly random numbers. Knuth includes the following algorithm, <!-- raw HTML omitted --><!-- raw HTML omitted -->Algorithm-K<!-- raw HTML omitted --><!-- raw HTML omitted -->, to illustrate this point. You can find an excerpt of the algorithm <a href="http://www.informit.com/articles/article.aspx?p=2221790">here</a>.</p>
+<p>Early in the volume Knuth shows how difficult it is to create a sufficiently random pseudorandom number generator. Simply adding a number of complicated steps will not yield truly random numbers. Knuth includes the following algorithm, <em>Algorithm-K</em>, to illustrate this point. You can find an excerpt of the algorithm <a href="http://www.informit.com/articles/article.aspx?p=2221790">here</a>.</p>
 <h4 id="algorithm-k">Algorithm K<a href="#algorithm-k" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h4>
 <p>For the purposes of demonstration I&rsquo;ve implemented the algorithm below. The steps aren&rsquo;t particularly important, but as you can see it&rsquo;s a fairly involved algorithm that looks like it might produce something random.</p>
-<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
-<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">36
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">37
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">38
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">39
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">40
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">41
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">42
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">43
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">44
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">45
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">46
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">47
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">48
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">49
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">50
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">51
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">52
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">53
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">54
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">55
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">56
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">57
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">58
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">59
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">60
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">61
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">62
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">63
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">64
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">65
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">66
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">67
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">68
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">69
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">70
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">71
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">72
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">73
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">74
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">75
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">76
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">77
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">78
-</span></code></pre></td>
-<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-racket" data-lang="racket"><span style="color:#f92672">#lang </span>racket
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scheme" data-lang="scheme"><span style="color:#f92672">#</span>lang racket
 
-(<span style="color:#66d9ef">define</span> (algorithm-k x)
-  (do-algorithm-k x (+ <span style="color:#ae81ff">1</span> (floor (/ x (expt <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">9</span>))))))
+(<span style="color:#66d9ef">define </span>(<span style="color:#a6e22e">algorithm-k</span> x)
+  (<span style="color:#a6e22e">do-algorithm-k</span> x (+ <span style="color:#ae81ff">1</span> (floor (/ x (expt <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">9</span>))))))
 
-(<span style="color:#66d9ef">define</span> ns (variable-reference-&gt;namespace (<span style="color:#66d9ef">#%variable-reference</span>)))
+(<span style="color:#66d9ef">define </span>ns (<span style="color:#a6e22e">variable-reference-&gt;namespace</span> (<span style="color:#f92672">#</span>%variable-reference)))
 
-(<span style="color:#66d9ef">define</span> (string-&gt;procedure s)
-  (<span style="color:#66d9ef">define</span> sym (string-&gt;symbol s))
+(<span style="color:#66d9ef">define </span>(<span style="color:#a6e22e">string-&gt;procedure</span> s)
+  (<span style="color:#66d9ef">define </span>sym (string-&gt;symbol s))
   (eval sym ns))
 
-(<span style="color:#66d9ef">define</span> (do-algorithm-k x iterations)
-  (<span style="color:#66d9ef">define</span> step (string-append
+(<span style="color:#66d9ef">define </span>(<span style="color:#a6e22e">do-algorithm-k</span> x iterations)
+  (<span style="color:#66d9ef">define </span>step (<span style="color:#a6e22e">string-append</span>
                 <span style="color:#e6db74">&#34;k&#34;</span>
-                (number-&gt;string
+                (<span style="color:#a6e22e">number-&gt;string</span>
                  (+ (modulo (floor (/ x (expt <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">8</span>))) <span style="color:#ae81ff">10</span>) <span style="color:#ae81ff">3</span>))))
-  (<span style="color:#66d9ef">if</span> (eq? iterations <span style="color:#ae81ff">0</span>)
+  (<span style="color:#66d9ef">if </span>(eq? iterations <span style="color:#ae81ff">0</span>)
       x
-      ((string-&gt;procedure step) x iterations)))
+      ((<span style="color:#a6e22e">string-&gt;procedure</span> step) x iterations)))
 
 <span style="color:#75715e">;; Ensure &gt;= 5 x 10^9</span>
-(<span style="color:#66d9ef">define</span> (k3 x iterations)
-  (<span style="color:#66d9ef">if</span> (&gt; x <span style="color:#ae81ff">5000000000</span>)
-      (k4 x iterations)
-      (k4 (+ x <span style="color:#ae81ff">5000000000</span>) iterations)))
+(<span style="color:#66d9ef">define </span>(<span style="color:#a6e22e">k3</span> x iterations)
+  (<span style="color:#66d9ef">if </span>(&gt; x <span style="color:#ae81ff">5000000000</span>)
+      (<span style="color:#a6e22e">k4</span> x iterations)
+      (<span style="color:#a6e22e">k4</span> (+ x <span style="color:#ae81ff">5000000000</span>) iterations)))
 
 <span style="color:#75715e">;; Middle square</span>
-(<span style="color:#66d9ef">define</span> (k4 x iterations)
-  (k5 (modulo (floor (/ (expt x <span style="color:#ae81ff">2</span>) (expt <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">5</span>))) (expt <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">10</span>)) iterations))
+(<span style="color:#66d9ef">define </span>(<span style="color:#a6e22e">k4</span> x iterations)
+  (<span style="color:#a6e22e">k5</span> (modulo (floor (/ (expt x <span style="color:#ae81ff">2</span>) (expt <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">5</span>))) (expt <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">10</span>)) iterations))
 
 <span style="color:#75715e">;; Multiply</span>
-(<span style="color:#66d9ef">define</span> (k5 x iterations)
-  (k6 (modulo (* x <span style="color:#ae81ff">1001001001</span>) (expt <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">10</span>)) iterations))
+(<span style="color:#66d9ef">define </span>(<span style="color:#a6e22e">k5</span> x iterations)
+  (<span style="color:#a6e22e">k6</span> (modulo (* x <span style="color:#ae81ff">1001001001</span>) (expt <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">10</span>)) iterations))
 
 <span style="color:#75715e">;; Psuedo-complement</span>
-(<span style="color:#66d9ef">define</span> (k6 x iterations)
-  (<span style="color:#66d9ef">if</span> (&lt; x <span style="color:#ae81ff">100000000</span>)
-      (k7 (+ x <span style="color:#ae81ff">9814055677</span>) iterations)
-      (k7 (- (expt <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">10</span>) x) iterations)))
+(<span style="color:#66d9ef">define </span>(<span style="color:#a6e22e">k6</span> x iterations)
+  (<span style="color:#66d9ef">if </span>(&lt; x <span style="color:#ae81ff">100000000</span>)
+      (<span style="color:#a6e22e">k7</span> (+ x <span style="color:#ae81ff">9814055677</span>) iterations)
+      (<span style="color:#a6e22e">k7</span> (- (expt <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">10</span>) x) iterations)))
 
 <span style="color:#75715e">;; Interchange halves</span>
 <span style="color:#75715e">;; ie 1234567890 -&gt; 6789012345</span>
-(<span style="color:#66d9ef">define</span> (k7 x iterations)
-  (k8 (+
+(<span style="color:#66d9ef">define </span>(<span style="color:#a6e22e">k7</span> x iterations)
+  (<span style="color:#a6e22e">k8</span> (<span style="color:#a6e22e">+</span>
        (* (expt <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">5</span>) (modulo x (expt <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">5</span>)))
        (floor (/ x (expt <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">5</span>)))) iterations))
 
 <span style="color:#75715e">;; Multiply / same as k5</span>
-(<span style="color:#66d9ef">define</span> (k8 x iterations)
-  (k9 (modulo (* x <span style="color:#ae81ff">1001001001</span>) (expt <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">10</span>)) iterations))
+(<span style="color:#66d9ef">define </span>(<span style="color:#a6e22e">k8</span> x iterations)
+  (<span style="color:#a6e22e">k9</span> (modulo (* x <span style="color:#ae81ff">1001001001</span>) (expt <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">10</span>)) iterations))
 
 <span style="color:#75715e">;; Decrease digits</span>
-(<span style="color:#66d9ef">define</span> (k9 x iterations)
-  (k10 (sub-one x <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">0</span>) iterations))
+(<span style="color:#66d9ef">define </span>(<span style="color:#a6e22e">k9</span> x iterations)
+  (<span style="color:#a6e22e">k10</span> (<span style="color:#a6e22e">sub-one</span> x <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">0</span>) iterations))
 
-(<span style="color:#66d9ef">define</span> (sub-one x sum mult)
-  (<span style="color:#66d9ef">if</span> (eq? x <span style="color:#ae81ff">0</span>)
+(<span style="color:#66d9ef">define </span>(<span style="color:#a6e22e">sub-one</span> x sum mult)
+  (<span style="color:#66d9ef">if </span>(eq? x <span style="color:#ae81ff">0</span>)
       sum
-      (<span style="color:#66d9ef">if</span> (eq? (modulo x <span style="color:#ae81ff">10</span>) <span style="color:#ae81ff">0</span>)
-          (sub-one (floor (/ x <span style="color:#ae81ff">10</span>)) (+ (* (modulo x <span style="color:#ae81ff">10</span>) (expt <span style="color:#ae81ff">10</span> mult)) sum) (+ <span style="color:#ae81ff">1</span> mult))
-          (sub-one (floor (/ x <span style="color:#ae81ff">10</span>)) (+ (* (- (modulo x <span style="color:#ae81ff">10</span>) <span style="color:#ae81ff">1</span>) (expt <span style="color:#ae81ff">10</span> mult)) sum) (+ <span style="color:#ae81ff">1</span> mult)))))
+      (<span style="color:#66d9ef">if </span>(eq? (modulo x <span style="color:#ae81ff">10</span>) <span style="color:#ae81ff">0</span>)
+          (<span style="color:#a6e22e">sub-one</span> (floor (/ x <span style="color:#ae81ff">10</span>)) (+ (* (modulo x <span style="color:#ae81ff">10</span>) (expt <span style="color:#ae81ff">10</span> mult)) sum) (+ <span style="color:#ae81ff">1</span> mult))
+          (<span style="color:#a6e22e">sub-one</span> (floor (/ x <span style="color:#ae81ff">10</span>)) (+ (* (- (modulo x <span style="color:#ae81ff">10</span>) <span style="color:#ae81ff">1</span>) (expt <span style="color:#ae81ff">10</span> mult)) sum) (+ <span style="color:#ae81ff">1</span> mult)))))
 
 <span style="color:#75715e">;; 99999 modify</span>
-(<span style="color:#66d9ef">define</span> (k10 x iterations)
-  (<span style="color:#66d9ef">if</span> (&lt; x (expt <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">5</span>))
-      (k11 (+ (expt x <span style="color:#ae81ff">2</span>) <span style="color:#ae81ff">99999</span>) iterations)
-      (k11 (- x <span style="color:#ae81ff">99999</span>) iterations)))
+(<span style="color:#66d9ef">define </span>(<span style="color:#a6e22e">k10</span> x iterations)
+  (<span style="color:#66d9ef">if </span>(&lt; x (expt <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">5</span>))
+      (<span style="color:#a6e22e">k11</span> (+ (expt x <span style="color:#ae81ff">2</span>) <span style="color:#ae81ff">99999</span>) iterations)
+      (<span style="color:#a6e22e">k11</span> (- x <span style="color:#ae81ff">99999</span>) iterations)))
 
 <span style="color:#75715e">;; Normalize</span>
-(<span style="color:#66d9ef">define</span> (k11 x iterations)
-  (k12 (go-until x) iterations))
+(<span style="color:#66d9ef">define </span>(<span style="color:#a6e22e">k11</span> x iterations)
+  (<span style="color:#a6e22e">k12</span> (<span style="color:#a6e22e">go-until</span> x) iterations))
 
-(<span style="color:#66d9ef">define</span> (go-until x)
-  (<span style="color:#66d9ef">if</span> (&lt; x (expt <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">9</span>)) (go-until (* x <span style="color:#ae81ff">10</span>)) x))
+(<span style="color:#66d9ef">define </span>(<span style="color:#a6e22e">go-until</span> x)
+  (<span style="color:#66d9ef">if </span>(&lt; x (expt <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">9</span>)) (<span style="color:#a6e22e">go-until</span> (* x <span style="color:#ae81ff">10</span>)) x))
 
 <span style="color:#75715e">;; Modified middle square</span>
-(<span style="color:#66d9ef">define</span> (k12 x iterations)
-  (do-algorithm-k (modulo (floor (* x (/ (- x <span style="color:#ae81ff">1</span>) (expt <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">5</span>)))) (expt <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">10</span>)) (- iterations <span style="color:#ae81ff">1</span>)))</code></pre></td></tr></table>
-</div>
-</div>
-<p>The results however random seeming do present a problem:</p>
+(<span style="color:#66d9ef">define </span>(<span style="color:#a6e22e">k12</span> x iterations)
+  (<span style="color:#a6e22e">do-algorithm-k</span> (modulo (floor (* x (/ (- x <span style="color:#ae81ff">1</span>) (expt <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">5</span>)))) (expt <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">10</span>)) (- iterations <span style="color:#ae81ff">1</span>)))
+</code></pre></div><p>The results however random seeming do present a problem:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">&gt; <span style="color:#f92672">(</span>algorithm-k 1<span style="color:#f92672">)</span>
 <span style="color:#ae81ff">3831577709</span>
 &gt; <span style="color:#f92672">(</span>algorithm-k 12345<span style="color:#f92672">)</span>
 <span style="color:#ae81ff">5827337884</span>
 &gt; <span style="color:#f92672">(</span>algorithm-k 6065038420<span style="color:#f92672">)</span>
-<span style="color:#ae81ff">6065038420</span></code></pre></div>
-<p>The first two examples produce what one might expect, but the third produces itself. Knuth points out that the algorithm happens to degenerate to 6065038420, with the lesson being:</p>
-<!-- raw HTML omitted -->
+<span style="color:#ae81ff">6065038420</span>
+</code></pre></div><p>The first two examples produce what one might expect, but the third produces itself. Knuth points out that the algorithm happens to degenerate to 6065038420, with the lesson being:</p>
+<p><em>&ldquo;Random numbers should not be generated with a method chosen at random&rdquo;</em></p>
 <p>Besides coincidentally degenerating to a seemingly random number, Algorithm K has a number of other downsides, it&rsquo;s difficult to implement and because it iterates a certain amount of times depending on the input, takes a relatively long time to produce a single random number. Somewhere inside that complexity there is a reason why the generator degenerates to 6065038420. In order to be usable we need to be able to easily prove that won&rsquo;t happen. The key take away from that is that we need this to be fast and simple.</p>
 <h3 id="linear-congruential-generator">Linear Congruential Generator<a href="#linear-congruential-generator" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
 <p>The most common pseudorandom number generator (according to Knuth) is a <a href="https://en.wikipedia.org/wiki/Linear_congruential_generator">Linear congruential generator</a>, which has the following equation:</p>
-<!-- raw HTML omitted -->
+<p><em>Xn + 1 = (a * Xn + c) mod m</em></p>
 <p>Unlike the previous algorithm, the equation isn&rsquo;t difficult to explain; numbers for m,a, and c are chosen and set by the language or library designers (hopefully not randomly) and a seed is chosen for the first value of Xn. This being a recurrence relation, the result of each run then becomes the next seed or starting value for a subsequent run. You can see this in the code below:</p>
-<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
-<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">8
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">9
-</span></code></pre></td>
-<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-racket" data-lang="racket"><span style="color:#f92672">#lang </span>racket
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scheme" data-lang="scheme"><span style="color:#f92672">#</span>lang racket
 
-(<span style="color:#66d9ef">define</span> next (current-seconds))
+(<span style="color:#66d9ef">define </span>next (<span style="color:#a6e22e">current-seconds</span>))
 
-(<span style="color:#66d9ef">define</span> (my-random)
-  (<span style="color:#66d9ef">set!</span> next (modulo
+(<span style="color:#66d9ef">define </span>(<span style="color:#a6e22e">my-random</span>)
+  (<span style="color:#66d9ef">set! </span>next (<span style="color:#a6e22e">modulo</span>
               (+ (* next <span style="color:#ae81ff">6364136223846793005</span>) <span style="color:#ae81ff">1442695040888963407</span>)
               (expt <span style="color:#ae81ff">2</span> <span style="color:#ae81ff">64</span>)))
-  next)</code></pre></td></tr></table>
-</div>
-</div>
-<p>You can see the output this produces from the racket repl here:</p>
+  next)
+</code></pre></div><p>You can see the output this produces from the racket repl here:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">&gt; <span style="color:#f92672">(</span>my-random<span style="color:#f92672">)</span>
 <span style="color:#ae81ff">14843871667761315205</span>
 &gt; <span style="color:#f92672">(</span>my-random<span style="color:#f92672">)</span>
 <span style="color:#ae81ff">534325907729616048</span>
 &gt; <span style="color:#f92672">(</span>my-random<span style="color:#f92672">)</span>
-<span style="color:#ae81ff">5734414832404007999</span></code></pre></div>
-<p>This isn&rsquo;t how Racket generates its random numbers (it uses an implementation of the <a href="https://github.com/racket/racket/blob/5bb837661c12a9752c6a99f952c0e1b267645b33/racket/src/cs/rumble/random.ss">MRG32k3a algorithm</a>), however this method is used by other languages such as the function defined in <a href="https://sourceware.org/git/?p=glibc.git;a=blob;f=stdlib/random_r.c;hb=glibc-2.26#l362">glibc</a></p>
-<h4 id="choosing-our-imi-and-iai-values">Choosing our <!-- raw HTML omitted -->m<!-- raw HTML omitted --> and <!-- raw HTML omitted -->a<!-- raw HTML omitted --> values<a href="#choosing-our-imi-and-iai-values" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h4>
-<p>It&rsquo;s important to note here that the numbers used above were not chosen by random, in particular it is important to pay extra attention to the numbers we choose for <!-- raw HTML omitted -->m<!-- raw HTML omitted --> and <!-- raw HTML omitted -->a<!-- raw HTML omitted -->.</p>
+<span style="color:#ae81ff">5734414832404007999</span>
+</code></pre></div><p>This isn&rsquo;t how Racket generates its random numbers (it uses an implementation of the <a href="https://github.com/racket/racket/blob/5bb837661c12a9752c6a99f952c0e1b267645b33/racket/src/cs/rumble/random.ss">MRG32k3a algorithm</a>), however this method is used by other languages such as the function defined in <a href="https://sourceware.org/git/?p=glibc.git;a=blob;f=stdlib/random_r.c;hb=glibc-2.26#l362">glibc</a></p>
+<h4 id="choosing-our-m-and-a-values">Choosing our <em>m</em> and <em>a</em> values<a href="#choosing-our-m-and-a-values" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h4>
+<p>It&rsquo;s important to note here that the numbers used above were not chosen by random, in particular it is important to pay extra attention to the numbers we choose for <em>m</em> and <em>a</em>.</p>
 <ul>
 <li>our m value controls the &ldquo;period&rdquo; of the random number generator which is how long it takes for it to start repeating. ie if we should choose something such as 2, we&rsquo;ll end up producing: 0,1,0,1,0&hellip; so choosing a larger number is ideal.</li>
-<li>m should also be a number that will make division quick since it is a comparatively slow operation. Knuth suggests that you use the word size of the computer ie. 2<!-- raw HTML omitted -->64<!-- raw HTML omitted --> or use the largest prime smaller than the word size.</li>
+<li>m should also be a number that will make division quick since it is a comparatively slow operation. Knuth suggests that you use the word size of the computer ie. <em>2^64</em> or use the largest prime smaller than the word size.</li>
 <li>if m is a power of 2, pick a so that a % 8 = 5. This is to ensure that we produce all m possible values and gives our generator &ldquo;high potency&rdquo;. There is a proof for this but it&rsquo;s far too long to include. In general it would seem that choosing the a value is more complicated than m but equally important as poor choices for a have historically resulted in poor generators. The rules are dependant on the values of m, and c but are too long to include and explain here. <a href="https://en.wikipedia.org/wiki/Linear_congruential_generator">The wiki entry</a> contains a more detailed explanation of the choices when it comes to choosing a.</li>
 </ul>
 <h3 id="why-not-both">Why not both?<a href="#why-not-both" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
 <p>The LCG is just one form of PRNG such as <a href="https://en.wikipedia.org/wiki/Xorshift">xorshift</a>, <a href="https://en.wikipedia.org/wiki/Well_equidistributed_long-period_linear">WELL</a>, or the <a href="https://en.wikipedia.org/wiki/Mersenne_Twister">Mersenne Twister</a> so, if having one random number generator produces something fairly random, would two random number generators produce something even more random? As it turns out yes, but only if applied properly otherwise you could cause issues <a href="https://medium.com/@betable/tifu-by-using-math-random-f1c308c4fd9d">like the one seen in Javascripts Math.random() library</a>. If a person is unconvinced that a random number generator is not sufficiently random, putting two generators together should in Knuth words &ldquo;convince all but the most hardened of skeptics&rdquo;. One method involves taking two generators and shuffling them together, it&rsquo;s only weakness being that it does not change the number themselves, only the sequence so this may still fail the <a href="https://www.cs.indiana.edu/~kapadia/project2/node21.html">Birthday spacings</a> test. Knuth suggest instead that we use an even simpler method by combining results from the same generator, producing 500 or so results, choosing the first 55, then throwing the rest away and repeating the process.</p>
-<h2 id="statistical-tests-or-how-we-can-prove-whats-ireallyi-random">Statistical Tests Or How we can prove what&rsquo;s <!-- raw HTML omitted -->really<!-- raw HTML omitted --> random<a href="#statistical-tests-or-how-we-can-prove-whats-ireallyi-random" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<h2 id="statistical-tests-or-how-we-can-prove-whats-really-random">Statistical Tests Or How we can prove what&rsquo;s <em>really</em> random<a href="#statistical-tests-or-how-we-can-prove-whats-really-random" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
 <p>Once we&rsquo;ve created a random number generator, we need a way to decide if it&rsquo;s actually random or not. Knuth suggests we run a battery of tests on the generator in order to determine that it&rsquo;s satisfactorily random. He also humorously suggests that if the tests don&rsquo;t come out the way we want to try reading <a href="https://en.wikipedia.org/wiki/How_to_Lie_with_Statistics">another book</a>.</p>
 <p>To thoroughly evaluate a random number generator he suggests running the following tests multiple times:</p>
 <ul>
@@ -388,116 +289,11 @@ It&amp;rsquo;s been about nine months since I finished reading the first volume.
 <h3 id="spectral-test">Spectral test<a href="#spectral-test" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
 <p>The most important of all the tests is the Spectral test. This test is make or break for random number generators. All good PRNG&rsquo;s will pass this test, and more importantly, bad PRNG&rsquo;s will fail. There are various examples of this online but one of the more interesting that I came across was of the RANDU generator and why it fails the spectral test can be seen <a href="https://www.youtube.com/watch?v=7wVk_XsxyNk">here</a></p>
 <h3 id="why-so-many-tests">Why So Many Tests?<a href="#why-so-many-tests" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
-<p>True randomness is difficult to obtain, some might argue that it may be impossible. This is even more true because after all, we are working with computers which <!-- raw HTML omitted -->should<!-- raw HTML omitted --> not behave randomly. For this reason we need to determine that they are significantly random enough. To determine this we need to use thorough statistical analysis to show us in a quantifiable way, how random they are. This can be difficult and time consuming to prove as it turns some random generators will pass a few of these tests, yet completely fail others. Luckily most of the math here has been done for us, and we are unlikely to be developing our own, but there are a few notable examples where this happened to fail tests but, still seemed random such as <a href="https://en.wikipedia.org/wiki/RANDU">RANDU</a> which Knuth called &ldquo;truly horrible&rdquo;.</p>
+<p>True randomness is difficult to obtain, some might argue that it may be impossible. This is even more true because after all, we are working with computers which <em>should</em> not behave randomly. For this reason we need to determine that they are significantly random enough. To determine this we need to use thorough statistical analysis to show us in a quantifiable way, how random they are. This can be difficult and time consuming to prove as it turns some random generators will pass a few of these tests, yet completely fail others. Luckily most of the math here has been done for us, and we are unlikely to be developing our own, but there are a few notable examples where this happened to fail tests but, still seemed random such as <a href="https://en.wikipedia.org/wiki/RANDU">RANDU</a> which Knuth called &ldquo;truly horrible&rdquo;.</p>
 <h3 id="running-some-tests">Running some tests<a href="#running-some-tests" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
 <p>Reading about these tests was interesting, but what would be more interesting is to run it on the two generators I had used above, as well as RANDU which is shown below. Comparing the results should highlight the differences between the generators that we expect to preform well, and those that we know will preform poorly. There are a number of random number generator testers out there but the one I used was <code>dieharder</code> based on a suite of tests called diehard. For each run I generated 1,000,0000 random numbers (algorithm k took significantly longer ~20 min) and fed it to diehard. You can see the results here:</p>
 <h1 id="standard-lcg">Standard LCG<a href="#standard-lcg" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
-<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
-<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  1
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  2
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  3
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  4
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  5
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  6
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  7
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  8
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  9
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 10
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 11
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 12
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 13
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 14
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 15
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 16
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 17
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 18
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 19
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 20
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 21
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 22
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 23
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 24
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 25
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 26
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 27
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 28
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 29
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 30
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 31
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 32
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 33
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 34
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 35
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 36
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 37
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 38
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 39
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 40
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 41
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 42
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 43
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 44
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 45
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 46
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 47
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 48
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 49
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 50
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 51
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 52
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 53
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 54
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 55
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 56
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 57
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 58
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 59
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 60
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 61
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 62
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 63
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 64
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 65
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 66
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 67
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 68
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 69
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 70
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 71
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 72
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 73
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 74
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 75
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 76
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 77
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 78
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 79
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 80
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 81
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 82
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 83
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 84
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 85
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 86
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 87
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 88
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 89
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 90
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 91
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 92
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 93
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 94
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 95
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 96
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 97
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 98
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 99
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">100
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">101
-</span></code></pre></td>
-<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#75715e">#=============================================================================#</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#75715e">#=============================================================================#</span>
 <span style="color:#75715e">#            dieharder version 3.31.1 Copyright 2003 Robert G. Brown          #</span>
 <span style="color:#75715e">#=============================================================================#</span>
    rng_name    |           filename             |rands/second|
@@ -597,347 +393,18 @@ rgb_minimum_distance|   5|     10000|    1000|0.00000000|  FAILED
 <span style="color:#75715e"># The file file_input was rewound 612 times</span>
       rgb_lagged_sum|   3|   1000000|     100|0.00000000|  FAILED  
 <span style="color:#75715e"># The file file_input was rewound 662 times</span>
-      rgb_lagged_sum|   4|   1000000|     100|0.00000000|  FAILED</code></pre></td></tr></table>
-</div>
-</div>
-<h1 id="randu">RANDU<a href="#randu" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
-<p><div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
-<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
-</span></code></pre></td>
-<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-racket" data-lang="racket"><span style="color:#f92672">#lang </span>racket
+      rgb_lagged_sum|   4|   1000000|     100|0.00000000|  FAILED
+</code></pre></div><h1 id="randu">RANDU<a href="#randu" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scheme" data-lang="scheme"><span style="color:#f92672">#</span>lang racket
 
-(<span style="color:#66d9ef">define</span> next <span style="color:#ae81ff">1090815429</span>)
+(<span style="color:#66d9ef">define </span>next <span style="color:#ae81ff">1090815429</span>)
 
-(<span style="color:#66d9ef">define</span> (randu)
-  (<span style="color:#66d9ef">set!</span> next (modulo (* next <span style="color:#ae81ff">65539</span>) (expt <span style="color:#ae81ff">2</span> <span style="color:#ae81ff">31</span>)))
-  next)</code></pre></td></tr></table>
-</div>
-</div>
-<!-- raw HTML omitted -->
-<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
-<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  1
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  2
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  3
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  4
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  5
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  6
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  7
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  8
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  9
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 10
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 11
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 12
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 13
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 14
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 15
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 16
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 17
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 18
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 19
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 20
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 21
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 22
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 23
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 24
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 25
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 26
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 27
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 28
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 29
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 30
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 31
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 32
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 33
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 34
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 35
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 36
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 37
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 38
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 39
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 40
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 41
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 42
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 43
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 44
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 45
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 46
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 47
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 48
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 49
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 50
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 51
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 52
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 53
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 54
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 55
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 56
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 57
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 58
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 59
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 60
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 61
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 62
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 63
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 64
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 65
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 66
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 67
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 68
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 69
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 70
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 71
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 72
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 73
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 74
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 75
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 76
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 77
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 78
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 79
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 80
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 81
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 82
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 83
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 84
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 85
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 86
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 87
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 88
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 89
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 90
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 91
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 92
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 93
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 94
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 95
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 96
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 97
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 98
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 99
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">100
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">101
-</span></code></pre></td>
-<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#75715e">#=============================================================================#</span>
-<span style="color:#75715e">#            dieharder version 3.31.1 Copyright 2003 Robert G. Brown          #</span>
-<span style="color:#75715e">#=============================================================================#</span>
-   rng_name    |           filename             |rands/second|
-     file_input|                     randu.input|  7.94e+06  |
-<span style="color:#75715e">#=============================================================================#</span>
-        test_name   |ntup| tsamples |psamples|  p-value |Assessment
-<span style="color:#75715e">#=============================================================================#</span>
-<span style="color:#75715e"># The file file_input was rewound 1 times</span>
-   diehard_birthdays|   0|       100|     100|0.00000053|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 11 times</span>
-      diehard_operm5|   0|   1000000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 24 times</span>
-  diehard_rank_32x32|   0|     40000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 30 times</span>
-    diehard_rank_6x8|   0|    100000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 32 times</span>
-   diehard_bitstream|   0|   2097152|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 53 times</span>
-        diehard_opso|   0|   2097152|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 67 times</span>
-        diehard_oqso|   0|   2097152|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 74 times</span>
-         diehard_dna|   0|   2097152|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 74 times</span>
-diehard_count_1s_str|   0|    256000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 87 times</span>
-diehard_count_1s_byt|   0|    256000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 87 times</span>
- diehard_parking_lot|   0|     12000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 88 times</span>
-    diehard_2dsphere|   2|      8000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 88 times</span>
-    diehard_3dsphere|   3|      4000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 101 times</span>
-     diehard_squeeze|   0|    100000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 101 times</span>
-        diehard_sums|   0|       100|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 102 times</span>
-        diehard_runs|   0|    100000|     100|0.00055174|   WEAK   
-        diehard_runs|   0|    100000|     100|0.00915037|  PASSED  
-<span style="color:#75715e"># The file file_input was rewound 118 times</span>
-       diehard_craps|   0|    200000|     100|0.00000000|  FAILED  
-       diehard_craps|   0|    200000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 318 times</span>
- marsaglia_tsang_gcd|   0|  10000000|     100|0.00000000|  FAILED  
- marsaglia_tsang_gcd|   0|  10000000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 319 times</span>
-         sts_monobit|   1|    100000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 320 times</span>
-            sts_runs|   2|    100000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 323 times</span>
-         rgb_bitdist|   1|    100000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 327 times</span>
-         rgb_bitdist|   2|    100000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 333 times</span>
-         rgb_bitdist|   3|    100000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 341 times</span>
-         rgb_bitdist|   4|    100000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 351 times</span>
-         rgb_bitdist|   5|    100000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 363 times</span>
-         rgb_bitdist|   6|    100000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 377 times</span>
-         rgb_bitdist|   7|    100000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 393 times</span>
-         rgb_bitdist|   8|    100000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 411 times</span>
-         rgb_bitdist|   9|    100000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 431 times</span>
-         rgb_bitdist|  10|    100000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 453 times</span>
-         rgb_bitdist|  11|    100000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 477 times</span>
-         rgb_bitdist|  12|    100000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 479 times</span>
-rgb_minimum_distance|   2|     10000|    1000|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 482 times</span>
-rgb_minimum_distance|   3|     10000|    1000|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 486 times</span>
-rgb_minimum_distance|   4|     10000|    1000|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 491 times</span>
-rgb_minimum_distance|   5|     10000|    1000|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 493 times</span>
-    rgb_permutations|   2|    100000|     100|0.14813789|  PASSED  
-<span style="color:#75715e"># The file file_input was rewound 496 times</span>
-    rgb_permutations|   3|    100000|     100|0.49241270|  PASSED  
-<span style="color:#75715e"># The file file_input was rewound 500 times</span>
-    rgb_permutations|   4|    100000|     100|0.00108537|   WEAK   
-<span style="color:#75715e"># The file file_input was rewound 505 times</span>
-    rgb_permutations|   5|    100000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 515 times</span>
-      rgb_lagged_sum|   0|   1000000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 535 times</span>
-      rgb_lagged_sum|   1|   1000000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 565 times</span>
-      rgb_lagged_sum|   2|   1000000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 605 times</span>
-      rgb_lagged_sum|   3|   1000000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 655 times</span>
-      rgb_lagged_sum|   4|   1000000|     100|0.00000000|  FAILED  </code></pre></td></tr></table>
-</div>
-</div></p>
+(<span style="color:#66d9ef">define </span>(<span style="color:#a6e22e">randu</span>)
+  (<span style="color:#66d9ef">set! </span>next (modulo (* next <span style="color:#ae81ff">65539</span>) (expt <span style="color:#ae81ff">2</span> <span style="color:#ae81ff">31</span>)))
+  next)
+</code></pre></div><!-- raw HTML omitted -->
 <h1 id="algorithm-k-1">Algorithm-k<a href="#algorithm-k-1" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
-<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
-<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  1
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  2
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  3
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  4
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  5
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  6
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  7
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  8
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  9
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 10
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 11
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 12
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 13
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 14
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 15
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 16
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 17
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 18
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 19
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 20
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 21
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 22
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 23
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 24
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 25
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 26
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 27
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 28
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 29
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 30
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 31
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 32
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 33
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 34
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 35
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 36
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 37
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 38
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 39
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 40
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 41
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 42
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 43
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 44
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 45
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 46
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 47
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 48
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 49
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 50
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 51
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 52
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 53
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 54
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 55
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 56
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 57
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 58
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 59
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 60
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 61
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 62
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 63
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 64
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 65
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 66
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 67
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 68
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 69
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 70
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 71
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 72
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 73
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 74
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 75
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 76
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 77
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 78
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 79
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 80
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 81
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 82
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 83
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 84
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 85
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 86
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 87
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 88
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 89
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 90
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 91
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 92
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 93
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 94
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 95
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 96
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 97
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 98
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 99
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">100
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">101
-</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">102
-</span></code></pre></td>
-<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#75715e">#=============================================================================#</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#75715e">#=============================================================================#</span>
 <span style="color:#75715e">#            dieharder version 3.31.1 Copyright 2003 Robert G. Brown          #</span>
 <span style="color:#75715e">#=============================================================================#</span>
    rng_name    |           filename             |rands/second|
@@ -1038,10 +505,8 @@ rgb_minimum_distance|   5|     10000|    1000|0.00000000|  FAILED
 <span style="color:#75715e"># The file file_input was rewound 610 times</span>
       rgb_lagged_sum|   3|   1000000|     100|0.00000000|  FAILED  
 <span style="color:#75715e"># The file file_input was rewound 660 times</span>
-      rgb_lagged_sum|   4|   1000000|     100|0.00000000|  FAILED</code></pre></td></tr></table>
-</div>
-</div>
-<p>There&rsquo;s already quite a bit to digest here so I didn&rsquo;t include all of the test results as the first few are enough to illustrate the differences between the three algorithms. One thing you will notice is that the standard LCG used actually failed a lot of tests. After doing a little testing and some digging it seems that dieharder will also fail these tests with its own generator with the same amount of numbers. In fact, you can really only expect good results with about 10 million or more numbers, but because diehard runs on a single cpu this would have taken a considerable amount of time to run. The comparison is really what we&rsquo;re after and from the results it&rsquo;s clear that algorithm-k is not suitable, nor is RANDU much better. I wanted to be able to see what kind of results I would see from running a much larger set so I ran one last run with 100,000,000 which shows that the lcg faired a little bit better.</p>
+      rgb_lagged_sum|   4|   1000000|     100|0.00000000|  FAILED
+</code></pre></div><p>There&rsquo;s already quite a bit to digest here so I didn&rsquo;t include all of the test results as the first few are enough to illustrate the differences between the three algorithms. One thing you will notice is that the standard LCG used actually failed a lot of tests. After doing a little testing and some digging it seems that dieharder will also fail these tests with its own generator with the same amount of numbers. In fact, you can really only expect good results with about 10 million or more numbers, but because diehard runs on a single cpu this would have taken a considerable amount of time to run. The comparison is really what we&rsquo;re after and from the results it&rsquo;s clear that algorithm-k is not suitable, nor is RANDU much better. I wanted to be able to see what kind of results I would see from running a much larger set so I ran one last run with 100,000,000 which shows that the lcg faired a little bit better.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#75715e">#=============================================================================#</span>
 <span style="color:#75715e">#            dieharder version 3.31.1 Copyright 2003 Robert G. Brown          #</span>
 <span style="color:#75715e">#=============================================================================#</span>
@@ -1143,11 +608,11 @@ rgb_minimum_distance|   5|     10000|    1000|0.00000148|   WEAK
 <span style="color:#75715e"># The file file_input was rewound 66 times</span>
       rgb_lagged_sum|   4|   1000000|     100|0.02328575|  PASSED  
 <span style="color:#75715e"># The file file_input was rewound 72 times</span>
-      rgb_lagged_sum|   5|   1000000|     100|0.10863760|  PASSED  </code></pre></div>
-<p>Here we can see the larger set actually did quite a bit better, passing where it was either weak or had even failed before. It&rsquo;s not perfect of course, and certainly not suitable for cryptographic use but we can see that the generator works well enough. I would have liked to have run more tests and tried a few different random number generators, but testing with dieharder was taking quite a long time on my underpowered laptop CPU. Of course no generator is going to pass every test as Knuth states: <!-- raw HTML omitted -->&quot;A truly random sequence will exhibit local non-randomness&quot;<!-- raw HTML omitted -->. Proving that a generator is suitable would require many more multiple runs on larger data sets. Only then might say that the PRNG is satisfiably random.</p>
+      rgb_lagged_sum|   5|   1000000|     100|0.10863760|  PASSED  
+</code></pre></div><p>Here we can see the larger set actually did quite a bit better, passing where it was either weak or had even failed before. It&rsquo;s not perfect of course, and certainly not suitable for cryptographic use but we can see that the generator works well enough. I would have liked to have run more tests and tried a few different random number generators, but testing with dieharder was taking quite a long time on my underpowered laptop CPU. Of course no generator is going to pass every test as Knuth states: <em>&ldquo;A truly random sequence will exhibit local non-randomness&rdquo;</em>. Proving that a generator is suitable would require many more multiple runs on larger data sets. Only then might say that the PRNG is satisfiably random.</p>
 <h2 id="not-so-random-musings">Not So Random Musings<a href="#not-so-random-musings" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
 <p>In a set of infinite numbers we might expect to see 1,000,000 7&rsquo;s or 8&rsquo;s in a row at some point. Maybe the numbers, viewed in a single line would map to ascii values that could print the works of Shakespeare. It may not be desirable for applications, but it would be consistent with a truly random number generator. Though the math was certainly beyond me, the first half of volume 2 was incredibly interesting. If anything it&rsquo;s made me question how random numbers are generated a little more, forcing me to dig through the random number generators that I have trusted. A simple mistake could result in unexpected deterministic behaviour. Though this is unlikely to be a problem in my day to day life as a web developer, it will still make me think the next time I need to rely on random behaviour. Further fueling my paranoia, Knuth gives some great advice to summarise the learnings of the chapter:</p>
-<!-- raw HTML omitted -->
+<p><em>&ldquo;Look at the subroutine library of each computer installation in your organization, and replace the random number generators by good ones. Try to avoid being too shocked at what you find.&quot;</em></p>
       </div></div>
   
   <div class="pagination">

@@ -23,7 +23,7 @@ Almost two years ago, I found about about the Racket language and worked through
 
 Before I start building something I want to get a feel for the language so I started by making a simple FizzBuzz function. The code is simple enough to read, define the function, which loops through 0 to some given argument and prints when certain conditions are met. I'm not sure if this is idiomatic Racket but I'm not concerned about that just yet.
 
-{{< highlight racket>}}
+```scheme
 #lang racket
 (define (fizz-buzz num)
   (for ([i num])
@@ -35,7 +35,7 @@ Before I start building something I want to get a feel for the language so I sta
       [else (println i)])))
 
 (fizz-buzz 20)
-{{< / highlight >}}
+```
 
 # Diving into the documentation
 
@@ -57,10 +57,10 @@ I wouldn't usually do it this way, but I decided I should read through the docs,
 
 * Though most OO languages have some aspects of functional programming with lambdas, it's nowhere near as intuitive. Treating functions are arguments allows you to things you would never even think about in Object Oriented programming. Instead of checking if an argument was a string or an Integer, casting it and then applying the correct function we check if it's a string and pass the function along to the two arguments. This isn't something unique to Racket, but it is something that I appreciated a lot the longer I used it. The example taken from the docs here, shows off just how easy it is:
 
-{{< highlight racket>}}
+```scheme
 (define (double v)
     ((if (string? v) string-append +) v v))
-{{< / highlight >}}
+```
 
 * Racket is almost syntax-less; whereas many languages have different structures, rules and often shortcuts for defining variables, checking conditionals, creating switches, or creating functions is all the same. Not having to look up syntax greatly simplified the process of learning the language.
 
@@ -76,11 +76,11 @@ This may have not been the best choice for the first thing I should try to build
 
 Bytes can be read using `read-bytes` and passes an input port which in this case was made from opening a file, and reads bytes in octal. I won't include the entire script here, just enough to show off the simplicity of Racket.
 
-{{< highlight racket>}}
+```scheme
 (define in (open-input-file "gif.gif"))
-{{< / highlight >}}
+```
 
-{{< highlight racket>}}
+```scheme
 #lang racket
 
 (define (size-of-color-table-from-packed-field bstr bytes-before-pf)
@@ -94,13 +94,13 @@ Bytes can be read using `read-bytes` and passes an input port which in this case
 
 (provide size-of-color-table-from-packed-field
          extract-packed-field)
-{{< / highlight >}}
+```
 
 ### Testing
 
 If I'm going to want to use this for anything useful, a good test suite is an important consideration. Luckily testing was pretty straightforward as well, just make sure you provide the functions you intend to expose and [rackUnit](https://docs.racket-lang.org/rackunit/index.html) provides easy methods for testing.
 
-{{< highlight racket>}}
+```scheme
 #lang racket
 
 (require rackunit "readgif.rkt")
@@ -115,7 +115,7 @@ If I'm going to want to use this for anything useful, a good test suite is an im
                          (check-equal?
                           (extract-packed-field #"\314\1\367\0\367\377\0" 4)
                           #"\367")))
-{{< / highlight >}}
+```
 
 You of course don't need all of this, the `check-equal?` is enough, but being able to organize the test suites like this is nice if you want to run just one of them. Though I don't know exactly how complicated a larger test suite would be overall, I'm happy with the minimal test framework that racket provides.
 
@@ -123,14 +123,14 @@ You of course don't need all of this, the `check-equal?` is enough, but being ab
 
 The majority of my experience is in web development so the next step was to create a small website or an api. I had heard that Hackernews was written in racket or, more accurately, written arc, a language written in Racket, so I wanted to see how easy it would be to write a webpage in racket. The docs again shine through here with instant web servlets:
 
-{{< highlight racket >}}
+```scheme
 #lang web-server/insta
  
 (define (start req)
   (response/xexpr
    `(html (head (title "Hello world!"))
           (body (p "This website was made with Racket!")))))
-{{< / highlight >}}
+```
 
 Thi is nice of course, but ideally I don't want to have to roll everything myself. Luckily there are a few different web frameworks on github, though a few of them are in early stages or don't seem to have many contributions:
 
@@ -141,7 +141,7 @@ Thi is nice of course, but ideally I don't want to have to roll everything mysel
 
 I decided to take a look at spin mostly because it reminded me a lot of the minimalist framework [Sinatra](http://sinatrarb.com/) which I have used before.
 
-{{< highlight racket >}}
+```scheme
 #lang racket
 
 (require (planet dmac/spin))
@@ -154,7 +154,7 @@ I decided to take a look at spin mostly because it reminded me a lot of the mini
   (string-append "Hello, " (params req 'name) "!")))
 
 (run)
-{{< / highlight >}}
+```
 
 Boom! This was more what I was looking for: Throw down some routes and then then the use whatever logic needs to run. The framework also includes templating and the like if you need something a little more complicated but there doesn't really seem to be anything in the way of react, rails, spring, or anything in the realm of fully fleshed out web frameworks. That really shouldn't be that surprising considering how small the user base is, and what the typical use case for the language is, so I didn't go much further in the way of creating a more robust web application though there is a static site generator [Frog](https://docs.racket-lang.org/frog/index.html). Though I probably won't consider moving over to Frog from the current static site generator I use for this site: [Hugo](https://gohugo.io/). It looked like it had some thorough documentation and room for customization.
 
@@ -162,7 +162,7 @@ Boom! This was more what I was looking for: Throw down some routes and then then
 
 A lot of applications depend on making calls to third party apis, so I wanted to see what parsing json was like. There are a number of useful libraries for making [rest requests](https://github.com/jackfirth/racket-request) with racket, but I wanted to use just the base language. There were a few different ways to make requests but I found this to be the most intuitive and relevant to the majority of my use cases.
 
-{{< highlight racket >}}
+```scheme
 #lang racket
 (require net/http-client
          json)
@@ -173,7 +173,7 @@ A lot of applications depend on making calls to third party apis, so I wanted to
 
 (when (jsexpr? data)
     (hash-ref (first data) 'login))
-{{< / highlight >}}
+```
 
 Here the `http-sendrecv` produces three values: status, header, and response. The function then returns an input port which we can read as json. Really it builds a `#hasheq` type or a list of hashes depending on the results, so the Racket libraries for getting information from hashes makes this pretty simple to read from. In this example the json is a list of several results, so we read the first hash from the list in order to access the `'login` element.
 
