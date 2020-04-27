@@ -1,35 +1,33 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>computer science on Adam&#39;s Blag</title>
-    <link>https://arm64.ca/categories/computer-science/</link>
-    <description>Recent content in computer science on Adam&#39;s Blag</description>
+    <title>computer science on Terminal</title>
+    <link>/categories/computer-science/</link>
+    <description>Recent content in computer science on Terminal</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-US</language>
+    <language>en-us</language>
     <lastBuildDate>Wed, 08 May 2019 15:30:34 -0500</lastBuildDate>
     
-	<atom:link href="https://arm64.ca/categories/computer-science/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="/categories/computer-science/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Random Numbers</title>
-      <link>https://arm64.ca/post/taocp-vol-2-seminumerical-algorithms/</link>
+      <link>/post/taocp-vol-2-seminumerical-algorithms/</link>
       <pubDate>Wed, 08 May 2019 15:30:34 -0500</pubDate>
       
-      <guid>https://arm64.ca/post/taocp-vol-2-seminumerical-algorithms/</guid>
+      <guid>/post/taocp-vol-2-seminumerical-algorithms/</guid>
       <description>&lt;p&gt;Random numbers from the second volume of TAOCP and experimentation with PRNGs.&lt;/p&gt;
-
-&lt;p&gt;It&amp;rsquo;s been about nine months since I finished reading the first volume. Though it&amp;rsquo;s likely not a surprise to many, it&amp;rsquo;s one of the more daunting reads however, I found it to be surprisingly entertaining and well written. &lt;a href=&#34;https://arm64.ca/post/the-art-of-computer-programming/&#34;&gt;My summary of the experience reading through the first volume&lt;/a&gt; was more or less my thoughts on the book, but didn&amp;rsquo;t offer a lot in terms of the content that was covered, nor did I highlight a lot of interesting material that was gleaned from its pages – perhaps I&amp;rsquo;ll remedy that when I have time for a second read through. Admittedly, there was quite a bit of content and I don&amp;rsquo;t think I wanted to post a section by section summary of the volume, especially when you consider that much of the first volume was devoted to stacks, trees, linked lists, and other data structures, something familiar to most software engineers and programmers. Luckily the second volume is far less familiar territory (at least to me) and may be more interesting to write about.&lt;/p&gt;</description>
+&lt;p&gt;It&amp;rsquo;s been about nine months since I finished reading the first volume. Though it&amp;rsquo;s likely not a surprise to many, it&amp;rsquo;s one of the more daunting reads however, I found it to be surprisingly entertaining and well written. &lt;a href=&#34;/post/the-art-of-computer-programming/&#34;&gt;My summary of the experience reading through the first volume&lt;/a&gt; was more or less my thoughts on the book, but didn&amp;rsquo;t offer a lot in terms of the content that was covered, nor did I highlight a lot of interesting material that was gleaned from its pages – perhaps I&amp;rsquo;ll remedy that when I have time for a second read through. Admittedly, there was quite a bit of content and I don&amp;rsquo;t think I wanted to post a section by section summary of the volume, especially when you consider that much of the first volume was devoted to stacks, trees, linked lists, and other data structures, something familiar to most software engineers and programmers. Luckily the second volume is far less familiar territory (at least to me) and may be more interesting to write about.&lt;/p&gt;</description>
     </item>
     
     <item>
       <title>The Art of Computer Programming</title>
-      <link>https://arm64.ca/post/the-art-of-computer-programming/</link>
+      <link>/post/the-art-of-computer-programming/</link>
       <pubDate>Sat, 25 Aug 2018 17:56:57 -0500</pubDate>
       
-      <guid>https://arm64.ca/post/the-art-of-computer-programming/</guid>
+      <guid>/post/the-art-of-computer-programming/</guid>
       <description>&lt;p&gt;An attempt at making my way through one of the most infamous computer science books&lt;/p&gt;
-
 &lt;p&gt;I was recently gifted the first volume of Donald Knuth&amp;rsquo;s: &amp;ldquo;The Art of Computer Programming&amp;rdquo;. Being the computer geek that I am, I have never been so excited yet, intimidated about sitting down and working through what some people would call a Reference book.&lt;/p&gt;</description>
     </item>
     
