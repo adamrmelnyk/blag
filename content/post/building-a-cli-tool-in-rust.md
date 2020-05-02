@@ -1,7 +1,7 @@
 ---
 title: "Building a Cli Tool in Rust"
 date: 2020-05-02T11:20:54-05:00
-description: "New Post"
+description: "A short tutorial on building a useful command line tool in Rust"
 draft: false
 toc: false
 categories: ["technology"]
