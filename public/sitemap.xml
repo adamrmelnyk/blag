@@ -3,8 +3,43 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>/post/building-a-cli-tool-in-rust/</loc>
+    <lastmod>2020-05-02T11:20:54-05:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/categories/</loc>
-    <lastmod>2019-05-08T15:30:34-05:00</lastmod>
+    <lastmod>2020-05-02T11:20:54-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/cli/</loc>
+    <lastmod>2020-05-02T11:20:54-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/</loc>
+    <lastmod>2020-05-02T11:20:54-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/rust/</loc>
+    <lastmod>2020-05-02T11:20:54-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/</loc>
+    <lastmod>2020-05-02T11:20:54-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/technology/</loc>
+    <lastmod>2020-05-02T11:20:54-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/</loc>
+    <lastmod>2020-05-02T11:20:54-05:00</lastmod>
   </url>
   
   <url>
@@ -18,27 +53,12 @@
   </url>
   
   <url>
-    <loc>/post/</loc>
-    <lastmod>2019-05-08T15:30:34-05:00</lastmod>
-  </url>
-  
-  <url>
     <loc>/post/taocp-vol-2-seminumerical-algorithms/</loc>
     <lastmod>2019-05-08T15:30:34-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/tags/</loc>
-    <lastmod>2019-05-08T15:30:34-05:00</lastmod>
-  </url>
-  
-  <url>
     <loc>/tags/taocp/</loc>
-    <lastmod>2019-05-08T15:30:34-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/</loc>
     <lastmod>2019-05-08T15:30:34-05:00</lastmod>
   </url>
   
@@ -64,11 +84,6 @@
   
   <url>
     <loc>/tags/racket/</loc>
-    <lastmod>2019-03-03T11:14:34-06:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/categories/technology/</loc>
     <lastmod>2019-03-03T11:14:34-06:00</lastmod>
   </url>
   
