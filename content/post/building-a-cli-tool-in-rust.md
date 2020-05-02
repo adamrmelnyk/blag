@@ -339,6 +339,6 @@ Right now we can manipulate the speakers themselves but we don’t have a way of
 
 The tool might be small right now, but adding anything else might start making it harder to maintain, adding some tests will help us make sure that all of our features keep working as we add to it.
 
-## Learnings from building it
+## Concluding Thoughts
 
 For a language that’s considered to be tricky to use by some, I found this relatively simple to put together. Async features were no more difficult to use than other normal functions. Structop really made making a Cli tool much simpler as well, giving us a simple way to set up a command line tool and expand it as needed.
