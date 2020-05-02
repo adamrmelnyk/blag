@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Rust on Terminal</title>
+    <title>Rust on Adam&#39;s Blag</title>
     <link>/tags/rust/</link>
-    <description>Recent content in Rust on Terminal</description>
+    <description>Recent content in Rust on Adam&#39;s Blag</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
+    <copyright>Adam MElnyk 2020</copyright>
     <lastBuildDate>Sat, 02 May 2020 11:20:54 -0500</lastBuildDate>
     
 	<atom:link href="/tags/rust/index.xml" rel="self" type="application/rss+xml" />

@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>computer science on Terminal</title>
+    <title>computer science on Adam&#39;s Blag</title>
     <link>/categories/computer-science/</link>
-    <description>Recent content in computer science on Terminal</description>
+    <description>Recent content in computer science on Adam&#39;s Blag</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
+    <copyright>Adam MElnyk 2020</copyright>
     <lastBuildDate>Wed, 08 May 2019 15:30:34 -0500</lastBuildDate>
     
 	<atom:link href="/categories/computer-science/index.xml" rel="self" type="application/rss+xml" />

@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>knuth on Terminal</title>
+    <title>knuth on Adam&#39;s Blag</title>
     <link>/tags/knuth/</link>
-    <description>Recent content in knuth on Terminal</description>
+    <description>Recent content in knuth on Adam&#39;s Blag</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
+    <copyright>Adam MElnyk 2020</copyright>
     <lastBuildDate>Wed, 08 May 2019 15:30:34 -0500</lastBuildDate>
     
 	<atom:link href="/tags/knuth/index.xml" rel="self" type="application/rss+xml" />

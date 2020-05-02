@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>/</loc>
+    <lastmod>2020-05-02T11:20:54-05:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/post/building-a-cli-tool-in-rust/</loc>
     <lastmod>2020-05-02T11:20:54-05:00</lastmod>
   </url>
@@ -34,11 +39,6 @@
   
   <url>
     <loc>/categories/technology/</loc>
-    <lastmod>2020-05-02T11:20:54-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/</loc>
     <lastmod>2020-05-02T11:20:54-05:00</lastmod>
   </url>
   

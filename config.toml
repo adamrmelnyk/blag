@@ -39,11 +39,11 @@ paginate = 5
 [languages]
   [languages.en]
     languageName = "English"
-    title = "Terminal"
-    subtitle = "A simple, retro theme for Hugo"
-    owner = ""
+    title = "Adam's Blag"
+    subtitle = ""
+    owner = "Adam R. Melnyk"
     keywords = ""
-    copyright = ""
+    copyright = "Adam MElnyk 2020"
     menuMore = "Show more"
     readMore = "Read more"
     readOtherPosts = "Read other posts"
