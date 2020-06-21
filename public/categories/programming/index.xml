@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>programming on Terminal</title>
+    <title>programming on Adam&#39;s Blag</title>
     <link>/categories/programming/</link>
-    <description>Recent content in programming on Terminal</description>
+    <description>Recent content in programming on Adam&#39;s Blag</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 30 Apr 2020 22:00:59 -0500</lastBuildDate>
+    <copyright>Adam Melnyk 2020</copyright>
+    <lastBuildDate>Sat, 20 Jun 2020 23:15:02 -0500</lastBuildDate>
     
 	<atom:link href="/categories/programming/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Building a Cli Tool in Rust</title>
-      <link>/post/building-a-cli-tool-in-rust/</link>
-      <pubDate>Thu, 30 Apr 2020 22:00:59 -0500</pubDate>
+      <title>Scraping Wikipedia With Rust</title>
+      <link>/post/scraping-wikipedia-with-rust/</link>
+      <pubDate>Sat, 20 Jun 2020 23:15:02 -0500</pubDate>
       
-      <guid>/post/building-a-cli-tool-in-rust/</guid>
-      <description>Like almost everyone I know, I&amp;rsquo;ve been sitting pacing inside for almost 8 weeks, waiting out the sars-cov-2 pandemic. I&amp;rsquo;ve been &amp;ldquo;zooming&amp;rdquo; with friends, phoning my family members, and catching up on reading. Gone are the days of concerts and movie theaters. Now is the time for reading, Animal Crossing, and updating one&amp;rsquo;s websites. So here it is, a new theme for a new year and a new post to help stave off boredom.</description>
+      <guid>/post/scraping-wikipedia-with-rust/</guid>
+      <description>Writing a toy scraper As the quarantine continues and many things are still closed, I&amp;rsquo;m still spending a lot of time looking for fun side projects I can complete in a few days or less. As I drifted off to sleep one night wondering about some correlations between countries and various other data points. I realized that wikipedia probably had all the data I needed to find out. What if I could just scrape all the data off of wikipedia and throw it into sql tables so I could chart data that way?</description>
     </item>
     
   </channel>
