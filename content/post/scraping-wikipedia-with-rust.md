@@ -5,7 +5,7 @@ description: "Building a toy Rust app to scrape data from wikipedia"
 draft: false
 toc: false
 categories: ["programming"]
-tags: ["rust", "scraper"]
+tags: ["rust", "scraper", "wikipedia"]
 ---
 
 ## Writing a toy scraper

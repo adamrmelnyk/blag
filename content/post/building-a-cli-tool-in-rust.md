@@ -5,7 +5,7 @@ description: "A short tutorial on building a useful command line tool in Rust"
 draft: false
 toc: false
 categories: ["technology"]
-tags: ["Rust", "Cli"]
+tags: ["Rust", "Cli", "sonos"]
 ---
 
 Like almost everyone I know, I’ve been ~~sitting~~ pacing inside for almost 8 weeks, waiting out the sars-cov-2 pandemic. I’ve been “zooming” with friends, phoning my family members, and catching up on reading. Gone are the days of concerts and movie theaters. Now is the time for reading, Animal Crossing, and updating one’s websites. So here it is, a new theme for a new year and a new post to help stave off boredom. Now’s the perfect time to clean up my dirty markdown peppered with HTML that I’ve been meaning to remove, update those pesky dependencies that github keeps reminding me are out of date, and it’s the perfect opportunity to work on something new and exciting.

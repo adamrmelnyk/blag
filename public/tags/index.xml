@@ -31,11 +31,29 @@
     </item>
     
     <item>
+      <title>wikipedia</title>
+      <link>/tags/wikipedia/</link>
+      <pubDate>Sat, 20 Jun 2020 23:15:02 -0500</pubDate>
+      
+      <guid>/tags/wikipedia/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>Cli</title>
       <link>/tags/cli/</link>
       <pubDate>Sat, 02 May 2020 11:20:54 -0500</pubDate>
       
       <guid>/tags/cli/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>sonos</title>
+      <link>/tags/sonos/</link>
+      <pubDate>Sat, 02 May 2020 11:20:54 -0500</pubDate>
+      
+      <guid>/tags/sonos/</guid>
       <description></description>
     </item>
     
