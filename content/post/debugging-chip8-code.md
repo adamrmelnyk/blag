@@ -8,7 +8,7 @@ categories: ["rust", "emulator"]
 tags: ["chip8", "hexcode", "emulator", "rust"]
 ---
 
-The first time I wrote a program in hexidecimal or assembly was using a made up, educational cpu called Pep8, this was before I had read anything about how to properly organize code, programming practices, and before I had read [clean code](https://www.amazon.com/Clean-Code-Handbook-Software-Craftsmanship/dp/0132350882). Over the last month and a half, I've been working on a [CHIP8](https://en.wikipedia.org/wiki/CHIP-8) emulator, so for the first time in a while, I'm revisiting old topics and old books on computer architecture. Now that the project is largely complete, what's left is to test it out, and the best way to do that, is to mess around with it and see what I can build for myself using the chip8 instruction set.
+The first time I wrote a program in hexidecimal or assembly was using a made up, educational cpu called Pep8, this was before I had read anything about how to properly organize code, programming practices, and before I had read [clean code](https://www.amazon.com/Clean-Code-Handbook-Software-Craftsmanship/dp/0132350882). Over the last month and a half, I've been working on a [CHIP8](https://en.wikipedia.org/wiki/CHIP-8) emulator, which you can find [here](https://github.com/adamrmelnyk/chip_8_emulator), so for the first time in a while, I'm revisiting old topics and old books on computer architecture. Now that the project is largely complete, what's left is to test it out, and the best way to do that, is to mess around with it and see what I can build for myself using the chip8 instruction set.
 
 As I wrote many small programs to test each of the operations of the emulator, I ran into a number of scenarios where I'd end up re-writing instructions after parts of the code had moved around a lot. In my day to day work, I spend time thinking a lot about how to best organize my code. It's not enough to have it work, it's important to organize it as well so that it will be easier to maintain, reduce complexity, and be readable for engineers who may not be familiar with it. This got me thinking about how alien it was to debug CHIP8 programs and made me wonder whether or not there existed a "Clean Hex Code" or a "Clean assembly code" or perhaps something more akin to Dijkstra's [Structured Programming](https://en.wikipedia.org/wiki/Structured_programming) for CHIP8 code.
 
@@ -173,6 +173,6 @@ fn wait_on_debug_input(&mut self) {
 
 At each press of the enter key, I either load a register, draw, set the address register, or any other operation. This isn't perfect but it will go a long way to understanding what's going on, one step at a time.
 
-### What's next
+## What's next
 
 There's a lot left to be desired here in terms of what tools we can offer the CHIP8 programmer, for one, we aren't displaying the op codes, nor are we showing any additional information about state such as memory and register values. Adding a second window might help to display some of this, though it is a little strange to display that separately. We should also add the concept of state so we can replay operations. We probably won't ever be able to recreate the necessary tools that make modern programming ergonomic, but it can definitely be improved.
