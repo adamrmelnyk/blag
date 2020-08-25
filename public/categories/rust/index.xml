@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>rust on Adam&#39;s Blag</title>
+    <link>/categories/rust/</link>
+    <description>Recent content in rust on Adam&#39;s Blag</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Adam Melnyk 2020</copyright>
+    <lastBuildDate>Sun, 23 Aug 2020 15:45:10 -0500</lastBuildDate>
+    
+	<atom:link href="/categories/rust/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Debugging CHIP8 code</title>
+      <link>/post/debugging-chip8-code/</link>
+      <pubDate>Sun, 23 Aug 2020 15:45:10 -0500</pubDate>
+      
+      <guid>/post/debugging-chip8-code/</guid>
+      <description>The first time I wrote a program in hexidecimal or assembly was using a made up, educational cpu called Pep8, this was before I had read anything about how to properly organize code, programming practices, and before I had read clean code. Over the last month and a half, I&amp;rsquo;ve been working on a CHIP8 emulator, so for the first time in a while, I&amp;rsquo;m revisiting old topics and old books on computer architecture.</description>
+    </item>
+    
+  </channel>
+</rss>
