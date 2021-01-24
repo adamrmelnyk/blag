@@ -7,11 +7,7 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Adam Melnyk 2020</copyright>
-    <lastBuildDate>Sat, 20 Jun 2020 23:15:02 -0500</lastBuildDate>
-    
-	<atom:link href="/tags/scraper/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Sat, 20 Jun 2020 23:15:02 -0500</lastBuildDate><atom:link href="/tags/scraper/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Scraping Wikipedia With Rust</title>
       <link>/post/scraping-wikipedia-with-rust/</link>

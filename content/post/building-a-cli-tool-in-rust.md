@@ -341,4 +341,4 @@ The tool might be small right now, but adding anything else might start making i
 
 ## Concluding Thoughts
 
-For a language that’s considered to be tricky to use by some, I found this relatively simple to put together. Async features were no more difficult to use than other normal functions. Structop really made making a Cli tool much simpler as well, giving us a simple way to set up a command line tool and expand it as needed.
+Rust has a reputation for having a steep learning curve, but I hope that this post made it seem at least a little more approachable. Though my experience with the language as of writing this is fairly limited, I found this relatively simple to put together, and I hope that you will too. Async features were no more difficult to use than other normal functions. Structop really made making a Cli tool much simpler as well, giving us a simple way to set up a command line tool and expand it as needed.
