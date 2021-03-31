@@ -5,10 +5,8 @@
     <title>Random Numbers :: Adam&#39;s Blag</title>
   
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-<meta name="description" content="Random numbers from the second volume of TAOCP and experimentation with PRNGs.
-It&amp;rsquo;s been about nine months since I finished reading the first volume. Though it&amp;rsquo;s likely not a surprise to many, it&amp;rsquo;s one of the more daunting reads however, I found it to be surprisingly entertaining and well written. My summary of the experience reading through the first volume was more or less my thoughts on the book, but didn&amp;rsquo;t offer a lot in terms of the content that was covered, nor did I highlight a lot of interesting material that was gleaned from its pages – perhaps I&amp;rsquo;ll remedy that when I have time for a second read through. Admittedly, there was quite a bit of content and I don&amp;rsquo;t think I wanted to post a section by section summary of the volume, especially when you consider that much of the first volume was devoted to stacks, trees, linked lists, and other data structures, something familiar to most software engineers and programmers. Luckily the second volume is far less familiar territory (at least to me) and may be more interesting to write about.
-" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Working through Volume 2 of TAOCP" />
 <meta name="keywords" content="" />
 <meta name="robots" content="noodp" />
 <link rel="canonical" href="/post/taocp-vol-2-seminumerical-algorithms/" />
@@ -25,7 +23,7 @@ It&amp;rsquo;s been about nine months since I finished reading the first volume.
 
 
 
-<link rel="apple-touch-icon-precomposed" sizes="144x144" href="/img/apple-touch-icon-144-precomposed.png">
+<link rel="apple-touch-icon" href="/img/apple-touch-icon-192x192.png">
 
   <link rel="shortcut icon" href="/img/favicon/green.png">
 
@@ -33,17 +31,19 @@ It&amp;rsquo;s been about nine months since I finished reading the first volume.
 
 <meta name="twitter:card" content="summary" />
 
-  <meta name="twitter:site" content="" />
+  
+    <meta name="twitter:site" content="" />
+  
+    <meta name="twitter:creator" content="" />
 
-<meta name="twitter:creator" content="" />
 
 
 <meta property="og:locale" content="en" />
 <meta property="og:type" content="article" />
-<meta property="og:title" content="Random Numbers :: Adam&#39;s Blag">
+<meta property="og:title" content="Random Numbers">
 <meta property="og:description" content="Working through Volume 2 of TAOCP" />
 <meta property="og:url" content="/post/taocp-vol-2-seminumerical-algorithms/" />
-<meta property="og:site_name" content="Random Numbers" />
+<meta property="og:site_name" content="Adam&#39;s Blag" />
 
   
     <meta property="og:image" content="/img/favicon/green.png">
@@ -69,7 +69,7 @@ It&amp;rsquo;s been about nine months since I finished reading the first volume.
 
 
 </head>
-<body class="">
+<body class="green">
 
 
 <div class="container full headings--one-size">
@@ -84,7 +84,9 @@ It&amp;rsquo;s been about nine months since I finished reading the first volume.
 </a>
 
     </div>
-    <div class="menu-trigger">menu</div>
+    
+      <div class="menu-trigger">menu</div>
+    
   </div>
   
     <nav class="menu">
@@ -121,10 +123,10 @@ It&amp;rsquo;s been about nine months since I finished reading the first volume.
   <h1 class="post-title">
     <a href="/post/taocp-vol-2-seminumerical-algorithms/">Random Numbers</a></h1>
   <div class="post-meta">
-      
-    <span class="post-date">
-      2019-05-08
-    </span>
+    
+      <span class="post-date">
+        2019-05-08 
+      </span>
     
     
   </div>
@@ -139,6 +141,8 @@ It&amp;rsquo;s been about nine months since I finished reading the first volume.
     #<a href="/tags/vol2/">vol2</a>&nbsp;
     
   </span>
+  
+
   
 
   
@@ -614,32 +618,34 @@ rgb_minimum_distance|   5|     10000|    1000|0.00000148|   WEAK
 <p>In a set of infinite numbers we might expect to see 1,000,000 7&rsquo;s or 8&rsquo;s in a row at some point. Maybe the numbers, viewed in a single line would map to ascii values that could print the works of Shakespeare. It may not be desirable for applications, but it would be consistent with a truly random number generator. Though the math was certainly beyond me, the first half of volume 2 was incredibly interesting. If anything it&rsquo;s made me question how random numbers are generated a little more, forcing me to dig through the random number generators that I have trusted. A simple mistake could result in unexpected deterministic behaviour. Though this is unlikely to be a problem in my day to day life as a web developer, it will still make me think the next time I need to rely on random behaviour. Further fueling my paranoia, Knuth gives some great advice to summarise the learnings of the chapter:</p>
 <p><em>&ldquo;Look at the subroutine library of each computer installation in your organization, and replace the random number generators by good ones. Try to avoid being too shocked at what you find.&quot;</em></p>
       </div></div>
+
   
-  <div class="pagination">
+  
+<div class="pagination">
     <div class="pagination__title">
-      <span
-        class="pagination__title-h">Read other posts</span>
-      <hr />
+        <span class="pagination__title-h">Read other posts</span>
+        <hr />
     </div>
     <div class="pagination__buttons">
-      
-      <span class="button previous">
-        <a href="/post/building-a-cli-tool-in-rust/">
-          <span class="button__icon">←</span>
-          <span class="button__text">Building a Cli Tool in Rust</span>
-        </a>
-      </span>
-      
-      
-      <span class="button next">
-        <a href="/post/functional-programming-in-racket/">
-          <span class="button__text">Functional Programming in Racket</span>
-          <span class="button__icon">→</span>
-        </a>
-      </span>
-      
+        
+        <span class="button previous">
+            <a href="/post/building-a-cli-tool-in-rust/">
+                <span class="button__icon">←</span>
+                <span class="button__text">Building a Cli Tool in Rust</span>
+            </a>
+        </span>
+        
+        
+        <span class="button next">
+            <a href="/post/functional-programming-in-racket/">
+                <span class="button__text">Functional Programming in Racket</span>
+                <span class="button__icon">→</span>
+            </a>
+        </span>
+        
     </div>
-  </div>
+</div>
+
   
 
   
@@ -662,6 +668,8 @@ rgb_minimum_distance|   5|     10000|    1000|0.00000148|   WEAK
 
 <script src="/assets/main.js"></script>
 <script src="/assets/prism.js"></script>
+
+
 
 
 

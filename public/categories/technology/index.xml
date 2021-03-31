@@ -15,6 +15,240 @@
       
       <guid>/post/building-a-cli-tool-in-rust/</guid>
       <description>Like almost everyone I know, I’ve been sitting pacing inside for almost 8 weeks, waiting out the sars-cov-2 pandemic. I’ve been “zooming” with friends, phoning my family members, and catching up on reading. Gone are the days of concerts and movie theaters. Now is the time for reading, Animal Crossing, and updating one’s websites. So here it is, a new theme for a new year and a new post to help stave off boredom.</description>
+      <content>&lt;p&gt;Like almost everyone I know, I’ve been &lt;del&gt;sitting&lt;/del&gt; pacing inside for almost 8 weeks, waiting out the sars-cov-2 pandemic. I’ve been “zooming” with friends, phoning my family members, and catching up on reading. Gone are the days of concerts and movie theaters. Now is the time for reading, Animal Crossing, and updating one’s websites. So here it is, a new theme for a new year and a new post to help stave off boredom. Now’s the perfect time to clean up my dirty markdown peppered with HTML that I’ve been meaning to remove, update those pesky dependencies that github keeps reminding me are out of date, and it’s the perfect opportunity to work on something new and exciting.&lt;/p&gt;
+&lt;p&gt;Earlier this week a reddit user posted their library &lt;a href=&#34;https://docs.rs/sonor/0.1.2/sonor/&#34;&gt;sonor&lt;/a&gt; for interacting with sonos devices. Having a penchant for anything I can use from the command line, this seemed like the perfect opportunity to build a command line application to use my sonos speakers. Though I have not used Rust very much other than reading through the book and tinkering with a few different frameworks, this seemed to fit neatly into everything I wanted to do:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Use Rust for something novel&lt;/li&gt;
+&lt;li&gt;Build something I might actually use&lt;/li&gt;
+&lt;li&gt;Pass the time during a pandemic&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;building-the-tool&#34;&gt;Building the Tool&lt;/h2&gt;
+&lt;h3 id=&#34;setting-up-the-project&#34;&gt;Setting up the project&lt;/h3&gt;
+&lt;p&gt;Rust has some great tooling that is really easy to use and setup. Once you have Rust installed you can use cargo to start a new project like so:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;cargo new sonos_tool
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Running it is just one more step, just &lt;code&gt;cd&lt;/code&gt; into the directory and then use &lt;code&gt;cargo run&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;cargo run
+   Compiling sonos_tool v0.1.0 &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;/home/arm/src/sonos_tool&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+    Finished dev &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;unoptimized + debuginfo&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; target&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;s&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; in 6.61s
+     Running &lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;target/debug/sonos_tool&lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;
+Hello, world!
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;adding-dependencies&#34;&gt;Adding dependencies&lt;/h3&gt;
+&lt;p&gt;Before going further we’ll need to add a few dependencies to our &lt;code&gt;Cargo.toml&lt;/code&gt; file:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;[dependencies]
+sonor = &amp;#34;0.1.2&amp;#34;
+tokio = { version = &amp;#34;0.2&amp;#34;, features = [&amp;#34;macros&amp;#34;, &amp;#34;time&amp;#34;]}
+futures = &amp;#34;0.3&amp;#34;
+structopt = { version = &amp;#34;0.3&amp;#34;, default-features = false }
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;running-a-single-command-from-sonor&#34;&gt;Running a single command from sonor&lt;/h3&gt;
+&lt;p&gt;The first thing I want to do is the most basic thing I can find with sonor. The sonor repo has some examples so we’re going to start a little smaller and then expand upon it a little bit. Looking at the example the first thing we can do is find a speaker and return the name. So we can replace the main method with something like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Rust&#34; data-lang=&#34;Rust&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#[tokio::main]&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;async&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;() -&amp;gt; Result&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;(), sonor::Error&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; speaker &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; sonor::find(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Bedroom&amp;#34;&lt;/span&gt;, Duration::from_secs(&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;)).&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;
+    .expect(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;room exists&amp;#34;&lt;/span&gt;);
+    println&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Name: {}&amp;#34;&lt;/span&gt;, speaker.name().&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;);
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; Ok(())
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In this example, we have a speaker, or speaker set in our home called &lt;code&gt;&amp;quot;Bedroom&amp;quot;&lt;/code&gt; but you’ll need to use whatever name your speaker might be called.&lt;/p&gt;
+&lt;p&gt;Running this should produce something like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;    Finished dev &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;unoptimized + debuginfo&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; target&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;s&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; in 5.88s
+     Running &lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;target/debug/sonos_tool&lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;
+Name: Bedroom
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The library makes working with your sonos speakers easy as pie, we just need add more functions, and then make it usable as a command line tool.&lt;/p&gt;
+&lt;h3 id=&#34;adding-functionality&#34;&gt;Adding functionality&lt;/h3&gt;
+&lt;p&gt;Now that we can find the speaker we can use any of these commands at our disposal. All we need to do is make the commands available from the command line somehow and match them up with the appropriate speaker function.&lt;/p&gt;
+&lt;p&gt;Unless you want to dig into the docs to see what else we can do, the &lt;code&gt;speaker.rs&lt;/code&gt; file has all the commands we can access and some good examples on how one might use what’s available. To start with we should add some basic functionality that we might need: &lt;code&gt;Play&lt;/code&gt;, &lt;code&gt;Pause&lt;/code&gt;, and because we’re going to need to know the names of what’s available, an &lt;code&gt;Info&lt;/code&gt; command used for discovery.&lt;/p&gt;
+&lt;p&gt;To make things easier on ourselves, the first thing we can do is take a look at the &lt;a href=&#34;https://docs.rs/structopt/0.3.14/structopt/&#34;&gt;&lt;code&gt;structop&lt;/code&gt; crate&lt;/a&gt; which will be helpful for listing the available commands.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Rust&#34; data-lang=&#34;Rust&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#[derive(StructOpt)]&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;enum&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Command&lt;/span&gt; {
+    Info,
+    Play,
+    Pause,
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We’ll also add this to our main method though we don’t need to do anything with the cmd variable for now&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Rust&#34; data-lang=&#34;Rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; cmd &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Command::from_args();
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now we can run &lt;code&gt;cargo build&lt;/code&gt; and this time we’ll execute our binary like so&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;$ ./target/debug/sonos_tool --help
+Name: Bedroom
+sonos_tool 0.1.0
+
+USAGE:
+    sonos_tool &amp;lt;SUBCOMMAND&amp;gt;
+
+FLAGS:
+    -h, --help       Prints help information
+    -V, --version    Prints version information
+
+SUBCOMMANDS:
+    help     Prints this message or the help of the given subcommand&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;s&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+    info
+    pause
+    play
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Without needing to do anything else at all, Structop gives us a help command (we can use &lt;code&gt;-h&lt;/code&gt; as well), as well as a &lt;code&gt;--version&lt;/code&gt; command, and some helpful info.&lt;/p&gt;
+&lt;h3 id=&#34;adding-some-better-documentation-to-the-command-line-tool&#34;&gt;Adding some better documentation to the command line tool&lt;/h3&gt;
+&lt;p&gt;We aren’t making use of everything structop gives us however. Looking at the docs we can add the annotations which will build out the rest of this info for us.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Rust&#34; data-lang=&#34;Rust&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#[derive(StructOpt)]&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;enum&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Cli&lt;/span&gt; {
+    Info,
+    &lt;span style=&#34;color:#75715e&#34;&gt;#[structopt(
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;        about = &lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Plays specified room&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;,
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;        help = &lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;USAGE: play MyRoomName&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;    )]&lt;/span&gt;
+    Play,
+    &lt;span style=&#34;color:#75715e&#34;&gt;#[structopt(
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;        about = &lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Pauses a specified room&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;,
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;        help = &lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;USAGE: volume MyRoomName&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;    )]&lt;/span&gt;
+    Pause,
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now that we’ve added the about and help data, using &lt;code&gt;-h&lt;/code&gt; gives us something much more useful.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;   Compiling sonos_tool v0.1.0 &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;/home/arm/src/sonos_tool&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+    Finished dev &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;unoptimized + debuginfo&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; target&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;s&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; in 6.61s
+     Running &lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;target/debug/sonos_tool&lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;
+sonos_tool 0.1.0
+
+USAGE:
+    sonos_tool &amp;lt;SUBCOMMAND&amp;gt;
+
+FLAGS:
+    -h, --help       Prints help information
+    -V, --version    Prints version information
+
+SUBCOMMANDS:
+    help          Prints this message or the help of the given subcommand&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;s&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+    info          Displays info about all rooms
+    pause         Pauses a specified room
+    play          Plays specified room
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;There’s one last thing we need in our structop enum, as we saw with the first example, we’ll need a name to specify which speaker or group we’re talking about. This is just as easy as Rust enums are not normal enums and can have properties like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Rust&#34; data-lang=&#34;Rust&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#[derive(StructOpt)]&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;enum&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Command&lt;/span&gt; {
+    Info,
+    &lt;span style=&#34;color:#75715e&#34;&gt;#[structopt(
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;        about = &lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Plays specified room&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;,
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;        help = &lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;USAGE: play MyRoomName&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;    )]&lt;/span&gt;
+    Play {
+        name: String,
+    },
+    &lt;span style=&#34;color:#75715e&#34;&gt;#[structopt(
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;        about = &lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Pauses a specified room&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;,
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;        help = &lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;USAGE: volume MyRoomName&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;    )]&lt;/span&gt;
+    Pause {
+        name: String,
+    },
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;making-use-of-the-commands&#34;&gt;Making use of the commands&lt;/h3&gt;
+&lt;p&gt;Now that we have the commands laid out we just need to parse our command line arguments and then implement the three functions. For our functions we can implement them similarly to the first method where we printed our speakers name however, this time we’ll need to provide a param to specify which speaker we will be sending the command to.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Rust&#34; data-lang=&#34;Rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;play&lt;/span&gt;(name: String) -&amp;gt; Result&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;(), sonor::Error&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; speaker &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; sonor::find(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;name, Duration::from_secs(&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;)).&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;
+        .expect(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;room exists&amp;#34;&lt;/span&gt;);
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; speaker.play().&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;;
+}
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;pause&lt;/span&gt;(name: String) -&amp;gt; Result&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;(), sonor::Error&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; speaker &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; sonor::find(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;name, Duration::from_secs(&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;)).&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;
+        .expect(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;room exists&amp;#34;&lt;/span&gt;);
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; speaker.pause().&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Trying to build this however, will return an error:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;error&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;E0728&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;await&lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt; is only allowed inside &lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;async&lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt; functions and blocks
+   --&amp;gt; src/main.rs:121:19
+    |
+&lt;span style=&#34;color:#ae81ff&#34;&gt;120&lt;/span&gt; | fn pause&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;name: String&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; -&amp;gt; Result&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;, sonor::Error&amp;gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+    |    ----- this is not &lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;async&lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;
+&lt;span style=&#34;color:#ae81ff&#34;&gt;121&lt;/span&gt; |     let speaker &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; sonor::find&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&amp;amp;name, Duration::from_secs&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;2&lt;span style=&#34;color:#f92672&#34;&gt;))&lt;/span&gt;.await?
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ only allowed inside &lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;async&lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt; functions and blocks
+
+error&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;E0728&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;await&lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt; is only allowed inside &lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;async&lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt; functions and blocks
+   --&amp;gt; src/main.rs:123:12
+    |
+&lt;span style=&#34;color:#ae81ff&#34;&gt;120&lt;/span&gt; | fn pause&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;name: String&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; -&amp;gt; Result&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;, sonor::Error&amp;gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+    |    ----- this is not &lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;async&lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;
+...
+&lt;span style=&#34;color:#ae81ff&#34;&gt;123&lt;/span&gt; |     &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; speaker.pause&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;.await;
+    |            ^^^^^^^^^^^^^^^^^^^^^ only allowed inside &lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;async&lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt; functions and blocks
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Rust is laying out exactly what we need to make this work. The function needs to be &lt;code&gt;async&lt;/code&gt; just like the main method. It’s an easy fix and all we need is to do is change our method to:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Rust&#34; data-lang=&#34;Rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;async&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;play&lt;/span&gt;(name: String) -&amp;gt; Result&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;(), sonor::Error&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; speaker &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; sonor::find(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;name, Duration::from_secs(&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;)).&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;
+        .expect(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;room exists&amp;#34;&lt;/span&gt;);
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; speaker.play().&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;;
+}
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;async&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;pause&lt;/span&gt;(name: String) -&amp;gt; Result&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;(), sonor::Error&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; speaker &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; sonor::find(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;name, Duration::from_secs(&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;)).&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;
+        .expect(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;room exists&amp;#34;&lt;/span&gt;);
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; speaker.pause().&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Our info command will take a little more work. This function won’t be passed a name of a speaker like the other two functions, but rather, we’ll use it to find all our speakers on our wifi network and display some general info about the state of them.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Rust&#34; data-lang=&#34;Rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;async&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;info&lt;/span&gt;() -&amp;gt; Result&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;(), sonor::Error&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;mut&lt;/span&gt; devices &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; sonor::discover(Duration::from_secs(&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;)).&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;;
+
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; Some(device) &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; devices.try_next().&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt; {
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; name &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; device.name().&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; speaker &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; sonor::find(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;name, Duration::from_secs(&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;)).&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;
+            .expect(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;room exists&amp;#34;&lt;/span&gt;);
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;match&lt;/span&gt; speaker.track().&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt; {
+            Some(track_info) &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; {
+                println&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Room: {}&amp;#34;&lt;/span&gt;, name);
+                println&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Volume: {}&amp;#34;&lt;/span&gt;, speaker.volume().&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;);
+                println&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Track: {}&amp;#34;&lt;/span&gt;, track_info.track());
+            }
+            None &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; {
+                println&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Room: {}&amp;#34;&lt;/span&gt;, name);
+                println&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Volume: {}&amp;#34;&lt;/span&gt;, speaker.volume().&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;);
+            }
+        }
+        println&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;----------&amp;#34;&lt;/span&gt;);
+    }
+
+    Ok(())
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The main difference here is we need to use &lt;code&gt;sonor::discover&lt;/code&gt; to find our speakers before we can do anything, the rest is fairly self explanatory. For each device we find we want to print it’s name, the volume, and if it’s playing, display the track.&lt;/p&gt;
+&lt;h3 id=&#34;putting-it-all-together&#34;&gt;Putting it all together&lt;/h3&gt;
+&lt;p&gt;Now that we have our methods we just need to call set them up in our main method&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Rust&#34; data-lang=&#34;Rust&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#[tokio::main]&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;async&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;() -&amp;gt; Result&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;(), sonor::Error&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; args &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Command::from_args();
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;match&lt;/span&gt; args {
+        Command::Info &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; info().&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;,
+        Command::Play { name } &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; play(name).&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;,
+        Command::Pause { name } &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; pause(name).&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;,
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The first thing you may notice is how we pass the name that we defined in our enum above, to each &lt;code&gt;match&lt;/code&gt; arm. The second thing is that each of these async methods, like the methods from sonor are all async and as such will need &lt;code&gt;.await&lt;/code&gt; to be executed. Without this, nothing will happen. Luckily Rust will prevent us from doing this, as you’ll be able to see if you remove one of them and try to build the project.&lt;/p&gt;
+&lt;h3 id=&#34;running-the-basic-program&#34;&gt;Running the basic program&lt;/h3&gt;
+&lt;p&gt;Now that our barebones tool is finished, we can try it out. Running the info command should give you something like this, depending on what your speakers are named:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Shell&#34; data-lang=&#34;Shell&#34;&gt;$ ./target/debug/sonos_tool info
+Room: LivingRoom
+Volume: &lt;span style=&#34;color:#ae81ff&#34;&gt;21&lt;/span&gt;
+----------
+Room: Bookshelf
+Volume: &lt;span style=&#34;color:#ae81ff&#34;&gt;23&lt;/span&gt;
+----------
+Room: Kitchen
+Volume: &lt;span style=&#34;color:#ae81ff&#34;&gt;22&lt;/span&gt;
+----------
+Room: Bedroom
+Volume: &lt;span style=&#34;color:#ae81ff&#34;&gt;23&lt;/span&gt;
+----------
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Testing the pause and play functions will be a little different because you’ll need to actually turn on your speakers to test that it works but can be executed similarly &lt;code&gt;$ ./target/debug/sonos_tool play Bedroom&lt;/code&gt;.&lt;/p&gt;
+&lt;h3 id=&#34;missing-features&#34;&gt;Missing features&lt;/h3&gt;
+&lt;p&gt;This was put together relatively quickly so there’s a lot left that we can add. Looking in the Speaker implementation there are a ton of other features to be added that we can play around with.&lt;/p&gt;
+&lt;h4 id=&#34;better-error-handling&#34;&gt;Better Error handling&lt;/h4&gt;
+&lt;p&gt;All of our functions are using &lt;code&gt;.expect()&lt;/code&gt; right now. What this means is that when we give them a room that can’t be found, the tool will panic and stop.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Shell&#34; data-lang=&#34;Shell&#34;&gt;$ ./target/debug/sonos_tool play asdf
+thread &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;main&amp;#39;&lt;/span&gt; panicked at &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;room exists&amp;#39;&lt;/span&gt;, src/main.rs:152:19
+note: run with &lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;RUST_BACKTRACE&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;1&lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt; environment variable to display a backtrace
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;It would be much better if we removed this and handled the error gracefully.&lt;/p&gt;
+&lt;h4 id=&#34;missing-functionality&#34;&gt;Missing functionality&lt;/h4&gt;
+&lt;p&gt;There are still a lot of functions that we need to set up, we should be able to set the volume, stop, change our equalization, bass, treble etc. All of these should be relatively trivial to implement but would make this tool much more useful.&lt;/p&gt;
+&lt;h4 id=&#34;integrate-with-your-music-services&#34;&gt;Integrate with your music services&lt;/h4&gt;
+&lt;p&gt;Right now we can manipulate the speakers themselves but we don’t have a way of getting them to play specific songs or podcasts. We’d need to do that from the app.&lt;/p&gt;
+&lt;h4 id=&#34;tests&#34;&gt;Tests&lt;/h4&gt;
+&lt;p&gt;The tool might be small right now, but adding anything else might start making it harder to maintain, adding some tests will help us make sure that all of our features keep working as we add to it.&lt;/p&gt;
+&lt;h2 id=&#34;concluding-thoughts&#34;&gt;Concluding Thoughts&lt;/h2&gt;
+&lt;p&gt;Rust has a reputation for having a steep learning curve, but I hope that this post made it seem at least a little more approachable. Though my experience with the language as of writing this is fairly limited, I found this relatively simple to put together, and I hope that you will too. Async features were no more difficult to use than other normal functions. Structop really made making a Cli tool much simpler as well, giving us a simple way to set up a command line tool and expand it as needed.&lt;/p&gt;
+</content>
     </item>
     
     <item>
@@ -25,6 +259,136 @@
       <guid>/post/functional-programming-in-racket/</guid>
       <description>A dive into functional programming in Racket.
 Preface I&amp;rsquo;ve been playing around with functional languages for a few years now; I&amp;rsquo;d pick up an ebook on scala or Clojure some Saturday afternoon and try going through a tutorial or two. Maybe attend a workshop on it over a weekend with a friend who found the event on meetup.com and get a somewhat shallow overview of the language. The next weekend I&amp;rsquo;d look at it again and see if I could get a small webpage up and running or maybe a small command line tool but for the most part, it has always ended there.</description>
+      <content>&lt;p&gt;A dive into functional programming in Racket.&lt;/p&gt;
+&lt;h1 id=&#34;preface&#34;&gt;Preface&lt;/h1&gt;
+&lt;p&gt;I&amp;rsquo;ve been playing around with functional languages for a few years now; I&amp;rsquo;d pick up an ebook on scala or Clojure some Saturday afternoon and try going through a tutorial or two. Maybe attend a workshop on it over a weekend with a friend who found the event on meetup.com and get a somewhat shallow overview of the language. The next weekend I&amp;rsquo;d look at it again and see if I could get a small webpage up and running or maybe a small command line tool but for the most part, it has always ended there. I rarely end up going back the environment because I inevitably get distracted by another cool technology. What follows is an attempt to remedy that and do a deeper dive over a period of a month and a half.&lt;/p&gt;
+&lt;h1 id=&#34;why-racket-why-not-x&#34;&gt;Why Racket? Why not X&lt;/h1&gt;
+&lt;p&gt;Almost two years ago, I found about about the Racket language and worked through the &lt;a href=&#34;https://beautifulracket.com/&#34;&gt;Beautiful Racket&lt;/a&gt; tutorial. I found the language to actually be pretty fun to work with and was interested in writing a DSL which Racket was built for. Though I have used Clojure and scala before as well, I had written more code in Racket as well as some Chez-Scheme (which is quite similar) in school. Between that and &lt;a href=&#34;https://twitter.com/ID_AA_Carmack/status/577877590070919168&#34;&gt;John Carmacks tweet from a few years ago&lt;/a&gt;, Racket seemed like a good choice.&lt;/p&gt;
+&lt;h1 id=&#34;getting-started&#34;&gt;Getting started&lt;/h1&gt;
+&lt;p&gt;Before I start building something I want to get a feel for the language so I started by making a simple FizzBuzz function. The code is simple enough to read, define the function, which loops through 0 to some given argument and prints when certain conditions are met. I&amp;rsquo;m not sure if this is idiomatic Racket but I&amp;rsquo;m not concerned about that just yet.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-scheme&#34; data-lang=&#34;scheme&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;#&lt;/span&gt;lang racket
+(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;fizz-buzz&lt;/span&gt; num)
+  (&lt;span style=&#34;color:#a6e22e&#34;&gt;for&lt;/span&gt; ([i num])
+    (&lt;span style=&#34;color:#a6e22e&#34;&gt;cond&lt;/span&gt;
+      [(= i &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;)]
+      [(&lt;span style=&#34;color:#66d9ef&#34;&gt;and &lt;/span&gt;(= (modulo i &lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;) &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;) (= (modulo i &lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;) &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;)) (&lt;span style=&#34;color:#a6e22e&#34;&gt;println&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;FizzBuzz&amp;#34;&lt;/span&gt;)]
+      [(= (modulo i &lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;) &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;) (&lt;span style=&#34;color:#a6e22e&#34;&gt;println&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Fizz&amp;#34;&lt;/span&gt;)]
+      [(= (modulo i &lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;) &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;) (&lt;span style=&#34;color:#a6e22e&#34;&gt;println&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Buzz&amp;#34;&lt;/span&gt;)]
+      [&lt;span style=&#34;color:#66d9ef&#34;&gt;else &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;println&lt;/span&gt; i)])))
+
+(&lt;span style=&#34;color:#a6e22e&#34;&gt;fizz-buzz&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;20&lt;/span&gt;)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h1 id=&#34;diving-into-the-documentation&#34;&gt;Diving into the documentation&lt;/h1&gt;
+&lt;p&gt;I wouldn&amp;rsquo;t usually do it this way, but I decided I should read through the docs, more specifically the &lt;a href=&#34;https://docs.racket-lang.org/guide/index.html?q=loop&#34;&gt;Racket guide&lt;/a&gt; on the language before continuing on to something slightly larger. There was a lot of information there but here were some of things that I found interesting.&lt;/p&gt;
+&lt;h1 id=&#34;getting-started-a-few-things-i-noticed&#34;&gt;Getting started: A few things I noticed&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;The guide is actually pretty thorough, giving examples of by showing how functions in the standard language can be formed using other calls which I feel is really in the spirit of using a recursive language. &lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Development in Dr Racket, although dated looking is nice. The interactive shell at the bottom makes it easy to experiment while you&amp;rsquo;re building without having to rebuild or reload the file. Hitting &lt;code&gt;Ctrl + ?&lt;/code&gt; in the shell will also give you suggestions for words. I thought that tab completion was working at some point as well but, when I updated to the latest version of DrRacket it seemed to stop working for whatever reason.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;car&lt;/code&gt;, and &lt;code&gt;cdr&lt;/code&gt;, one of the things I remembered from using scheme in college, can still be used though they can be swapped for the more intuitive &lt;code&gt;first&lt;/code&gt; and &lt;code&gt;rest&lt;/code&gt; when working with lists.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;I kind of love the conciseness that comes from using ternaries in other languages, but because it&amp;rsquo;s a functional language, pretty much everything has that feel to it. The statement: &lt;code&gt;(if (&amp;gt; 3 4) &amp;quot;greater&amp;quot; &amp;quot;less&amp;quot;)&lt;/code&gt; looks a lot like a ternary. The only caveat here is that you need to return something for where it&amp;rsquo;s true or false. When you want just and if you need to use something like when: &lt;code&gt;(when (condition) body)&lt;/code&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;There is no while loop: I spend a lot of time working on OO programming in my daily life, so I found on a few occasions after making a few searches, trying to figure out why something so simple doesn&amp;rsquo;t exist, I finally realized my mistake. Getting out of the trap of OO thinking takes some getting used to but, it turns out to be really powerful. Being able to pass along a function instead of just data really does simplify logic and saves you a lot of boilerplate code that OO languages like Java are notorious for.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;cond&lt;/code&gt; is particularly useful; in a number of cases and I found it to be much more expressive than the switches than many other languages provide. Instead of passing in a single arg and checking the value like Java does you can test for any condition you want, similar to chaining several &lt;code&gt;else if&lt;/code&gt; statements, though much more powerful, as it can be passed like any other function.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Though most OO languages have some aspects of functional programming with lambdas, it&amp;rsquo;s nowhere near as intuitive. Treating functions are arguments allows you to things you would never even think about in Object Oriented programming. Instead of checking if an argument was a string or an Integer, casting it and then applying the correct function we check if it&amp;rsquo;s a string and pass the function along to the two arguments. This isn&amp;rsquo;t something unique to Racket, but it is something that I appreciated a lot the longer I used it. The example taken from the docs here, shows off just how easy it is:&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-scheme&#34; data-lang=&#34;scheme&#34;&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;double&lt;/span&gt; v)
+    ((&lt;span style=&#34;color:#66d9ef&#34;&gt;if &lt;/span&gt;(string? v) string-append +) v v))
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;Racket is almost syntax-less; whereas many languages have different structures, rules and often shortcuts for defining variables, checking conditionals, creating switches, or creating functions is all the same. Not having to look up syntax greatly simplified the process of learning the language.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&#34;something-slightly-larger&#34;&gt;Something Slightly Larger&lt;/h1&gt;
+&lt;p&gt;Naturally, I want to be able to work on something slightly larger next so I started with something I&amp;rsquo;ve already worked on before, and I set out creating a script for parsing and making small edits to gif files. To my surprise working at the byte level in racket is fairly simple.&lt;/p&gt;
+&lt;h2 id=&#34;byte-ing-off-more-than-i-can-chew&#34;&gt;Byte-ing off more than I can chew&lt;/h2&gt;
+&lt;p&gt;This may have not been the best choice for the first thing I should try to build, but I wanted to pick something somewhat off the beaten path to see what kind of problems I might run into. I thought I might run into issues with bracket completion, but that never really happened even though there wasn&amp;rsquo;t any bracket completion turned on. The majority of the issues that I ran into where more or less around using functions properly such as returning an expression or passing in the correct types to a function as even though the language is untyped there are functions that return errors if passed the wrong type of data.&lt;/p&gt;
+&lt;h2 id=&#34;getting-to-work&#34;&gt;Getting to work&lt;/h2&gt;
+&lt;p&gt;Bytes can be read using &lt;code&gt;read-bytes&lt;/code&gt; and passes an input port which in this case was made from opening a file, and reads bytes in octal. I won&amp;rsquo;t include the entire script here, just enough to show off the simplicity of Racket.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-scheme&#34; data-lang=&#34;scheme&#34;&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;in (open-input-file &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;gif.gif&amp;#34;&lt;/span&gt;))
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-scheme&#34; data-lang=&#34;scheme&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;#&lt;/span&gt;lang racket
+
+(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;size-of-color-table-from-packed-field&lt;/span&gt; bstr bytes-before-pf)
+  (&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;packed-field (&lt;span style=&#34;color:#a6e22e&#34;&gt;extract-packed-field&lt;/span&gt; bstr bytes-before-pf))
+  (* &lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt; (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt; (+ (&lt;span style=&#34;color:#a6e22e&#34;&gt;bitwise-and&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;integer-bytes-&amp;gt;integer&lt;/span&gt; packed-field &lt;span style=&#34;color:#66d9ef&#34;&gt;#f&lt;/span&gt;) least-three-sig-mask) &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;))))
+
+(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;extract-packed-field&lt;/span&gt; bstr bytes-before-pf)
+  (&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;in (&lt;span style=&#34;color:#a6e22e&#34;&gt;open-input-bytes&lt;/span&gt; bstr))
+  (&lt;span style=&#34;color:#a6e22e&#34;&gt;read-bytes&lt;/span&gt; bytes-before-pf in) &lt;span style=&#34;color:#75715e&#34;&gt;;; The number of bytes in front of the packed field in the bstr&lt;/span&gt;
+  (&lt;span style=&#34;color:#a6e22e&#34;&gt;read-bytes&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; in))
+
+(&lt;span style=&#34;color:#a6e22e&#34;&gt;provide&lt;/span&gt; size-of-color-table-from-packed-field
+         extract-packed-field)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;testing&#34;&gt;Testing&lt;/h3&gt;
+&lt;p&gt;If I&amp;rsquo;m going to want to use this for anything useful, a good test suite is an important consideration. Luckily testing was pretty straightforward as well, just make sure you provide the functions you intend to expose and &lt;a href=&#34;https://docs.racket-lang.org/rackunit/index.html&#34;&gt;rackUnit&lt;/a&gt; provides easy methods for testing.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-scheme&#34; data-lang=&#34;scheme&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;#&lt;/span&gt;lang racket
+
+(&lt;span style=&#34;color:#a6e22e&#34;&gt;require&lt;/span&gt; rackunit &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;readgif.rkt&amp;#34;&lt;/span&gt;)
+
+(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;readgif-tests
+  (&lt;span style=&#34;color:#a6e22e&#34;&gt;test-suite&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Tests for readgif&amp;#34;&lt;/span&gt;
+              (&lt;span style=&#34;color:#a6e22e&#34;&gt;test-case&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Extracting Size of color table&amp;#34;&lt;/span&gt;
+                         (&lt;span style=&#34;color:#a6e22e&#34;&gt;check-equal?&lt;/span&gt;
+                          (&lt;span style=&#34;color:#a6e22e&#34;&gt;size-of-color-table-from-packed-field&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;#&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;\360\24\253;\344\21O\262\20\227&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;)
+                          &lt;span style=&#34;color:#ae81ff&#34;&gt;96&lt;/span&gt;))
+              (&lt;span style=&#34;color:#a6e22e&#34;&gt;test-case&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Extracting the packed-field from a bstr&amp;#34;&lt;/span&gt;
+                         (&lt;span style=&#34;color:#a6e22e&#34;&gt;check-equal?&lt;/span&gt;
+                          (&lt;span style=&#34;color:#a6e22e&#34;&gt;extract-packed-field&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;#&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;\314\1\367\0\367\377\0&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;)
+                          &lt;span style=&#34;color:#f92672&#34;&gt;#&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;\367&amp;#34;&lt;/span&gt;)))
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You of course don&amp;rsquo;t need all of this, the &lt;code&gt;check-equal?&lt;/code&gt; is enough, but being able to organize the test suites like this is nice if you want to run just one of them. Though I don&amp;rsquo;t know exactly how complicated a larger test suite would be overall, I&amp;rsquo;m happy with the minimal test framework that racket provides.&lt;/p&gt;
+&lt;h2 id=&#34;web-development&#34;&gt;Web development&lt;/h2&gt;
+&lt;p&gt;The majority of my experience is in web development so the next step was to create a small website or an api. I had heard that Hackernews was written in racket or, more accurately, written arc, a language written in Racket, so I wanted to see how easy it would be to write a webpage in racket. The docs again shine through here with instant web servlets:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-scheme&#34; data-lang=&#34;scheme&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;#&lt;/span&gt;lang web-server/insta
+ 
+(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;start&lt;/span&gt; req)
+  (&lt;span style=&#34;color:#a6e22e&#34;&gt;response/xexpr&lt;/span&gt;
+   &lt;span style=&#34;color:#f92672&#34;&gt;`&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;html&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;head&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;title&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Hello world!&amp;#34;&lt;/span&gt;))
+          (&lt;span style=&#34;color:#a6e22e&#34;&gt;body&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;p&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;This website was made with Racket!&amp;#34;&lt;/span&gt;)))))
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Thi is nice of course, but ideally I don&amp;rsquo;t want to have to roll everything myself. Luckily there are a few different web frameworks on github, though a few of them are in early stages or don&amp;rsquo;t seem to have many contributions:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/nihirash/holy&#34;&gt;https://github.com/nihirash/holy&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/dmac/spin&#34;&gt;https://github.com/dmac/spin&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;taking-spin-for-a-whirl&#34;&gt;Taking Spin for a whirl&lt;/h3&gt;
+&lt;p&gt;I decided to take a look at spin mostly because it reminded me a lot of the minimalist framework &lt;a href=&#34;http://sinatrarb.com/&#34;&gt;Sinatra&lt;/a&gt; which I have used before.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-scheme&#34; data-lang=&#34;scheme&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;#&lt;/span&gt;lang racket
+
+(&lt;span style=&#34;color:#a6e22e&#34;&gt;require&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;planet&lt;/span&gt; dmac/spin))
+(&lt;span style=&#34;color:#a6e22e&#34;&gt;require&lt;/span&gt; web-server/templates)
+
+(&lt;span style=&#34;color:#a6e22e&#34;&gt;get&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/&amp;#34;&lt;/span&gt;
+  (&lt;span style=&#34;color:#a6e22e&#34;&gt;λ&lt;/span&gt; () &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Hello!&amp;#34;&lt;/span&gt;))
+
+(&lt;span style=&#34;color:#a6e22e&#34;&gt;get&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/hi/:name&amp;#34;&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;λ&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;req&lt;/span&gt;)
+  (string-append &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Hello, &amp;#34;&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;params&lt;/span&gt; req &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;name&lt;/span&gt;) &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;!&amp;#34;&lt;/span&gt;)))
+
+(&lt;span style=&#34;color:#a6e22e&#34;&gt;run&lt;/span&gt;)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Boom! This was more what I was looking for: Throw down some routes and then then the use whatever logic needs to run. The framework also includes templating and the like if you need something a little more complicated but there doesn&amp;rsquo;t really seem to be anything in the way of react, rails, spring, or anything in the realm of fully fleshed out web frameworks. That really shouldn&amp;rsquo;t be that surprising considering how small the user base is, and what the typical use case for the language is, so I didn&amp;rsquo;t go much further in the way of creating a more robust web application though there is a static site generator &lt;a href=&#34;https://docs.racket-lang.org/frog/index.html&#34;&gt;Frog&lt;/a&gt;. Though I probably won&amp;rsquo;t consider moving over to Frog from the current static site generator I use for this site: &lt;a href=&#34;https://gohugo.io/&#34;&gt;Hugo&lt;/a&gt;. It looked like it had some thorough documentation and room for customization.&lt;/p&gt;
+&lt;h3 id=&#34;making-web-requests&#34;&gt;Making web requests&lt;/h3&gt;
+&lt;p&gt;A lot of applications depend on making calls to third party apis, so I wanted to see what parsing json was like. There are a number of useful libraries for making &lt;a href=&#34;https://github.com/jackfirth/racket-request&#34;&gt;rest requests&lt;/a&gt; with racket, but I wanted to use just the base language. There were a few different ways to make requests but I found this to be the most intuitive and relevant to the majority of my use cases.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-scheme&#34; data-lang=&#34;scheme&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;#&lt;/span&gt;lang racket
+(&lt;span style=&#34;color:#a6e22e&#34;&gt;require&lt;/span&gt; net/http-client
+         json)
+
+(&lt;span style=&#34;color:#a6e22e&#34;&gt;define-values&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;status&lt;/span&gt; header response)
+  (&lt;span style=&#34;color:#a6e22e&#34;&gt;http-sendrecv&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;api.github.com&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/users&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;#&lt;/span&gt;:ssl? &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;auto&lt;/span&gt;))
+(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;data (&lt;span style=&#34;color:#a6e22e&#34;&gt;read-json&lt;/span&gt; response))
+
+(&lt;span style=&#34;color:#a6e22e&#34;&gt;when&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;jsexpr?&lt;/span&gt; data)
+    (&lt;span style=&#34;color:#a6e22e&#34;&gt;hash-ref&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;first&lt;/span&gt; data) &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;login&lt;/span&gt;))
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Here the &lt;code&gt;http-sendrecv&lt;/code&gt; produces three values: status, header, and response. The function then returns an input port which we can read as json. Really it builds a &lt;code&gt;#hasheq&lt;/code&gt; type or a list of hashes depending on the results, so the Racket libraries for getting information from hashes makes this pretty simple to read from. In this example the json is a list of several results, so we read the first hash from the list in order to access the &lt;code&gt;&#39;login&lt;/code&gt; element.&lt;/p&gt;
+&lt;h1 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h1&gt;
+&lt;p&gt;This is easily the fastest I&amp;rsquo;ve become productive in any particular language. The biggest strength of racket is being largely syntax-less meaning the only real learning that I needed to do was find out what functions were available through the base racket language. The docs were thorough, and though there were a lot of functions, the language still felt small enough that I started to feel like I knew what I was doing relatively quickly. I&amp;rsquo;m not sure that I would build a website from Racket at the moment, but I think that it does make a great general purpose language, and the next time I write a script or tool, I might just try using Racket first.&lt;/p&gt;
+</content>
     </item>
     
     <item>
@@ -35,6 +399,100 @@ Preface I&amp;rsquo;ve been playing around with functional languages for a few y
       <guid>/post/reading-parquet-files-java/</guid>
       <description>&lt;p&gt;A simple way of reading Parquet files without the need to use Spark.&lt;/p&gt;
 &lt;p&gt;I recently ran into an issue where I needed to read from &lt;a href=&#34;https://parquet.apache.org/&#34;&gt;Parquet&lt;/a&gt; files in a simple way without having to use the entire Spark framework. Though inspecting the contents of a Parquet file turns out to be pretty simple using the &lt;code&gt;spark-shell&lt;/code&gt;, doing so without the framework ended up being more difficult because of a lack of documentation about how to read the actual content of Parquet files, the columnar format used by Hadoop and Spark.&lt;/p&gt;</description>
+      <content>&lt;p&gt;A simple way of reading Parquet files without the need to use Spark.&lt;/p&gt;
+&lt;p&gt;I recently ran into an issue where I needed to read from &lt;a href=&#34;https://parquet.apache.org/&#34;&gt;Parquet&lt;/a&gt; files in a simple way without having to use the entire Spark framework. Though inspecting the contents of a Parquet file turns out to be pretty simple using the &lt;code&gt;spark-shell&lt;/code&gt;, doing so without the framework ended up being more difficult because of a lack of documentation about how to read the actual content of Parquet files, the columnar format used by Hadoop and Spark.&lt;/p&gt;
+&lt;p&gt;If all you need to do is inspect the contents of a parquet file you can do so pretty easily if you already have spark set up like so&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;
+$ spark-shell
+scala&amp;gt; val sqlContext &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; new org.apache.spark.sql.SQLContext&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;sc&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+scala&amp;gt; val parqfile &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; sqlContext.read.parquet&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Objects.parquet&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+scala&amp;gt; Parqfile.registerTempTable&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;object&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+scala&amp;gt; val allrecords &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; sqlContext.sql&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;SELECT * FROM object&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+scala&amp;gt; allrecords.show&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;However if that&amp;rsquo;s not an option or you need a more programmatic way to inspect the elements you&amp;rsquo;ll have to use the &lt;a href=&#34;https://github.com/apache/parquet-mr&#34;&gt;libraries internally used by Hadoop and Spark&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;If you&amp;rsquo;re using Maven you&amp;rsquo;ll want to get the following dependancies&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-xml&#34; data-lang=&#34;xml&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;dependencies&amp;gt;&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+        &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.apache.parquet&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+        &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;parquet-avro&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+        &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;version&amp;gt;&lt;/span&gt;1.10.0&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/version&amp;gt;&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+        &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.apache.hadoop&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+        &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;hadoop-common&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+        &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;version&amp;gt;&lt;/span&gt;3.1.0&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/version&amp;gt;&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/dependencies&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; org.apache.hadoop.conf.Configuration&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; org.apache.hadoop.fs.Path&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; org.apache.parquet.column.page.PageReadStore&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; org.apache.parquet.example.data.simple.SimpleGroup&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; org.apache.parquet.example.data.simple.convert.GroupRecordConverter&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; org.apache.parquet.hadoop.ParquetFileReader&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; org.apache.parquet.hadoop.util.HadoopInputFile&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; org.apache.parquet.io.ColumnIOFactory&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; org.apache.parquet.io.MessageColumnIO&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; org.apache.parquet.io.RecordReader&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; org.apache.parquet.schema.MessageType&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; org.apache.parquet.schema.Type&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; java.io.IOException&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; java.util.ArrayList&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; java.util.List&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;ParquetReaderUtils&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; Parquet &lt;span style=&#34;color:#a6e22e&#34;&gt;getParquetData&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;String filePath&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;throws&lt;/span&gt; IOException &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+        List&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;SimpleGroup&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; simpleGroups &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; ArrayList&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;gt;();&lt;/span&gt;
+        ParquetFileReader reader &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; ParquetFileReader&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;open&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;HadoopInputFile&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;fromPath&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; Path&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;filePath&lt;span style=&#34;color:#f92672&#34;&gt;),&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; Configuration&lt;span style=&#34;color:#f92672&#34;&gt;()));&lt;/span&gt;
+        MessageType schema &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; reader&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;getFooter&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;().&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;getFileMetaData&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;().&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;getSchema&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;();&lt;/span&gt;
+        List&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;Type&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; fields &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; schema&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;getFields&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;();&lt;/span&gt;
+        PageReadStore pages&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;((&lt;/span&gt;pages &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; reader&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;readNextRowGroup&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;())&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;long&lt;/span&gt; rows &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; pages&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;getRowCount&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;();&lt;/span&gt;
+            MessageColumnIO columnIO &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; ColumnIOFactory&lt;span style=&#34;color:#f92672&#34;&gt;().&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;getColumnIO&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;schema&lt;span style=&#34;color:#f92672&#34;&gt;);&lt;/span&gt;
+            RecordReader recordReader &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; columnIO&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;getRecordReader&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;pages&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; GroupRecordConverter&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;schema&lt;span style=&#34;color:#f92672&#34;&gt;));&lt;/span&gt;
+
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; 0&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; rows&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt; i&lt;span style=&#34;color:#f92672&#34;&gt;++)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+                SimpleGroup simpleGroup &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;SimpleGroup&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; recordReader&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;read&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;();&lt;/span&gt;
+                simpleGroups&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;add&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;simpleGroup&lt;span style=&#34;color:#f92672&#34;&gt;);&lt;/span&gt;
+            &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+        &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+        reader&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;close&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;();&lt;/span&gt;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; Parquet&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;simpleGroups&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; fields&lt;span style=&#34;color:#f92672&#34;&gt;);&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;And to make things easier A Parquet data object&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; org.apache.parquet.example.data.simple.SimpleGroup&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; org.apache.parquet.schema.Type&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; java.util.List&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Parquet&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;private&lt;/span&gt; List&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;SimpleGroup&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; data&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;private&lt;/span&gt; List&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;Type&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; schema&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Parquet&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;List&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;SimpleGroup&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; data&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; List&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;Type&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; schema&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;data&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; data&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;schema&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; schema&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; List&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;SimpleGroup&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;getData&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; data&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; List&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;Type&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;getSchema&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; schema&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Once we return the Parquet Object we can read whats inside each of the SimpleGroups like so:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;  Parquet parquet &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; ParquetReaderUtils&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;getParquetData&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;();&lt;/span&gt;
+  SimpleGroup simpleGroup &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; parquet&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;getData&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;().&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;get&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;0&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+  String storedString &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; simpleGroups&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;get&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;0&lt;span style=&#34;color:#f92672&#34;&gt;).&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;getString&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;theFieldIWant&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; 0&lt;span style=&#34;color:#f92672&#34;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The only caveat here being, we must determine the name of the field as well as the type in order to extract it. The fields we already have from the schema we stored on the Parquet object, however the type we may want to determine by manually inspecting the data with a debugger, though it can be determined dynamically using&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;  parquet&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;getSchema&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;().&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;get&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;0&lt;span style=&#34;color:#f92672&#34;&gt;).&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;getOriginalType&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;();&lt;/span&gt;
+  parquet&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;getSchema&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;().&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;get&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;0&lt;span style=&#34;color:#f92672&#34;&gt;).&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;asPrimitiveType&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;();&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content>
     </item>
     
   </channel>

@@ -5,8 +5,8 @@
     <title>Building a Cli Tool in Rust :: Adam&#39;s Blag</title>
   
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-<meta name="description" content="Like almost everyone I know, I’ve been sitting pacing inside for almost 8 weeks, waiting out the sars-cov-2 pandemic. I’ve been “zooming” with friends, phoning my family members, and catching up on reading. Gone are the days of concerts and movie theaters. Now is the time for reading, Animal Crossing, and updating one’s websites. So here it is, a new theme for a new year and a new post to help stave off boredom." />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="A short tutorial on building a useful command line tool in Rust" />
 <meta name="keywords" content="" />
 <meta name="robots" content="noodp" />
 <link rel="canonical" href="/post/building-a-cli-tool-in-rust/" />
@@ -23,7 +23,7 @@
 
 
 
-<link rel="apple-touch-icon-precomposed" sizes="144x144" href="/img/apple-touch-icon-144-precomposed.png">
+<link rel="apple-touch-icon" href="/img/apple-touch-icon-192x192.png">
 
   <link rel="shortcut icon" href="/img/favicon/green.png">
 
@@ -31,17 +31,19 @@
 
 <meta name="twitter:card" content="summary" />
 
-  <meta name="twitter:site" content="" />
+  
+    <meta name="twitter:site" content="" />
+  
+    <meta name="twitter:creator" content="" />
 
-<meta name="twitter:creator" content="" />
 
 
 <meta property="og:locale" content="en" />
 <meta property="og:type" content="article" />
-<meta property="og:title" content="Building a Cli Tool in Rust :: Adam&#39;s Blag">
+<meta property="og:title" content="Building a Cli Tool in Rust">
 <meta property="og:description" content="A short tutorial on building a useful command line tool in Rust" />
 <meta property="og:url" content="/post/building-a-cli-tool-in-rust/" />
-<meta property="og:site_name" content="Building a Cli Tool in Rust" />
+<meta property="og:site_name" content="Adam&#39;s Blag" />
 
   
     <meta property="og:image" content="/img/favicon/green.png">
@@ -67,7 +69,7 @@
 
 
 </head>
-<body class="">
+<body class="green">
 
 
 <div class="container full headings--one-size">
@@ -82,7 +84,9 @@
 </a>
 
     </div>
-    <div class="menu-trigger">menu</div>
+    
+      <div class="menu-trigger">menu</div>
+    
   </div>
   
     <nav class="menu">
@@ -119,10 +123,10 @@
   <h1 class="post-title">
     <a href="/post/building-a-cli-tool-in-rust/">Building a Cli Tool in Rust</a></h1>
   <div class="post-meta">
-      
-    <span class="post-date">
-      2020-05-02
-    </span>
+    
+      <span class="post-date">
+        2020-05-02 
+      </span>
     
     
   </div>
@@ -137,6 +141,8 @@
     #<a href="/tags/sonos/">sonos</a>&nbsp;
     
   </span>
+  
+
   
 
   
@@ -377,32 +383,34 @@ note: run with <span style="color:#e6db74">`</span>RUST_BACKTRACE<span style="co
 <p>Rust has a reputation for having a steep learning curve, but I hope that this post made it seem at least a little more approachable. Though my experience with the language as of writing this is fairly limited, I found this relatively simple to put together, and I hope that you will too. Async features were no more difficult to use than other normal functions. Structop really made making a Cli tool much simpler as well, giving us a simple way to set up a command line tool and expand it as needed.</p>
 
       </div></div>
+
   
-  <div class="pagination">
+  
+<div class="pagination">
     <div class="pagination__title">
-      <span
-        class="pagination__title-h">Read other posts</span>
-      <hr />
+        <span class="pagination__title-h">Read other posts</span>
+        <hr />
     </div>
     <div class="pagination__buttons">
-      
-      <span class="button previous">
-        <a href="/post/scraping-wikipedia-with-rust/">
-          <span class="button__icon">←</span>
-          <span class="button__text">Scraping Wikipedia With Rust</span>
-        </a>
-      </span>
-      
-      
-      <span class="button next">
-        <a href="/post/taocp-vol-2-seminumerical-algorithms/">
-          <span class="button__text">Random Numbers</span>
-          <span class="button__icon">→</span>
-        </a>
-      </span>
-      
+        
+        <span class="button previous">
+            <a href="/post/scraping-wikipedia-with-rust/">
+                <span class="button__icon">←</span>
+                <span class="button__text">Scraping Wikipedia With Rust</span>
+            </a>
+        </span>
+        
+        
+        <span class="button next">
+            <a href="/post/taocp-vol-2-seminumerical-algorithms/">
+                <span class="button__text">Random Numbers</span>
+                <span class="button__icon">→</span>
+            </a>
+        </span>
+        
     </div>
-  </div>
+</div>
+
   
 
   
@@ -425,6 +433,8 @@ note: run with <span style="color:#e6db74">`</span>RUST_BACKTRACE<span style="co
 
 <script src="/assets/main.js"></script>
 <script src="/assets/prism.js"></script>
+
+
 
 
 

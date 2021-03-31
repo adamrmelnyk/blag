@@ -15,6 +15,7 @@
       
       <guid>/tags/chip8/</guid>
       <description></description>
+      <content></content>
     </item>
     
     <item>
@@ -24,6 +25,7 @@
       
       <guid>/tags/emulator/</guid>
       <description></description>
+      <content></content>
     </item>
     
     <item>
@@ -33,6 +35,7 @@
       
       <guid>/tags/hexcode/</guid>
       <description></description>
+      <content></content>
     </item>
     
     <item>
@@ -42,6 +45,7 @@
       
       <guid>/tags/rust/</guid>
       <description></description>
+      <content></content>
     </item>
     
     <item>
@@ -51,6 +55,7 @@
       
       <guid>/tags/scraper/</guid>
       <description></description>
+      <content></content>
     </item>
     
     <item>
@@ -60,6 +65,7 @@
       
       <guid>/tags/wikipedia/</guid>
       <description></description>
+      <content></content>
     </item>
     
     <item>
@@ -69,6 +75,7 @@
       
       <guid>/tags/cli/</guid>
       <description></description>
+      <content></content>
     </item>
     
     <item>
@@ -78,6 +85,7 @@
       
       <guid>/tags/sonos/</guid>
       <description></description>
+      <content></content>
     </item>
     
     <item>
@@ -87,6 +95,7 @@
       
       <guid>/tags/knuth/</guid>
       <description></description>
+      <content></content>
     </item>
     
     <item>
@@ -96,6 +105,7 @@
       
       <guid>/tags/taocp/</guid>
       <description></description>
+      <content></content>
     </item>
     
     <item>
@@ -105,6 +115,7 @@
       
       <guid>/tags/vol2/</guid>
       <description></description>
+      <content></content>
     </item>
     
     <item>
@@ -114,6 +125,7 @@
       
       <guid>/tags/functional/</guid>
       <description></description>
+      <content></content>
     </item>
     
     <item>
@@ -123,6 +135,7 @@
       
       <guid>/tags/racket/</guid>
       <description></description>
+      <content></content>
     </item>
     
     <item>
@@ -132,6 +145,7 @@
       
       <guid>/tags/vol1/</guid>
       <description></description>
+      <content></content>
     </item>
     
     <item>
@@ -141,6 +155,7 @@
       
       <guid>/tags/java/</guid>
       <description></description>
+      <content></content>
     </item>
     
     <item>
@@ -150,6 +165,7 @@
       
       <guid>/tags/parquet/</guid>
       <description></description>
+      <content></content>
     </item>
     
   </channel>

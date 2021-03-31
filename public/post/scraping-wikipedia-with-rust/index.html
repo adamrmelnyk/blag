@@ -5,8 +5,8 @@
     <title>Scraping Wikipedia With Rust :: Adam&#39;s Blag</title>
   
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-<meta name="description" content="Writing a toy scraper As the quarantine continues and many things are still closed, I&amp;rsquo;m still spending a lot of time looking for fun side projects I can complete in a few days or less. As I drifted off to sleep one night wondering about some correlations between countries and various other data points. I realized that wikipedia probably had all the data I needed to find out. What if I could just scrape all the data off of wikipedia and throw it into sql tables so I could chart data that way?" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Building a toy Rust app to scrape data from wikipedia" />
 <meta name="keywords" content="" />
 <meta name="robots" content="noodp" />
 <link rel="canonical" href="/post/scraping-wikipedia-with-rust/" />
@@ -23,7 +23,7 @@
 
 
 
-<link rel="apple-touch-icon-precomposed" sizes="144x144" href="/img/apple-touch-icon-144-precomposed.png">
+<link rel="apple-touch-icon" href="/img/apple-touch-icon-192x192.png">
 
   <link rel="shortcut icon" href="/img/favicon/green.png">
 
@@ -31,17 +31,19 @@
 
 <meta name="twitter:card" content="summary" />
 
-  <meta name="twitter:site" content="" />
+  
+    <meta name="twitter:site" content="" />
+  
+    <meta name="twitter:creator" content="" />
 
-<meta name="twitter:creator" content="" />
 
 
 <meta property="og:locale" content="en" />
 <meta property="og:type" content="article" />
-<meta property="og:title" content="Scraping Wikipedia With Rust :: Adam&#39;s Blag">
+<meta property="og:title" content="Scraping Wikipedia With Rust">
 <meta property="og:description" content="Building a toy Rust app to scrape data from wikipedia" />
 <meta property="og:url" content="/post/scraping-wikipedia-with-rust/" />
-<meta property="og:site_name" content="Scraping Wikipedia With Rust" />
+<meta property="og:site_name" content="Adam&#39;s Blag" />
 
   
     <meta property="og:image" content="/img/favicon/green.png">
@@ -67,7 +69,7 @@
 
 
 </head>
-<body class="">
+<body class="green">
 
 
 <div class="container full headings--one-size">
@@ -82,7 +84,9 @@
 </a>
 
     </div>
-    <div class="menu-trigger">menu</div>
+    
+      <div class="menu-trigger">menu</div>
+    
   </div>
   
     <nav class="menu">
@@ -119,10 +123,10 @@
   <h1 class="post-title">
     <a href="/post/scraping-wikipedia-with-rust/">Scraping Wikipedia With Rust</a></h1>
   <div class="post-meta">
-      
-    <span class="post-date">
-      2020-06-20
-    </span>
+    
+      <span class="post-date">
+        2020-06-20 
+      </span>
     
     
   </div>
@@ -137,6 +141,8 @@
     #<a href="/tags/wikipedia/">wikipedia</a>&nbsp;
     
   </span>
+  
+
   
 
   
@@ -252,32 +258,34 @@ connection
 <p>You can find the finished product <a href="https://github.com/adamrmelnyk/wtd">here</a>. The project doesn&rsquo;t work on everything and it likely will not work on all but the most simple of wikipedia pages (those with one table and no tables inside of tables) as many pages have different layouts and formatting that require more testing and tweaking to clean and parse the data. The basic ideas however, are all there to give anyone some ideas on how they might want to scrape data from somewhere else.</p>
 
       </div></div>
+
   
-  <div class="pagination">
+  
+<div class="pagination">
     <div class="pagination__title">
-      <span
-        class="pagination__title-h">Read other posts</span>
-      <hr />
+        <span class="pagination__title-h">Read other posts</span>
+        <hr />
     </div>
     <div class="pagination__buttons">
-      
-      <span class="button previous">
-        <a href="/post/debugging-chip8-code/">
-          <span class="button__icon">←</span>
-          <span class="button__text">Debugging CHIP8 code</span>
-        </a>
-      </span>
-      
-      
-      <span class="button next">
-        <a href="/post/building-a-cli-tool-in-rust/">
-          <span class="button__text">Building a Cli Tool in Rust</span>
-          <span class="button__icon">→</span>
-        </a>
-      </span>
-      
+        
+        <span class="button previous">
+            <a href="/post/debugging-chip8-code/">
+                <span class="button__icon">←</span>
+                <span class="button__text">Debugging CHIP8 code</span>
+            </a>
+        </span>
+        
+        
+        <span class="button next">
+            <a href="/post/building-a-cli-tool-in-rust/">
+                <span class="button__text">Building a Cli Tool in Rust</span>
+                <span class="button__icon">→</span>
+            </a>
+        </span>
+        
     </div>
-  </div>
+</div>
+
   
 
   
@@ -300,6 +308,8 @@ connection
 
 <script src="/assets/main.js"></script>
 <script src="/assets/prism.js"></script>
+
+
 
 
 

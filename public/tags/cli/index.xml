@@ -15,6 +15,240 @@
       
       <guid>/post/building-a-cli-tool-in-rust/</guid>
       <description>Like almost everyone I know, I’ve been sitting pacing inside for almost 8 weeks, waiting out the sars-cov-2 pandemic. I’ve been “zooming” with friends, phoning my family members, and catching up on reading. Gone are the days of concerts and movie theaters. Now is the time for reading, Animal Crossing, and updating one’s websites. So here it is, a new theme for a new year and a new post to help stave off boredom.</description>
+      <content>&lt;p&gt;Like almost everyone I know, I’ve been &lt;del&gt;sitting&lt;/del&gt; pacing inside for almost 8 weeks, waiting out the sars-cov-2 pandemic. I’ve been “zooming” with friends, phoning my family members, and catching up on reading. Gone are the days of concerts and movie theaters. Now is the time for reading, Animal Crossing, and updating one’s websites. So here it is, a new theme for a new year and a new post to help stave off boredom. Now’s the perfect time to clean up my dirty markdown peppered with HTML that I’ve been meaning to remove, update those pesky dependencies that github keeps reminding me are out of date, and it’s the perfect opportunity to work on something new and exciting.&lt;/p&gt;
+&lt;p&gt;Earlier this week a reddit user posted their library &lt;a href=&#34;https://docs.rs/sonor/0.1.2/sonor/&#34;&gt;sonor&lt;/a&gt; for interacting with sonos devices. Having a penchant for anything I can use from the command line, this seemed like the perfect opportunity to build a command line application to use my sonos speakers. Though I have not used Rust very much other than reading through the book and tinkering with a few different frameworks, this seemed to fit neatly into everything I wanted to do:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Use Rust for something novel&lt;/li&gt;
+&lt;li&gt;Build something I might actually use&lt;/li&gt;
+&lt;li&gt;Pass the time during a pandemic&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;building-the-tool&#34;&gt;Building the Tool&lt;/h2&gt;
+&lt;h3 id=&#34;setting-up-the-project&#34;&gt;Setting up the project&lt;/h3&gt;
+&lt;p&gt;Rust has some great tooling that is really easy to use and setup. Once you have Rust installed you can use cargo to start a new project like so:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;cargo new sonos_tool
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Running it is just one more step, just &lt;code&gt;cd&lt;/code&gt; into the directory and then use &lt;code&gt;cargo run&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;cargo run
+   Compiling sonos_tool v0.1.0 &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;/home/arm/src/sonos_tool&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+    Finished dev &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;unoptimized + debuginfo&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; target&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;s&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; in 6.61s
+     Running &lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;target/debug/sonos_tool&lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;
+Hello, world!
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;adding-dependencies&#34;&gt;Adding dependencies&lt;/h3&gt;
+&lt;p&gt;Before going further we’ll need to add a few dependencies to our &lt;code&gt;Cargo.toml&lt;/code&gt; file:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;[dependencies]
+sonor = &amp;#34;0.1.2&amp;#34;
+tokio = { version = &amp;#34;0.2&amp;#34;, features = [&amp;#34;macros&amp;#34;, &amp;#34;time&amp;#34;]}
+futures = &amp;#34;0.3&amp;#34;
+structopt = { version = &amp;#34;0.3&amp;#34;, default-features = false }
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;running-a-single-command-from-sonor&#34;&gt;Running a single command from sonor&lt;/h3&gt;
+&lt;p&gt;The first thing I want to do is the most basic thing I can find with sonor. The sonor repo has some examples so we’re going to start a little smaller and then expand upon it a little bit. Looking at the example the first thing we can do is find a speaker and return the name. So we can replace the main method with something like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Rust&#34; data-lang=&#34;Rust&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#[tokio::main]&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;async&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;() -&amp;gt; Result&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;(), sonor::Error&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; speaker &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; sonor::find(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Bedroom&amp;#34;&lt;/span&gt;, Duration::from_secs(&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;)).&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;
+    .expect(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;room exists&amp;#34;&lt;/span&gt;);
+    println&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Name: {}&amp;#34;&lt;/span&gt;, speaker.name().&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;);
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; Ok(())
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In this example, we have a speaker, or speaker set in our home called &lt;code&gt;&amp;quot;Bedroom&amp;quot;&lt;/code&gt; but you’ll need to use whatever name your speaker might be called.&lt;/p&gt;
+&lt;p&gt;Running this should produce something like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;    Finished dev &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;unoptimized + debuginfo&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; target&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;s&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; in 5.88s
+     Running &lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;target/debug/sonos_tool&lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;
+Name: Bedroom
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The library makes working with your sonos speakers easy as pie, we just need add more functions, and then make it usable as a command line tool.&lt;/p&gt;
+&lt;h3 id=&#34;adding-functionality&#34;&gt;Adding functionality&lt;/h3&gt;
+&lt;p&gt;Now that we can find the speaker we can use any of these commands at our disposal. All we need to do is make the commands available from the command line somehow and match them up with the appropriate speaker function.&lt;/p&gt;
+&lt;p&gt;Unless you want to dig into the docs to see what else we can do, the &lt;code&gt;speaker.rs&lt;/code&gt; file has all the commands we can access and some good examples on how one might use what’s available. To start with we should add some basic functionality that we might need: &lt;code&gt;Play&lt;/code&gt;, &lt;code&gt;Pause&lt;/code&gt;, and because we’re going to need to know the names of what’s available, an &lt;code&gt;Info&lt;/code&gt; command used for discovery.&lt;/p&gt;
+&lt;p&gt;To make things easier on ourselves, the first thing we can do is take a look at the &lt;a href=&#34;https://docs.rs/structopt/0.3.14/structopt/&#34;&gt;&lt;code&gt;structop&lt;/code&gt; crate&lt;/a&gt; which will be helpful for listing the available commands.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Rust&#34; data-lang=&#34;Rust&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#[derive(StructOpt)]&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;enum&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Command&lt;/span&gt; {
+    Info,
+    Play,
+    Pause,
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We’ll also add this to our main method though we don’t need to do anything with the cmd variable for now&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Rust&#34; data-lang=&#34;Rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; cmd &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Command::from_args();
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now we can run &lt;code&gt;cargo build&lt;/code&gt; and this time we’ll execute our binary like so&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;$ ./target/debug/sonos_tool --help
+Name: Bedroom
+sonos_tool 0.1.0
+
+USAGE:
+    sonos_tool &amp;lt;SUBCOMMAND&amp;gt;
+
+FLAGS:
+    -h, --help       Prints help information
+    -V, --version    Prints version information
+
+SUBCOMMANDS:
+    help     Prints this message or the help of the given subcommand&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;s&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+    info
+    pause
+    play
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Without needing to do anything else at all, Structop gives us a help command (we can use &lt;code&gt;-h&lt;/code&gt; as well), as well as a &lt;code&gt;--version&lt;/code&gt; command, and some helpful info.&lt;/p&gt;
+&lt;h3 id=&#34;adding-some-better-documentation-to-the-command-line-tool&#34;&gt;Adding some better documentation to the command line tool&lt;/h3&gt;
+&lt;p&gt;We aren’t making use of everything structop gives us however. Looking at the docs we can add the annotations which will build out the rest of this info for us.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Rust&#34; data-lang=&#34;Rust&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#[derive(StructOpt)]&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;enum&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Cli&lt;/span&gt; {
+    Info,
+    &lt;span style=&#34;color:#75715e&#34;&gt;#[structopt(
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;        about = &lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Plays specified room&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;,
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;        help = &lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;USAGE: play MyRoomName&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;    )]&lt;/span&gt;
+    Play,
+    &lt;span style=&#34;color:#75715e&#34;&gt;#[structopt(
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;        about = &lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Pauses a specified room&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;,
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;        help = &lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;USAGE: volume MyRoomName&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;    )]&lt;/span&gt;
+    Pause,
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now that we’ve added the about and help data, using &lt;code&gt;-h&lt;/code&gt; gives us something much more useful.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;   Compiling sonos_tool v0.1.0 &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;/home/arm/src/sonos_tool&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+    Finished dev &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;unoptimized + debuginfo&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; target&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;s&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; in 6.61s
+     Running &lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;target/debug/sonos_tool&lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;
+sonos_tool 0.1.0
+
+USAGE:
+    sonos_tool &amp;lt;SUBCOMMAND&amp;gt;
+
+FLAGS:
+    -h, --help       Prints help information
+    -V, --version    Prints version information
+
+SUBCOMMANDS:
+    help          Prints this message or the help of the given subcommand&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;s&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+    info          Displays info about all rooms
+    pause         Pauses a specified room
+    play          Plays specified room
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;There’s one last thing we need in our structop enum, as we saw with the first example, we’ll need a name to specify which speaker or group we’re talking about. This is just as easy as Rust enums are not normal enums and can have properties like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Rust&#34; data-lang=&#34;Rust&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#[derive(StructOpt)]&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;enum&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Command&lt;/span&gt; {
+    Info,
+    &lt;span style=&#34;color:#75715e&#34;&gt;#[structopt(
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;        about = &lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Plays specified room&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;,
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;        help = &lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;USAGE: play MyRoomName&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;    )]&lt;/span&gt;
+    Play {
+        name: String,
+    },
+    &lt;span style=&#34;color:#75715e&#34;&gt;#[structopt(
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;        about = &lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Pauses a specified room&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;,
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;        help = &lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;USAGE: volume MyRoomName&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;    )]&lt;/span&gt;
+    Pause {
+        name: String,
+    },
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;making-use-of-the-commands&#34;&gt;Making use of the commands&lt;/h3&gt;
+&lt;p&gt;Now that we have the commands laid out we just need to parse our command line arguments and then implement the three functions. For our functions we can implement them similarly to the first method where we printed our speakers name however, this time we’ll need to provide a param to specify which speaker we will be sending the command to.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Rust&#34; data-lang=&#34;Rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;play&lt;/span&gt;(name: String) -&amp;gt; Result&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;(), sonor::Error&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; speaker &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; sonor::find(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;name, Duration::from_secs(&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;)).&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;
+        .expect(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;room exists&amp;#34;&lt;/span&gt;);
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; speaker.play().&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;;
+}
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;pause&lt;/span&gt;(name: String) -&amp;gt; Result&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;(), sonor::Error&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; speaker &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; sonor::find(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;name, Duration::from_secs(&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;)).&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;
+        .expect(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;room exists&amp;#34;&lt;/span&gt;);
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; speaker.pause().&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Trying to build this however, will return an error:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;error&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;E0728&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;await&lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt; is only allowed inside &lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;async&lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt; functions and blocks
+   --&amp;gt; src/main.rs:121:19
+    |
+&lt;span style=&#34;color:#ae81ff&#34;&gt;120&lt;/span&gt; | fn pause&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;name: String&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; -&amp;gt; Result&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;, sonor::Error&amp;gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+    |    ----- this is not &lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;async&lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;
+&lt;span style=&#34;color:#ae81ff&#34;&gt;121&lt;/span&gt; |     let speaker &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; sonor::find&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&amp;amp;name, Duration::from_secs&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;2&lt;span style=&#34;color:#f92672&#34;&gt;))&lt;/span&gt;.await?
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ only allowed inside &lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;async&lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt; functions and blocks
+
+error&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;E0728&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;await&lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt; is only allowed inside &lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;async&lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt; functions and blocks
+   --&amp;gt; src/main.rs:123:12
+    |
+&lt;span style=&#34;color:#ae81ff&#34;&gt;120&lt;/span&gt; | fn pause&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;name: String&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; -&amp;gt; Result&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;, sonor::Error&amp;gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+    |    ----- this is not &lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;async&lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;
+...
+&lt;span style=&#34;color:#ae81ff&#34;&gt;123&lt;/span&gt; |     &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; speaker.pause&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;.await;
+    |            ^^^^^^^^^^^^^^^^^^^^^ only allowed inside &lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;async&lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt; functions and blocks
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Rust is laying out exactly what we need to make this work. The function needs to be &lt;code&gt;async&lt;/code&gt; just like the main method. It’s an easy fix and all we need is to do is change our method to:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Rust&#34; data-lang=&#34;Rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;async&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;play&lt;/span&gt;(name: String) -&amp;gt; Result&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;(), sonor::Error&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; speaker &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; sonor::find(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;name, Duration::from_secs(&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;)).&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;
+        .expect(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;room exists&amp;#34;&lt;/span&gt;);
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; speaker.play().&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;;
+}
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;async&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;pause&lt;/span&gt;(name: String) -&amp;gt; Result&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;(), sonor::Error&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; speaker &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; sonor::find(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;name, Duration::from_secs(&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;)).&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;
+        .expect(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;room exists&amp;#34;&lt;/span&gt;);
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; speaker.pause().&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Our info command will take a little more work. This function won’t be passed a name of a speaker like the other two functions, but rather, we’ll use it to find all our speakers on our wifi network and display some general info about the state of them.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Rust&#34; data-lang=&#34;Rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;async&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;info&lt;/span&gt;() -&amp;gt; Result&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;(), sonor::Error&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;mut&lt;/span&gt; devices &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; sonor::discover(Duration::from_secs(&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;)).&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;;
+
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; Some(device) &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; devices.try_next().&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt; {
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; name &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; device.name().&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; speaker &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; sonor::find(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;name, Duration::from_secs(&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;)).&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;
+            .expect(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;room exists&amp;#34;&lt;/span&gt;);
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;match&lt;/span&gt; speaker.track().&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt; {
+            Some(track_info) &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; {
+                println&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Room: {}&amp;#34;&lt;/span&gt;, name);
+                println&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Volume: {}&amp;#34;&lt;/span&gt;, speaker.volume().&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;);
+                println&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Track: {}&amp;#34;&lt;/span&gt;, track_info.track());
+            }
+            None &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; {
+                println&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Room: {}&amp;#34;&lt;/span&gt;, name);
+                println&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Volume: {}&amp;#34;&lt;/span&gt;, speaker.volume().&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;);
+            }
+        }
+        println&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;----------&amp;#34;&lt;/span&gt;);
+    }
+
+    Ok(())
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The main difference here is we need to use &lt;code&gt;sonor::discover&lt;/code&gt; to find our speakers before we can do anything, the rest is fairly self explanatory. For each device we find we want to print it’s name, the volume, and if it’s playing, display the track.&lt;/p&gt;
+&lt;h3 id=&#34;putting-it-all-together&#34;&gt;Putting it all together&lt;/h3&gt;
+&lt;p&gt;Now that we have our methods we just need to call set them up in our main method&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Rust&#34; data-lang=&#34;Rust&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#[tokio::main]&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;async&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;() -&amp;gt; Result&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;(), sonor::Error&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; args &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Command::from_args();
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;match&lt;/span&gt; args {
+        Command::Info &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; info().&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;,
+        Command::Play { name } &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; play(name).&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;,
+        Command::Pause { name } &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; pause(name).&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;,
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The first thing you may notice is how we pass the name that we defined in our enum above, to each &lt;code&gt;match&lt;/code&gt; arm. The second thing is that each of these async methods, like the methods from sonor are all async and as such will need &lt;code&gt;.await&lt;/code&gt; to be executed. Without this, nothing will happen. Luckily Rust will prevent us from doing this, as you’ll be able to see if you remove one of them and try to build the project.&lt;/p&gt;
+&lt;h3 id=&#34;running-the-basic-program&#34;&gt;Running the basic program&lt;/h3&gt;
+&lt;p&gt;Now that our barebones tool is finished, we can try it out. Running the info command should give you something like this, depending on what your speakers are named:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Shell&#34; data-lang=&#34;Shell&#34;&gt;$ ./target/debug/sonos_tool info
+Room: LivingRoom
+Volume: &lt;span style=&#34;color:#ae81ff&#34;&gt;21&lt;/span&gt;
+----------
+Room: Bookshelf
+Volume: &lt;span style=&#34;color:#ae81ff&#34;&gt;23&lt;/span&gt;
+----------
+Room: Kitchen
+Volume: &lt;span style=&#34;color:#ae81ff&#34;&gt;22&lt;/span&gt;
+----------
+Room: Bedroom
+Volume: &lt;span style=&#34;color:#ae81ff&#34;&gt;23&lt;/span&gt;
+----------
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Testing the pause and play functions will be a little different because you’ll need to actually turn on your speakers to test that it works but can be executed similarly &lt;code&gt;$ ./target/debug/sonos_tool play Bedroom&lt;/code&gt;.&lt;/p&gt;
+&lt;h3 id=&#34;missing-features&#34;&gt;Missing features&lt;/h3&gt;
+&lt;p&gt;This was put together relatively quickly so there’s a lot left that we can add. Looking in the Speaker implementation there are a ton of other features to be added that we can play around with.&lt;/p&gt;
+&lt;h4 id=&#34;better-error-handling&#34;&gt;Better Error handling&lt;/h4&gt;
+&lt;p&gt;All of our functions are using &lt;code&gt;.expect()&lt;/code&gt; right now. What this means is that when we give them a room that can’t be found, the tool will panic and stop.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Shell&#34; data-lang=&#34;Shell&#34;&gt;$ ./target/debug/sonos_tool play asdf
+thread &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;main&amp;#39;&lt;/span&gt; panicked at &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;room exists&amp;#39;&lt;/span&gt;, src/main.rs:152:19
+note: run with &lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;RUST_BACKTRACE&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;1&lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt; environment variable to display a backtrace
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;It would be much better if we removed this and handled the error gracefully.&lt;/p&gt;
+&lt;h4 id=&#34;missing-functionality&#34;&gt;Missing functionality&lt;/h4&gt;
+&lt;p&gt;There are still a lot of functions that we need to set up, we should be able to set the volume, stop, change our equalization, bass, treble etc. All of these should be relatively trivial to implement but would make this tool much more useful.&lt;/p&gt;
+&lt;h4 id=&#34;integrate-with-your-music-services&#34;&gt;Integrate with your music services&lt;/h4&gt;
+&lt;p&gt;Right now we can manipulate the speakers themselves but we don’t have a way of getting them to play specific songs or podcasts. We’d need to do that from the app.&lt;/p&gt;
+&lt;h4 id=&#34;tests&#34;&gt;Tests&lt;/h4&gt;
+&lt;p&gt;The tool might be small right now, but adding anything else might start making it harder to maintain, adding some tests will help us make sure that all of our features keep working as we add to it.&lt;/p&gt;
+&lt;h2 id=&#34;concluding-thoughts&#34;&gt;Concluding Thoughts&lt;/h2&gt;
+&lt;p&gt;Rust has a reputation for having a steep learning curve, but I hope that this post made it seem at least a little more approachable. Though my experience with the language as of writing this is fairly limited, I found this relatively simple to put together, and I hope that you will too. Async features were no more difficult to use than other normal functions. Structop really made making a Cli tool much simpler as well, giving us a simple way to set up a command line tool and expand it as needed.&lt;/p&gt;
+</content>
     </item>
     
   </channel>

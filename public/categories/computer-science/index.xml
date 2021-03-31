@@ -16,6 +16,475 @@
       <guid>/post/taocp-vol-2-seminumerical-algorithms/</guid>
       <description>&lt;p&gt;Random numbers from the second volume of TAOCP and experimentation with PRNGs.&lt;/p&gt;
 &lt;p&gt;It&amp;rsquo;s been about nine months since I finished reading the first volume. Though it&amp;rsquo;s likely not a surprise to many, it&amp;rsquo;s one of the more daunting reads however, I found it to be surprisingly entertaining and well written. &lt;a href=&#34;/post/the-art-of-computer-programming/&#34;&gt;My summary of the experience reading through the first volume&lt;/a&gt; was more or less my thoughts on the book, but didn&amp;rsquo;t offer a lot in terms of the content that was covered, nor did I highlight a lot of interesting material that was gleaned from its pages – perhaps I&amp;rsquo;ll remedy that when I have time for a second read through. Admittedly, there was quite a bit of content and I don&amp;rsquo;t think I wanted to post a section by section summary of the volume, especially when you consider that much of the first volume was devoted to stacks, trees, linked lists, and other data structures, something familiar to most software engineers and programmers. Luckily the second volume is far less familiar territory (at least to me) and may be more interesting to write about.&lt;/p&gt;</description>
+      <content>&lt;p&gt;Random numbers from the second volume of TAOCP and experimentation with PRNGs.&lt;/p&gt;
+&lt;p&gt;It&amp;rsquo;s been about nine months since I finished reading the first volume. Though it&amp;rsquo;s likely not a surprise to many, it&amp;rsquo;s one of the more daunting reads however, I found it to be surprisingly entertaining and well written. &lt;a href=&#34;/post/the-art-of-computer-programming/&#34;&gt;My summary of the experience reading through the first volume&lt;/a&gt; was more or less my thoughts on the book, but didn&amp;rsquo;t offer a lot in terms of the content that was covered, nor did I highlight a lot of interesting material that was gleaned from its pages – perhaps I&amp;rsquo;ll remedy that when I have time for a second read through. Admittedly, there was quite a bit of content and I don&amp;rsquo;t think I wanted to post a section by section summary of the volume, especially when you consider that much of the first volume was devoted to stacks, trees, linked lists, and other data structures, something familiar to most software engineers and programmers. Luckily the second volume is far less familiar territory (at least to me) and may be more interesting to write about.&lt;/p&gt;
+&lt;h3 id=&#34;not-so-random-number-generators&#34;&gt;Not So Random Number Generators&lt;/h3&gt;
+&lt;p&gt;Early in the volume Knuth shows how difficult it is to create a sufficiently random pseudorandom number generator. Simply adding a number of complicated steps will not yield truly random numbers. Knuth includes the following algorithm, &lt;em&gt;Algorithm-K&lt;/em&gt;, to illustrate this point. You can find an excerpt of the algorithm &lt;a href=&#34;http://www.informit.com/articles/article.aspx?p=2221790&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;h4 id=&#34;algorithm-k&#34;&gt;Algorithm K&lt;/h4&gt;
+&lt;p&gt;For the purposes of demonstration I&amp;rsquo;ve implemented the algorithm below. The steps aren&amp;rsquo;t particularly important, but as you can see it&amp;rsquo;s a fairly involved algorithm that looks like it might produce something random.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-scheme&#34; data-lang=&#34;scheme&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;#&lt;/span&gt;lang racket
+
+(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;algorithm-k&lt;/span&gt; x)
+  (&lt;span style=&#34;color:#a6e22e&#34;&gt;do-algorithm-k&lt;/span&gt; x (+ &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; (floor (/ x (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;9&lt;/span&gt;))))))
+
+(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;ns (&lt;span style=&#34;color:#a6e22e&#34;&gt;variable-reference-&amp;gt;namespace&lt;/span&gt; (&lt;span style=&#34;color:#f92672&#34;&gt;#&lt;/span&gt;%variable-reference)))
+
+(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;string-&amp;gt;procedure&lt;/span&gt; s)
+  (&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;sym (string-&amp;gt;symbol s))
+  (eval sym ns))
+
+(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;do-algorithm-k&lt;/span&gt; x iterations)
+  (&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;step (&lt;span style=&#34;color:#a6e22e&#34;&gt;string-append&lt;/span&gt;
+                &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;k&amp;#34;&lt;/span&gt;
+                (&lt;span style=&#34;color:#a6e22e&#34;&gt;number-&amp;gt;string&lt;/span&gt;
+                 (+ (modulo (floor (/ x (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;8&lt;/span&gt;))) &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;) &lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;))))
+  (&lt;span style=&#34;color:#66d9ef&#34;&gt;if &lt;/span&gt;(eq? iterations &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;)
+      x
+      ((&lt;span style=&#34;color:#a6e22e&#34;&gt;string-&amp;gt;procedure&lt;/span&gt; step) x iterations)))
+
+&lt;span style=&#34;color:#75715e&#34;&gt;;; Ensure &amp;gt;= 5 x 10^9&lt;/span&gt;
+(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;k3&lt;/span&gt; x iterations)
+  (&lt;span style=&#34;color:#66d9ef&#34;&gt;if &lt;/span&gt;(&amp;gt; x &lt;span style=&#34;color:#ae81ff&#34;&gt;5000000000&lt;/span&gt;)
+      (&lt;span style=&#34;color:#a6e22e&#34;&gt;k4&lt;/span&gt; x iterations)
+      (&lt;span style=&#34;color:#a6e22e&#34;&gt;k4&lt;/span&gt; (+ x &lt;span style=&#34;color:#ae81ff&#34;&gt;5000000000&lt;/span&gt;) iterations)))
+
+&lt;span style=&#34;color:#75715e&#34;&gt;;; Middle square&lt;/span&gt;
+(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;k4&lt;/span&gt; x iterations)
+  (&lt;span style=&#34;color:#a6e22e&#34;&gt;k5&lt;/span&gt; (modulo (floor (/ (expt x &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;) (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;))) (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;)) iterations))
+
+&lt;span style=&#34;color:#75715e&#34;&gt;;; Multiply&lt;/span&gt;
+(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;k5&lt;/span&gt; x iterations)
+  (&lt;span style=&#34;color:#a6e22e&#34;&gt;k6&lt;/span&gt; (modulo (* x &lt;span style=&#34;color:#ae81ff&#34;&gt;1001001001&lt;/span&gt;) (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;)) iterations))
+
+&lt;span style=&#34;color:#75715e&#34;&gt;;; Psuedo-complement&lt;/span&gt;
+(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;k6&lt;/span&gt; x iterations)
+  (&lt;span style=&#34;color:#66d9ef&#34;&gt;if &lt;/span&gt;(&amp;lt; x &lt;span style=&#34;color:#ae81ff&#34;&gt;100000000&lt;/span&gt;)
+      (&lt;span style=&#34;color:#a6e22e&#34;&gt;k7&lt;/span&gt; (+ x &lt;span style=&#34;color:#ae81ff&#34;&gt;9814055677&lt;/span&gt;) iterations)
+      (&lt;span style=&#34;color:#a6e22e&#34;&gt;k7&lt;/span&gt; (- (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;) x) iterations)))
+
+&lt;span style=&#34;color:#75715e&#34;&gt;;; Interchange halves&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;;; ie 1234567890 -&amp;gt; 6789012345&lt;/span&gt;
+(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;k7&lt;/span&gt; x iterations)
+  (&lt;span style=&#34;color:#a6e22e&#34;&gt;k8&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;+&lt;/span&gt;
+       (* (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;) (modulo x (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;)))
+       (floor (/ x (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;)))) iterations))
+
+&lt;span style=&#34;color:#75715e&#34;&gt;;; Multiply / same as k5&lt;/span&gt;
+(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;k8&lt;/span&gt; x iterations)
+  (&lt;span style=&#34;color:#a6e22e&#34;&gt;k9&lt;/span&gt; (modulo (* x &lt;span style=&#34;color:#ae81ff&#34;&gt;1001001001&lt;/span&gt;) (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;)) iterations))
+
+&lt;span style=&#34;color:#75715e&#34;&gt;;; Decrease digits&lt;/span&gt;
+(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;k9&lt;/span&gt; x iterations)
+  (&lt;span style=&#34;color:#a6e22e&#34;&gt;k10&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;sub-one&lt;/span&gt; x &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;) iterations))
+
+(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;sub-one&lt;/span&gt; x sum mult)
+  (&lt;span style=&#34;color:#66d9ef&#34;&gt;if &lt;/span&gt;(eq? x &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;)
+      sum
+      (&lt;span style=&#34;color:#66d9ef&#34;&gt;if &lt;/span&gt;(eq? (modulo x &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;) &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;)
+          (&lt;span style=&#34;color:#a6e22e&#34;&gt;sub-one&lt;/span&gt; (floor (/ x &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;)) (+ (* (modulo x &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;) (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; mult)) sum) (+ &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; mult))
+          (&lt;span style=&#34;color:#a6e22e&#34;&gt;sub-one&lt;/span&gt; (floor (/ x &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;)) (+ (* (- (modulo x &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;) &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;) (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; mult)) sum) (+ &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; mult)))))
+
+&lt;span style=&#34;color:#75715e&#34;&gt;;; 99999 modify&lt;/span&gt;
+(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;k10&lt;/span&gt; x iterations)
+  (&lt;span style=&#34;color:#66d9ef&#34;&gt;if &lt;/span&gt;(&amp;lt; x (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;))
+      (&lt;span style=&#34;color:#a6e22e&#34;&gt;k11&lt;/span&gt; (+ (expt x &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;) &lt;span style=&#34;color:#ae81ff&#34;&gt;99999&lt;/span&gt;) iterations)
+      (&lt;span style=&#34;color:#a6e22e&#34;&gt;k11&lt;/span&gt; (- x &lt;span style=&#34;color:#ae81ff&#34;&gt;99999&lt;/span&gt;) iterations)))
+
+&lt;span style=&#34;color:#75715e&#34;&gt;;; Normalize&lt;/span&gt;
+(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;k11&lt;/span&gt; x iterations)
+  (&lt;span style=&#34;color:#a6e22e&#34;&gt;k12&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;go-until&lt;/span&gt; x) iterations))
+
+(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;go-until&lt;/span&gt; x)
+  (&lt;span style=&#34;color:#66d9ef&#34;&gt;if &lt;/span&gt;(&amp;lt; x (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;9&lt;/span&gt;)) (&lt;span style=&#34;color:#a6e22e&#34;&gt;go-until&lt;/span&gt; (* x &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;)) x))
+
+&lt;span style=&#34;color:#75715e&#34;&gt;;; Modified middle square&lt;/span&gt;
+(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;k12&lt;/span&gt; x iterations)
+  (&lt;span style=&#34;color:#a6e22e&#34;&gt;do-algorithm-k&lt;/span&gt; (modulo (floor (* x (/ (- x &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;) (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;)))) (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;)) (- iterations &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)))
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The results however random seeming do present a problem:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&amp;gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;algorithm-k 1&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+&lt;span style=&#34;color:#ae81ff&#34;&gt;3831577709&lt;/span&gt;
+&amp;gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;algorithm-k 12345&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+&lt;span style=&#34;color:#ae81ff&#34;&gt;5827337884&lt;/span&gt;
+&amp;gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;algorithm-k 6065038420&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+&lt;span style=&#34;color:#ae81ff&#34;&gt;6065038420&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The first two examples produce what one might expect, but the third produces itself. Knuth points out that the algorithm happens to degenerate to 6065038420, with the lesson being:&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;&amp;ldquo;Random numbers should not be generated with a method chosen at random&amp;rdquo;&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;Besides coincidentally degenerating to a seemingly random number, Algorithm K has a number of other downsides, it&amp;rsquo;s difficult to implement and because it iterates a certain amount of times depending on the input, takes a relatively long time to produce a single random number. Somewhere inside that complexity there is a reason why the generator degenerates to 6065038420. In order to be usable we need to be able to easily prove that won&amp;rsquo;t happen. The key take away from that is that we need this to be fast and simple.&lt;/p&gt;
+&lt;h3 id=&#34;linear-congruential-generator&#34;&gt;Linear Congruential Generator&lt;/h3&gt;
+&lt;p&gt;The most common pseudorandom number generator (according to Knuth) is a &lt;a href=&#34;https://en.wikipedia.org/wiki/Linear_congruential_generator&#34;&gt;Linear congruential generator&lt;/a&gt;, which has the following equation:&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Xn + 1 = (a * Xn + c) mod m&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;Unlike the previous algorithm, the equation isn&amp;rsquo;t difficult to explain; numbers for m,a, and c are chosen and set by the language or library designers (hopefully not randomly) and a seed is chosen for the first value of Xn. This being a recurrence relation, the result of each run then becomes the next seed or starting value for a subsequent run. You can see this in the code below:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-scheme&#34; data-lang=&#34;scheme&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;#&lt;/span&gt;lang racket
+
+(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;next (&lt;span style=&#34;color:#a6e22e&#34;&gt;current-seconds&lt;/span&gt;))
+
+(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;my-random&lt;/span&gt;)
+  (&lt;span style=&#34;color:#66d9ef&#34;&gt;set! &lt;/span&gt;next (&lt;span style=&#34;color:#a6e22e&#34;&gt;modulo&lt;/span&gt;
+              (+ (* next &lt;span style=&#34;color:#ae81ff&#34;&gt;6364136223846793005&lt;/span&gt;) &lt;span style=&#34;color:#ae81ff&#34;&gt;1442695040888963407&lt;/span&gt;)
+              (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;64&lt;/span&gt;)))
+  next)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You can see the output this produces from the racket repl here:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&amp;gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;my-random&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+&lt;span style=&#34;color:#ae81ff&#34;&gt;14843871667761315205&lt;/span&gt;
+&amp;gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;my-random&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+&lt;span style=&#34;color:#ae81ff&#34;&gt;534325907729616048&lt;/span&gt;
+&amp;gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;my-random&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+&lt;span style=&#34;color:#ae81ff&#34;&gt;5734414832404007999&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This isn&amp;rsquo;t how Racket generates its random numbers (it uses an implementation of the &lt;a href=&#34;https://github.com/racket/racket/blob/5bb837661c12a9752c6a99f952c0e1b267645b33/racket/src/cs/rumble/random.ss&#34;&gt;MRG32k3a algorithm&lt;/a&gt;), however this method is used by other languages such as the function defined in &lt;a href=&#34;https://sourceware.org/git/?p=glibc.git;a=blob;f=stdlib/random_r.c;hb=glibc-2.26#l362&#34;&gt;glibc&lt;/a&gt;&lt;/p&gt;
+&lt;h4 id=&#34;choosing-our-m-and-a-values&#34;&gt;Choosing our &lt;em&gt;m&lt;/em&gt; and &lt;em&gt;a&lt;/em&gt; values&lt;/h4&gt;
+&lt;p&gt;It&amp;rsquo;s important to note here that the numbers used above were not chosen by random, in particular it is important to pay extra attention to the numbers we choose for &lt;em&gt;m&lt;/em&gt; and &lt;em&gt;a&lt;/em&gt;.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;our m value controls the &amp;ldquo;period&amp;rdquo; of the random number generator which is how long it takes for it to start repeating. ie if we should choose something such as 2, we&amp;rsquo;ll end up producing: 0,1,0,1,0&amp;hellip; so choosing a larger number is ideal.&lt;/li&gt;
+&lt;li&gt;m should also be a number that will make division quick since it is a comparatively slow operation. Knuth suggests that you use the word size of the computer ie. &lt;em&gt;2^64&lt;/em&gt; or use the largest prime smaller than the word size.&lt;/li&gt;
+&lt;li&gt;if m is a power of 2, pick a so that a % 8 = 5. This is to ensure that we produce all m possible values and gives our generator &amp;ldquo;high potency&amp;rdquo;. There is a proof for this but it&amp;rsquo;s far too long to include. In general it would seem that choosing the a value is more complicated than m but equally important as poor choices for a have historically resulted in poor generators. The rules are dependant on the values of m, and c but are too long to include and explain here. &lt;a href=&#34;https://en.wikipedia.org/wiki/Linear_congruential_generator&#34;&gt;The wiki entry&lt;/a&gt; contains a more detailed explanation of the choices when it comes to choosing a.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;why-not-both&#34;&gt;Why not both?&lt;/h3&gt;
+&lt;p&gt;The LCG is just one form of PRNG such as &lt;a href=&#34;https://en.wikipedia.org/wiki/Xorshift&#34;&gt;xorshift&lt;/a&gt;, &lt;a href=&#34;https://en.wikipedia.org/wiki/Well_equidistributed_long-period_linear&#34;&gt;WELL&lt;/a&gt;, or the &lt;a href=&#34;https://en.wikipedia.org/wiki/Mersenne_Twister&#34;&gt;Mersenne Twister&lt;/a&gt; so, if having one random number generator produces something fairly random, would two random number generators produce something even more random? As it turns out yes, but only if applied properly otherwise you could cause issues &lt;a href=&#34;https://medium.com/@betable/tifu-by-using-math-random-f1c308c4fd9d&#34;&gt;like the one seen in Javascripts Math.random() library&lt;/a&gt;. If a person is unconvinced that a random number generator is not sufficiently random, putting two generators together should in Knuth words &amp;ldquo;convince all but the most hardened of skeptics&amp;rdquo;. One method involves taking two generators and shuffling them together, it&amp;rsquo;s only weakness being that it does not change the number themselves, only the sequence so this may still fail the &lt;a href=&#34;https://www.cs.indiana.edu/~kapadia/project2/node21.html&#34;&gt;Birthday spacings&lt;/a&gt; test. Knuth suggest instead that we use an even simpler method by combining results from the same generator, producing 500 or so results, choosing the first 55, then throwing the rest away and repeating the process.&lt;/p&gt;
+&lt;h2 id=&#34;statistical-tests-or-how-we-can-prove-whats-really-random&#34;&gt;Statistical Tests Or How we can prove what&amp;rsquo;s &lt;em&gt;really&lt;/em&gt; random&lt;/h2&gt;
+&lt;p&gt;Once we&amp;rsquo;ve created a random number generator, we need a way to decide if it&amp;rsquo;s actually random or not. Knuth suggests we run a battery of tests on the generator in order to determine that it&amp;rsquo;s satisfactorily random. He also humorously suggests that if the tests don&amp;rsquo;t come out the way we want to try reading &lt;a href=&#34;https://en.wikipedia.org/wiki/How_to_Lie_with_Statistics&#34;&gt;another book&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;To thoroughly evaluate a random number generator he suggests running the following tests multiple times:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Equidistribution test (Frequency Test)&lt;/li&gt;
+&lt;li&gt;Serial Test&lt;/li&gt;
+&lt;li&gt;Gap Test&lt;/li&gt;
+&lt;li&gt;Poker Test&lt;/li&gt;
+&lt;li&gt;Coupon Collectors Test&lt;/li&gt;
+&lt;li&gt;Permutation Test&lt;/li&gt;
+&lt;li&gt;Runs test&lt;/li&gt;
+&lt;li&gt;Maximum of t test&lt;/li&gt;
+&lt;li&gt;Collision test&lt;/li&gt;
+&lt;li&gt;Birthday Spacings test&lt;/li&gt;
+&lt;li&gt;Serial correlation test&lt;/li&gt;
+&lt;li&gt;Tests on subsequences&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Then analyzing them using the &lt;a href=&#34;https://en.wikipedia.org/wiki/Chi-squared_test&#34;&gt;chi-squared test&lt;/a&gt; and the &lt;a href=&#34;https://en.wikipedia.org/wiki/Kolmogorov%E2%80%93Smirnov_test&#34;&gt;Kolmogorov–Smirnov test&lt;/a&gt; to analyze the results of the tests.&lt;/p&gt;
+&lt;h3 id=&#34;spectral-test&#34;&gt;Spectral test&lt;/h3&gt;
+&lt;p&gt;The most important of all the tests is the Spectral test. This test is make or break for random number generators. All good PRNG&amp;rsquo;s will pass this test, and more importantly, bad PRNG&amp;rsquo;s will fail. There are various examples of this online but one of the more interesting that I came across was of the RANDU generator and why it fails the spectral test can be seen &lt;a href=&#34;https://www.youtube.com/watch?v=7wVk_XsxyNk&#34;&gt;here&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&#34;why-so-many-tests&#34;&gt;Why So Many Tests?&lt;/h3&gt;
+&lt;p&gt;True randomness is difficult to obtain, some might argue that it may be impossible. This is even more true because after all, we are working with computers which &lt;em&gt;should&lt;/em&gt; not behave randomly. For this reason we need to determine that they are significantly random enough. To determine this we need to use thorough statistical analysis to show us in a quantifiable way, how random they are. This can be difficult and time consuming to prove as it turns some random generators will pass a few of these tests, yet completely fail others. Luckily most of the math here has been done for us, and we are unlikely to be developing our own, but there are a few notable examples where this happened to fail tests but, still seemed random such as &lt;a href=&#34;https://en.wikipedia.org/wiki/RANDU&#34;&gt;RANDU&lt;/a&gt; which Knuth called &amp;ldquo;truly horrible&amp;rdquo;.&lt;/p&gt;
+&lt;h3 id=&#34;running-some-tests&#34;&gt;Running some tests&lt;/h3&gt;
+&lt;p&gt;Reading about these tests was interesting, but what would be more interesting is to run it on the two generators I had used above, as well as RANDU which is shown below. Comparing the results should highlight the differences between the generators that we expect to preform well, and those that we know will preform poorly. There are a number of random number generator testers out there but the one I used was &lt;code&gt;dieharder&lt;/code&gt; based on a suite of tests called diehard. For each run I generated 1,000,0000 random numbers (algorithm k took significantly longer ~20 min) and fed it to diehard. You can see the results here:&lt;/p&gt;
+&lt;h1 id=&#34;standard-lcg&#34;&gt;Standard LCG&lt;/h1&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#=============================================================================#&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;#            dieharder version 3.31.1 Copyright 2003 Robert G. Brown          #&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;#=============================================================================#&lt;/span&gt;
+   rng_name    |           filename             |rands/second|
+     file_input|                   example.input|  6.15e+06  |
+&lt;span style=&#34;color:#75715e&#34;&gt;#=============================================================================#&lt;/span&gt;
+        test_name   |ntup| tsamples |psamples|  p-value |Assessment
+&lt;span style=&#34;color:#75715e&#34;&gt;#=============================================================================#&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 1 times&lt;/span&gt;
+   diehard_birthdays|   0|       100|     100|0.72874473|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 11 times&lt;/span&gt;
+      diehard_operm5|   0|   1000000|     100|0.00008973|   WEAK   
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 24 times&lt;/span&gt;
+  diehard_rank_32x32|   0|     40000|     100|0.24249094|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 30 times&lt;/span&gt;
+    diehard_rank_6x8|   0|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 32 times&lt;/span&gt;
+   diehard_bitstream|   0|   2097152|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 53 times&lt;/span&gt;
+        diehard_opso|   0|   2097152|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 67 times&lt;/span&gt;
+        diehard_oqso|   0|   2097152|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 74 times&lt;/span&gt;
+         diehard_dna|   0|   2097152|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 74 times&lt;/span&gt;
+diehard_count_1s_str|   0|    256000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 87 times&lt;/span&gt;
+diehard_count_1s_byt|   0|    256000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 87 times&lt;/span&gt;
+ diehard_parking_lot|   0|     12000|     100|0.33164281|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 88 times&lt;/span&gt;
+    diehard_2dsphere|   2|      8000|     100|0.08003531|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 88 times&lt;/span&gt;
+    diehard_3dsphere|   3|      4000|     100|0.55288986|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 111 times&lt;/span&gt;
+     diehard_squeeze|   0|    100000|     100|0.00371770|   WEAK   
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 111 times&lt;/span&gt;
+        diehard_sums|   0|       100|     100|0.06120371|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 112 times&lt;/span&gt;
+        diehard_runs|   0|    100000|     100|0.35781871|  PASSED  
+        diehard_runs|   0|    100000|     100|0.07426726|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 125 times&lt;/span&gt;
+       diehard_craps|   0|    200000|     100|0.00004611|   WEAK   
+       diehard_craps|   0|    200000|     100|0.44395534|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 325 times&lt;/span&gt;
+ marsaglia_tsang_gcd|   0|  10000000|     100|0.00000000|  FAILED  
+ marsaglia_tsang_gcd|   0|  10000000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 326 times&lt;/span&gt;
+         sts_monobit|   1|    100000|     100|0.34446776|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 327 times&lt;/span&gt;
+            sts_runs|   2|    100000|     100|0.34889544|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 330 times&lt;/span&gt;
+         rgb_bitdist|   1|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 334 times&lt;/span&gt;
+         rgb_bitdist|   2|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 340 times&lt;/span&gt;
+         rgb_bitdist|   3|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 348 times&lt;/span&gt;
+         rgb_bitdist|   4|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 358 times&lt;/span&gt;
+         rgb_bitdist|   5|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 370 times&lt;/span&gt;
+         rgb_bitdist|   6|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 384 times&lt;/span&gt;
+         rgb_bitdist|   7|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 400 times&lt;/span&gt;
+         rgb_bitdist|   8|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 418 times&lt;/span&gt;
+         rgb_bitdist|   9|    100000|     100|0.00005693|   WEAK   
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 438 times&lt;/span&gt;
+         rgb_bitdist|  10|    100000|     100|0.53597412|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 460 times&lt;/span&gt;
+         rgb_bitdist|  11|    100000|     100|0.89275780|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 484 times&lt;/span&gt;
+         rgb_bitdist|  12|    100000|     100|0.01596294|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 486 times&lt;/span&gt;
+rgb_minimum_distance|   2|     10000|    1000|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 489 times&lt;/span&gt;
+rgb_minimum_distance|   3|     10000|    1000|0.00020551|   WEAK   
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 493 times&lt;/span&gt;
+rgb_minimum_distance|   4|     10000|    1000|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 498 times&lt;/span&gt;
+rgb_minimum_distance|   5|     10000|    1000|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 500 times&lt;/span&gt;
+    rgb_permutations|   2|    100000|     100|0.27181166|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 503 times&lt;/span&gt;
+    rgb_permutations|   3|    100000|     100|0.67601712|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 507 times&lt;/span&gt;
+    rgb_permutations|   4|    100000|     100|0.05999982|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 512 times&lt;/span&gt;
+    rgb_permutations|   5|    100000|     100|0.16764489|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 522 times&lt;/span&gt;
+      rgb_lagged_sum|   0|   1000000|     100|0.00003809|   WEAK   
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 542 times&lt;/span&gt;
+      rgb_lagged_sum|   1|   1000000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 572 times&lt;/span&gt;
+      rgb_lagged_sum|   2|   1000000|     100|0.00000015|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 612 times&lt;/span&gt;
+      rgb_lagged_sum|   3|   1000000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 662 times&lt;/span&gt;
+      rgb_lagged_sum|   4|   1000000|     100|0.00000000|  FAILED
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h1 id=&#34;randu&#34;&gt;RANDU&lt;/h1&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-scheme&#34; data-lang=&#34;scheme&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;#&lt;/span&gt;lang racket
+
+(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;next &lt;span style=&#34;color:#ae81ff&#34;&gt;1090815429&lt;/span&gt;)
+
+(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;randu&lt;/span&gt;)
+  (&lt;span style=&#34;color:#66d9ef&#34;&gt;set! &lt;/span&gt;next (modulo (* next &lt;span style=&#34;color:#ae81ff&#34;&gt;65539&lt;/span&gt;) (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;31&lt;/span&gt;)))
+  next)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;!-- raw HTML omitted --&gt;
+&lt;h1 id=&#34;algorithm-k-1&#34;&gt;Algorithm-k&lt;/h1&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#=============================================================================#&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;#            dieharder version 3.31.1 Copyright 2003 Robert G. Brown          #&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;#=============================================================================#&lt;/span&gt;
+   rng_name    |           filename             |rands/second|
+     file_input|                    backup.input|  7.99e+06  |
+&lt;span style=&#34;color:#75715e&#34;&gt;#=============================================================================#&lt;/span&gt;
+        test_name   |ntup| tsamples |psamples|  p-value |Assessment
+&lt;span style=&#34;color:#75715e&#34;&gt;#=============================================================================#&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 1 times&lt;/span&gt;
+   diehard_birthdays|   0|       100|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 11 times&lt;/span&gt;
+      diehard_operm5|   0|   1000000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 24 times&lt;/span&gt;
+  diehard_rank_32x32|   0|     40000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 30 times&lt;/span&gt;
+    diehard_rank_6x8|   0|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 32 times&lt;/span&gt;
+   diehard_bitstream|   0|   2097152|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 53 times&lt;/span&gt;
+        diehard_opso|   0|   2097152|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 67 times&lt;/span&gt;
+        diehard_oqso|   0|   2097152|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 74 times&lt;/span&gt;
+         diehard_dna|   0|   2097152|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 74 times&lt;/span&gt;
+diehard_count_1s_str|   0|    256000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 87 times&lt;/span&gt;
+diehard_count_1s_byt|   0|    256000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 87 times&lt;/span&gt;
+ diehard_parking_lot|   0|     12000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 88 times&lt;/span&gt;
+    diehard_2dsphere|   2|      8000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 88 times&lt;/span&gt;
+    diehard_3dsphere|   3|      4000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 108 times&lt;/span&gt;
+     diehard_squeeze|   0|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 108 times&lt;/span&gt;
+        diehard_sums|   0|       100|     100|0.00000018|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 109 times&lt;/span&gt;
+        diehard_runs|   0|    100000|     100|0.00000000|  FAILED  
+        diehard_runs|   0|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 123 times&lt;/span&gt;
+       diehard_craps|   0|    200000|     100|0.00000000|  FAILED  
+       diehard_craps|   0|    200000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 323 times&lt;/span&gt;
+ marsaglia_tsang_gcd|   0|  10000000|     100|0.00000000|  FAILED  
+ marsaglia_tsang_gcd|   0|  10000000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 324 times&lt;/span&gt;
+         sts_monobit|   1|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 325 times&lt;/span&gt;
+      diehard_operm5|   0|   1000000|     100|0.34393548|  PASSED  
+            sts_runs|   2|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 328 times&lt;/span&gt;
+         rgb_bitdist|   1|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 332 times&lt;/span&gt;
+         rgb_bitdist|   2|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 338 times&lt;/span&gt;
+         rgb_bitdist|   3|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 346 times&lt;/span&gt;
+         rgb_bitdist|   4|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 356 times&lt;/span&gt;
+         rgb_bitdist|   5|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 368 times&lt;/span&gt;
+         rgb_bitdist|   6|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 382 times&lt;/span&gt;
+         rgb_bitdist|   7|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 398 times&lt;/span&gt;
+         rgb_bitdist|   8|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 416 times&lt;/span&gt;
+         rgb_bitdist|   9|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 436 times&lt;/span&gt;
+         rgb_bitdist|  10|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 458 times&lt;/span&gt;
+         rgb_bitdist|  11|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 482 times&lt;/span&gt;
+         rgb_bitdist|  12|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 484 times&lt;/span&gt;
+rgb_minimum_distance|   2|     10000|    1000|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 487 times&lt;/span&gt;
+rgb_minimum_distance|   3|     10000|    1000|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 491 times&lt;/span&gt;
+rgb_minimum_distance|   4|     10000|    1000|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 496 times&lt;/span&gt;
+rgb_minimum_distance|   5|     10000|    1000|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 498 times&lt;/span&gt;
+    rgb_permutations|   2|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 501 times&lt;/span&gt;
+    rgb_permutations|   3|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 505 times&lt;/span&gt;
+    rgb_permutations|   4|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 510 times&lt;/span&gt;
+    rgb_permutations|   5|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 520 times&lt;/span&gt;
+      rgb_lagged_sum|   0|   1000000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 540 times&lt;/span&gt;
+      rgb_lagged_sum|   1|   1000000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 570 times&lt;/span&gt;
+      rgb_lagged_sum|   2|   1000000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 610 times&lt;/span&gt;
+      rgb_lagged_sum|   3|   1000000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 660 times&lt;/span&gt;
+      rgb_lagged_sum|   4|   1000000|     100|0.00000000|  FAILED
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;There&amp;rsquo;s already quite a bit to digest here so I didn&amp;rsquo;t include all of the test results as the first few are enough to illustrate the differences between the three algorithms. One thing you will notice is that the standard LCG used actually failed a lot of tests. After doing a little testing and some digging it seems that dieharder will also fail these tests with its own generator with the same amount of numbers. In fact, you can really only expect good results with about 10 million or more numbers, but because diehard runs on a single cpu this would have taken a considerable amount of time to run. The comparison is really what we&amp;rsquo;re after and from the results it&amp;rsquo;s clear that algorithm-k is not suitable, nor is RANDU much better. I wanted to be able to see what kind of results I would see from running a much larger set so I ran one last run with 100,000,000 which shows that the lcg faired a little bit better.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#=============================================================================#&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;#            dieharder version 3.31.1 Copyright 2003 Robert G. Brown          #&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;#=============================================================================#&lt;/span&gt;
+   rng_name    |           filename             |rands/second|
+     file_input|                   example.input|  6.16e+06  |
+&lt;span style=&#34;color:#75715e&#34;&gt;#=============================================================================#&lt;/span&gt;
+        test_name   |ntup| tsamples |psamples|  p-value |Assessment
+&lt;span style=&#34;color:#75715e&#34;&gt;#=============================================================================#&lt;/span&gt;
+   diehard_birthdays|   0|       100|     100|0.50369944|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 1 times&lt;/span&gt;
+      diehard_operm5|   0|   1000000|     100|0.34393548|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 2 times&lt;/span&gt;
+  diehard_rank_32x32|   0|     40000|     100|0.76284541|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 3 times&lt;/span&gt;
+    diehard_rank_6x8|   0|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 3 times&lt;/span&gt;
+   diehard_bitstream|   0|   2097152|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 5 times&lt;/span&gt;
+        diehard_opso|   0|   2097152|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 6 times&lt;/span&gt;
+        diehard_oqso|   0|   2097152|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 7 times&lt;/span&gt;
+         diehard_dna|   0|   2097152|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 7 times&lt;/span&gt;
+diehard_count_1s_str|   0|    256000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 8 times&lt;/span&gt;
+diehard_count_1s_byt|   0|    256000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 8 times&lt;/span&gt;
+ diehard_parking_lot|   0|     12000|     100|0.82658516|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 8 times&lt;/span&gt;
+    diehard_2dsphere|   2|      8000|     100|0.48942059|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 8 times&lt;/span&gt;
+    diehard_3dsphere|   3|      4000|     100|0.95108230|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 11 times&lt;/span&gt;
+     diehard_squeeze|   0|    100000|     100|0.38225241|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 11 times&lt;/span&gt;
+        diehard_sums|   0|       100|     100|0.07389024|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 11 times&lt;/span&gt;
+        diehard_runs|   0|    100000|     100|0.69622840|  PASSED  
+        diehard_runs|   0|    100000|     100|0.74440767|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 12 times&lt;/span&gt;
+       diehard_craps|   0|    200000|     100|0.34755313|  PASSED  
+       diehard_craps|   0|    200000|     100|0.93778967|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 32 times&lt;/span&gt;
+ marsaglia_tsang_gcd|   0|  10000000|     100|0.00000000|  FAILED  
+ marsaglia_tsang_gcd|   0|  10000000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 32 times&lt;/span&gt;
+         sts_monobit|   1|    100000|     100|0.13113454|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 32 times&lt;/span&gt;
+            sts_runs|   2|    100000|     100|0.22502954|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 33 times&lt;/span&gt;
+         rgb_bitdist|   1|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 33 times&lt;/span&gt;
+         rgb_bitdist|   2|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 34 times&lt;/span&gt;
+         rgb_bitdist|   3|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 34 times&lt;/span&gt;
+         rgb_bitdist|   4|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 35 times&lt;/span&gt;
+         rgb_bitdist|   5|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 37 times&lt;/span&gt;
+         rgb_bitdist|   6|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 38 times&lt;/span&gt;
+         rgb_bitdist|   7|    100000|     100|0.00000000|  FAILED  
+^&lt;span style=&#34;color:#f92672&#34;&gt;[[&lt;/span&gt;1;5D# The file file_input was rewound &lt;span style=&#34;color:#ae81ff&#34;&gt;40&lt;/span&gt; times
+         rgb_bitdist|   8|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 41 times&lt;/span&gt;
+         rgb_bitdist|   9|    100000|     100|0.00048263|   WEAK   
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 43 times&lt;/span&gt;
+         rgb_bitdist|  10|    100000|     100|0.00000207|   WEAK   
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 46 times&lt;/span&gt;
+         rgb_bitdist|  11|    100000|     100|0.11712560|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 48 times&lt;/span&gt;
+         rgb_bitdist|  12|    100000|     100|0.00070481|   WEAK   
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 48 times&lt;/span&gt;
+rgb_minimum_distance|   2|     10000|    1000|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 48 times&lt;/span&gt;
+rgb_minimum_distance|   3|     10000|    1000|0.00073621|   WEAK   
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 49 times&lt;/span&gt;
+rgb_minimum_distance|   4|     10000|    1000|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 49 times&lt;/span&gt;
+rgb_minimum_distance|   5|     10000|    1000|0.00000148|   WEAK   
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 50 times&lt;/span&gt;
+    rgb_permutations|   2|    100000|     100|0.64531526|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 50 times&lt;/span&gt;
+    rgb_permutations|   3|    100000|     100|0.12491885|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 50 times&lt;/span&gt;
+    rgb_permutations|   4|    100000|     100|0.29544943|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 51 times&lt;/span&gt;
+    rgb_permutations|   5|    100000|     100|0.57519225|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 52 times&lt;/span&gt;
+      rgb_lagged_sum|   0|   1000000|     100|0.42557400|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 54 times&lt;/span&gt;
+      rgb_lagged_sum|   1|   1000000|     100|0.94028320|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 57 times&lt;/span&gt;
+      rgb_lagged_sum|   2|   1000000|     100|0.34329913|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 61 times&lt;/span&gt;
+      rgb_lagged_sum|   3|   1000000|     100|0.02887377|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 66 times&lt;/span&gt;
+      rgb_lagged_sum|   4|   1000000|     100|0.02328575|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 72 times&lt;/span&gt;
+      rgb_lagged_sum|   5|   1000000|     100|0.10863760|  PASSED  
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Here we can see the larger set actually did quite a bit better, passing where it was either weak or had even failed before. It&amp;rsquo;s not perfect of course, and certainly not suitable for cryptographic use but we can see that the generator works well enough. I would have liked to have run more tests and tried a few different random number generators, but testing with dieharder was taking quite a long time on my underpowered laptop CPU. Of course no generator is going to pass every test as Knuth states: &lt;em&gt;&amp;ldquo;A truly random sequence will exhibit local non-randomness&amp;rdquo;&lt;/em&gt;. Proving that a generator is suitable would require many more multiple runs on larger data sets. Only then might say that the PRNG is satisfiably random.&lt;/p&gt;
+&lt;h2 id=&#34;not-so-random-musings&#34;&gt;Not So Random Musings&lt;/h2&gt;
+&lt;p&gt;In a set of infinite numbers we might expect to see 1,000,000 7&amp;rsquo;s or 8&amp;rsquo;s in a row at some point. Maybe the numbers, viewed in a single line would map to ascii values that could print the works of Shakespeare. It may not be desirable for applications, but it would be consistent with a truly random number generator. Though the math was certainly beyond me, the first half of volume 2 was incredibly interesting. If anything it&amp;rsquo;s made me question how random numbers are generated a little more, forcing me to dig through the random number generators that I have trusted. A simple mistake could result in unexpected deterministic behaviour. Though this is unlikely to be a problem in my day to day life as a web developer, it will still make me think the next time I need to rely on random behaviour. Further fueling my paranoia, Knuth gives some great advice to summarise the learnings of the chapter:&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;&amp;ldquo;Look at the subroutine library of each computer installation in your organization, and replace the random number generators by good ones. Try to avoid being too shocked at what you find.&amp;quot;&lt;/em&gt;&lt;/p&gt;</content>
     </item>
     
     <item>
@@ -26,6 +495,63 @@
       <guid>/post/the-art-of-computer-programming/</guid>
       <description>&lt;p&gt;An attempt at making my way through one of the most infamous computer science books&lt;/p&gt;
 &lt;p&gt;I was recently gifted the first volume of Donald Knuth&amp;rsquo;s: &amp;ldquo;The Art of Computer Programming&amp;rdquo;. Being the computer geek that I am, I have never been so excited yet, intimidated about sitting down and working through what some people would call a Reference book.&lt;/p&gt;</description>
+      <content>&lt;p&gt;An attempt at making my way through one of the most infamous computer science books&lt;/p&gt;
+&lt;p&gt;I was recently gifted the first volume of Donald Knuth&amp;rsquo;s: &amp;ldquo;The Art of Computer Programming&amp;rdquo;. Being the computer geek that I am, I have never been so excited yet, intimidated about sitting down and working through what some people would call a Reference book.&lt;/p&gt;
+&lt;h2 id=&#34;reading-the-book&#34;&gt;Reading the book&lt;/h2&gt;
+&lt;p&gt;The biggest misconception that I had about this book was that I thought it would be more like a reference book, something you can quickly open, flip to the table of contents, and then over to page 254 for linked lists (or linked allocation in this case) and learn everything there is to know about linked lists. As stated by peers, Stack Overflow posts, Reddit, and Hacker News users, it&amp;rsquo;s not something you would want to actually go about reading through. It&amp;rsquo;s long, highly technical, and full of math equations. I suspect that the average reader would quickly get lost the first time Knuth shows off an algorithm in a custom assembly language written specifically for this book (yes, really). To put this more plainly: &lt;em&gt;Reading through TAOCP is an NP hard problem&lt;/em&gt;. Naturally, I couldn&amp;rsquo;t wait to read through it. So how should we go about reading the book? Luckily for us Knuth provides the reader with instructions, and of course, being the computer scientist that he is, a helpful algorithm flow chart to guide the reader through the process of reading the books which looks something like this:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;           +
+           |
+           |
+     +-----v-----+
+     |1. Start in|
+     +-----+-----+
+           |
+           |
++----------v-----------+
+|                      |
+| 2. Read pp xv - xvii |
+|                      |
++----------+-----------+
+           |
+           |
+     +-----v------+
+     |            |
+     | 3. N &amp;lt;- 1  |
+     |            |
+     +-----+------+
+           |
+           |
+  +--------v---------+
+  |4. Begin Chapter N|
+  +--------+---------+
+           |
+           |
+   +-------v-------+ Yes       +---------------------------------------+
+   |5. Interesting?+----------&amp;gt;| 6. Read until Exhaustion or Whatever  |
+   +---------------+           | the CS equivalent of Nirvana might be |
+           |No                 +---------------------------------------+
+           |                                        ^
+           |                                        |
+           +----------------------------------------+
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The flow chart and written procedure following this contains other suggestions on how to read through the book based on if you&amp;rsquo;ve read through it before or just based on what your interests are.&lt;/p&gt;
+&lt;h3 id=&#34;exercises&#34;&gt;Exercises&lt;/h3&gt;
+&lt;p&gt;A large portion of this book is dedicated to exercises as well as the included solutions in the back. &lt;em&gt;Ugh, homework&lt;/em&gt;. One of the more helpful things that Knuth does is break down the relative difficulty of each problem using this notation:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;00 Immediate                        &amp;gt; Recommended
+10 Simple (one minute)                M Mathematically oriented
+20 Medium (15 minutes)                HM Requiring &amp;quot;higher math&amp;quot;
+30 Moderately Hard
+40 Term Project
+50 Research problem
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;In his reasoning for breaking down exercises this way, Knuth includes an anecdote about how Richard Bellman&amp;rsquo;s book &lt;em&gt;Dynamic Programming&lt;/em&gt; mixed trivial problems with research problems with no indication about which problems were solvable or not. &lt;em&gt;I bet his students loved that&lt;/em&gt;. Though I wanted to get a lot out of this book the first time round I don&amp;rsquo;t expect to go through all of these. Probably the easier ones to get the idea of it, but also doing a little bit of searching about the more Research type problems is certainly interesting.&lt;/p&gt;
+&lt;h2 id=&#34;induction-combinations-harmonic-numbers-and-other-basic-concepts&#34;&gt;Induction, Combinations, Harmonic numbers, and Other Basic Concepts&lt;/h2&gt;
+&lt;p&gt;This is where I imagine most people would stop. After a lengthy dissection of what algorithms are as well as the history behind the word Algorithm, Section 1.2 includes a lot of the foundational math behind computer sciences, induction, permutations and combinations, harmonic numbers, and elementary number theory; All the things you tried to wrap your head around in Algorithms I through III that you thought you could forget about have come back with a vengeance. I&amp;rsquo;ll admit that when I started reading the introduction to this chapter and flipped through the next 10 pages or so I considered picking up some supplementary materials on the math involved. After some searching I came across some of his other works and I almost picked up his book on &lt;a href=&#34;https://www.amazon.com/dp/0201558025/&#34;&gt;concrete mathematics&lt;/a&gt;. It was at this point that my adventures in computer science had started to look a lot like &lt;a href=&#34;https://www.youtube.com/watch?v=AbSehcT19u0&#34;&gt;this&lt;/a&gt;. I resisted the temptation a bit and pressed on which I&amp;rsquo;m glad I did because two paragraphs down Knuth suggests you lightly skim this the first time you read through the book otherwise you might never get around to reading the actual computer science topics. &lt;em&gt;Hmmm&amp;hellip; yeah that checks out&lt;/em&gt;&lt;/p&gt;
+&lt;h2 id=&#34;mix&#34;&gt;MIX&lt;/h2&gt;
+&lt;p&gt;Not only did Knuth have to &lt;a href=&#34;https://en.wikipedia.org/wiki/TeX#History&#34;&gt;create a typesetting language after the second edition of the second volume was created&lt;/a&gt; but he also set about creating an instruction set and assembly language for a made up machine called MIX, reasoning that programming languages tend to influence the way that an engineer might code so having a more pure language to work with might solve that issue. &lt;em&gt;&lt;a href=&#34;https://www.youtube.com/watch?v=AbSehcT19u0&#34;&gt;Hmm&amp;hellip; That sounds familiar&lt;/a&gt;&lt;/em&gt;. You can find the entire set of instructions and diagram of the machine architecture &lt;a href=&#34;https://en.wikipedia.org/wiki/MIX&#34;&gt;here&lt;/a&gt; although if you can find a copy of the book I recommend looking at the diagram given in the book itself because it&amp;rsquo;s beautiful. What I found particularly interesting is that this architecture is actually supported by &lt;a href=&#34;https://gcc.gnu.org/onlinedocs/gcc/MMIX-Options.html&#34;&gt;gcc&lt;/a&gt; meaning we can compile code for the theoretical computer. Knuth describes this computer, the MIX 1009 that runs MIX assembly code as:&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;MIX is very much like nearly every computer of the 1960&amp;rsquo;s and 70&amp;rsquo;s, except that it is, perhaps, nicer.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;There you have it. Throw out that new Macbook pro you bought for $3000 and &lt;em&gt;rm -rf&lt;/em&gt; that Vue JS project you&amp;rsquo;ve been working on because it&amp;rsquo;s time we threw something new into the MIX! Knuth does admit that at this point MIX is a bit antequated so naturally he notes that a new version, dubbed &lt;a href=&#34;http://mmix.cs.hm.edu/index.html&#34;&gt;MMIX&lt;/a&gt;, based on RISC, has been created and will likely be included in subsequent editions of the book&amp;hellip; just as soon as they get around to rewriting all of the algorithms in MMMIX assembly.&lt;/p&gt;
+&lt;h2 id=&#34;concluding-thoughts&#34;&gt;Concluding Thoughts&lt;/h2&gt;
+&lt;p&gt;Though the book provides a very comprehensive and deep dive into every topic, the book is still missing some information. Completing this book proved to be an impossible task for Knuth and others; before Knuth can document everything, previous parts of it have already started to go out of date and the various &lt;em&gt;&amp;ldquo;Under construction&amp;rdquo;&lt;/em&gt; sections throughout the book highlight just how quickly, and how much information there really is about this field of study. This doesn&amp;rsquo;t come as particularly surprising to anyone who&amp;rsquo;s spent time trying to include the newest npm module into their web project, only to find out it&amp;rsquo;s unsupported three months later. I spent the better part of 4 years studying computer science in school yet barely scratched the surface of what the field has to offer and years later I&amp;rsquo;m still finding the need to learn more about it. At times it can feel overwhelming just trying to keep up with learning the basics of the newest language, the hottest Javascript framework or the the newest trends. Software engineering, web development, and computer sciences are moving at blazingly fast speeds with nary an end in sight. Even at it&amp;rsquo;s most basic levels described here in the first volume, it&amp;rsquo;s still being worked on let alone the work on the remaining volumes following volume 4, which have yet to be released.&lt;/p&gt;
+&lt;p&gt;So why read this then? Though the book is quite old I still think that there is a lot of value in reading through it. Much of it is still relevant today as data structures and basic algorithms (the underpinning of everything we still use daily) have not changed much, and more than that; Knuth is actually a fantastic writer. Though the material may be heavy, Knuth has a sort of dry humor that I&amp;rsquo;ve come to appreciate that has made reading this volume enjoyable. Though I don&amp;rsquo;t think that &lt;a href=&#34;https://www.businessinsider.com/bill-gates-loves-donald-knuth-the-art-of-computer-programming-2016-4&#34;&gt;reading TAOCP alone will get you a job&lt;/a&gt;, I recommend reading TAOCP for anyone who wishes to pique their intellectual curiosities about the field of computer science.&lt;/p&gt;</content>
     </item>
     
   </channel>

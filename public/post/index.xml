@@ -15,6 +15,495 @@
       
       <guid>/post/debugging-chip8-code/</guid>
       <description>The first time I wrote a program in hexidecimal or assembly was using a made up, educational cpu called Pep8, this was before I had read anything about how to properly organize code, programming practices, and before I had read clean code. Over the last month and a half, I&amp;rsquo;ve been working on a CHIP8 emulator, which you can find here, so for the first time in a while, I&amp;rsquo;m revisiting old topics and old books on computer architecture.</description>
+      <content>&lt;p&gt;The first time I wrote a program in hexidecimal or assembly was using a made up, educational cpu called Pep8, this was before I had read anything about how to properly organize code, programming practices, and before I had read &lt;a href=&#34;https://www.amazon.com/Clean-Code-Handbook-Software-Craftsmanship/dp/0132350882&#34;&gt;clean code&lt;/a&gt;. Over the last month and a half, I&amp;rsquo;ve been working on a &lt;a href=&#34;https://en.wikipedia.org/wiki/CHIP-8&#34;&gt;CHIP8&lt;/a&gt; emulator, which you can find &lt;a href=&#34;https://github.com/adamrmelnyk/chip_8_emulator&#34;&gt;here&lt;/a&gt;, so for the first time in a while, I&amp;rsquo;m revisiting old topics and old books on computer architecture. Now that the project is largely complete, what&amp;rsquo;s left is to test it out, and the best way to do that, is to mess around with it and see what I can build for myself using the chip8 instruction set.&lt;/p&gt;
+&lt;p&gt;As I wrote many small programs to test each of the operations of the emulator, I ran into a number of scenarios where I&amp;rsquo;d end up re-writing instructions after parts of the code had moved around a lot. In my day to day work, I spend time thinking a lot about how to best organize my code. It&amp;rsquo;s not enough to have it work, it&amp;rsquo;s important to organize it as well so that it will be easier to maintain, reduce complexity, and be readable for engineers who may not be familiar with it. This got me thinking about how alien it was to debug CHIP8 programs and made me wonder whether or not there existed a &amp;ldquo;Clean Hex Code&amp;rdquo; or a &amp;ldquo;Clean assembly code&amp;rdquo; or perhaps something more akin to Dijkstra&amp;rsquo;s &lt;a href=&#34;https://en.wikipedia.org/wiki/Structured_programming&#34;&gt;Structured Programming&lt;/a&gt; for CHIP8 code.&lt;/p&gt;
+&lt;h2 id=&#34;debugging-is-hard&#34;&gt;Debugging is hard&lt;/h2&gt;
+&lt;p&gt;Debugging is challenging when I write code in Java, Rust, Javascript etc. That&amp;rsquo;s why it&amp;rsquo;s so important that all modern languages have their own IDE&amp;rsquo;s, editors, plugins, and other tools to aid the programmer in development. Even the C language, designed around the same time as CHIP8, has it&amp;rsquo;s own tools that people use today. So when I encounter a bug in my CHIP8 program, I&amp;rsquo;m really left to my own devices. Aside from the fact that any time I encounter an error, I need to determine whether or not the error resides in the emulator I&amp;rsquo;ve written, or the assembly itself. Debugging the hex code is much more challenging for much less code.&lt;/p&gt;
+&lt;p&gt;To edit my CHIP8 programs I used ghex, a simple editor that I had used in the past to inspect binaries. There may be better tools out there but this was one that I am familiar with. Here&amp;rsquo;s a simple program with the breakdown so we can follow what&amp;rsquo;s going on.&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;row&lt;/th&gt;
+&lt;th&gt;op&lt;/th&gt;
+&lt;th&gt;op&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;0x200&lt;/td&gt;
+&lt;td&gt;A2&lt;/td&gt;
+&lt;td&gt;06&lt;/td&gt;
+&lt;td&gt;Set our address register to begin reading at location 206&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;0x202&lt;/td&gt;
+&lt;td&gt;D0&lt;/td&gt;
+&lt;td&gt;05&lt;/td&gt;
+&lt;td&gt;Draw at (0,0), 5 bytes starting from the location in memory specified by the address register&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;0x204&lt;/td&gt;
+&lt;td&gt;00&lt;/td&gt;
+&lt;td&gt;00&lt;/td&gt;
+&lt;td&gt;Halt&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;0x206&lt;/td&gt;
+&lt;td&gt;FF&lt;/td&gt;
+&lt;td&gt;C3&lt;/td&gt;
+&lt;td&gt;The bytes that will be drawn&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;0x208&lt;/td&gt;
+&lt;td&gt;FF&lt;/td&gt;
+&lt;td&gt;C3&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;0x210&lt;/td&gt;
+&lt;td&gt;00&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;In this small program, what we&amp;rsquo;re doing is printing a single letter to the top right hand corner of the screen. In this case, the letter &amp;ldquo;A&amp;rdquo;. We load the address of where we want to start reading our letter from, into register 0, Then draw from five locations in memory beginning at the location stored in register 0. I should also note that although I am creating this letter myself after the Halt operation, CHIP8 loads sprites for letters and numbers in the first 512 address spaces so we could actually make this easier on ourselves by using the sprites given to us.&lt;/p&gt;
+&lt;p&gt;The result looks like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;// ******** 0xFF 0b1111_1111
+// **    ** 0xC3 0b1100_0011
+// ******** 0xFF 0b1111_1111
+// **    ** 0xC3 0b1100_0011
+// **    ** 0xC3 0b1100_0011
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The next thing I wanted to do was put a &amp;ldquo;+&amp;rdquo; sign next to the A. To do this I just repeat what I did before. Add the sprite for the plus after the A. Then I&amp;rsquo;ll just draw once more.&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;row&lt;/th&gt;
+&lt;th&gt;op&lt;/th&gt;
+&lt;th&gt;op&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;0x200&lt;/td&gt;
+&lt;td&gt;A2&lt;/td&gt;
+&lt;td&gt;06&lt;/td&gt;
+&lt;td&gt;Set our address register to begin reading at location 206&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;0x202&lt;/td&gt;
+&lt;td&gt;D0&lt;/td&gt;
+&lt;td&gt;05&lt;/td&gt;
+&lt;td&gt;Draw the A&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;0x204&lt;/td&gt;
+&lt;td&gt;D0&lt;/td&gt;
+&lt;td&gt;06&lt;/td&gt;
+&lt;td&gt;Draw the +&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;0x206&lt;/td&gt;
+&lt;td&gt;00&lt;/td&gt;
+&lt;td&gt;00&lt;/td&gt;
+&lt;td&gt;Halt&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;0x208&lt;/td&gt;
+&lt;td&gt;FF&lt;/td&gt;
+&lt;td&gt;C3&lt;/td&gt;
+&lt;td&gt;The A Sprite&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;0x20A&lt;/td&gt;
+&lt;td&gt;FF&lt;/td&gt;
+&lt;td&gt;C3&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;0x20C&lt;/td&gt;
+&lt;td&gt;18&lt;/td&gt;
+&lt;td&gt;18&lt;/td&gt;
+&lt;td&gt;The + Sprite&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;0x20E&lt;/td&gt;
+&lt;td&gt;FF&lt;/td&gt;
+&lt;td&gt;FF&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;0x210&lt;/td&gt;
+&lt;td&gt;18&lt;/td&gt;
+&lt;td&gt;18&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;This should produce and A, and then a &amp;ldquo;+&amp;rdquo; that looks like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;//    **    0x18 0b0001_1000
+//    **    0x18 0b0001_1000
+// ******** 0xFF 0b1111_1111
+// ******** 0xFF 0b1111_1111
+//    **    0x18 0b0001_1000
+//    **    0x18 0b0001_1000
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Of course &lt;em&gt;it doesn&amp;rsquo;t&lt;/em&gt;, because we&amp;rsquo;ve made a few mistakes which we&amp;rsquo;ll fix next. Not only are we drawing twice in the same spot, but we&amp;rsquo;re also reading our sprite from the wrong location! When we added the extra draw function, our sprite was loaded into a different place! To fix this we need to make a few changes. Part of why this doesn&amp;rsquo;t work is because of how much set up the draw function requires. It reads the X coordinate from a specified register, the Y coordinate from another register, and then begins drawing a sprite reading from wherever the address register or &lt;em&gt;i&lt;/em&gt; register is pointing to. What this means is that though we got our first drawing without much work since everything defaulted to zero we&amp;rsquo;ll need to:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;set a register to where we want to start printing our second character&lt;/li&gt;
+&lt;li&gt;draw our first sprite&lt;/li&gt;
+&lt;li&gt;set the address register a second time pointing at our new sprite&lt;/li&gt;
+&lt;li&gt;draw the new sprite&lt;/li&gt;
+&lt;li&gt;wait for a keystroke and pause so we can actually see what we printed&lt;/li&gt;
+&lt;li&gt;go back and fix the last time we set the address because it&amp;rsquo;s moved&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Here&amp;rsquo;s what the working solution looks like:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;row&lt;/th&gt;
+&lt;th&gt;op&lt;/th&gt;
+&lt;th&gt;op&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;0x200&lt;/td&gt;
+&lt;td&gt;61&lt;/td&gt;
+&lt;td&gt;0A&lt;/td&gt;
+&lt;td&gt;Load 0x0A into register 0x1&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;0x202&lt;/td&gt;
+&lt;td&gt;A2&lt;/td&gt;
+&lt;td&gt;0E&lt;/td&gt;
+&lt;td&gt;Set the address register to 0x214&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;0x204&lt;/td&gt;
+&lt;td&gt;D0&lt;/td&gt;
+&lt;td&gt;05&lt;/td&gt;
+&lt;td&gt;Draw from location (x,y) in register x = 0x1, y = 0x0, 5 addressess starting from the location of the address register&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;0x206&lt;/td&gt;
+&lt;td&gt;A2&lt;/td&gt;
+&lt;td&gt;13&lt;/td&gt;
+&lt;td&gt;Set the address register to 0x219&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;0x208&lt;/td&gt;
+&lt;td&gt;D1&lt;/td&gt;
+&lt;td&gt;06&lt;/td&gt;
+&lt;td&gt;Draw from location (x,y) in register x = 0x1, y = 0x0, 6 addressess&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;0x20A&lt;/td&gt;
+&lt;td&gt;F0&lt;/td&gt;
+&lt;td&gt;0A&lt;/td&gt;
+&lt;td&gt;Set key press to register 0 (Waits for keypress)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;0x20C&lt;/td&gt;
+&lt;td&gt;00&lt;/td&gt;
+&lt;td&gt;00&lt;/td&gt;
+&lt;td&gt;Halt&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;0x20E&lt;/td&gt;
+&lt;td&gt;FF&lt;/td&gt;
+&lt;td&gt;C3&lt;/td&gt;
+&lt;td&gt;Start of A sprite&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;0x210&lt;/td&gt;
+&lt;td&gt;FF&lt;/td&gt;
+&lt;td&gt;C3&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;0x212&lt;/td&gt;
+&lt;td&gt;C3&lt;/td&gt;
+&lt;td&gt;18&lt;/td&gt;
+&lt;td&gt;End of A sprite, beginning of + sprite&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;0x214&lt;/td&gt;
+&lt;td&gt;18&lt;/td&gt;
+&lt;td&gt;FF&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;0x216&lt;/td&gt;
+&lt;td&gt;FF&lt;/td&gt;
+&lt;td&gt;18&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;0x218&lt;/td&gt;
+&lt;td&gt;18&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;End of + sprite&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;Let&amp;rsquo;s say we aren&amp;rsquo;t quite finished though, we want to print another &amp;ldquo;A&amp;rdquo; on the display. We&amp;rsquo;ll have to make more changes, and for a second time, go back and change the addresses of where we start reading our sprites.&lt;/p&gt;
+&lt;p&gt;The finished product now looks like this:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;row&lt;/th&gt;
+&lt;th&gt;op&lt;/th&gt;
+&lt;th&gt;op&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;0x200&lt;/td&gt;
+&lt;td&gt;61&lt;/td&gt;
+&lt;td&gt;0A&lt;/td&gt;
+&lt;td&gt;Load 0x0A into register 0x1&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;0x202&lt;/td&gt;
+&lt;td&gt;62&lt;/td&gt;
+&lt;td&gt;14&lt;/td&gt;
+&lt;td&gt;Load 0x14 into register 0x2&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;0x204&lt;/td&gt;
+&lt;td&gt;A2&lt;/td&gt;
+&lt;td&gt;14&lt;/td&gt;
+&lt;td&gt;Set the address register to 0x214&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;0x206&lt;/td&gt;
+&lt;td&gt;D0&lt;/td&gt;
+&lt;td&gt;05&lt;/td&gt;
+&lt;td&gt;Draw from location (x,y) in register x = 0x1, y = 0x0, 5 addressess starting from the location of the address register&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;0x208&lt;/td&gt;
+&lt;td&gt;A2&lt;/td&gt;
+&lt;td&gt;19&lt;/td&gt;
+&lt;td&gt;Set the address register to 0x219&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;0x20A&lt;/td&gt;
+&lt;td&gt;D1&lt;/td&gt;
+&lt;td&gt;06&lt;/td&gt;
+&lt;td&gt;Draw from location (x,y) in register x = 0x1, y = 0x0, 6 addressess&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;0x20C&lt;/td&gt;
+&lt;td&gt;A2&lt;/td&gt;
+&lt;td&gt;14&lt;/td&gt;
+&lt;td&gt;set address register to 0x214&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;0x20E&lt;/td&gt;
+&lt;td&gt;D2&lt;/td&gt;
+&lt;td&gt;05&lt;/td&gt;
+&lt;td&gt;Draw from location (x,y) in register x = 0x2, y = 0x0, 6 addressess&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;0x210&lt;/td&gt;
+&lt;td&gt;F0&lt;/td&gt;
+&lt;td&gt;0A&lt;/td&gt;
+&lt;td&gt;Set key press to register 0 (Waits for keypress)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;0x212&lt;/td&gt;
+&lt;td&gt;00&lt;/td&gt;
+&lt;td&gt;00&lt;/td&gt;
+&lt;td&gt;Halt&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;0x214&lt;/td&gt;
+&lt;td&gt;FF&lt;/td&gt;
+&lt;td&gt;C3&lt;/td&gt;
+&lt;td&gt;Start of A sprite&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;0x216&lt;/td&gt;
+&lt;td&gt;FF&lt;/td&gt;
+&lt;td&gt;C3&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;0x218&lt;/td&gt;
+&lt;td&gt;C3&lt;/td&gt;
+&lt;td&gt;18&lt;/td&gt;
+&lt;td&gt;End of A sprite, beginning of + sprite&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;0x21A&lt;/td&gt;
+&lt;td&gt;18&lt;/td&gt;
+&lt;td&gt;FF&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;0x21C&lt;/td&gt;
+&lt;td&gt;FF&lt;/td&gt;
+&lt;td&gt;18&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;0x21E&lt;/td&gt;
+&lt;td&gt;18&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;End of + sprite&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id=&#34;how-to-avoid-rewriting-everything&#34;&gt;How to avoid rewriting everything&lt;/h3&gt;
+&lt;p&gt;What this example progarm above illustrates is that we really need to plan things ahead otherwise we&amp;rsquo;re going to end up needing to rewrite code. So what&amp;rsquo;s that solution to all of this? Because this is a small program, we could probably get away with having more space in between where our sprites are stored and where we execute our program.&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;row&lt;/th&gt;
+&lt;th&gt;op&lt;/th&gt;
+&lt;th&gt;op&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;0x200&lt;/td&gt;
+&lt;td&gt;61&lt;/td&gt;
+&lt;td&gt;0A&lt;/td&gt;
+&lt;td&gt;Load 0x0A into register 0x1&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;0x202&lt;/td&gt;
+&lt;td&gt;62&lt;/td&gt;
+&lt;td&gt;14&lt;/td&gt;
+&lt;td&gt;Load 0x14 into register 0x2&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;0x204&lt;/td&gt;
+&lt;td&gt;A5&lt;/td&gt;
+&lt;td&gt;00&lt;/td&gt;
+&lt;td&gt;Set the address register to 0x500&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;0x206&lt;/td&gt;
+&lt;td&gt;D0&lt;/td&gt;
+&lt;td&gt;05&lt;/td&gt;
+&lt;td&gt;Draw from location (x,y) in register x = 0x1, y = 0x0, 5 addressess starting from the location of the address register&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;0x208&lt;/td&gt;
+&lt;td&gt;A5&lt;/td&gt;
+&lt;td&gt;05&lt;/td&gt;
+&lt;td&gt;Set the address register to 0x505&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;0x20A&lt;/td&gt;
+&lt;td&gt;D1&lt;/td&gt;
+&lt;td&gt;06&lt;/td&gt;
+&lt;td&gt;Draw from location (x,y) in register x = 0x1, y = 0x0, 6 addressess&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;0x20C&lt;/td&gt;
+&lt;td&gt;A5&lt;/td&gt;
+&lt;td&gt;00&lt;/td&gt;
+&lt;td&gt;set address register to 0x500&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;0x20E&lt;/td&gt;
+&lt;td&gt;D2&lt;/td&gt;
+&lt;td&gt;05&lt;/td&gt;
+&lt;td&gt;Draw from location (x,y) in register x = 0x2, y = 0x0, 6 addressess&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;0x210&lt;/td&gt;
+&lt;td&gt;F0&lt;/td&gt;
+&lt;td&gt;0A&lt;/td&gt;
+&lt;td&gt;Set key press to register 0 (Waits for keypress)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;0x212&lt;/td&gt;
+&lt;td&gt;00&lt;/td&gt;
+&lt;td&gt;00&lt;/td&gt;
+&lt;td&gt;Halt&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&amp;hellip;..&lt;/td&gt;
+&lt;td&gt;..&lt;/td&gt;
+&lt;td&gt;..&lt;/td&gt;
+&lt;td&gt;&amp;hellip;.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;0x500&lt;/td&gt;
+&lt;td&gt;FF&lt;/td&gt;
+&lt;td&gt;C3&lt;/td&gt;
+&lt;td&gt;Start of A sprite&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;0x502&lt;/td&gt;
+&lt;td&gt;FF&lt;/td&gt;
+&lt;td&gt;C3&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;0x504&lt;/td&gt;
+&lt;td&gt;C3&lt;/td&gt;
+&lt;td&gt;18&lt;/td&gt;
+&lt;td&gt;End of A sprite, beginning of + sprite&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;0x506&lt;/td&gt;
+&lt;td&gt;18&lt;/td&gt;
+&lt;td&gt;FF&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;0x508&lt;/td&gt;
+&lt;td&gt;FF&lt;/td&gt;
+&lt;td&gt;18&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;0x50A&lt;/td&gt;
+&lt;td&gt;18&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;End of + sprite&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;One thing you might notice about hexeditors is that they default to overwrite instead of insert mode. This default isn&amp;rsquo;t very helpful in most situations but, it&amp;rsquo;s perfect for editing hexcode, it makes sense that we don&amp;rsquo;t want other code to be moved around too much as we require that our sprites or future method calls stay in place.&lt;/p&gt;
+&lt;p&gt;After moving our sprites down to location &lt;code&gt;0x500&lt;/code&gt;, we now have a little more room to work with, so we can add some extra operations in between before we need to worry. The caveat is that in a larger one we&amp;rsquo;d need to be more efficient with our space as our memory constraints are a lot lower than more modern machines.&lt;/p&gt;
+&lt;h3 id=&#34;adding-a-debugger&#34;&gt;Adding a debugger&lt;/h3&gt;
+&lt;p&gt;After overcoming a few actual bugs within the emulator itself, I ran into some bugs with my code much like the ones above. Unfortunately for us, there are very few tools to help us debug. There&amp;rsquo;s no CHIP8 IDE that will let us know that we didn&amp;rsquo;t load anything into the register we&amp;rsquo;re going to read from, or that we&amp;rsquo;re going to read from the wrong place in memory. Because this is an emulator, we&amp;rsquo;re no longer limited by the orginal technology of CHIP8, we can add our own debugging tools. To help overcome these challenges, I added a debugger which would halt the execution cycle, waiting for enter to be pressed, exiting debug mode, or exit the emulator itself which looks like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Rust&#34; data-lang=&#34;Rust&#34;&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;/// Loop until a valid key is pressed
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;wait_on_debug_input&lt;/span&gt;(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;mut&lt;/span&gt; self) {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;mut&lt;/span&gt; key_pressed &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;false&lt;/span&gt;;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;key_pressed {
+        self.window.update();
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; Some(keys) &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; self.window.get_keys_pressed(KeyRepeat::No) {
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; t &lt;span style=&#34;color:#66d9ef&#34;&gt;in&lt;/span&gt; keys {
+                &lt;span style=&#34;color:#66d9ef&#34;&gt;match&lt;/span&gt; t {
+                    Key::Enter &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; { key_pressed &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;true&lt;/span&gt; },
+                    Key::Escape &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; { std::process::exit(&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;) }, &lt;span style=&#34;color:#75715e&#34;&gt;// Kills the execution and returns 0
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;                    Key::Delete &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; {
+                        key_pressed &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;true&lt;/span&gt;;
+                        self.debug &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;false&lt;/span&gt;; &lt;span style=&#34;color:#75715e&#34;&gt;// removes us from the debug cycle
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;                    },
+                    _ &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; {}
+                }
+            }
+        }
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://github.com/adamrmelnyk/chip_8_emulator/raw/master/examples/debug.gif&#34; alt=&#34;debuggif&#34;&gt;&lt;/p&gt;
+&lt;p&gt;At each press of the enter key, I either load a register, draw, set the address register, or any other operation. This isn&amp;rsquo;t perfect but it will go a long way to understanding what&amp;rsquo;s going on, one step at a time.&lt;/p&gt;
+&lt;h2 id=&#34;whats-next&#34;&gt;What&amp;rsquo;s next&lt;/h2&gt;
+&lt;p&gt;There&amp;rsquo;s a lot left to be desired here in terms of what tools we can offer the CHIP8 programmer, for one, we aren&amp;rsquo;t displaying the op codes, nor are we showing any additional information about state such as memory and register values. Adding a second window might help to display some of this, though it is a little strange to display that separately. We should also add the concept of state so we can replay operations. We probably won&amp;rsquo;t ever be able to recreate the necessary tools that make modern programming ergonomic, but it can definitely be improved.&lt;/p&gt;
+</content>
     </item>
     
     <item>
@@ -24,6 +513,115 @@
       
       <guid>/post/scraping-wikipedia-with-rust/</guid>
       <description>Writing a toy scraper As the quarantine continues and many things are still closed, I&amp;rsquo;m still spending a lot of time looking for fun side projects I can complete in a few days or less. As I drifted off to sleep one night wondering about some correlations between countries and various other data points. I realized that wikipedia probably had all the data I needed to find out. What if I could just scrape all the data off of wikipedia and throw it into sql tables so I could chart data that way?</description>
+      <content>&lt;h2 id=&#34;writing-a-toy-scraper&#34;&gt;Writing a toy scraper&lt;/h2&gt;
+&lt;p&gt;As the quarantine continues and many things are still closed, I&amp;rsquo;m still spending a lot of time looking for fun side projects I can complete in a few days or less. As I drifted off to sleep one night wondering about some correlations between countries and various other data points. I realized that wikipedia probably had all the data I needed to find out. What if I could just scrape all the data off of wikipedia and throw it into sql tables so I could chart data that way? This sounded like the perfect job for another Rust CLI tool.&lt;/p&gt;
+&lt;h2 id=&#34;making-a-request&#34;&gt;Making a Request&lt;/h2&gt;
+&lt;p&gt;The first thing we need is a library to actually make requests to a webpage. There are more than a few of them, but the one I settled on is &lt;a href=&#34;https://docs.rs/reqwest/0.10.6/reqwest/&#34;&gt;reqwest&lt;/a&gt;, a highly recommended library with good support. You can find plenty of examples on how to use it and it also supports async await.&lt;/p&gt;
+&lt;p&gt;Using reqwest is as easy as this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; body &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; reqwest::get(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;https://www.arm64.ca&amp;#34;&lt;/span&gt;)
+    .&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;
+    .text()
+    .&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;;
+
+println&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;body = {:?}&amp;#34;&lt;/span&gt;, body);
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The use case I had for this wasn&amp;rsquo;t too much more complicated than this. I just needed to check that the response code had a successful response and I could continue with scraping the data I needed.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;match&lt;/span&gt; get(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;url).&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt; {
+    Ok(resp) &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; {
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; resp.status().is_success() {
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;match&lt;/span&gt; resp.text().&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt; {
+                Ok(body) &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; extract_data(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;body),
+                Err(_) &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; {
+                    eprintln(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Oh noes! What happened to my body!&amp;#34;&lt;/span&gt;);
+                    std::process::exit(&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;);
+                },
+            }
+        } &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; {
+            &lt;span style=&#34;color:#75715e&#34;&gt;// Return some err
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;        }
+    }
+    Err(_) &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;// Return some err,
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;}status
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;scraping-data&#34;&gt;Scraping data&lt;/h2&gt;
+&lt;p&gt;Once we&amp;rsquo;ve made a request to a website we need to actually extract that data. To do so we&amp;rsquo;ll need another library so we don&amp;rsquo;t have to reinvent the wheel. Another library &lt;a href=&#34;https://docs.rs/scraper/0.9.1/scraper/&#34;&gt;scraper&lt;/a&gt; does the job for us. It allows us to parse html and select particular elements; Exactly what we&amp;rsquo;ll need if we want to extract data from a table on wiki page. One of the useful parts of Scraper is that the &lt;code&gt;Selector&lt;/code&gt; lets us chain selectors together so we can find elements inside of other elements. This is extremely useful if we want to narrow down our results to exactly what we need.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;use&lt;/span&gt; scraper::{Html, Selector};
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; html &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;r#&amp;#34;
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;    &amp;lt;div&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;        &amp;lt;h1&amp;gt;Foo&amp;lt;/h1&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;        &amp;lt;h1&amp;gt;Bar&amp;lt;/h1&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;        &amp;lt;h1&amp;gt;Baz&amp;lt;/h1&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;    &amp;lt;/div&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;#&lt;/span&gt;;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; fragment &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Html::parse_fragment(html);
+&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; div_selector &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Selector::parse(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;div&amp;#34;&lt;/span&gt;).unwrap();
+&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; h1_selector &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Selector::parse(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;h1&amp;#34;&lt;/span&gt;).unwrap();
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; h1 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; fragment.select(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;div_selector).next().unwrap();
+&lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; element &lt;span style=&#34;color:#66d9ef&#34;&gt;in&lt;/span&gt; h1.select(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;h1_selector) {
+    assert_eq&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;h1&amp;#34;&lt;/span&gt;, element.value().name());
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;One disadvantage of using any library is that documentation isn&amp;rsquo;t always perfect. At the time of this writing there&amp;rsquo;s another use case I needed later which was not described in scrapers documentation or README. Selectors can be made to select multiple tags. This turns out to be really useful if you end up finding some heterogeneous data in the html you&amp;rsquo;re parsing as I did. Just like the selector above we put the tag we&amp;rsquo;re looking for into quotes, only this time, we separate all of the tags we&amp;rsquo;re looking for in one string with commas.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;use&lt;/span&gt; scraper::{Html, Selector};
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; html &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;r#&amp;#34;
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;        &amp;lt;div&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;            &amp;lt;h1&amp;gt;foo&amp;lt;/h1&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;            &amp;lt;h2&amp;gt;bar&amp;lt;/h2&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;            &amp;lt;h3&amp;gt;baz&amp;lt;/h3&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;        &amp;lt;/div&amp;gt;&amp;#34;#&lt;/span&gt;;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; fragment &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Html::parse_fragment(html);
+&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; selector &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Selector::parse(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;h1,h2,h3&amp;#34;&lt;/span&gt;).unwrap();
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; element &lt;span style=&#34;color:#66d9ef&#34;&gt;in&lt;/span&gt; fragment.select(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;selector) {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; name &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; element.value().name();
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; is_htag &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; name &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;h1&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;||&lt;/span&gt; name &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;h2&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;||&lt;/span&gt; name &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;h3&amp;#34;&lt;/span&gt;;
+    assert_eq&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;true&lt;/span&gt;, is_htag);
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;working-with-the-db&#34;&gt;Working with the DB&lt;/h2&gt;
+&lt;p&gt;Now that we can request the data and search it for what we&amp;rsquo;re looking for, the last thing is to store it somewhere. I mentioned before that I&amp;rsquo;d like to put it in the SQL table so I chose SQLite3 because it&amp;rsquo;s easily available and lightweight. There were a few different libraries to choose from, such as &lt;a href=&#34;https://github.com/rusqlite/rusqlite&#34;&gt;rusqlite&lt;/a&gt; but I went with &lt;a href=&#34;https://docs.rs/sqlite/0.24.0/sqlite/&#34;&gt;sqlite&lt;/a&gt; which was simple enough to use. We simply open a connection to the database and then execute a command.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; connection &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; sqlite::open(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;mySqlite3DbFileName.db&amp;#34;&lt;/span&gt;).unwrap();
+
+connection
+    .execute(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;CREATE TABLE mytable (col1 TEXT, col2 INTEGER);&amp;#34;&lt;/span&gt;)
+    .unwrap();
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Inserting is essentially the same though the library gives you a few better options if you are doing this more than once.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; connection &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; sqlite::open(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;mySqlite3DbFileName.db&amp;#34;&lt;/span&gt;).unwrap();
+
+connection
+    .execute(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;INSERT INTO mytable (col1, col2) VALUES (&amp;#39;a&amp;#39;, 10);&amp;#34;&lt;/span&gt;)
+    .unwrap();
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;putting-everything-together&#34;&gt;Putting everything together&lt;/h2&gt;
+&lt;h3 id=&#34;cleaning-the-data&#34;&gt;Cleaning the data&lt;/h3&gt;
+&lt;p&gt;Now we have all the tools we need to start retrieving, parsing and storing data. The main work of course is going to be in parsing. We not only need to find the correct table elements we need, but there&amp;rsquo;s also a lot of extra information that needs to be removed such as spans, fonts, and other invisible elements so that we insert data that looks like this:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;1|China|1403191760|18.0|21 Jun 2020|National population clock&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;and not:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;&amp;lt;span class=&amp;quot;flagicon&amp;quot;&amp;gt;&amp;lt;img alt=&amp;quot;&amp;quot; src=&amp;quot;//upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Flag_of_the_People%27s_Republic_of_China.svg/23px-Flag_of_the_People%27s_Republic_of_China.svg.png&amp;quot; decoding=&amp;quot;async&amp;quot; class=&amp;quot;thumbborder&amp;quot; srcset=&amp;quot;//upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Flag_of_the_People%27s_Republic_of_China.svg/35px-Flag_of_the_People%27s_Republic_of_China.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Flag_of_the_People%27s_Republic_of_China.svg/45px-Flag_of_the_People%27s_Republic_of_China.svg.png 2x&amp;quot; data-file-width=&amp;quot;900&amp;quot; data-file-height=&amp;quot;600&amp;quot; width=&amp;quot;23&amp;quot; height=&amp;quot;15&amp;quot;&amp;gt;&amp;lt;/span&amp;gt;&amp;amp;nbsp;&amp;lt;a href=&amp;quot;/wiki/Demographics_of_China&amp;quot; title=&amp;quot;Demographics of China&amp;quot;&amp;gt;China&amp;lt;/a&amp;gt;&amp;lt;sup id=&amp;quot;cite_ref-4&amp;quot; class=&amp;quot;reference&amp;quot;&amp;gt;&amp;lt;a href=&amp;quot;#cite_note-4&amp;quot;&amp;gt;[b]&amp;lt;/a&amp;gt;&amp;lt;/sup&amp;gt;&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Cleaning up this data is pretty tedious and requires a lot of tweaking depending on how each page is styled so I won&amp;rsquo;t include any sort of insite here. You can see what I did in the project &lt;a href=&#34;https://github.com/adamrmelnyk/wtd/blob/master/src/main.rs#L225&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;h3 id=&#34;building-the-cli-tool-elements&#34;&gt;Building the CLI tool elements&lt;/h3&gt;
+&lt;p&gt;Because this is meant to be a CLI tool, we&amp;rsquo;ll also need to add those elements such as Structop which will do a lot of the heavy lifting for us. For an example of how to set up a CLI tool, see the previous post &lt;a href=&#34;/post/building-a-cli-tool-in-rust/&#34;&gt;here&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&#34;data-types&#34;&gt;Data types&lt;/h3&gt;
+&lt;p&gt;Because we want to build a tool that requires as little work from the user as possible, we also need to determine the data type of each column if we want to put everything in a database table. Luckily, &lt;a href=&#34;https://doc.rust-lang.org/std/primitive.str.html#method.parse&#34;&gt;parse&lt;/a&gt; comes in handy. We use the turbofish syntax (a fancy name for &lt;code&gt;::&amp;lt;u32&amp;gt;&lt;/code&gt; or &lt;code&gt;::&amp;lt;f64&amp;gt;&lt;/code&gt; etc) to specify the type and if we return &lt;code&gt;Ok()&lt;/code&gt; we can determine what kind of data each element might be.&lt;/p&gt;
+&lt;p&gt;The finished method looks something like this&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;/// Derives the type of the string
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;derive_type&lt;/span&gt;(sample_datum: &lt;span style=&#34;color:#66d9ef&#34;&gt;&amp;amp;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;str&lt;/span&gt;) -&amp;gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;SqlTypes&lt;/span&gt; {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; html_cleaned_data &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; remove_html_tags(sample_datum);
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; removed_citations &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; remove_wiki_citation_links(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;html_cleaned_data);
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; cleaned &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; clean_integer_or_double_string(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;removed_citations);
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; cleaned.parse::&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;i64&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;().is_ok() { &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; SqlTypes::INTEGER }
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; cleaned.parse::&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;f64&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;().is_ok() { &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; SqlTypes::REAL }
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; removed_citations.parse::&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;bool&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;().is_ok() { &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; SqlTypes::NUMERIC }
+    SqlTypes::TEXT
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This isn&amp;rsquo;t an exhaustive list of types supported by Sqlite3 but it covers the basics that we might need.&lt;/p&gt;
+&lt;h2 id=&#34;whats-missing&#34;&gt;What&amp;rsquo;s missing&lt;/h2&gt;
+&lt;h3 id=&#34;dates&#34;&gt;Dates&lt;/h3&gt;
+&lt;p&gt;Perhaps one of the trickier points left to work on are dates. &lt;a href=&#34;https://www.sqlitetutorial.net/sqlite-date/&#34;&gt;Sqlite3 has a few options&lt;/a&gt; so we need to decide on what format of date we will use (perhaps a Real and use epoch time?). Because there are so many accepted date formats and many types of date formats a webpage might use. This is a more general problem that is beyond the scope of this small project but there is likely a rust library somewhere that will do some of this for you, much like Javascripts &lt;code&gt;Date.parse()&lt;/code&gt; method.&lt;/p&gt;
+&lt;h3 id=&#34;testing-testing-testing&#34;&gt;Testing, Testing, Testing&lt;/h3&gt;
+&lt;p&gt;A lot of the work around parsing is going to be in cleaning the data, that means for each new source, we&amp;rsquo;ll likely need to tweak how we clean the data and add more and more testing around this to make sure we don&amp;rsquo;t break backwards compatibility. Over the course of building this tool I realized how inconsistent much of the data was, each page I ran it on required it&amp;rsquo;s own tweaks to keep everything working.&lt;/p&gt;
+&lt;h2 id=&#34;the-finished-alpha-product&#34;&gt;The finished (alpha) product&lt;/h2&gt;
+&lt;p&gt;You can find the finished product &lt;a href=&#34;https://github.com/adamrmelnyk/wtd&#34;&gt;here&lt;/a&gt;. The project doesn&amp;rsquo;t work on everything and it likely will not work on all but the most simple of wikipedia pages (those with one table and no tables inside of tables) as many pages have different layouts and formatting that require more testing and tweaking to clean and parse the data. The basic ideas however, are all there to give anyone some ideas on how they might want to scrape data from somewhere else.&lt;/p&gt;
+</content>
     </item>
     
     <item>
@@ -33,6 +631,240 @@
       
       <guid>/post/building-a-cli-tool-in-rust/</guid>
       <description>Like almost everyone I know, I’ve been sitting pacing inside for almost 8 weeks, waiting out the sars-cov-2 pandemic. I’ve been “zooming” with friends, phoning my family members, and catching up on reading. Gone are the days of concerts and movie theaters. Now is the time for reading, Animal Crossing, and updating one’s websites. So here it is, a new theme for a new year and a new post to help stave off boredom.</description>
+      <content>&lt;p&gt;Like almost everyone I know, I’ve been &lt;del&gt;sitting&lt;/del&gt; pacing inside for almost 8 weeks, waiting out the sars-cov-2 pandemic. I’ve been “zooming” with friends, phoning my family members, and catching up on reading. Gone are the days of concerts and movie theaters. Now is the time for reading, Animal Crossing, and updating one’s websites. So here it is, a new theme for a new year and a new post to help stave off boredom. Now’s the perfect time to clean up my dirty markdown peppered with HTML that I’ve been meaning to remove, update those pesky dependencies that github keeps reminding me are out of date, and it’s the perfect opportunity to work on something new and exciting.&lt;/p&gt;
+&lt;p&gt;Earlier this week a reddit user posted their library &lt;a href=&#34;https://docs.rs/sonor/0.1.2/sonor/&#34;&gt;sonor&lt;/a&gt; for interacting with sonos devices. Having a penchant for anything I can use from the command line, this seemed like the perfect opportunity to build a command line application to use my sonos speakers. Though I have not used Rust very much other than reading through the book and tinkering with a few different frameworks, this seemed to fit neatly into everything I wanted to do:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Use Rust for something novel&lt;/li&gt;
+&lt;li&gt;Build something I might actually use&lt;/li&gt;
+&lt;li&gt;Pass the time during a pandemic&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;building-the-tool&#34;&gt;Building the Tool&lt;/h2&gt;
+&lt;h3 id=&#34;setting-up-the-project&#34;&gt;Setting up the project&lt;/h3&gt;
+&lt;p&gt;Rust has some great tooling that is really easy to use and setup. Once you have Rust installed you can use cargo to start a new project like so:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;cargo new sonos_tool
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Running it is just one more step, just &lt;code&gt;cd&lt;/code&gt; into the directory and then use &lt;code&gt;cargo run&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;cargo run
+   Compiling sonos_tool v0.1.0 &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;/home/arm/src/sonos_tool&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+    Finished dev &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;unoptimized + debuginfo&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; target&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;s&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; in 6.61s
+     Running &lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;target/debug/sonos_tool&lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;
+Hello, world!
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;adding-dependencies&#34;&gt;Adding dependencies&lt;/h3&gt;
+&lt;p&gt;Before going further we’ll need to add a few dependencies to our &lt;code&gt;Cargo.toml&lt;/code&gt; file:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;[dependencies]
+sonor = &amp;#34;0.1.2&amp;#34;
+tokio = { version = &amp;#34;0.2&amp;#34;, features = [&amp;#34;macros&amp;#34;, &amp;#34;time&amp;#34;]}
+futures = &amp;#34;0.3&amp;#34;
+structopt = { version = &amp;#34;0.3&amp;#34;, default-features = false }
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;running-a-single-command-from-sonor&#34;&gt;Running a single command from sonor&lt;/h3&gt;
+&lt;p&gt;The first thing I want to do is the most basic thing I can find with sonor. The sonor repo has some examples so we’re going to start a little smaller and then expand upon it a little bit. Looking at the example the first thing we can do is find a speaker and return the name. So we can replace the main method with something like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Rust&#34; data-lang=&#34;Rust&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#[tokio::main]&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;async&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;() -&amp;gt; Result&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;(), sonor::Error&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; speaker &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; sonor::find(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Bedroom&amp;#34;&lt;/span&gt;, Duration::from_secs(&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;)).&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;
+    .expect(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;room exists&amp;#34;&lt;/span&gt;);
+    println&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Name: {}&amp;#34;&lt;/span&gt;, speaker.name().&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;);
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; Ok(())
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In this example, we have a speaker, or speaker set in our home called &lt;code&gt;&amp;quot;Bedroom&amp;quot;&lt;/code&gt; but you’ll need to use whatever name your speaker might be called.&lt;/p&gt;
+&lt;p&gt;Running this should produce something like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;    Finished dev &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;unoptimized + debuginfo&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; target&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;s&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; in 5.88s
+     Running &lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;target/debug/sonos_tool&lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;
+Name: Bedroom
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The library makes working with your sonos speakers easy as pie, we just need add more functions, and then make it usable as a command line tool.&lt;/p&gt;
+&lt;h3 id=&#34;adding-functionality&#34;&gt;Adding functionality&lt;/h3&gt;
+&lt;p&gt;Now that we can find the speaker we can use any of these commands at our disposal. All we need to do is make the commands available from the command line somehow and match them up with the appropriate speaker function.&lt;/p&gt;
+&lt;p&gt;Unless you want to dig into the docs to see what else we can do, the &lt;code&gt;speaker.rs&lt;/code&gt; file has all the commands we can access and some good examples on how one might use what’s available. To start with we should add some basic functionality that we might need: &lt;code&gt;Play&lt;/code&gt;, &lt;code&gt;Pause&lt;/code&gt;, and because we’re going to need to know the names of what’s available, an &lt;code&gt;Info&lt;/code&gt; command used for discovery.&lt;/p&gt;
+&lt;p&gt;To make things easier on ourselves, the first thing we can do is take a look at the &lt;a href=&#34;https://docs.rs/structopt/0.3.14/structopt/&#34;&gt;&lt;code&gt;structop&lt;/code&gt; crate&lt;/a&gt; which will be helpful for listing the available commands.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Rust&#34; data-lang=&#34;Rust&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#[derive(StructOpt)]&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;enum&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Command&lt;/span&gt; {
+    Info,
+    Play,
+    Pause,
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We’ll also add this to our main method though we don’t need to do anything with the cmd variable for now&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Rust&#34; data-lang=&#34;Rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; cmd &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Command::from_args();
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now we can run &lt;code&gt;cargo build&lt;/code&gt; and this time we’ll execute our binary like so&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;$ ./target/debug/sonos_tool --help
+Name: Bedroom
+sonos_tool 0.1.0
+
+USAGE:
+    sonos_tool &amp;lt;SUBCOMMAND&amp;gt;
+
+FLAGS:
+    -h, --help       Prints help information
+    -V, --version    Prints version information
+
+SUBCOMMANDS:
+    help     Prints this message or the help of the given subcommand&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;s&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+    info
+    pause
+    play
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Without needing to do anything else at all, Structop gives us a help command (we can use &lt;code&gt;-h&lt;/code&gt; as well), as well as a &lt;code&gt;--version&lt;/code&gt; command, and some helpful info.&lt;/p&gt;
+&lt;h3 id=&#34;adding-some-better-documentation-to-the-command-line-tool&#34;&gt;Adding some better documentation to the command line tool&lt;/h3&gt;
+&lt;p&gt;We aren’t making use of everything structop gives us however. Looking at the docs we can add the annotations which will build out the rest of this info for us.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Rust&#34; data-lang=&#34;Rust&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#[derive(StructOpt)]&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;enum&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Cli&lt;/span&gt; {
+    Info,
+    &lt;span style=&#34;color:#75715e&#34;&gt;#[structopt(
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;        about = &lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Plays specified room&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;,
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;        help = &lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;USAGE: play MyRoomName&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;    )]&lt;/span&gt;
+    Play,
+    &lt;span style=&#34;color:#75715e&#34;&gt;#[structopt(
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;        about = &lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Pauses a specified room&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;,
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;        help = &lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;USAGE: volume MyRoomName&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;    )]&lt;/span&gt;
+    Pause,
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now that we’ve added the about and help data, using &lt;code&gt;-h&lt;/code&gt; gives us something much more useful.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;   Compiling sonos_tool v0.1.0 &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;/home/arm/src/sonos_tool&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+    Finished dev &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;unoptimized + debuginfo&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; target&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;s&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; in 6.61s
+     Running &lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;target/debug/sonos_tool&lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;
+sonos_tool 0.1.0
+
+USAGE:
+    sonos_tool &amp;lt;SUBCOMMAND&amp;gt;
+
+FLAGS:
+    -h, --help       Prints help information
+    -V, --version    Prints version information
+
+SUBCOMMANDS:
+    help          Prints this message or the help of the given subcommand&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;s&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+    info          Displays info about all rooms
+    pause         Pauses a specified room
+    play          Plays specified room
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;There’s one last thing we need in our structop enum, as we saw with the first example, we’ll need a name to specify which speaker or group we’re talking about. This is just as easy as Rust enums are not normal enums and can have properties like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Rust&#34; data-lang=&#34;Rust&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#[derive(StructOpt)]&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;enum&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Command&lt;/span&gt; {
+    Info,
+    &lt;span style=&#34;color:#75715e&#34;&gt;#[structopt(
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;        about = &lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Plays specified room&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;,
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;        help = &lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;USAGE: play MyRoomName&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;    )]&lt;/span&gt;
+    Play {
+        name: String,
+    },
+    &lt;span style=&#34;color:#75715e&#34;&gt;#[structopt(
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;        about = &lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Pauses a specified room&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;,
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;        help = &lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;USAGE: volume MyRoomName&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;    )]&lt;/span&gt;
+    Pause {
+        name: String,
+    },
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;making-use-of-the-commands&#34;&gt;Making use of the commands&lt;/h3&gt;
+&lt;p&gt;Now that we have the commands laid out we just need to parse our command line arguments and then implement the three functions. For our functions we can implement them similarly to the first method where we printed our speakers name however, this time we’ll need to provide a param to specify which speaker we will be sending the command to.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Rust&#34; data-lang=&#34;Rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;play&lt;/span&gt;(name: String) -&amp;gt; Result&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;(), sonor::Error&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; speaker &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; sonor::find(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;name, Duration::from_secs(&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;)).&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;
+        .expect(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;room exists&amp;#34;&lt;/span&gt;);
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; speaker.play().&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;;
+}
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;pause&lt;/span&gt;(name: String) -&amp;gt; Result&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;(), sonor::Error&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; speaker &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; sonor::find(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;name, Duration::from_secs(&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;)).&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;
+        .expect(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;room exists&amp;#34;&lt;/span&gt;);
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; speaker.pause().&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Trying to build this however, will return an error:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;error&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;E0728&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;await&lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt; is only allowed inside &lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;async&lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt; functions and blocks
+   --&amp;gt; src/main.rs:121:19
+    |
+&lt;span style=&#34;color:#ae81ff&#34;&gt;120&lt;/span&gt; | fn pause&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;name: String&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; -&amp;gt; Result&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;, sonor::Error&amp;gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+    |    ----- this is not &lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;async&lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;
+&lt;span style=&#34;color:#ae81ff&#34;&gt;121&lt;/span&gt; |     let speaker &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; sonor::find&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&amp;amp;name, Duration::from_secs&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;2&lt;span style=&#34;color:#f92672&#34;&gt;))&lt;/span&gt;.await?
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ only allowed inside &lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;async&lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt; functions and blocks
+
+error&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;E0728&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;await&lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt; is only allowed inside &lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;async&lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt; functions and blocks
+   --&amp;gt; src/main.rs:123:12
+    |
+&lt;span style=&#34;color:#ae81ff&#34;&gt;120&lt;/span&gt; | fn pause&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;name: String&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; -&amp;gt; Result&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;, sonor::Error&amp;gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+    |    ----- this is not &lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;async&lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;
+...
+&lt;span style=&#34;color:#ae81ff&#34;&gt;123&lt;/span&gt; |     &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; speaker.pause&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;.await;
+    |            ^^^^^^^^^^^^^^^^^^^^^ only allowed inside &lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;async&lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt; functions and blocks
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Rust is laying out exactly what we need to make this work. The function needs to be &lt;code&gt;async&lt;/code&gt; just like the main method. It’s an easy fix and all we need is to do is change our method to:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Rust&#34; data-lang=&#34;Rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;async&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;play&lt;/span&gt;(name: String) -&amp;gt; Result&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;(), sonor::Error&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; speaker &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; sonor::find(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;name, Duration::from_secs(&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;)).&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;
+        .expect(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;room exists&amp;#34;&lt;/span&gt;);
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; speaker.play().&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;;
+}
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;async&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;pause&lt;/span&gt;(name: String) -&amp;gt; Result&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;(), sonor::Error&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; speaker &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; sonor::find(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;name, Duration::from_secs(&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;)).&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;
+        .expect(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;room exists&amp;#34;&lt;/span&gt;);
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; speaker.pause().&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Our info command will take a little more work. This function won’t be passed a name of a speaker like the other two functions, but rather, we’ll use it to find all our speakers on our wifi network and display some general info about the state of them.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Rust&#34; data-lang=&#34;Rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;async&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;info&lt;/span&gt;() -&amp;gt; Result&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;(), sonor::Error&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;mut&lt;/span&gt; devices &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; sonor::discover(Duration::from_secs(&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;)).&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;;
+
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; Some(device) &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; devices.try_next().&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt; {
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; name &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; device.name().&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; speaker &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; sonor::find(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;name, Duration::from_secs(&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;)).&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;
+            .expect(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;room exists&amp;#34;&lt;/span&gt;);
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;match&lt;/span&gt; speaker.track().&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt; {
+            Some(track_info) &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; {
+                println&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Room: {}&amp;#34;&lt;/span&gt;, name);
+                println&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Volume: {}&amp;#34;&lt;/span&gt;, speaker.volume().&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;);
+                println&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Track: {}&amp;#34;&lt;/span&gt;, track_info.track());
+            }
+            None &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; {
+                println&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Room: {}&amp;#34;&lt;/span&gt;, name);
+                println&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Volume: {}&amp;#34;&lt;/span&gt;, speaker.volume().&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;);
+            }
+        }
+        println&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;----------&amp;#34;&lt;/span&gt;);
+    }
+
+    Ok(())
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The main difference here is we need to use &lt;code&gt;sonor::discover&lt;/code&gt; to find our speakers before we can do anything, the rest is fairly self explanatory. For each device we find we want to print it’s name, the volume, and if it’s playing, display the track.&lt;/p&gt;
+&lt;h3 id=&#34;putting-it-all-together&#34;&gt;Putting it all together&lt;/h3&gt;
+&lt;p&gt;Now that we have our methods we just need to call set them up in our main method&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Rust&#34; data-lang=&#34;Rust&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#[tokio::main]&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;async&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;() -&amp;gt; Result&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;(), sonor::Error&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; args &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Command::from_args();
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;match&lt;/span&gt; args {
+        Command::Info &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; info().&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;,
+        Command::Play { name } &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; play(name).&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;,
+        Command::Pause { name } &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; pause(name).&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;,
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The first thing you may notice is how we pass the name that we defined in our enum above, to each &lt;code&gt;match&lt;/code&gt; arm. The second thing is that each of these async methods, like the methods from sonor are all async and as such will need &lt;code&gt;.await&lt;/code&gt; to be executed. Without this, nothing will happen. Luckily Rust will prevent us from doing this, as you’ll be able to see if you remove one of them and try to build the project.&lt;/p&gt;
+&lt;h3 id=&#34;running-the-basic-program&#34;&gt;Running the basic program&lt;/h3&gt;
+&lt;p&gt;Now that our barebones tool is finished, we can try it out. Running the info command should give you something like this, depending on what your speakers are named:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Shell&#34; data-lang=&#34;Shell&#34;&gt;$ ./target/debug/sonos_tool info
+Room: LivingRoom
+Volume: &lt;span style=&#34;color:#ae81ff&#34;&gt;21&lt;/span&gt;
+----------
+Room: Bookshelf
+Volume: &lt;span style=&#34;color:#ae81ff&#34;&gt;23&lt;/span&gt;
+----------
+Room: Kitchen
+Volume: &lt;span style=&#34;color:#ae81ff&#34;&gt;22&lt;/span&gt;
+----------
+Room: Bedroom
+Volume: &lt;span style=&#34;color:#ae81ff&#34;&gt;23&lt;/span&gt;
+----------
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Testing the pause and play functions will be a little different because you’ll need to actually turn on your speakers to test that it works but can be executed similarly &lt;code&gt;$ ./target/debug/sonos_tool play Bedroom&lt;/code&gt;.&lt;/p&gt;
+&lt;h3 id=&#34;missing-features&#34;&gt;Missing features&lt;/h3&gt;
+&lt;p&gt;This was put together relatively quickly so there’s a lot left that we can add. Looking in the Speaker implementation there are a ton of other features to be added that we can play around with.&lt;/p&gt;
+&lt;h4 id=&#34;better-error-handling&#34;&gt;Better Error handling&lt;/h4&gt;
+&lt;p&gt;All of our functions are using &lt;code&gt;.expect()&lt;/code&gt; right now. What this means is that when we give them a room that can’t be found, the tool will panic and stop.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Shell&#34; data-lang=&#34;Shell&#34;&gt;$ ./target/debug/sonos_tool play asdf
+thread &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;main&amp;#39;&lt;/span&gt; panicked at &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;room exists&amp;#39;&lt;/span&gt;, src/main.rs:152:19
+note: run with &lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;RUST_BACKTRACE&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;1&lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt; environment variable to display a backtrace
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;It would be much better if we removed this and handled the error gracefully.&lt;/p&gt;
+&lt;h4 id=&#34;missing-functionality&#34;&gt;Missing functionality&lt;/h4&gt;
+&lt;p&gt;There are still a lot of functions that we need to set up, we should be able to set the volume, stop, change our equalization, bass, treble etc. All of these should be relatively trivial to implement but would make this tool much more useful.&lt;/p&gt;
+&lt;h4 id=&#34;integrate-with-your-music-services&#34;&gt;Integrate with your music services&lt;/h4&gt;
+&lt;p&gt;Right now we can manipulate the speakers themselves but we don’t have a way of getting them to play specific songs or podcasts. We’d need to do that from the app.&lt;/p&gt;
+&lt;h4 id=&#34;tests&#34;&gt;Tests&lt;/h4&gt;
+&lt;p&gt;The tool might be small right now, but adding anything else might start making it harder to maintain, adding some tests will help us make sure that all of our features keep working as we add to it.&lt;/p&gt;
+&lt;h2 id=&#34;concluding-thoughts&#34;&gt;Concluding Thoughts&lt;/h2&gt;
+&lt;p&gt;Rust has a reputation for having a steep learning curve, but I hope that this post made it seem at least a little more approachable. Though my experience with the language as of writing this is fairly limited, I found this relatively simple to put together, and I hope that you will too. Async features were no more difficult to use than other normal functions. Structop really made making a Cli tool much simpler as well, giving us a simple way to set up a command line tool and expand it as needed.&lt;/p&gt;
+</content>
     </item>
     
     <item>
@@ -43,6 +875,475 @@
       <guid>/post/taocp-vol-2-seminumerical-algorithms/</guid>
       <description>&lt;p&gt;Random numbers from the second volume of TAOCP and experimentation with PRNGs.&lt;/p&gt;
 &lt;p&gt;It&amp;rsquo;s been about nine months since I finished reading the first volume. Though it&amp;rsquo;s likely not a surprise to many, it&amp;rsquo;s one of the more daunting reads however, I found it to be surprisingly entertaining and well written. &lt;a href=&#34;/post/the-art-of-computer-programming/&#34;&gt;My summary of the experience reading through the first volume&lt;/a&gt; was more or less my thoughts on the book, but didn&amp;rsquo;t offer a lot in terms of the content that was covered, nor did I highlight a lot of interesting material that was gleaned from its pages – perhaps I&amp;rsquo;ll remedy that when I have time for a second read through. Admittedly, there was quite a bit of content and I don&amp;rsquo;t think I wanted to post a section by section summary of the volume, especially when you consider that much of the first volume was devoted to stacks, trees, linked lists, and other data structures, something familiar to most software engineers and programmers. Luckily the second volume is far less familiar territory (at least to me) and may be more interesting to write about.&lt;/p&gt;</description>
+      <content>&lt;p&gt;Random numbers from the second volume of TAOCP and experimentation with PRNGs.&lt;/p&gt;
+&lt;p&gt;It&amp;rsquo;s been about nine months since I finished reading the first volume. Though it&amp;rsquo;s likely not a surprise to many, it&amp;rsquo;s one of the more daunting reads however, I found it to be surprisingly entertaining and well written. &lt;a href=&#34;/post/the-art-of-computer-programming/&#34;&gt;My summary of the experience reading through the first volume&lt;/a&gt; was more or less my thoughts on the book, but didn&amp;rsquo;t offer a lot in terms of the content that was covered, nor did I highlight a lot of interesting material that was gleaned from its pages – perhaps I&amp;rsquo;ll remedy that when I have time for a second read through. Admittedly, there was quite a bit of content and I don&amp;rsquo;t think I wanted to post a section by section summary of the volume, especially when you consider that much of the first volume was devoted to stacks, trees, linked lists, and other data structures, something familiar to most software engineers and programmers. Luckily the second volume is far less familiar territory (at least to me) and may be more interesting to write about.&lt;/p&gt;
+&lt;h3 id=&#34;not-so-random-number-generators&#34;&gt;Not So Random Number Generators&lt;/h3&gt;
+&lt;p&gt;Early in the volume Knuth shows how difficult it is to create a sufficiently random pseudorandom number generator. Simply adding a number of complicated steps will not yield truly random numbers. Knuth includes the following algorithm, &lt;em&gt;Algorithm-K&lt;/em&gt;, to illustrate this point. You can find an excerpt of the algorithm &lt;a href=&#34;http://www.informit.com/articles/article.aspx?p=2221790&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;h4 id=&#34;algorithm-k&#34;&gt;Algorithm K&lt;/h4&gt;
+&lt;p&gt;For the purposes of demonstration I&amp;rsquo;ve implemented the algorithm below. The steps aren&amp;rsquo;t particularly important, but as you can see it&amp;rsquo;s a fairly involved algorithm that looks like it might produce something random.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-scheme&#34; data-lang=&#34;scheme&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;#&lt;/span&gt;lang racket
+
+(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;algorithm-k&lt;/span&gt; x)
+  (&lt;span style=&#34;color:#a6e22e&#34;&gt;do-algorithm-k&lt;/span&gt; x (+ &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; (floor (/ x (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;9&lt;/span&gt;))))))
+
+(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;ns (&lt;span style=&#34;color:#a6e22e&#34;&gt;variable-reference-&amp;gt;namespace&lt;/span&gt; (&lt;span style=&#34;color:#f92672&#34;&gt;#&lt;/span&gt;%variable-reference)))
+
+(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;string-&amp;gt;procedure&lt;/span&gt; s)
+  (&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;sym (string-&amp;gt;symbol s))
+  (eval sym ns))
+
+(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;do-algorithm-k&lt;/span&gt; x iterations)
+  (&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;step (&lt;span style=&#34;color:#a6e22e&#34;&gt;string-append&lt;/span&gt;
+                &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;k&amp;#34;&lt;/span&gt;
+                (&lt;span style=&#34;color:#a6e22e&#34;&gt;number-&amp;gt;string&lt;/span&gt;
+                 (+ (modulo (floor (/ x (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;8&lt;/span&gt;))) &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;) &lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;))))
+  (&lt;span style=&#34;color:#66d9ef&#34;&gt;if &lt;/span&gt;(eq? iterations &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;)
+      x
+      ((&lt;span style=&#34;color:#a6e22e&#34;&gt;string-&amp;gt;procedure&lt;/span&gt; step) x iterations)))
+
+&lt;span style=&#34;color:#75715e&#34;&gt;;; Ensure &amp;gt;= 5 x 10^9&lt;/span&gt;
+(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;k3&lt;/span&gt; x iterations)
+  (&lt;span style=&#34;color:#66d9ef&#34;&gt;if &lt;/span&gt;(&amp;gt; x &lt;span style=&#34;color:#ae81ff&#34;&gt;5000000000&lt;/span&gt;)
+      (&lt;span style=&#34;color:#a6e22e&#34;&gt;k4&lt;/span&gt; x iterations)
+      (&lt;span style=&#34;color:#a6e22e&#34;&gt;k4&lt;/span&gt; (+ x &lt;span style=&#34;color:#ae81ff&#34;&gt;5000000000&lt;/span&gt;) iterations)))
+
+&lt;span style=&#34;color:#75715e&#34;&gt;;; Middle square&lt;/span&gt;
+(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;k4&lt;/span&gt; x iterations)
+  (&lt;span style=&#34;color:#a6e22e&#34;&gt;k5&lt;/span&gt; (modulo (floor (/ (expt x &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;) (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;))) (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;)) iterations))
+
+&lt;span style=&#34;color:#75715e&#34;&gt;;; Multiply&lt;/span&gt;
+(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;k5&lt;/span&gt; x iterations)
+  (&lt;span style=&#34;color:#a6e22e&#34;&gt;k6&lt;/span&gt; (modulo (* x &lt;span style=&#34;color:#ae81ff&#34;&gt;1001001001&lt;/span&gt;) (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;)) iterations))
+
+&lt;span style=&#34;color:#75715e&#34;&gt;;; Psuedo-complement&lt;/span&gt;
+(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;k6&lt;/span&gt; x iterations)
+  (&lt;span style=&#34;color:#66d9ef&#34;&gt;if &lt;/span&gt;(&amp;lt; x &lt;span style=&#34;color:#ae81ff&#34;&gt;100000000&lt;/span&gt;)
+      (&lt;span style=&#34;color:#a6e22e&#34;&gt;k7&lt;/span&gt; (+ x &lt;span style=&#34;color:#ae81ff&#34;&gt;9814055677&lt;/span&gt;) iterations)
+      (&lt;span style=&#34;color:#a6e22e&#34;&gt;k7&lt;/span&gt; (- (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;) x) iterations)))
+
+&lt;span style=&#34;color:#75715e&#34;&gt;;; Interchange halves&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;;; ie 1234567890 -&amp;gt; 6789012345&lt;/span&gt;
+(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;k7&lt;/span&gt; x iterations)
+  (&lt;span style=&#34;color:#a6e22e&#34;&gt;k8&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;+&lt;/span&gt;
+       (* (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;) (modulo x (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;)))
+       (floor (/ x (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;)))) iterations))
+
+&lt;span style=&#34;color:#75715e&#34;&gt;;; Multiply / same as k5&lt;/span&gt;
+(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;k8&lt;/span&gt; x iterations)
+  (&lt;span style=&#34;color:#a6e22e&#34;&gt;k9&lt;/span&gt; (modulo (* x &lt;span style=&#34;color:#ae81ff&#34;&gt;1001001001&lt;/span&gt;) (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;)) iterations))
+
+&lt;span style=&#34;color:#75715e&#34;&gt;;; Decrease digits&lt;/span&gt;
+(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;k9&lt;/span&gt; x iterations)
+  (&lt;span style=&#34;color:#a6e22e&#34;&gt;k10&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;sub-one&lt;/span&gt; x &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;) iterations))
+
+(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;sub-one&lt;/span&gt; x sum mult)
+  (&lt;span style=&#34;color:#66d9ef&#34;&gt;if &lt;/span&gt;(eq? x &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;)
+      sum
+      (&lt;span style=&#34;color:#66d9ef&#34;&gt;if &lt;/span&gt;(eq? (modulo x &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;) &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;)
+          (&lt;span style=&#34;color:#a6e22e&#34;&gt;sub-one&lt;/span&gt; (floor (/ x &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;)) (+ (* (modulo x &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;) (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; mult)) sum) (+ &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; mult))
+          (&lt;span style=&#34;color:#a6e22e&#34;&gt;sub-one&lt;/span&gt; (floor (/ x &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;)) (+ (* (- (modulo x &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;) &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;) (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; mult)) sum) (+ &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; mult)))))
+
+&lt;span style=&#34;color:#75715e&#34;&gt;;; 99999 modify&lt;/span&gt;
+(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;k10&lt;/span&gt; x iterations)
+  (&lt;span style=&#34;color:#66d9ef&#34;&gt;if &lt;/span&gt;(&amp;lt; x (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;))
+      (&lt;span style=&#34;color:#a6e22e&#34;&gt;k11&lt;/span&gt; (+ (expt x &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;) &lt;span style=&#34;color:#ae81ff&#34;&gt;99999&lt;/span&gt;) iterations)
+      (&lt;span style=&#34;color:#a6e22e&#34;&gt;k11&lt;/span&gt; (- x &lt;span style=&#34;color:#ae81ff&#34;&gt;99999&lt;/span&gt;) iterations)))
+
+&lt;span style=&#34;color:#75715e&#34;&gt;;; Normalize&lt;/span&gt;
+(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;k11&lt;/span&gt; x iterations)
+  (&lt;span style=&#34;color:#a6e22e&#34;&gt;k12&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;go-until&lt;/span&gt; x) iterations))
+
+(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;go-until&lt;/span&gt; x)
+  (&lt;span style=&#34;color:#66d9ef&#34;&gt;if &lt;/span&gt;(&amp;lt; x (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;9&lt;/span&gt;)) (&lt;span style=&#34;color:#a6e22e&#34;&gt;go-until&lt;/span&gt; (* x &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;)) x))
+
+&lt;span style=&#34;color:#75715e&#34;&gt;;; Modified middle square&lt;/span&gt;
+(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;k12&lt;/span&gt; x iterations)
+  (&lt;span style=&#34;color:#a6e22e&#34;&gt;do-algorithm-k&lt;/span&gt; (modulo (floor (* x (/ (- x &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;) (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;)))) (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;)) (- iterations &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)))
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The results however random seeming do present a problem:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&amp;gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;algorithm-k 1&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+&lt;span style=&#34;color:#ae81ff&#34;&gt;3831577709&lt;/span&gt;
+&amp;gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;algorithm-k 12345&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+&lt;span style=&#34;color:#ae81ff&#34;&gt;5827337884&lt;/span&gt;
+&amp;gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;algorithm-k 6065038420&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+&lt;span style=&#34;color:#ae81ff&#34;&gt;6065038420&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The first two examples produce what one might expect, but the third produces itself. Knuth points out that the algorithm happens to degenerate to 6065038420, with the lesson being:&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;&amp;ldquo;Random numbers should not be generated with a method chosen at random&amp;rdquo;&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;Besides coincidentally degenerating to a seemingly random number, Algorithm K has a number of other downsides, it&amp;rsquo;s difficult to implement and because it iterates a certain amount of times depending on the input, takes a relatively long time to produce a single random number. Somewhere inside that complexity there is a reason why the generator degenerates to 6065038420. In order to be usable we need to be able to easily prove that won&amp;rsquo;t happen. The key take away from that is that we need this to be fast and simple.&lt;/p&gt;
+&lt;h3 id=&#34;linear-congruential-generator&#34;&gt;Linear Congruential Generator&lt;/h3&gt;
+&lt;p&gt;The most common pseudorandom number generator (according to Knuth) is a &lt;a href=&#34;https://en.wikipedia.org/wiki/Linear_congruential_generator&#34;&gt;Linear congruential generator&lt;/a&gt;, which has the following equation:&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Xn + 1 = (a * Xn + c) mod m&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;Unlike the previous algorithm, the equation isn&amp;rsquo;t difficult to explain; numbers for m,a, and c are chosen and set by the language or library designers (hopefully not randomly) and a seed is chosen for the first value of Xn. This being a recurrence relation, the result of each run then becomes the next seed or starting value for a subsequent run. You can see this in the code below:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-scheme&#34; data-lang=&#34;scheme&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;#&lt;/span&gt;lang racket
+
+(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;next (&lt;span style=&#34;color:#a6e22e&#34;&gt;current-seconds&lt;/span&gt;))
+
+(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;my-random&lt;/span&gt;)
+  (&lt;span style=&#34;color:#66d9ef&#34;&gt;set! &lt;/span&gt;next (&lt;span style=&#34;color:#a6e22e&#34;&gt;modulo&lt;/span&gt;
+              (+ (* next &lt;span style=&#34;color:#ae81ff&#34;&gt;6364136223846793005&lt;/span&gt;) &lt;span style=&#34;color:#ae81ff&#34;&gt;1442695040888963407&lt;/span&gt;)
+              (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;64&lt;/span&gt;)))
+  next)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You can see the output this produces from the racket repl here:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&amp;gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;my-random&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+&lt;span style=&#34;color:#ae81ff&#34;&gt;14843871667761315205&lt;/span&gt;
+&amp;gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;my-random&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+&lt;span style=&#34;color:#ae81ff&#34;&gt;534325907729616048&lt;/span&gt;
+&amp;gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;my-random&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+&lt;span style=&#34;color:#ae81ff&#34;&gt;5734414832404007999&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This isn&amp;rsquo;t how Racket generates its random numbers (it uses an implementation of the &lt;a href=&#34;https://github.com/racket/racket/blob/5bb837661c12a9752c6a99f952c0e1b267645b33/racket/src/cs/rumble/random.ss&#34;&gt;MRG32k3a algorithm&lt;/a&gt;), however this method is used by other languages such as the function defined in &lt;a href=&#34;https://sourceware.org/git/?p=glibc.git;a=blob;f=stdlib/random_r.c;hb=glibc-2.26#l362&#34;&gt;glibc&lt;/a&gt;&lt;/p&gt;
+&lt;h4 id=&#34;choosing-our-m-and-a-values&#34;&gt;Choosing our &lt;em&gt;m&lt;/em&gt; and &lt;em&gt;a&lt;/em&gt; values&lt;/h4&gt;
+&lt;p&gt;It&amp;rsquo;s important to note here that the numbers used above were not chosen by random, in particular it is important to pay extra attention to the numbers we choose for &lt;em&gt;m&lt;/em&gt; and &lt;em&gt;a&lt;/em&gt;.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;our m value controls the &amp;ldquo;period&amp;rdquo; of the random number generator which is how long it takes for it to start repeating. ie if we should choose something such as 2, we&amp;rsquo;ll end up producing: 0,1,0,1,0&amp;hellip; so choosing a larger number is ideal.&lt;/li&gt;
+&lt;li&gt;m should also be a number that will make division quick since it is a comparatively slow operation. Knuth suggests that you use the word size of the computer ie. &lt;em&gt;2^64&lt;/em&gt; or use the largest prime smaller than the word size.&lt;/li&gt;
+&lt;li&gt;if m is a power of 2, pick a so that a % 8 = 5. This is to ensure that we produce all m possible values and gives our generator &amp;ldquo;high potency&amp;rdquo;. There is a proof for this but it&amp;rsquo;s far too long to include. In general it would seem that choosing the a value is more complicated than m but equally important as poor choices for a have historically resulted in poor generators. The rules are dependant on the values of m, and c but are too long to include and explain here. &lt;a href=&#34;https://en.wikipedia.org/wiki/Linear_congruential_generator&#34;&gt;The wiki entry&lt;/a&gt; contains a more detailed explanation of the choices when it comes to choosing a.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;why-not-both&#34;&gt;Why not both?&lt;/h3&gt;
+&lt;p&gt;The LCG is just one form of PRNG such as &lt;a href=&#34;https://en.wikipedia.org/wiki/Xorshift&#34;&gt;xorshift&lt;/a&gt;, &lt;a href=&#34;https://en.wikipedia.org/wiki/Well_equidistributed_long-period_linear&#34;&gt;WELL&lt;/a&gt;, or the &lt;a href=&#34;https://en.wikipedia.org/wiki/Mersenne_Twister&#34;&gt;Mersenne Twister&lt;/a&gt; so, if having one random number generator produces something fairly random, would two random number generators produce something even more random? As it turns out yes, but only if applied properly otherwise you could cause issues &lt;a href=&#34;https://medium.com/@betable/tifu-by-using-math-random-f1c308c4fd9d&#34;&gt;like the one seen in Javascripts Math.random() library&lt;/a&gt;. If a person is unconvinced that a random number generator is not sufficiently random, putting two generators together should in Knuth words &amp;ldquo;convince all but the most hardened of skeptics&amp;rdquo;. One method involves taking two generators and shuffling them together, it&amp;rsquo;s only weakness being that it does not change the number themselves, only the sequence so this may still fail the &lt;a href=&#34;https://www.cs.indiana.edu/~kapadia/project2/node21.html&#34;&gt;Birthday spacings&lt;/a&gt; test. Knuth suggest instead that we use an even simpler method by combining results from the same generator, producing 500 or so results, choosing the first 55, then throwing the rest away and repeating the process.&lt;/p&gt;
+&lt;h2 id=&#34;statistical-tests-or-how-we-can-prove-whats-really-random&#34;&gt;Statistical Tests Or How we can prove what&amp;rsquo;s &lt;em&gt;really&lt;/em&gt; random&lt;/h2&gt;
+&lt;p&gt;Once we&amp;rsquo;ve created a random number generator, we need a way to decide if it&amp;rsquo;s actually random or not. Knuth suggests we run a battery of tests on the generator in order to determine that it&amp;rsquo;s satisfactorily random. He also humorously suggests that if the tests don&amp;rsquo;t come out the way we want to try reading &lt;a href=&#34;https://en.wikipedia.org/wiki/How_to_Lie_with_Statistics&#34;&gt;another book&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;To thoroughly evaluate a random number generator he suggests running the following tests multiple times:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Equidistribution test (Frequency Test)&lt;/li&gt;
+&lt;li&gt;Serial Test&lt;/li&gt;
+&lt;li&gt;Gap Test&lt;/li&gt;
+&lt;li&gt;Poker Test&lt;/li&gt;
+&lt;li&gt;Coupon Collectors Test&lt;/li&gt;
+&lt;li&gt;Permutation Test&lt;/li&gt;
+&lt;li&gt;Runs test&lt;/li&gt;
+&lt;li&gt;Maximum of t test&lt;/li&gt;
+&lt;li&gt;Collision test&lt;/li&gt;
+&lt;li&gt;Birthday Spacings test&lt;/li&gt;
+&lt;li&gt;Serial correlation test&lt;/li&gt;
+&lt;li&gt;Tests on subsequences&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Then analyzing them using the &lt;a href=&#34;https://en.wikipedia.org/wiki/Chi-squared_test&#34;&gt;chi-squared test&lt;/a&gt; and the &lt;a href=&#34;https://en.wikipedia.org/wiki/Kolmogorov%E2%80%93Smirnov_test&#34;&gt;Kolmogorov–Smirnov test&lt;/a&gt; to analyze the results of the tests.&lt;/p&gt;
+&lt;h3 id=&#34;spectral-test&#34;&gt;Spectral test&lt;/h3&gt;
+&lt;p&gt;The most important of all the tests is the Spectral test. This test is make or break for random number generators. All good PRNG&amp;rsquo;s will pass this test, and more importantly, bad PRNG&amp;rsquo;s will fail. There are various examples of this online but one of the more interesting that I came across was of the RANDU generator and why it fails the spectral test can be seen &lt;a href=&#34;https://www.youtube.com/watch?v=7wVk_XsxyNk&#34;&gt;here&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&#34;why-so-many-tests&#34;&gt;Why So Many Tests?&lt;/h3&gt;
+&lt;p&gt;True randomness is difficult to obtain, some might argue that it may be impossible. This is even more true because after all, we are working with computers which &lt;em&gt;should&lt;/em&gt; not behave randomly. For this reason we need to determine that they are significantly random enough. To determine this we need to use thorough statistical analysis to show us in a quantifiable way, how random they are. This can be difficult and time consuming to prove as it turns some random generators will pass a few of these tests, yet completely fail others. Luckily most of the math here has been done for us, and we are unlikely to be developing our own, but there are a few notable examples where this happened to fail tests but, still seemed random such as &lt;a href=&#34;https://en.wikipedia.org/wiki/RANDU&#34;&gt;RANDU&lt;/a&gt; which Knuth called &amp;ldquo;truly horrible&amp;rdquo;.&lt;/p&gt;
+&lt;h3 id=&#34;running-some-tests&#34;&gt;Running some tests&lt;/h3&gt;
+&lt;p&gt;Reading about these tests was interesting, but what would be more interesting is to run it on the two generators I had used above, as well as RANDU which is shown below. Comparing the results should highlight the differences between the generators that we expect to preform well, and those that we know will preform poorly. There are a number of random number generator testers out there but the one I used was &lt;code&gt;dieharder&lt;/code&gt; based on a suite of tests called diehard. For each run I generated 1,000,0000 random numbers (algorithm k took significantly longer ~20 min) and fed it to diehard. You can see the results here:&lt;/p&gt;
+&lt;h1 id=&#34;standard-lcg&#34;&gt;Standard LCG&lt;/h1&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#=============================================================================#&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;#            dieharder version 3.31.1 Copyright 2003 Robert G. Brown          #&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;#=============================================================================#&lt;/span&gt;
+   rng_name    |           filename             |rands/second|
+     file_input|                   example.input|  6.15e+06  |
+&lt;span style=&#34;color:#75715e&#34;&gt;#=============================================================================#&lt;/span&gt;
+        test_name   |ntup| tsamples |psamples|  p-value |Assessment
+&lt;span style=&#34;color:#75715e&#34;&gt;#=============================================================================#&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 1 times&lt;/span&gt;
+   diehard_birthdays|   0|       100|     100|0.72874473|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 11 times&lt;/span&gt;
+      diehard_operm5|   0|   1000000|     100|0.00008973|   WEAK   
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 24 times&lt;/span&gt;
+  diehard_rank_32x32|   0|     40000|     100|0.24249094|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 30 times&lt;/span&gt;
+    diehard_rank_6x8|   0|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 32 times&lt;/span&gt;
+   diehard_bitstream|   0|   2097152|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 53 times&lt;/span&gt;
+        diehard_opso|   0|   2097152|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 67 times&lt;/span&gt;
+        diehard_oqso|   0|   2097152|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 74 times&lt;/span&gt;
+         diehard_dna|   0|   2097152|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 74 times&lt;/span&gt;
+diehard_count_1s_str|   0|    256000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 87 times&lt;/span&gt;
+diehard_count_1s_byt|   0|    256000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 87 times&lt;/span&gt;
+ diehard_parking_lot|   0|     12000|     100|0.33164281|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 88 times&lt;/span&gt;
+    diehard_2dsphere|   2|      8000|     100|0.08003531|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 88 times&lt;/span&gt;
+    diehard_3dsphere|   3|      4000|     100|0.55288986|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 111 times&lt;/span&gt;
+     diehard_squeeze|   0|    100000|     100|0.00371770|   WEAK   
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 111 times&lt;/span&gt;
+        diehard_sums|   0|       100|     100|0.06120371|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 112 times&lt;/span&gt;
+        diehard_runs|   0|    100000|     100|0.35781871|  PASSED  
+        diehard_runs|   0|    100000|     100|0.07426726|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 125 times&lt;/span&gt;
+       diehard_craps|   0|    200000|     100|0.00004611|   WEAK   
+       diehard_craps|   0|    200000|     100|0.44395534|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 325 times&lt;/span&gt;
+ marsaglia_tsang_gcd|   0|  10000000|     100|0.00000000|  FAILED  
+ marsaglia_tsang_gcd|   0|  10000000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 326 times&lt;/span&gt;
+         sts_monobit|   1|    100000|     100|0.34446776|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 327 times&lt;/span&gt;
+            sts_runs|   2|    100000|     100|0.34889544|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 330 times&lt;/span&gt;
+         rgb_bitdist|   1|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 334 times&lt;/span&gt;
+         rgb_bitdist|   2|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 340 times&lt;/span&gt;
+         rgb_bitdist|   3|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 348 times&lt;/span&gt;
+         rgb_bitdist|   4|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 358 times&lt;/span&gt;
+         rgb_bitdist|   5|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 370 times&lt;/span&gt;
+         rgb_bitdist|   6|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 384 times&lt;/span&gt;
+         rgb_bitdist|   7|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 400 times&lt;/span&gt;
+         rgb_bitdist|   8|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 418 times&lt;/span&gt;
+         rgb_bitdist|   9|    100000|     100|0.00005693|   WEAK   
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 438 times&lt;/span&gt;
+         rgb_bitdist|  10|    100000|     100|0.53597412|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 460 times&lt;/span&gt;
+         rgb_bitdist|  11|    100000|     100|0.89275780|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 484 times&lt;/span&gt;
+         rgb_bitdist|  12|    100000|     100|0.01596294|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 486 times&lt;/span&gt;
+rgb_minimum_distance|   2|     10000|    1000|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 489 times&lt;/span&gt;
+rgb_minimum_distance|   3|     10000|    1000|0.00020551|   WEAK   
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 493 times&lt;/span&gt;
+rgb_minimum_distance|   4|     10000|    1000|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 498 times&lt;/span&gt;
+rgb_minimum_distance|   5|     10000|    1000|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 500 times&lt;/span&gt;
+    rgb_permutations|   2|    100000|     100|0.27181166|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 503 times&lt;/span&gt;
+    rgb_permutations|   3|    100000|     100|0.67601712|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 507 times&lt;/span&gt;
+    rgb_permutations|   4|    100000|     100|0.05999982|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 512 times&lt;/span&gt;
+    rgb_permutations|   5|    100000|     100|0.16764489|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 522 times&lt;/span&gt;
+      rgb_lagged_sum|   0|   1000000|     100|0.00003809|   WEAK   
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 542 times&lt;/span&gt;
+      rgb_lagged_sum|   1|   1000000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 572 times&lt;/span&gt;
+      rgb_lagged_sum|   2|   1000000|     100|0.00000015|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 612 times&lt;/span&gt;
+      rgb_lagged_sum|   3|   1000000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 662 times&lt;/span&gt;
+      rgb_lagged_sum|   4|   1000000|     100|0.00000000|  FAILED
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h1 id=&#34;randu&#34;&gt;RANDU&lt;/h1&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-scheme&#34; data-lang=&#34;scheme&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;#&lt;/span&gt;lang racket
+
+(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;next &lt;span style=&#34;color:#ae81ff&#34;&gt;1090815429&lt;/span&gt;)
+
+(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;randu&lt;/span&gt;)
+  (&lt;span style=&#34;color:#66d9ef&#34;&gt;set! &lt;/span&gt;next (modulo (* next &lt;span style=&#34;color:#ae81ff&#34;&gt;65539&lt;/span&gt;) (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;31&lt;/span&gt;)))
+  next)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;!-- raw HTML omitted --&gt;
+&lt;h1 id=&#34;algorithm-k-1&#34;&gt;Algorithm-k&lt;/h1&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#=============================================================================#&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;#            dieharder version 3.31.1 Copyright 2003 Robert G. Brown          #&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;#=============================================================================#&lt;/span&gt;
+   rng_name    |           filename             |rands/second|
+     file_input|                    backup.input|  7.99e+06  |
+&lt;span style=&#34;color:#75715e&#34;&gt;#=============================================================================#&lt;/span&gt;
+        test_name   |ntup| tsamples |psamples|  p-value |Assessment
+&lt;span style=&#34;color:#75715e&#34;&gt;#=============================================================================#&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 1 times&lt;/span&gt;
+   diehard_birthdays|   0|       100|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 11 times&lt;/span&gt;
+      diehard_operm5|   0|   1000000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 24 times&lt;/span&gt;
+  diehard_rank_32x32|   0|     40000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 30 times&lt;/span&gt;
+    diehard_rank_6x8|   0|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 32 times&lt;/span&gt;
+   diehard_bitstream|   0|   2097152|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 53 times&lt;/span&gt;
+        diehard_opso|   0|   2097152|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 67 times&lt;/span&gt;
+        diehard_oqso|   0|   2097152|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 74 times&lt;/span&gt;
+         diehard_dna|   0|   2097152|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 74 times&lt;/span&gt;
+diehard_count_1s_str|   0|    256000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 87 times&lt;/span&gt;
+diehard_count_1s_byt|   0|    256000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 87 times&lt;/span&gt;
+ diehard_parking_lot|   0|     12000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 88 times&lt;/span&gt;
+    diehard_2dsphere|   2|      8000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 88 times&lt;/span&gt;
+    diehard_3dsphere|   3|      4000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 108 times&lt;/span&gt;
+     diehard_squeeze|   0|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 108 times&lt;/span&gt;
+        diehard_sums|   0|       100|     100|0.00000018|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 109 times&lt;/span&gt;
+        diehard_runs|   0|    100000|     100|0.00000000|  FAILED  
+        diehard_runs|   0|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 123 times&lt;/span&gt;
+       diehard_craps|   0|    200000|     100|0.00000000|  FAILED  
+       diehard_craps|   0|    200000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 323 times&lt;/span&gt;
+ marsaglia_tsang_gcd|   0|  10000000|     100|0.00000000|  FAILED  
+ marsaglia_tsang_gcd|   0|  10000000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 324 times&lt;/span&gt;
+         sts_monobit|   1|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 325 times&lt;/span&gt;
+      diehard_operm5|   0|   1000000|     100|0.34393548|  PASSED  
+            sts_runs|   2|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 328 times&lt;/span&gt;
+         rgb_bitdist|   1|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 332 times&lt;/span&gt;
+         rgb_bitdist|   2|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 338 times&lt;/span&gt;
+         rgb_bitdist|   3|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 346 times&lt;/span&gt;
+         rgb_bitdist|   4|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 356 times&lt;/span&gt;
+         rgb_bitdist|   5|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 368 times&lt;/span&gt;
+         rgb_bitdist|   6|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 382 times&lt;/span&gt;
+         rgb_bitdist|   7|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 398 times&lt;/span&gt;
+         rgb_bitdist|   8|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 416 times&lt;/span&gt;
+         rgb_bitdist|   9|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 436 times&lt;/span&gt;
+         rgb_bitdist|  10|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 458 times&lt;/span&gt;
+         rgb_bitdist|  11|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 482 times&lt;/span&gt;
+         rgb_bitdist|  12|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 484 times&lt;/span&gt;
+rgb_minimum_distance|   2|     10000|    1000|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 487 times&lt;/span&gt;
+rgb_minimum_distance|   3|     10000|    1000|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 491 times&lt;/span&gt;
+rgb_minimum_distance|   4|     10000|    1000|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 496 times&lt;/span&gt;
+rgb_minimum_distance|   5|     10000|    1000|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 498 times&lt;/span&gt;
+    rgb_permutations|   2|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 501 times&lt;/span&gt;
+    rgb_permutations|   3|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 505 times&lt;/span&gt;
+    rgb_permutations|   4|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 510 times&lt;/span&gt;
+    rgb_permutations|   5|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 520 times&lt;/span&gt;
+      rgb_lagged_sum|   0|   1000000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 540 times&lt;/span&gt;
+      rgb_lagged_sum|   1|   1000000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 570 times&lt;/span&gt;
+      rgb_lagged_sum|   2|   1000000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 610 times&lt;/span&gt;
+      rgb_lagged_sum|   3|   1000000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 660 times&lt;/span&gt;
+      rgb_lagged_sum|   4|   1000000|     100|0.00000000|  FAILED
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;There&amp;rsquo;s already quite a bit to digest here so I didn&amp;rsquo;t include all of the test results as the first few are enough to illustrate the differences between the three algorithms. One thing you will notice is that the standard LCG used actually failed a lot of tests. After doing a little testing and some digging it seems that dieharder will also fail these tests with its own generator with the same amount of numbers. In fact, you can really only expect good results with about 10 million or more numbers, but because diehard runs on a single cpu this would have taken a considerable amount of time to run. The comparison is really what we&amp;rsquo;re after and from the results it&amp;rsquo;s clear that algorithm-k is not suitable, nor is RANDU much better. I wanted to be able to see what kind of results I would see from running a much larger set so I ran one last run with 100,000,000 which shows that the lcg faired a little bit better.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#=============================================================================#&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;#            dieharder version 3.31.1 Copyright 2003 Robert G. Brown          #&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;#=============================================================================#&lt;/span&gt;
+   rng_name    |           filename             |rands/second|
+     file_input|                   example.input|  6.16e+06  |
+&lt;span style=&#34;color:#75715e&#34;&gt;#=============================================================================#&lt;/span&gt;
+        test_name   |ntup| tsamples |psamples|  p-value |Assessment
+&lt;span style=&#34;color:#75715e&#34;&gt;#=============================================================================#&lt;/span&gt;
+   diehard_birthdays|   0|       100|     100|0.50369944|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 1 times&lt;/span&gt;
+      diehard_operm5|   0|   1000000|     100|0.34393548|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 2 times&lt;/span&gt;
+  diehard_rank_32x32|   0|     40000|     100|0.76284541|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 3 times&lt;/span&gt;
+    diehard_rank_6x8|   0|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 3 times&lt;/span&gt;
+   diehard_bitstream|   0|   2097152|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 5 times&lt;/span&gt;
+        diehard_opso|   0|   2097152|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 6 times&lt;/span&gt;
+        diehard_oqso|   0|   2097152|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 7 times&lt;/span&gt;
+         diehard_dna|   0|   2097152|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 7 times&lt;/span&gt;
+diehard_count_1s_str|   0|    256000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 8 times&lt;/span&gt;
+diehard_count_1s_byt|   0|    256000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 8 times&lt;/span&gt;
+ diehard_parking_lot|   0|     12000|     100|0.82658516|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 8 times&lt;/span&gt;
+    diehard_2dsphere|   2|      8000|     100|0.48942059|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 8 times&lt;/span&gt;
+    diehard_3dsphere|   3|      4000|     100|0.95108230|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 11 times&lt;/span&gt;
+     diehard_squeeze|   0|    100000|     100|0.38225241|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 11 times&lt;/span&gt;
+        diehard_sums|   0|       100|     100|0.07389024|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 11 times&lt;/span&gt;
+        diehard_runs|   0|    100000|     100|0.69622840|  PASSED  
+        diehard_runs|   0|    100000|     100|0.74440767|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 12 times&lt;/span&gt;
+       diehard_craps|   0|    200000|     100|0.34755313|  PASSED  
+       diehard_craps|   0|    200000|     100|0.93778967|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 32 times&lt;/span&gt;
+ marsaglia_tsang_gcd|   0|  10000000|     100|0.00000000|  FAILED  
+ marsaglia_tsang_gcd|   0|  10000000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 32 times&lt;/span&gt;
+         sts_monobit|   1|    100000|     100|0.13113454|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 32 times&lt;/span&gt;
+            sts_runs|   2|    100000|     100|0.22502954|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 33 times&lt;/span&gt;
+         rgb_bitdist|   1|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 33 times&lt;/span&gt;
+         rgb_bitdist|   2|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 34 times&lt;/span&gt;
+         rgb_bitdist|   3|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 34 times&lt;/span&gt;
+         rgb_bitdist|   4|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 35 times&lt;/span&gt;
+         rgb_bitdist|   5|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 37 times&lt;/span&gt;
+         rgb_bitdist|   6|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 38 times&lt;/span&gt;
+         rgb_bitdist|   7|    100000|     100|0.00000000|  FAILED  
+^&lt;span style=&#34;color:#f92672&#34;&gt;[[&lt;/span&gt;1;5D# The file file_input was rewound &lt;span style=&#34;color:#ae81ff&#34;&gt;40&lt;/span&gt; times
+         rgb_bitdist|   8|    100000|     100|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 41 times&lt;/span&gt;
+         rgb_bitdist|   9|    100000|     100|0.00048263|   WEAK   
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 43 times&lt;/span&gt;
+         rgb_bitdist|  10|    100000|     100|0.00000207|   WEAK   
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 46 times&lt;/span&gt;
+         rgb_bitdist|  11|    100000|     100|0.11712560|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 48 times&lt;/span&gt;
+         rgb_bitdist|  12|    100000|     100|0.00070481|   WEAK   
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 48 times&lt;/span&gt;
+rgb_minimum_distance|   2|     10000|    1000|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 48 times&lt;/span&gt;
+rgb_minimum_distance|   3|     10000|    1000|0.00073621|   WEAK   
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 49 times&lt;/span&gt;
+rgb_minimum_distance|   4|     10000|    1000|0.00000000|  FAILED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 49 times&lt;/span&gt;
+rgb_minimum_distance|   5|     10000|    1000|0.00000148|   WEAK   
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 50 times&lt;/span&gt;
+    rgb_permutations|   2|    100000|     100|0.64531526|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 50 times&lt;/span&gt;
+    rgb_permutations|   3|    100000|     100|0.12491885|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 50 times&lt;/span&gt;
+    rgb_permutations|   4|    100000|     100|0.29544943|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 51 times&lt;/span&gt;
+    rgb_permutations|   5|    100000|     100|0.57519225|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 52 times&lt;/span&gt;
+      rgb_lagged_sum|   0|   1000000|     100|0.42557400|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 54 times&lt;/span&gt;
+      rgb_lagged_sum|   1|   1000000|     100|0.94028320|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 57 times&lt;/span&gt;
+      rgb_lagged_sum|   2|   1000000|     100|0.34329913|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 61 times&lt;/span&gt;
+      rgb_lagged_sum|   3|   1000000|     100|0.02887377|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 66 times&lt;/span&gt;
+      rgb_lagged_sum|   4|   1000000|     100|0.02328575|  PASSED  
+&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 72 times&lt;/span&gt;
+      rgb_lagged_sum|   5|   1000000|     100|0.10863760|  PASSED  
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Here we can see the larger set actually did quite a bit better, passing where it was either weak or had even failed before. It&amp;rsquo;s not perfect of course, and certainly not suitable for cryptographic use but we can see that the generator works well enough. I would have liked to have run more tests and tried a few different random number generators, but testing with dieharder was taking quite a long time on my underpowered laptop CPU. Of course no generator is going to pass every test as Knuth states: &lt;em&gt;&amp;ldquo;A truly random sequence will exhibit local non-randomness&amp;rdquo;&lt;/em&gt;. Proving that a generator is suitable would require many more multiple runs on larger data sets. Only then might say that the PRNG is satisfiably random.&lt;/p&gt;
+&lt;h2 id=&#34;not-so-random-musings&#34;&gt;Not So Random Musings&lt;/h2&gt;
+&lt;p&gt;In a set of infinite numbers we might expect to see 1,000,000 7&amp;rsquo;s or 8&amp;rsquo;s in a row at some point. Maybe the numbers, viewed in a single line would map to ascii values that could print the works of Shakespeare. It may not be desirable for applications, but it would be consistent with a truly random number generator. Though the math was certainly beyond me, the first half of volume 2 was incredibly interesting. If anything it&amp;rsquo;s made me question how random numbers are generated a little more, forcing me to dig through the random number generators that I have trusted. A simple mistake could result in unexpected deterministic behaviour. Though this is unlikely to be a problem in my day to day life as a web developer, it will still make me think the next time I need to rely on random behaviour. Further fueling my paranoia, Knuth gives some great advice to summarise the learnings of the chapter:&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;&amp;ldquo;Look at the subroutine library of each computer installation in your organization, and replace the random number generators by good ones. Try to avoid being too shocked at what you find.&amp;quot;&lt;/em&gt;&lt;/p&gt;</content>
     </item>
     
     <item>
@@ -53,6 +1354,136 @@
       <guid>/post/functional-programming-in-racket/</guid>
       <description>A dive into functional programming in Racket.
 Preface I&amp;rsquo;ve been playing around with functional languages for a few years now; I&amp;rsquo;d pick up an ebook on scala or Clojure some Saturday afternoon and try going through a tutorial or two. Maybe attend a workshop on it over a weekend with a friend who found the event on meetup.com and get a somewhat shallow overview of the language. The next weekend I&amp;rsquo;d look at it again and see if I could get a small webpage up and running or maybe a small command line tool but for the most part, it has always ended there.</description>
+      <content>&lt;p&gt;A dive into functional programming in Racket.&lt;/p&gt;
+&lt;h1 id=&#34;preface&#34;&gt;Preface&lt;/h1&gt;
+&lt;p&gt;I&amp;rsquo;ve been playing around with functional languages for a few years now; I&amp;rsquo;d pick up an ebook on scala or Clojure some Saturday afternoon and try going through a tutorial or two. Maybe attend a workshop on it over a weekend with a friend who found the event on meetup.com and get a somewhat shallow overview of the language. The next weekend I&amp;rsquo;d look at it again and see if I could get a small webpage up and running or maybe a small command line tool but for the most part, it has always ended there. I rarely end up going back the environment because I inevitably get distracted by another cool technology. What follows is an attempt to remedy that and do a deeper dive over a period of a month and a half.&lt;/p&gt;
+&lt;h1 id=&#34;why-racket-why-not-x&#34;&gt;Why Racket? Why not X&lt;/h1&gt;
+&lt;p&gt;Almost two years ago, I found about about the Racket language and worked through the &lt;a href=&#34;https://beautifulracket.com/&#34;&gt;Beautiful Racket&lt;/a&gt; tutorial. I found the language to actually be pretty fun to work with and was interested in writing a DSL which Racket was built for. Though I have used Clojure and scala before as well, I had written more code in Racket as well as some Chez-Scheme (which is quite similar) in school. Between that and &lt;a href=&#34;https://twitter.com/ID_AA_Carmack/status/577877590070919168&#34;&gt;John Carmacks tweet from a few years ago&lt;/a&gt;, Racket seemed like a good choice.&lt;/p&gt;
+&lt;h1 id=&#34;getting-started&#34;&gt;Getting started&lt;/h1&gt;
+&lt;p&gt;Before I start building something I want to get a feel for the language so I started by making a simple FizzBuzz function. The code is simple enough to read, define the function, which loops through 0 to some given argument and prints when certain conditions are met. I&amp;rsquo;m not sure if this is idiomatic Racket but I&amp;rsquo;m not concerned about that just yet.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-scheme&#34; data-lang=&#34;scheme&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;#&lt;/span&gt;lang racket
+(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;fizz-buzz&lt;/span&gt; num)
+  (&lt;span style=&#34;color:#a6e22e&#34;&gt;for&lt;/span&gt; ([i num])
+    (&lt;span style=&#34;color:#a6e22e&#34;&gt;cond&lt;/span&gt;
+      [(= i &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;)]
+      [(&lt;span style=&#34;color:#66d9ef&#34;&gt;and &lt;/span&gt;(= (modulo i &lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;) &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;) (= (modulo i &lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;) &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;)) (&lt;span style=&#34;color:#a6e22e&#34;&gt;println&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;FizzBuzz&amp;#34;&lt;/span&gt;)]
+      [(= (modulo i &lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;) &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;) (&lt;span style=&#34;color:#a6e22e&#34;&gt;println&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Fizz&amp;#34;&lt;/span&gt;)]
+      [(= (modulo i &lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;) &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;) (&lt;span style=&#34;color:#a6e22e&#34;&gt;println&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Buzz&amp;#34;&lt;/span&gt;)]
+      [&lt;span style=&#34;color:#66d9ef&#34;&gt;else &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;println&lt;/span&gt; i)])))
+
+(&lt;span style=&#34;color:#a6e22e&#34;&gt;fizz-buzz&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;20&lt;/span&gt;)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h1 id=&#34;diving-into-the-documentation&#34;&gt;Diving into the documentation&lt;/h1&gt;
+&lt;p&gt;I wouldn&amp;rsquo;t usually do it this way, but I decided I should read through the docs, more specifically the &lt;a href=&#34;https://docs.racket-lang.org/guide/index.html?q=loop&#34;&gt;Racket guide&lt;/a&gt; on the language before continuing on to something slightly larger. There was a lot of information there but here were some of things that I found interesting.&lt;/p&gt;
+&lt;h1 id=&#34;getting-started-a-few-things-i-noticed&#34;&gt;Getting started: A few things I noticed&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;The guide is actually pretty thorough, giving examples of by showing how functions in the standard language can be formed using other calls which I feel is really in the spirit of using a recursive language. &lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Development in Dr Racket, although dated looking is nice. The interactive shell at the bottom makes it easy to experiment while you&amp;rsquo;re building without having to rebuild or reload the file. Hitting &lt;code&gt;Ctrl + ?&lt;/code&gt; in the shell will also give you suggestions for words. I thought that tab completion was working at some point as well but, when I updated to the latest version of DrRacket it seemed to stop working for whatever reason.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;car&lt;/code&gt;, and &lt;code&gt;cdr&lt;/code&gt;, one of the things I remembered from using scheme in college, can still be used though they can be swapped for the more intuitive &lt;code&gt;first&lt;/code&gt; and &lt;code&gt;rest&lt;/code&gt; when working with lists.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;I kind of love the conciseness that comes from using ternaries in other languages, but because it&amp;rsquo;s a functional language, pretty much everything has that feel to it. The statement: &lt;code&gt;(if (&amp;gt; 3 4) &amp;quot;greater&amp;quot; &amp;quot;less&amp;quot;)&lt;/code&gt; looks a lot like a ternary. The only caveat here is that you need to return something for where it&amp;rsquo;s true or false. When you want just and if you need to use something like when: &lt;code&gt;(when (condition) body)&lt;/code&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;There is no while loop: I spend a lot of time working on OO programming in my daily life, so I found on a few occasions after making a few searches, trying to figure out why something so simple doesn&amp;rsquo;t exist, I finally realized my mistake. Getting out of the trap of OO thinking takes some getting used to but, it turns out to be really powerful. Being able to pass along a function instead of just data really does simplify logic and saves you a lot of boilerplate code that OO languages like Java are notorious for.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;cond&lt;/code&gt; is particularly useful; in a number of cases and I found it to be much more expressive than the switches than many other languages provide. Instead of passing in a single arg and checking the value like Java does you can test for any condition you want, similar to chaining several &lt;code&gt;else if&lt;/code&gt; statements, though much more powerful, as it can be passed like any other function.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Though most OO languages have some aspects of functional programming with lambdas, it&amp;rsquo;s nowhere near as intuitive. Treating functions are arguments allows you to things you would never even think about in Object Oriented programming. Instead of checking if an argument was a string or an Integer, casting it and then applying the correct function we check if it&amp;rsquo;s a string and pass the function along to the two arguments. This isn&amp;rsquo;t something unique to Racket, but it is something that I appreciated a lot the longer I used it. The example taken from the docs here, shows off just how easy it is:&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-scheme&#34; data-lang=&#34;scheme&#34;&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;double&lt;/span&gt; v)
+    ((&lt;span style=&#34;color:#66d9ef&#34;&gt;if &lt;/span&gt;(string? v) string-append +) v v))
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;Racket is almost syntax-less; whereas many languages have different structures, rules and often shortcuts for defining variables, checking conditionals, creating switches, or creating functions is all the same. Not having to look up syntax greatly simplified the process of learning the language.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&#34;something-slightly-larger&#34;&gt;Something Slightly Larger&lt;/h1&gt;
+&lt;p&gt;Naturally, I want to be able to work on something slightly larger next so I started with something I&amp;rsquo;ve already worked on before, and I set out creating a script for parsing and making small edits to gif files. To my surprise working at the byte level in racket is fairly simple.&lt;/p&gt;
+&lt;h2 id=&#34;byte-ing-off-more-than-i-can-chew&#34;&gt;Byte-ing off more than I can chew&lt;/h2&gt;
+&lt;p&gt;This may have not been the best choice for the first thing I should try to build, but I wanted to pick something somewhat off the beaten path to see what kind of problems I might run into. I thought I might run into issues with bracket completion, but that never really happened even though there wasn&amp;rsquo;t any bracket completion turned on. The majority of the issues that I ran into where more or less around using functions properly such as returning an expression or passing in the correct types to a function as even though the language is untyped there are functions that return errors if passed the wrong type of data.&lt;/p&gt;
+&lt;h2 id=&#34;getting-to-work&#34;&gt;Getting to work&lt;/h2&gt;
+&lt;p&gt;Bytes can be read using &lt;code&gt;read-bytes&lt;/code&gt; and passes an input port which in this case was made from opening a file, and reads bytes in octal. I won&amp;rsquo;t include the entire script here, just enough to show off the simplicity of Racket.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-scheme&#34; data-lang=&#34;scheme&#34;&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;in (open-input-file &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;gif.gif&amp;#34;&lt;/span&gt;))
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-scheme&#34; data-lang=&#34;scheme&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;#&lt;/span&gt;lang racket
+
+(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;size-of-color-table-from-packed-field&lt;/span&gt; bstr bytes-before-pf)
+  (&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;packed-field (&lt;span style=&#34;color:#a6e22e&#34;&gt;extract-packed-field&lt;/span&gt; bstr bytes-before-pf))
+  (* &lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt; (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt; (+ (&lt;span style=&#34;color:#a6e22e&#34;&gt;bitwise-and&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;integer-bytes-&amp;gt;integer&lt;/span&gt; packed-field &lt;span style=&#34;color:#66d9ef&#34;&gt;#f&lt;/span&gt;) least-three-sig-mask) &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;))))
+
+(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;extract-packed-field&lt;/span&gt; bstr bytes-before-pf)
+  (&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;in (&lt;span style=&#34;color:#a6e22e&#34;&gt;open-input-bytes&lt;/span&gt; bstr))
+  (&lt;span style=&#34;color:#a6e22e&#34;&gt;read-bytes&lt;/span&gt; bytes-before-pf in) &lt;span style=&#34;color:#75715e&#34;&gt;;; The number of bytes in front of the packed field in the bstr&lt;/span&gt;
+  (&lt;span style=&#34;color:#a6e22e&#34;&gt;read-bytes&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; in))
+
+(&lt;span style=&#34;color:#a6e22e&#34;&gt;provide&lt;/span&gt; size-of-color-table-from-packed-field
+         extract-packed-field)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;testing&#34;&gt;Testing&lt;/h3&gt;
+&lt;p&gt;If I&amp;rsquo;m going to want to use this for anything useful, a good test suite is an important consideration. Luckily testing was pretty straightforward as well, just make sure you provide the functions you intend to expose and &lt;a href=&#34;https://docs.racket-lang.org/rackunit/index.html&#34;&gt;rackUnit&lt;/a&gt; provides easy methods for testing.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-scheme&#34; data-lang=&#34;scheme&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;#&lt;/span&gt;lang racket
+
+(&lt;span style=&#34;color:#a6e22e&#34;&gt;require&lt;/span&gt; rackunit &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;readgif.rkt&amp;#34;&lt;/span&gt;)
+
+(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;readgif-tests
+  (&lt;span style=&#34;color:#a6e22e&#34;&gt;test-suite&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Tests for readgif&amp;#34;&lt;/span&gt;
+              (&lt;span style=&#34;color:#a6e22e&#34;&gt;test-case&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Extracting Size of color table&amp;#34;&lt;/span&gt;
+                         (&lt;span style=&#34;color:#a6e22e&#34;&gt;check-equal?&lt;/span&gt;
+                          (&lt;span style=&#34;color:#a6e22e&#34;&gt;size-of-color-table-from-packed-field&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;#&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;\360\24\253;\344\21O\262\20\227&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;)
+                          &lt;span style=&#34;color:#ae81ff&#34;&gt;96&lt;/span&gt;))
+              (&lt;span style=&#34;color:#a6e22e&#34;&gt;test-case&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Extracting the packed-field from a bstr&amp;#34;&lt;/span&gt;
+                         (&lt;span style=&#34;color:#a6e22e&#34;&gt;check-equal?&lt;/span&gt;
+                          (&lt;span style=&#34;color:#a6e22e&#34;&gt;extract-packed-field&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;#&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;\314\1\367\0\367\377\0&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;)
+                          &lt;span style=&#34;color:#f92672&#34;&gt;#&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;\367&amp;#34;&lt;/span&gt;)))
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You of course don&amp;rsquo;t need all of this, the &lt;code&gt;check-equal?&lt;/code&gt; is enough, but being able to organize the test suites like this is nice if you want to run just one of them. Though I don&amp;rsquo;t know exactly how complicated a larger test suite would be overall, I&amp;rsquo;m happy with the minimal test framework that racket provides.&lt;/p&gt;
+&lt;h2 id=&#34;web-development&#34;&gt;Web development&lt;/h2&gt;
+&lt;p&gt;The majority of my experience is in web development so the next step was to create a small website or an api. I had heard that Hackernews was written in racket or, more accurately, written arc, a language written in Racket, so I wanted to see how easy it would be to write a webpage in racket. The docs again shine through here with instant web servlets:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-scheme&#34; data-lang=&#34;scheme&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;#&lt;/span&gt;lang web-server/insta
+ 
+(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;start&lt;/span&gt; req)
+  (&lt;span style=&#34;color:#a6e22e&#34;&gt;response/xexpr&lt;/span&gt;
+   &lt;span style=&#34;color:#f92672&#34;&gt;`&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;html&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;head&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;title&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Hello world!&amp;#34;&lt;/span&gt;))
+          (&lt;span style=&#34;color:#a6e22e&#34;&gt;body&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;p&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;This website was made with Racket!&amp;#34;&lt;/span&gt;)))))
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Thi is nice of course, but ideally I don&amp;rsquo;t want to have to roll everything myself. Luckily there are a few different web frameworks on github, though a few of them are in early stages or don&amp;rsquo;t seem to have many contributions:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/nihirash/holy&#34;&gt;https://github.com/nihirash/holy&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/dmac/spin&#34;&gt;https://github.com/dmac/spin&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;taking-spin-for-a-whirl&#34;&gt;Taking Spin for a whirl&lt;/h3&gt;
+&lt;p&gt;I decided to take a look at spin mostly because it reminded me a lot of the minimalist framework &lt;a href=&#34;http://sinatrarb.com/&#34;&gt;Sinatra&lt;/a&gt; which I have used before.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-scheme&#34; data-lang=&#34;scheme&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;#&lt;/span&gt;lang racket
+
+(&lt;span style=&#34;color:#a6e22e&#34;&gt;require&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;planet&lt;/span&gt; dmac/spin))
+(&lt;span style=&#34;color:#a6e22e&#34;&gt;require&lt;/span&gt; web-server/templates)
+
+(&lt;span style=&#34;color:#a6e22e&#34;&gt;get&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/&amp;#34;&lt;/span&gt;
+  (&lt;span style=&#34;color:#a6e22e&#34;&gt;λ&lt;/span&gt; () &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Hello!&amp;#34;&lt;/span&gt;))
+
+(&lt;span style=&#34;color:#a6e22e&#34;&gt;get&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/hi/:name&amp;#34;&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;λ&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;req&lt;/span&gt;)
+  (string-append &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Hello, &amp;#34;&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;params&lt;/span&gt; req &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;name&lt;/span&gt;) &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;!&amp;#34;&lt;/span&gt;)))
+
+(&lt;span style=&#34;color:#a6e22e&#34;&gt;run&lt;/span&gt;)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Boom! This was more what I was looking for: Throw down some routes and then then the use whatever logic needs to run. The framework also includes templating and the like if you need something a little more complicated but there doesn&amp;rsquo;t really seem to be anything in the way of react, rails, spring, or anything in the realm of fully fleshed out web frameworks. That really shouldn&amp;rsquo;t be that surprising considering how small the user base is, and what the typical use case for the language is, so I didn&amp;rsquo;t go much further in the way of creating a more robust web application though there is a static site generator &lt;a href=&#34;https://docs.racket-lang.org/frog/index.html&#34;&gt;Frog&lt;/a&gt;. Though I probably won&amp;rsquo;t consider moving over to Frog from the current static site generator I use for this site: &lt;a href=&#34;https://gohugo.io/&#34;&gt;Hugo&lt;/a&gt;. It looked like it had some thorough documentation and room for customization.&lt;/p&gt;
+&lt;h3 id=&#34;making-web-requests&#34;&gt;Making web requests&lt;/h3&gt;
+&lt;p&gt;A lot of applications depend on making calls to third party apis, so I wanted to see what parsing json was like. There are a number of useful libraries for making &lt;a href=&#34;https://github.com/jackfirth/racket-request&#34;&gt;rest requests&lt;/a&gt; with racket, but I wanted to use just the base language. There were a few different ways to make requests but I found this to be the most intuitive and relevant to the majority of my use cases.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-scheme&#34; data-lang=&#34;scheme&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;#&lt;/span&gt;lang racket
+(&lt;span style=&#34;color:#a6e22e&#34;&gt;require&lt;/span&gt; net/http-client
+         json)
+
+(&lt;span style=&#34;color:#a6e22e&#34;&gt;define-values&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;status&lt;/span&gt; header response)
+  (&lt;span style=&#34;color:#a6e22e&#34;&gt;http-sendrecv&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;api.github.com&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/users&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;#&lt;/span&gt;:ssl? &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;auto&lt;/span&gt;))
+(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;data (&lt;span style=&#34;color:#a6e22e&#34;&gt;read-json&lt;/span&gt; response))
+
+(&lt;span style=&#34;color:#a6e22e&#34;&gt;when&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;jsexpr?&lt;/span&gt; data)
+    (&lt;span style=&#34;color:#a6e22e&#34;&gt;hash-ref&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;first&lt;/span&gt; data) &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;login&lt;/span&gt;))
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Here the &lt;code&gt;http-sendrecv&lt;/code&gt; produces three values: status, header, and response. The function then returns an input port which we can read as json. Really it builds a &lt;code&gt;#hasheq&lt;/code&gt; type or a list of hashes depending on the results, so the Racket libraries for getting information from hashes makes this pretty simple to read from. In this example the json is a list of several results, so we read the first hash from the list in order to access the &lt;code&gt;&#39;login&lt;/code&gt; element.&lt;/p&gt;
+&lt;h1 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h1&gt;
+&lt;p&gt;This is easily the fastest I&amp;rsquo;ve become productive in any particular language. The biggest strength of racket is being largely syntax-less meaning the only real learning that I needed to do was find out what functions were available through the base racket language. The docs were thorough, and though there were a lot of functions, the language still felt small enough that I started to feel like I knew what I was doing relatively quickly. I&amp;rsquo;m not sure that I would build a website from Racket at the moment, but I think that it does make a great general purpose language, and the next time I write a script or tool, I might just try using Racket first.&lt;/p&gt;
+</content>
     </item>
     
     <item>
@@ -63,6 +1494,63 @@ Preface I&amp;rsquo;ve been playing around with functional languages for a few y
       <guid>/post/the-art-of-computer-programming/</guid>
       <description>&lt;p&gt;An attempt at making my way through one of the most infamous computer science books&lt;/p&gt;
 &lt;p&gt;I was recently gifted the first volume of Donald Knuth&amp;rsquo;s: &amp;ldquo;The Art of Computer Programming&amp;rdquo;. Being the computer geek that I am, I have never been so excited yet, intimidated about sitting down and working through what some people would call a Reference book.&lt;/p&gt;</description>
+      <content>&lt;p&gt;An attempt at making my way through one of the most infamous computer science books&lt;/p&gt;
+&lt;p&gt;I was recently gifted the first volume of Donald Knuth&amp;rsquo;s: &amp;ldquo;The Art of Computer Programming&amp;rdquo;. Being the computer geek that I am, I have never been so excited yet, intimidated about sitting down and working through what some people would call a Reference book.&lt;/p&gt;
+&lt;h2 id=&#34;reading-the-book&#34;&gt;Reading the book&lt;/h2&gt;
+&lt;p&gt;The biggest misconception that I had about this book was that I thought it would be more like a reference book, something you can quickly open, flip to the table of contents, and then over to page 254 for linked lists (or linked allocation in this case) and learn everything there is to know about linked lists. As stated by peers, Stack Overflow posts, Reddit, and Hacker News users, it&amp;rsquo;s not something you would want to actually go about reading through. It&amp;rsquo;s long, highly technical, and full of math equations. I suspect that the average reader would quickly get lost the first time Knuth shows off an algorithm in a custom assembly language written specifically for this book (yes, really). To put this more plainly: &lt;em&gt;Reading through TAOCP is an NP hard problem&lt;/em&gt;. Naturally, I couldn&amp;rsquo;t wait to read through it. So how should we go about reading the book? Luckily for us Knuth provides the reader with instructions, and of course, being the computer scientist that he is, a helpful algorithm flow chart to guide the reader through the process of reading the books which looks something like this:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;           +
+           |
+           |
+     +-----v-----+
+     |1. Start in|
+     +-----+-----+
+           |
+           |
++----------v-----------+
+|                      |
+| 2. Read pp xv - xvii |
+|                      |
++----------+-----------+
+           |
+           |
+     +-----v------+
+     |            |
+     | 3. N &amp;lt;- 1  |
+     |            |
+     +-----+------+
+           |
+           |
+  +--------v---------+
+  |4. Begin Chapter N|
+  +--------+---------+
+           |
+           |
+   +-------v-------+ Yes       +---------------------------------------+
+   |5. Interesting?+----------&amp;gt;| 6. Read until Exhaustion or Whatever  |
+   +---------------+           | the CS equivalent of Nirvana might be |
+           |No                 +---------------------------------------+
+           |                                        ^
+           |                                        |
+           +----------------------------------------+
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The flow chart and written procedure following this contains other suggestions on how to read through the book based on if you&amp;rsquo;ve read through it before or just based on what your interests are.&lt;/p&gt;
+&lt;h3 id=&#34;exercises&#34;&gt;Exercises&lt;/h3&gt;
+&lt;p&gt;A large portion of this book is dedicated to exercises as well as the included solutions in the back. &lt;em&gt;Ugh, homework&lt;/em&gt;. One of the more helpful things that Knuth does is break down the relative difficulty of each problem using this notation:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;00 Immediate                        &amp;gt; Recommended
+10 Simple (one minute)                M Mathematically oriented
+20 Medium (15 minutes)                HM Requiring &amp;quot;higher math&amp;quot;
+30 Moderately Hard
+40 Term Project
+50 Research problem
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;In his reasoning for breaking down exercises this way, Knuth includes an anecdote about how Richard Bellman&amp;rsquo;s book &lt;em&gt;Dynamic Programming&lt;/em&gt; mixed trivial problems with research problems with no indication about which problems were solvable or not. &lt;em&gt;I bet his students loved that&lt;/em&gt;. Though I wanted to get a lot out of this book the first time round I don&amp;rsquo;t expect to go through all of these. Probably the easier ones to get the idea of it, but also doing a little bit of searching about the more Research type problems is certainly interesting.&lt;/p&gt;
+&lt;h2 id=&#34;induction-combinations-harmonic-numbers-and-other-basic-concepts&#34;&gt;Induction, Combinations, Harmonic numbers, and Other Basic Concepts&lt;/h2&gt;
+&lt;p&gt;This is where I imagine most people would stop. After a lengthy dissection of what algorithms are as well as the history behind the word Algorithm, Section 1.2 includes a lot of the foundational math behind computer sciences, induction, permutations and combinations, harmonic numbers, and elementary number theory; All the things you tried to wrap your head around in Algorithms I through III that you thought you could forget about have come back with a vengeance. I&amp;rsquo;ll admit that when I started reading the introduction to this chapter and flipped through the next 10 pages or so I considered picking up some supplementary materials on the math involved. After some searching I came across some of his other works and I almost picked up his book on &lt;a href=&#34;https://www.amazon.com/dp/0201558025/&#34;&gt;concrete mathematics&lt;/a&gt;. It was at this point that my adventures in computer science had started to look a lot like &lt;a href=&#34;https://www.youtube.com/watch?v=AbSehcT19u0&#34;&gt;this&lt;/a&gt;. I resisted the temptation a bit and pressed on which I&amp;rsquo;m glad I did because two paragraphs down Knuth suggests you lightly skim this the first time you read through the book otherwise you might never get around to reading the actual computer science topics. &lt;em&gt;Hmmm&amp;hellip; yeah that checks out&lt;/em&gt;&lt;/p&gt;
+&lt;h2 id=&#34;mix&#34;&gt;MIX&lt;/h2&gt;
+&lt;p&gt;Not only did Knuth have to &lt;a href=&#34;https://en.wikipedia.org/wiki/TeX#History&#34;&gt;create a typesetting language after the second edition of the second volume was created&lt;/a&gt; but he also set about creating an instruction set and assembly language for a made up machine called MIX, reasoning that programming languages tend to influence the way that an engineer might code so having a more pure language to work with might solve that issue. &lt;em&gt;&lt;a href=&#34;https://www.youtube.com/watch?v=AbSehcT19u0&#34;&gt;Hmm&amp;hellip; That sounds familiar&lt;/a&gt;&lt;/em&gt;. You can find the entire set of instructions and diagram of the machine architecture &lt;a href=&#34;https://en.wikipedia.org/wiki/MIX&#34;&gt;here&lt;/a&gt; although if you can find a copy of the book I recommend looking at the diagram given in the book itself because it&amp;rsquo;s beautiful. What I found particularly interesting is that this architecture is actually supported by &lt;a href=&#34;https://gcc.gnu.org/onlinedocs/gcc/MMIX-Options.html&#34;&gt;gcc&lt;/a&gt; meaning we can compile code for the theoretical computer. Knuth describes this computer, the MIX 1009 that runs MIX assembly code as:&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;MIX is very much like nearly every computer of the 1960&amp;rsquo;s and 70&amp;rsquo;s, except that it is, perhaps, nicer.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;There you have it. Throw out that new Macbook pro you bought for $3000 and &lt;em&gt;rm -rf&lt;/em&gt; that Vue JS project you&amp;rsquo;ve been working on because it&amp;rsquo;s time we threw something new into the MIX! Knuth does admit that at this point MIX is a bit antequated so naturally he notes that a new version, dubbed &lt;a href=&#34;http://mmix.cs.hm.edu/index.html&#34;&gt;MMIX&lt;/a&gt;, based on RISC, has been created and will likely be included in subsequent editions of the book&amp;hellip; just as soon as they get around to rewriting all of the algorithms in MMMIX assembly.&lt;/p&gt;
+&lt;h2 id=&#34;concluding-thoughts&#34;&gt;Concluding Thoughts&lt;/h2&gt;
+&lt;p&gt;Though the book provides a very comprehensive and deep dive into every topic, the book is still missing some information. Completing this book proved to be an impossible task for Knuth and others; before Knuth can document everything, previous parts of it have already started to go out of date and the various &lt;em&gt;&amp;ldquo;Under construction&amp;rdquo;&lt;/em&gt; sections throughout the book highlight just how quickly, and how much information there really is about this field of study. This doesn&amp;rsquo;t come as particularly surprising to anyone who&amp;rsquo;s spent time trying to include the newest npm module into their web project, only to find out it&amp;rsquo;s unsupported three months later. I spent the better part of 4 years studying computer science in school yet barely scratched the surface of what the field has to offer and years later I&amp;rsquo;m still finding the need to learn more about it. At times it can feel overwhelming just trying to keep up with learning the basics of the newest language, the hottest Javascript framework or the the newest trends. Software engineering, web development, and computer sciences are moving at blazingly fast speeds with nary an end in sight. Even at it&amp;rsquo;s most basic levels described here in the first volume, it&amp;rsquo;s still being worked on let alone the work on the remaining volumes following volume 4, which have yet to be released.&lt;/p&gt;
+&lt;p&gt;So why read this then? Though the book is quite old I still think that there is a lot of value in reading through it. Much of it is still relevant today as data structures and basic algorithms (the underpinning of everything we still use daily) have not changed much, and more than that; Knuth is actually a fantastic writer. Though the material may be heavy, Knuth has a sort of dry humor that I&amp;rsquo;ve come to appreciate that has made reading this volume enjoyable. Though I don&amp;rsquo;t think that &lt;a href=&#34;https://www.businessinsider.com/bill-gates-loves-donald-knuth-the-art-of-computer-programming-2016-4&#34;&gt;reading TAOCP alone will get you a job&lt;/a&gt;, I recommend reading TAOCP for anyone who wishes to pique their intellectual curiosities about the field of computer science.&lt;/p&gt;</content>
     </item>
     
     <item>
@@ -73,6 +1561,100 @@ Preface I&amp;rsquo;ve been playing around with functional languages for a few y
       <guid>/post/reading-parquet-files-java/</guid>
       <description>&lt;p&gt;A simple way of reading Parquet files without the need to use Spark.&lt;/p&gt;
 &lt;p&gt;I recently ran into an issue where I needed to read from &lt;a href=&#34;https://parquet.apache.org/&#34;&gt;Parquet&lt;/a&gt; files in a simple way without having to use the entire Spark framework. Though inspecting the contents of a Parquet file turns out to be pretty simple using the &lt;code&gt;spark-shell&lt;/code&gt;, doing so without the framework ended up being more difficult because of a lack of documentation about how to read the actual content of Parquet files, the columnar format used by Hadoop and Spark.&lt;/p&gt;</description>
+      <content>&lt;p&gt;A simple way of reading Parquet files without the need to use Spark.&lt;/p&gt;
+&lt;p&gt;I recently ran into an issue where I needed to read from &lt;a href=&#34;https://parquet.apache.org/&#34;&gt;Parquet&lt;/a&gt; files in a simple way without having to use the entire Spark framework. Though inspecting the contents of a Parquet file turns out to be pretty simple using the &lt;code&gt;spark-shell&lt;/code&gt;, doing so without the framework ended up being more difficult because of a lack of documentation about how to read the actual content of Parquet files, the columnar format used by Hadoop and Spark.&lt;/p&gt;
+&lt;p&gt;If all you need to do is inspect the contents of a parquet file you can do so pretty easily if you already have spark set up like so&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;
+$ spark-shell
+scala&amp;gt; val sqlContext &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; new org.apache.spark.sql.SQLContext&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;sc&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+scala&amp;gt; val parqfile &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; sqlContext.read.parquet&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Objects.parquet&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+scala&amp;gt; Parqfile.registerTempTable&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;object&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+scala&amp;gt; val allrecords &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; sqlContext.sql&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;SELECT * FROM object&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+scala&amp;gt; allrecords.show&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;However if that&amp;rsquo;s not an option or you need a more programmatic way to inspect the elements you&amp;rsquo;ll have to use the &lt;a href=&#34;https://github.com/apache/parquet-mr&#34;&gt;libraries internally used by Hadoop and Spark&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;If you&amp;rsquo;re using Maven you&amp;rsquo;ll want to get the following dependancies&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-xml&#34; data-lang=&#34;xml&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;dependencies&amp;gt;&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+        &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.apache.parquet&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+        &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;parquet-avro&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+        &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;version&amp;gt;&lt;/span&gt;1.10.0&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/version&amp;gt;&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+        &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.apache.hadoop&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+        &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;hadoop-common&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+        &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;version&amp;gt;&lt;/span&gt;3.1.0&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/version&amp;gt;&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/dependencies&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; org.apache.hadoop.conf.Configuration&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; org.apache.hadoop.fs.Path&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; org.apache.parquet.column.page.PageReadStore&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; org.apache.parquet.example.data.simple.SimpleGroup&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; org.apache.parquet.example.data.simple.convert.GroupRecordConverter&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; org.apache.parquet.hadoop.ParquetFileReader&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; org.apache.parquet.hadoop.util.HadoopInputFile&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; org.apache.parquet.io.ColumnIOFactory&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; org.apache.parquet.io.MessageColumnIO&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; org.apache.parquet.io.RecordReader&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; org.apache.parquet.schema.MessageType&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; org.apache.parquet.schema.Type&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; java.io.IOException&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; java.util.ArrayList&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; java.util.List&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;ParquetReaderUtils&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; Parquet &lt;span style=&#34;color:#a6e22e&#34;&gt;getParquetData&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;String filePath&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;throws&lt;/span&gt; IOException &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+        List&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;SimpleGroup&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; simpleGroups &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; ArrayList&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;gt;();&lt;/span&gt;
+        ParquetFileReader reader &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; ParquetFileReader&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;open&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;HadoopInputFile&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;fromPath&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; Path&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;filePath&lt;span style=&#34;color:#f92672&#34;&gt;),&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; Configuration&lt;span style=&#34;color:#f92672&#34;&gt;()));&lt;/span&gt;
+        MessageType schema &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; reader&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;getFooter&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;().&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;getFileMetaData&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;().&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;getSchema&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;();&lt;/span&gt;
+        List&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;Type&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; fields &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; schema&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;getFields&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;();&lt;/span&gt;
+        PageReadStore pages&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;((&lt;/span&gt;pages &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; reader&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;readNextRowGroup&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;())&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;long&lt;/span&gt; rows &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; pages&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;getRowCount&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;();&lt;/span&gt;
+            MessageColumnIO columnIO &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; ColumnIOFactory&lt;span style=&#34;color:#f92672&#34;&gt;().&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;getColumnIO&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;schema&lt;span style=&#34;color:#f92672&#34;&gt;);&lt;/span&gt;
+            RecordReader recordReader &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; columnIO&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;getRecordReader&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;pages&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; GroupRecordConverter&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;schema&lt;span style=&#34;color:#f92672&#34;&gt;));&lt;/span&gt;
+
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; 0&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; rows&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt; i&lt;span style=&#34;color:#f92672&#34;&gt;++)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+                SimpleGroup simpleGroup &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;SimpleGroup&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; recordReader&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;read&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;();&lt;/span&gt;
+                simpleGroups&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;add&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;simpleGroup&lt;span style=&#34;color:#f92672&#34;&gt;);&lt;/span&gt;
+            &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+        &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+        reader&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;close&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;();&lt;/span&gt;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; Parquet&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;simpleGroups&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; fields&lt;span style=&#34;color:#f92672&#34;&gt;);&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;And to make things easier A Parquet data object&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; org.apache.parquet.example.data.simple.SimpleGroup&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; org.apache.parquet.schema.Type&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; java.util.List&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Parquet&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;private&lt;/span&gt; List&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;SimpleGroup&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; data&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;private&lt;/span&gt; List&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;Type&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; schema&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Parquet&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;List&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;SimpleGroup&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; data&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; List&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;Type&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; schema&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;data&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; data&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;schema&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; schema&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; List&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;SimpleGroup&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;getData&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; data&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; List&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;Type&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;getSchema&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; schema&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Once we return the Parquet Object we can read whats inside each of the SimpleGroups like so:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;  Parquet parquet &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; ParquetReaderUtils&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;getParquetData&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;();&lt;/span&gt;
+  SimpleGroup simpleGroup &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; parquet&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;getData&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;().&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;get&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;0&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+  String storedString &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; simpleGroups&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;get&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;0&lt;span style=&#34;color:#f92672&#34;&gt;).&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;getString&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;theFieldIWant&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; 0&lt;span style=&#34;color:#f92672&#34;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The only caveat here being, we must determine the name of the field as well as the type in order to extract it. The fields we already have from the schema we stored on the Parquet object, however the type we may want to determine by manually inspecting the data with a debugger, though it can be determined dynamically using&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;  parquet&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;getSchema&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;().&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;get&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;0&lt;span style=&#34;color:#f92672&#34;&gt;).&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;getOriginalType&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;();&lt;/span&gt;
+  parquet&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;getSchema&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;().&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;get&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;0&lt;span style=&#34;color:#f92672&#34;&gt;).&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;asPrimitiveType&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;();&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content>
     </item>
     
   </channel>
