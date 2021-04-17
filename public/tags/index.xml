@@ -7,7 +7,47 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Adam Melnyk 2020</copyright>
-    <lastBuildDate>Sun, 23 Aug 2020 15:45:10 -0500</lastBuildDate><atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 17 Apr 2021 15:16:33 -0500</lastBuildDate><atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>linux</title>
+      <link>/tags/linux/</link>
+      <pubDate>Sat, 17 Apr 2021 15:16:33 -0500</pubDate>
+      
+      <guid>/tags/linux/</guid>
+      <description></description>
+      <content></content>
+    </item>
+    
+    <item>
+      <title>plugins</title>
+      <link>/tags/plugins/</link>
+      <pubDate>Sat, 17 Apr 2021 15:16:33 -0500</pubDate>
+      
+      <guid>/tags/plugins/</guid>
+      <description></description>
+      <content></content>
+    </item>
+    
+    <item>
+      <title>PopOS</title>
+      <link>/tags/popos/</link>
+      <pubDate>Sat, 17 Apr 2021 15:16:33 -0500</pubDate>
+      
+      <guid>/tags/popos/</guid>
+      <description></description>
+      <content></content>
+    </item>
+    
+    <item>
+      <title>programming</title>
+      <link>/tags/programming/</link>
+      <pubDate>Sat, 17 Apr 2021 15:16:33 -0500</pubDate>
+      
+      <guid>/tags/programming/</guid>
+      <description></description>
+      <content></content>
+    </item>
+    
     <item>
       <title>chip8</title>
       <link>/tags/chip8/</link>
