@@ -155,17 +155,17 @@
 
   <div class="post-content"><div>
         <h2 id="background">Background<a href="#background" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
-<p>I&rsquo;ve been running linux on all of my machines for almost 15 years. For the first five I probably used a dozen or more flavours of Linux including OpenSuse, Fedora, Arch, Ubuntu, and many others. Eventually wiping my computer every month became more and more impractical and I abanonded my distrohopping ways, settling on Ubuntu. Ubuntu was stable, regularly updated, had an environment that I really liked (despite what some people may say about the unity interface) and I never looked back. That is until recently when I started using Pop!_OS.</p>
-<p>It&rsquo;s been a long time since I last swtiched operating systems but, it made me realized what I liked about Linux so much to begin with: You control the software, not the other way around. Want to install a new desktop environment? There are multiple to choose from. Want to add custom keymappings and shortcuts? You can do that. Want add additional functionality to an existing app on your machine? Download the source code and modify it as you like. Ubuntu was the clear, safe course but, now that I&rsquo;m running a new OS, I&rsquo;m feeling more in the spirit of making my operating system do what I want it to do. New OS, new me! So let&rsquo;s get hacking.</p>
+<p>I&rsquo;ve been running linux on all of my machines for almost 15 years. For the first five I probably used a dozen or more flavours of Linux including OpenSuse, Fedora, Arch, Ubuntu, and many others. Eventually wiping my computer every month became more and more impractical and I abandoned my distro-hopping ways, settling on Ubuntu. Ubuntu was stable, regularly updated, had an environment that I really liked (despite what some people may say about the unity interface) and I never looked back. That is until recently when I started using Pop!_OS.</p>
+<p>It&rsquo;s been a long time since I last switched operating systems but, it made me realize what I liked about Linux so much to begin with: You control the software, not the other way around. Want to install a new desktop environment? There are multiple to choose from. Want to add custom key mappings and shortcuts? You can do that. Want add additional functionality to an existing app on your machine? Download the source code and modify it as you like. Ubuntu was the clear, safe course but, now that I&rsquo;m running a new OS, I&rsquo;m feeling more in the spirit of making my operating system do what I want it to do. New OS, new me! So let&rsquo;s get hacking.</p>
 <h2 id="creating-a-launcher-plugin">Creating a launcher plugin<a href="#creating-a-launcher-plugin" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
 <p>One of the cool features of Pop!_OS is the <a href="https://github.com/pop-os/shell">Pop Shell</a>, which brings the features of other tiling window managers like i3wm to GNOME. It also features launcher plugins which we can write ourselves in JS which is what we&rsquo;ll be doing in this post.</p>
 <p>The easiest way to try this out is just to simply copy one of the existing plugin examples and just drop and replace what features we want to add instead.</p>
-<h2 id="making-a-spotify-plugin">Making a spotify plugin<a href="#making-a-spotify-plugin" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
-<p>I use Spotify pretty regularly, so it might be pretty handy to include a command on the launcher to pause/play spotify or just select the next track.</p>
+<h2 id="making-a-spotify-plugin">Making a Spotify plugin<a href="#making-a-spotify-plugin" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>I use Spotify pretty regularly, so it might be pretty handy to include a command on the launcher to pause/play Spotify or just select the next track.</p>
 <h3 id="pulling-down-an-example">Pulling down an example<a href="#pulling-down-an-example" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
 <p>The first thing we can do is take an existing plugin and adapt it to our needs. We&rsquo;ll need to copy the two files <a href="https://github.com/pop-os/shell/tree/master/src/plugins/pulse">here</a>. You can also find these files on your machine running Pop!_OS at: <code>/usr/lib/pop-shell/launcher/pulse</code>. You can either edit these files in place (Which I don&rsquo;t recommend since you&rsquo;re changing how the existing launcher plugins work!) or copy them into some new directory of your choice.</p>
 <h3 id="adapting-the-plugin-to-use-with-spotify-instead">Adapting the plugin to use with Spotify instead<a href="#adapting-the-plugin-to-use-with-spotify-instead" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
-<p>Adapting the plugin for our purposes is actually relatively little work. The launcher plugin we&rsquo;re looking at just has a list of ID&rsquo;s that map to some command that can be executed in a shell, so the first thing we need to do is change those commands.</p>
+<p>Adapting the plugin for our purposes is actually relatively little work. The launcher plugin we&rsquo;re looking at, just has a list of ID&rsquo;s that map to some command that can be executed in a shell, so the first thing we need to do is change those commands.</p>
 <p>The App class contains a constructor with default selections. We want to change that to something like this:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript">    <span style="color:#a6e22e">constructor</span>() {
         <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">last_query</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;&#34;</span>
@@ -198,7 +198,7 @@
                 <span style="color:#66d9ef">break</span>
         }
 </code></pre></div><p><strong>NOTE:</strong> I&rsquo;ve also removed the line <code>let sinks = pactl_sinks()</code> above as well as the associated function <code>pactl_sinks()</code> since it&rsquo;s only related to pulse audio and not necessary for our spotify plugin.</p>
-<p>If you&rsquo;re curious about what the commands above do, you can try running spotify and then plugging them in your terminal yourself. The first toggles pausing and playing spotify and the second switches to the next song.</p>
+<p>If you&rsquo;re curious about what the commands above do, you can try running spotify and then plugging them in your terminal yourself. The first toggles pausing and playing spotify, the second switches to the next song.</p>
 <p>The code for utilizing spotify is actually a bit simpler as well. We can just execute the string <code>cmd</code> instead of going through a loop.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript">        <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">cmd</span>) {
             <span style="color:#66d9ef">try</span> {
@@ -210,19 +210,19 @@
 
         <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">send</span>({ <span style="color:#a6e22e">event</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;close&#34;</span> })
     }
-</code></pre></div><p>There&rsquo;s one thing to change, we need to change the <code>meta.json</code> file to something that makes a little more sense:</p>
+</code></pre></div><p>There&rsquo;s one thing left to change, we need to change the <code>meta.json</code> file to something that makes a little more sense:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{
     <span style="color:#f92672">&#34;name&#34;</span>: <span style="color:#e6db74">&#34;Spotify Control&#34;</span>,
     <span style="color:#f92672">&#34;description&#34;</span>: <span style="color:#e6db74">&#34;Control Spotify Play and Track selection&#34;</span>,
     <span style="color:#f92672">&#34;exec&#34;</span>: <span style="color:#e6db74">&#34;main.js&#34;</span>,
     <span style="color:#f92672">&#34;icon&#34;</span>: <span style="color:#e6db74">&#34;multimedia-volume-control&#34;</span>
 }
-</code></pre></div><p>Now that we&rsquo;ve made the necessary changes we need to move it to where the rest of the plugins are, I&rsquo;ve called my plugin popify (I know, so clever) but use whatever folder you&rsquo;ve put your files into. You&rsquo;ll need to use sudo because the location requires privledged access.</p>
+</code></pre></div><p>Now that we&rsquo;ve made the necessary changes we need to move it to where the rest of the plugins are. I&rsquo;ve called my plugin popify (I know, so clever) but use whatever folder you&rsquo;ve put your files into. You&rsquo;ll need to use sudo because the location requires privileged access.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">sudo cp -r popify/ /usr/lib/pop-shell/launcher/.
 </code></pre></div><p>After copying the files over to the correct directory last thing to do is restart the GNOME shell. There are many ways to do this such as just killing GNOME <code>killall -1 gnome-shell</code>, but if you&rsquo;re unsure, you can simply reboot your machine and the new plugin will be ready. If you&rsquo;ve done everything right you should be able to see the new launcher when we type pause:</p>
 <p><img src="/images/launcher.png" alt="Pop_OS launcher"></p>
 <p>this should toggle spotify to pause or play. You should also be able to type next and the player should switch songs.</p>
-<p>If you feel like a hacker at this point, it&rsquo;s because you are! So throw on those shades, put your best black hoodie on, and go forth and hack away on some cool plugins. Hack the <del>Planet</del> OS!</p>
+<p>If you feel like a hacker at this point, it&rsquo;s because you are! So throw on those shades, put on your best black hoodie, and go forth and hack away on some cool plugins. Hack the <del>Planet</del> OS!</p>
 <h2 id="building-more-plugins">Building more plugins<a href="#building-more-plugins" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
 <p>Hopefully this gives you a starting point for developing new plugins for Pop!_OS. There isn&rsquo;t much official documentation or tutorials on writing plugins other than what&rsquo;s in the github readme, but hopefully this inspires anyone who wanted to give Pop!_OS a try, another reason to checkout it out.</p>
 

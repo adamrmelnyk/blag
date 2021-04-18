@@ -9,9 +9,9 @@ tags: ["programming", "plugins", "PopOS", "linux"]
 
 ## Background
 
-I've been running linux on all of my machines for almost 15 years. For the first five I probably used a dozen or more flavours of Linux including OpenSuse, Fedora, Arch, Ubuntu, and many others. Eventually wiping my computer every month became more and more impractical and I abanonded my distrohopping ways, settling on Ubuntu. Ubuntu was stable, regularly updated, had an environment that I really liked (despite what some people may say about the unity interface) and I never looked back. That is until recently when I started using Pop!_OS.
+I've been running linux on all of my machines for almost 15 years. For the first five I probably used a dozen or more flavours of Linux including OpenSuse, Fedora, Arch, Ubuntu, and many others. Eventually wiping my computer every month became more and more impractical and I abandoned my distro-hopping ways, settling on Ubuntu. Ubuntu was stable, regularly updated, had an environment that I really liked (despite what some people may say about the unity interface) and I never looked back. That is until recently when I started using Pop!_OS.
 
-It's been a long time since I last swtiched operating systems but, it made me realized what I liked about Linux so much to begin with: You control the software, not the other way around. Want to install a new desktop environment? There are multiple to choose from. Want to add custom keymappings and shortcuts? You can do that. Want add additional functionality to an existing app on your machine? Download the source code and modify it as you like. Ubuntu was the clear, safe course but, now that I'm running a new OS, I'm feeling more in the spirit of making my operating system do what I want it to do. New OS, new me! So let's get hacking.
+It's been a long time since I last switched operating systems but, it made me realize what I liked about Linux so much to begin with: You control the software, not the other way around. Want to install a new desktop environment? There are multiple to choose from. Want to add custom key mappings and shortcuts? You can do that. Want add additional functionality to an existing app on your machine? Download the source code and modify it as you like. Ubuntu was the clear, safe course but, now that I'm running a new OS, I'm feeling more in the spirit of making my operating system do what I want it to do. New OS, new me! So let's get hacking.
 
 ## Creating a launcher plugin
 
@@ -19,9 +19,9 @@ One of the cool features of Pop!_OS is the [Pop Shell](https://github.com/pop-os
 
 The easiest way to try this out is just to simply copy one of the existing plugin examples and just drop and replace what features we want to add instead.
 
-## Making a spotify plugin
+## Making a Spotify plugin
 
-I use Spotify pretty regularly, so it might be pretty handy to include a command on the launcher to pause/play spotify or just select the next track.
+I use Spotify pretty regularly, so it might be pretty handy to include a command on the launcher to pause/play Spotify or just select the next track.
 
 ### Pulling down an example
 
@@ -29,7 +29,7 @@ The first thing we can do is take an existing plugin and adapt it to our needs. 
 
 ### Adapting the plugin to use with Spotify instead
 
-Adapting the plugin for our purposes is actually relatively little work. The launcher plugin we're looking at just has a list of ID's that map to some command that can be executed in a shell, so the first thing we need to do is change those commands.
+Adapting the plugin for our purposes is actually relatively little work. The launcher plugin we're looking at, just has a list of ID's that map to some command that can be executed in a shell, so the first thing we need to do is change those commands.
 
 The App class contains a constructor with default selections. We want to change that to something like this:
 
@@ -72,7 +72,7 @@ If you walk through the code you'll see that it contains a function called `subm
 
 **NOTE:** I've also removed the line `let sinks = pactl_sinks()` above as well as the associated function `pactl_sinks()` since it's only related to pulse audio and not necessary for our spotify plugin.
 
-If you're curious about what the commands above do, you can try running spotify and then plugging them in your terminal yourself. The first toggles pausing and playing spotify and the second switches to the next song.
+If you're curious about what the commands above do, you can try running spotify and then plugging them in your terminal yourself. The first toggles pausing and playing spotify, the second switches to the next song.
 
 The code for utilizing spotify is actually a bit simpler as well. We can just execute the string `cmd` instead of going through a loop.
 
@@ -89,7 +89,7 @@ The code for utilizing spotify is actually a bit simpler as well. We can just ex
     }
 ```
 
-There's one thing to change, we need to change the `meta.json` file to something that makes a little more sense:
+There's one thing left to change, we need to change the `meta.json` file to something that makes a little more sense:
 
 ```json
 {
@@ -100,7 +100,7 @@ There's one thing to change, we need to change the `meta.json` file to something
 }
 ```
 
-Now that we've made the necessary changes we need to move it to where the rest of the plugins are, I've called my plugin popify (I know, so clever) but use whatever folder you've put your files into. You'll need to use sudo because the location requires privledged access.
+Now that we've made the necessary changes we need to move it to where the rest of the plugins are. I've called my plugin popify (I know, so clever) but use whatever folder you've put your files into. You'll need to use sudo because the location requires privileged access.
 
 ```sh
 sudo cp -r popify/ /usr/lib/pop-shell/launcher/.
@@ -112,7 +112,7 @@ After copying the files over to the correct directory last thing to do is restar
 
 this should toggle spotify to pause or play. You should also be able to type next and the player should switch songs.
 
-If you feel like a hacker at this point, it's because you are! So throw on those shades, put your best black hoodie on, and go forth and hack away on some cool plugins. Hack the ~~Planet~~ OS!
+If you feel like a hacker at this point, it's because you are! So throw on those shades, put on your best black hoodie, and go forth and hack away on some cool plugins. Hack the ~~Planet~~ OS!
 
 ## Building more plugins
 
