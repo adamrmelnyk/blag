@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>Why I use Lynx :: Adam&#39;s Blag</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Using lynx in 2021" />
+<meta name="keywords" content="" />
+<meta name="robots" content="noodp" />
+<link rel="canonical" href="/post/browser/" />
+
+
+
+
+<link rel="stylesheet" href="/assets/style.css">
+
+  <link rel="stylesheet" href="/assets/green.css">
+
+
+
+
+
+
+<link rel="apple-touch-icon" href="/img/apple-touch-icon-192x192.png">
+
+  <link rel="shortcut icon" href="/img/favicon/green.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+  
+    <meta name="twitter:site" content="" />
+  
+    <meta name="twitter:creator" content="" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Why I use Lynx">
+<meta property="og:description" content="Using lynx in 2021" />
+<meta property="og:url" content="/post/browser/" />
+<meta property="og:site_name" content="Adam&#39;s Blag" />
+
+  
+    <meta property="og:image" content="/img/favicon/green.png">
+  
+
+<meta property="og:image:width" content="2048">
+<meta property="og:image:height" content="1024">
+
+  <meta property="article:section" content="technology" />
+
+
+  <meta property="article:published_time" content="2021-05-15 19:05:48 -0500 CDT" />
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body class="green">
+
+
+<div class="container full headings--one-size">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="/">
+  <div class="logo">
+    Adam&#39;s Blag
+  </div>
+</a>
+
+    </div>
+    
+      <div class="menu-trigger">menu</div>
+    
+  </div>
+  
+    <nav class="menu">
+  <ul class="menu__inner menu__inner--desktop">
+    
+      
+        
+          <li><a href="https://adammelnyk.ca">Contact</a></li>
+        
+      
+      
+    
+
+    
+  </ul>
+
+  <ul class="menu__inner menu__inner--mobile">
+    
+      
+        <li><a href="https://adammelnyk.ca">Contact</a></li>
+      
+    
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+<div class="post">
+  <h1 class="post-title">
+    <a href="/post/browser/">Why I use Lynx</a></h1>
+  <div class="post-meta">
+    
+      <span class="post-date">
+        2021-05-15 
+      </span>
+    
+    
+  </div>
+
+  
+  <span class="post-tags">
+    
+    #<a href="/tags/web/">web</a>&nbsp;
+    
+    #<a href="/tags/browsers/">browsers</a>&nbsp;
+    
+    #<a href="/tags/lynx/">lynx</a>&nbsp;
+    
+    #<a href="/tags/terminal/">terminal</a>&nbsp;
+    
+  </span>
+  
+
+  
+
+  
+
+  <div class="post-content"><div>
+        <p>Lynx may be the oldest, currently maintained browser around. Though it looks nothing like a modern browser and will probably break trying to load any react based webpage, I still think it&rsquo;s one of the most underrated and underutilized browsers, which is why I still find myself using it on an almost daily basis.</p>
+<p>What Lynx offers:</p>
+<ul>
+<li>VI (and Emacs) bindings</li>
+<li>its own dotfile (.lynxrc)</li>
+<li>distraction free reading by default</li>
+<li>explicitly asks your permission to keep each cookie</li>
+<li>no images, CSS, or Javascript</li>
+<li>makes you feel like a hacker</li>
+</ul>
+<h2 id="simple-user-interface">Simple user interface<a href="#simple-user-interface" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>Like everything else in the terminal, the user interface for lynx is all keyboard based. <code>Q</code> quits, the arrow keys move your cursor to the next, clickable link, and the space bar will scroll you down to the next page. Everything else is listed at the bottom of the terminal.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">Commands: Use arrow keys to move, <span style="color:#e6db74">&#39;?&#39;</span> <span style="color:#66d9ef">for</span> help, <span style="color:#e6db74">&#39;q&#39;</span> to quit, <span style="color:#e6db74">&#39;&lt;-&#39;</span> to go back.
+  Arrow keys: Up and Down to move.  Right to follow a link; Left to go back.
+ H<span style="color:#f92672">)</span>elp O<span style="color:#f92672">)</span>ptions P<span style="color:#f92672">)</span>rint G<span style="color:#f92672">)</span>o M<span style="color:#f92672">)</span>ain screen Q<span style="color:#f92672">)</span>uit /<span style="color:#f92672">=</span>search <span style="color:#f92672">[</span>delete<span style="color:#f92672">]=</span>history list
+</code></pre></div><h2 id="minimal-user-tracking">Minimal user tracking<a href="#minimal-user-tracking" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>If you&rsquo;re concerned about privacy and being tracked online, then look no further! Because lynx is a <strong>text</strong> browser and does not load any graphics, CSS, or javascript, there is very little that can be used to track the user other than accepting cookies in which case, Lynx will prompt you to accept or reject each cookie. You can also view which cookies have already been stored by hitting <code>Ctrl + k</code>.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">www.theglobeandmail.com cookie: ak_user<span style="color:#f92672">={</span><span style="color:#e6db74">&#34;latitude&#34;</span>:<span style="color:#e6db74">&#34;30.2669&#34;</span> Allow? <span style="color:#f92672">(</span>Y/N/Always/neVer<span style="color:#f92672">)</span>
+</code></pre></div><p>Viewing your favorite news website on lynx can be an eye opening experience, it&rsquo;s one of the few times when you might be suspicious of someone offering you a dozen different cookies. Of course if your intention is to reject all cookies, this can get very tedious so it&rsquo;s best to just black hole everything and do something like:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">lynx -accept_all_cookies -cookie_file<span style="color:#f92672">=</span>/dev/null
+</code></pre></div><!-- raw HTML omitted -->
+<p>Though changing your user agent likely provides very minimal amounts of privacy, Lynx will also let you easily change your user agent to anything you&rsquo;d like:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">lynx -useragent<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;NotChrome&#34;</span>
+</code></pre></div><p>Or if you&rsquo;re feeling particularly evil:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">lynx -useragent<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)&#34;</span><span style="color:#960050;background-color:#1e0010">&#39;</span>
+</code></pre></div><h2 id="focus-and-readability">Focus and Readability<a href="#focus-and-readability" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>One of the key features that makes Lynx valuable as a browser, is how much easier it makes focusing on what I&rsquo;m reading. Many websites feature a lot of really distracting content, images, pop up modals, banner ads, colours, and sponsored content, all of which are designed and A/B tested to maximize attention grabbing and get you to click away to somewhere else or keep you on their website longer. All of this pushing and pulling makes for a very unfocused reading experience. Lynx cuts down on the noise. Much like the reader view in Firefox, Lynx makes it a lot easier to focus on what you&rsquo;re reading rather than be distracted by anything else. All you see is the text on the website. No click-bait headlines in the margins, just text.</p>
+<h3 id="a-cleaner-experience">A cleaner experience<a href="#a-cleaner-experience" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<p>Incredibly, some websites actually provide super light versions when viewed with lynx. DuckDuckGo automatically redirects to a &ldquo;lite&rdquo; version when using lynx (though not if you change the user agent!) giving you a very clean and usable webpage in lynx.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#75715e">#←←←                                                                     DuckDuckGo</span>
+   <span style="color:#75715e">#DuckDuckGo (Lite)</span>
+
+                                   DuckDuckGo
+                ________________________________________ Search
+
+</code></pre></div><h2 id="configurability">Configurability<a href="#configurability" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>Like many other command line utils, lynx is also configurable. It has it&rsquo;s own editable configuration file as well as giving you the option of defining your own <code>.lynxrc</code> file so you can take your configuration to other machines. There are <a href="https://lynx.invisible-island.net/lynx_help/cattoc.html">a lot of options</a>, many browsers provide similar functionality, though not without signing in. As well, because a lot of these configurations are available as command line flags, you can alias commands with flags giving you the ability to almost have various browser profiles depending on what you&rsquo;re doing.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">alias lynxnocookies<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;lynx -accept_all_cookies -cookie_file=/dev/null&#39;</span>
+alias lynxwhistory<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;lynx -accept_all_cookies -cookie_file=~/.lynx_cookies&#39;</span>
+</code></pre></div><h2 id="what-lynx-cant-do">What Lynx can&rsquo;t do<a href="#what-lynx-cant-do" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>I&rsquo;ll admit there are some things that are less than perfect about Lynx. You aren&rsquo;t going to be able to watch Youtube, scroll Instagram, or browse Reddit easily. As modern web development evolves, more and more of the web is being developed with javascript. Many websites no longer work at all without javascript being enabled (Not this website! It looks great in lynx! Try it out!). &lsquo;Web apps&rsquo; will almost never work with lynx as they will require javascript to do the most basic of functions such as submit forms and opening menus. Lynx will never excel at this kind of task, what it does well is text, and text only.</p>
+<h2 id="other-terminal-browsers">Other terminal browsers<a href="#other-terminal-browsers" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>Lynx isn&rsquo;t the only terminal browser, w3m is also quite popular and provides similar functionality, though it uses the cursor like a mouse meaning you need to use the arrow keys to move the cursor around in order to select anything.</p>
+<p>elinks provides a similar experience to lynx, however I would not recommend it&rsquo;s use. Because of it&rsquo;s lack of maintenance it has been removed from the debian repository.</p>
+<p>The most interesting by far of course is <a href="https://github.com/browsh-org/browsh">browsh</a>. It works just like normal, modern browser, rendering javascript, CSS, and even video! It&rsquo;s truly amazing though very different from the use case that I normally use lynx for.</p>
+<h2 id="why-you-should-try-lynx">Why you should Try Lynx<a href="#why-you-should-try-lynx" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>Lynx isn&rsquo;t for everyone, the first time you browse the web with lynx, when the oddly formatted text stares back at you, it might feel as if you took a step back in time to 80&rsquo;s. You won&rsquo;t be able to read your Twitter dms, or maybe even log into your email, but if you&rsquo;re looking for something without all the distractions of the modern web, lynx is the perfect choice.</p>
+
+      </div></div>
+
+  
+  
+<div class="pagination">
+    <div class="pagination__title">
+        <span class="pagination__title-h">Read other posts</span>
+        <hr />
+    </div>
+    <div class="pagination__buttons">
+        
+        
+        <span class="button next">
+            <a href="/post/creating-launch-plugins-for-pop-os/">
+                <span class="button__text">Creating Launch Plugins for Pop!_OS</span>
+                <span class="button__icon">→</span>
+            </a>
+        </span>
+        
+    </div>
+</div>
+
+  
+
+  
+
+</div>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright copyright--user">
+        <span>Adam Melnyk 2020</span>
+    
+        <span>:: Theme made by <a href="https://twitter.com/panr">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+<script src="/assets/main.js"></script>
+<script src="/assets/prism.js"></script>
+
+
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>

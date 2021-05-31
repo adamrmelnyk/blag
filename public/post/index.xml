@@ -7,7 +7,66 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Adam Melnyk 2020</copyright>
-    <lastBuildDate>Sat, 17 Apr 2021 15:16:33 -0500</lastBuildDate><atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 15 May 2021 19:05:48 -0500</lastBuildDate><atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Why I use Lynx</title>
+      <link>/post/browser/</link>
+      <pubDate>Sat, 15 May 2021 19:05:48 -0500</pubDate>
+      
+      <guid>/post/browser/</guid>
+      <description>Lynx may be the oldest, currently maintained browser around. Though it looks nothing like a modern browser and will probably break trying to load any react based webpage, I still think it&amp;rsquo;s one of the most underrated and underutilized browsers, which is why I still find myself using it on an almost daily basis.
+What Lynx offers:
+ VI (and Emacs) bindings its own dotfile (.lynxrc) distraction free reading by default explicitly asks your permission to keep each cookie no images, CSS, or Javascript makes you feel like a hacker  Simple user interface Like everything else in the terminal, the user interface for lynx is all keyboard based.</description>
+      <content>&lt;p&gt;Lynx may be the oldest, currently maintained browser around. Though it looks nothing like a modern browser and will probably break trying to load any react based webpage, I still think it&amp;rsquo;s one of the most underrated and underutilized browsers, which is why I still find myself using it on an almost daily basis.&lt;/p&gt;
+&lt;p&gt;What Lynx offers:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;VI (and Emacs) bindings&lt;/li&gt;
+&lt;li&gt;its own dotfile (.lynxrc)&lt;/li&gt;
+&lt;li&gt;distraction free reading by default&lt;/li&gt;
+&lt;li&gt;explicitly asks your permission to keep each cookie&lt;/li&gt;
+&lt;li&gt;no images, CSS, or Javascript&lt;/li&gt;
+&lt;li&gt;makes you feel like a hacker&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;simple-user-interface&#34;&gt;Simple user interface&lt;/h2&gt;
+&lt;p&gt;Like everything else in the terminal, the user interface for lynx is all keyboard based. &lt;code&gt;Q&lt;/code&gt; quits, the arrow keys move your cursor to the next, clickable link, and the space bar will scroll you down to the next page. Everything else is listed at the bottom of the terminal.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;Commands: Use arrow keys to move, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;?&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; help, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;q&amp;#39;&lt;/span&gt; to quit, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&amp;lt;-&amp;#39;&lt;/span&gt; to go back.
+  Arrow keys: Up and Down to move.  Right to follow a link; Left to go back.
+ H&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;elp O&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;ptions P&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;rint G&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;o M&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;ain screen Q&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;uit /&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;search &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;delete&lt;span style=&#34;color:#f92672&#34;&gt;]=&lt;/span&gt;history list
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;minimal-user-tracking&#34;&gt;Minimal user tracking&lt;/h2&gt;
+&lt;p&gt;If you&amp;rsquo;re concerned about privacy and being tracked online, then look no further! Because lynx is a &lt;strong&gt;text&lt;/strong&gt; browser and does not load any graphics, CSS, or javascript, there is very little that can be used to track the user other than accepting cookies in which case, Lynx will prompt you to accept or reject each cookie. You can also view which cookies have already been stored by hitting &lt;code&gt;Ctrl + k&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;www.theglobeandmail.com cookie: ak_user&lt;span style=&#34;color:#f92672&#34;&gt;={&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;latitude&amp;#34;&lt;/span&gt;:&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;30.2669&amp;#34;&lt;/span&gt; Allow? &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;Y/N/Always/neVer&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Viewing your favorite news website on lynx can be an eye opening experience, it&amp;rsquo;s one of the few times when you might be suspicious of someone offering you a dozen different cookies. Of course if your intention is to reject all cookies, this can get very tedious so it&amp;rsquo;s best to just black hole everything and do something like:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;lynx -accept_all_cookies -cookie_file&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;/dev/null
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Though changing your user agent likely provides very minimal amounts of privacy, Lynx will also let you easily change your user agent to anything you&amp;rsquo;d like:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;lynx -useragent&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;NotChrome&amp;#34;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Or if you&amp;rsquo;re feeling particularly evil:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;lynx -useragent&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&amp;#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;focus-and-readability&#34;&gt;Focus and Readability&lt;/h2&gt;
+&lt;p&gt;One of the key features that makes Lynx valuable as a browser, is how much easier it makes focusing on what I&amp;rsquo;m reading. Many websites feature a lot of really distracting content, images, pop up modals, banner ads, colours, and sponsored content, all of which are designed and A/B tested to maximize attention grabbing and get you to click away to somewhere else or keep you on their website longer. All of this pushing and pulling makes for a very unfocused reading experience. Lynx cuts down on the noise. Much like the reader view in Firefox, Lynx makes it a lot easier to focus on what you&amp;rsquo;re reading rather than be distracted by anything else. All you see is the text on the website. No click-bait headlines in the margins, just text.&lt;/p&gt;
+&lt;h3 id=&#34;a-cleaner-experience&#34;&gt;A cleaner experience&lt;/h3&gt;
+&lt;p&gt;Incredibly, some websites actually provide super light versions when viewed with lynx. DuckDuckGo automatically redirects to a &amp;ldquo;lite&amp;rdquo; version when using lynx (though not if you change the user agent!) giving you a very clean and usable webpage in lynx.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#←←←                                                                     DuckDuckGo&lt;/span&gt;
+   &lt;span style=&#34;color:#75715e&#34;&gt;#DuckDuckGo (Lite)&lt;/span&gt;
+
+                                   DuckDuckGo
+                ________________________________________ Search
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;configurability&#34;&gt;Configurability&lt;/h2&gt;
+&lt;p&gt;Like many other command line utils, lynx is also configurable. It has it&amp;rsquo;s own editable configuration file as well as giving you the option of defining your own &lt;code&gt;.lynxrc&lt;/code&gt; file so you can take your configuration to other machines. There are &lt;a href=&#34;https://lynx.invisible-island.net/lynx_help/cattoc.html&#34;&gt;a lot of options&lt;/a&gt;, many browsers provide similar functionality, though not without signing in. As well, because a lot of these configurations are available as command line flags, you can alias commands with flags giving you the ability to almost have various browser profiles depending on what you&amp;rsquo;re doing.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;alias lynxnocookies&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;lynx -accept_all_cookies -cookie_file=/dev/null&amp;#39;&lt;/span&gt;
+alias lynxwhistory&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;lynx -accept_all_cookies -cookie_file=~/.lynx_cookies&amp;#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;what-lynx-cant-do&#34;&gt;What Lynx can&amp;rsquo;t do&lt;/h2&gt;
+&lt;p&gt;I&amp;rsquo;ll admit there are some things that are less than perfect about Lynx. You aren&amp;rsquo;t going to be able to watch Youtube, scroll Instagram, or browse Reddit easily. As modern web development evolves, more and more of the web is being developed with javascript. Many websites no longer work at all without javascript being enabled (Not this website! It looks great in lynx! Try it out!). &amp;lsquo;Web apps&amp;rsquo; will almost never work with lynx as they will require javascript to do the most basic of functions such as submit forms and opening menus. Lynx will never excel at this kind of task, what it does well is text, and text only.&lt;/p&gt;
+&lt;h2 id=&#34;other-terminal-browsers&#34;&gt;Other terminal browsers&lt;/h2&gt;
+&lt;p&gt;Lynx isn&amp;rsquo;t the only terminal browser, w3m is also quite popular and provides similar functionality, though it uses the cursor like a mouse meaning you need to use the arrow keys to move the cursor around in order to select anything.&lt;/p&gt;
+&lt;p&gt;elinks provides a similar experience to lynx, however I would not recommend it&amp;rsquo;s use. Because of it&amp;rsquo;s lack of maintenance it has been removed from the debian repository.&lt;/p&gt;
+&lt;p&gt;The most interesting by far of course is &lt;a href=&#34;https://github.com/browsh-org/browsh&#34;&gt;browsh&lt;/a&gt;. It works just like normal, modern browser, rendering javascript, CSS, and even video! It&amp;rsquo;s truly amazing though very different from the use case that I normally use lynx for.&lt;/p&gt;
+&lt;h2 id=&#34;why-you-should-try-lynx&#34;&gt;Why you should Try Lynx&lt;/h2&gt;
+&lt;p&gt;Lynx isn&amp;rsquo;t for everyone, the first time you browse the web with lynx, when the oddly formatted text stares back at you, it might feel as if you took a step back in time to 80&amp;rsquo;s. You won&amp;rsquo;t be able to read your Twitter dms, or maybe even log into your email, but if you&amp;rsquo;re looking for something without all the distractions of the modern web, lynx is the perfect choice.&lt;/p&gt;
+</content>
+    </item>
+    
     <item>
       <title>Creating Launch Plugins for Pop!_OS</title>
       <link>/post/creating-launch-plugins-for-pop-os/</link>
