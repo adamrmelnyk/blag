@@ -9,7 +9,7 @@
     <copyright>Adam Melnyk 2020</copyright>
     <lastBuildDate>Wed, 16 Feb 2022 22:08:48 -0600</lastBuildDate><atom:link href="/categories/system76/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Creating Launch Plugins for Pop Os [Updated]</title>
+      <title>Creating Launch Plugins for Pop Os [Updated for 21.10]</title>
       <link>/post/creating-launch-plugins-for-pop-os-updated/</link>
       <pubDate>Wed, 16 Feb 2022 22:08:48 -0600</pubDate>
       
@@ -84,8 +84,11 @@ dbus-send --print-reply --dest&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/sp
       <pubDate>Sat, 17 Apr 2021 15:16:33 -0500</pubDate>
       
       <guid>/post/creating-launch-plugins-for-pop-os/</guid>
-      <description>Background I&amp;rsquo;ve been running linux on all of my machines for almost 15 years. For the first five I probably used a dozen or more flavours of Linux including OpenSuse, Fedora, Arch, Ubuntu, and many others. Eventually wiping my computer every month became more and more impractical and I abandoned my distro-hopping ways, settling on Ubuntu. Ubuntu was stable, regularly updated, had an environment that I really liked (despite what some people may say about the unity interface) and I never looked back.</description>
-      <content>&lt;h2 id=&#34;background&#34;&gt;Background&lt;/h2&gt;
+      <description>Update This post was written in 2021 for Pop!_OS 21.04. These instructions no longer work for Pop!_OS 21.10. Please see the new, updated post
+Background I&amp;rsquo;ve been running linux on all of my machines for almost 15 years. For the first five I probably used a dozen or more flavours of Linux including OpenSuse, Fedora, Arch, Ubuntu, and many others. Eventually wiping my computer every month became more and more impractical and I abandoned my distro-hopping ways, settling on Ubuntu.</description>
+      <content>&lt;h1 id=&#34;update&#34;&gt;Update&lt;/h1&gt;
+&lt;p&gt;This post was written in 2021 for Pop!_OS 21.04. These instructions no longer work for Pop!_OS 21.10. Please see &lt;a href=&#34;post/creating-launch-plugins-for-pop-os-updated/&#34;&gt;the new, updated post&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;background&#34;&gt;Background&lt;/h2&gt;
 &lt;p&gt;I&amp;rsquo;ve been running linux on all of my machines for almost 15 years. For the first five I probably used a dozen or more flavours of Linux including OpenSuse, Fedora, Arch, Ubuntu, and many others. Eventually wiping my computer every month became more and more impractical and I abandoned my distro-hopping ways, settling on Ubuntu. Ubuntu was stable, regularly updated, had an environment that I really liked (despite what some people may say about the unity interface) and I never looked back. That is until recently when I started using Pop!_OS.&lt;/p&gt;
 &lt;p&gt;It&amp;rsquo;s been a long time since I last switched operating systems but, it made me realize what I liked about Linux so much to begin with: You control the software, not the other way around. Want to install a new desktop environment? There are multiple to choose from. Want to add custom key mappings and shortcuts? You can do that. Want add additional functionality to an existing app on your machine? Download the source code and modify it as you like. Ubuntu was the clear, safe course but, now that I&amp;rsquo;m running a new OS, I&amp;rsquo;m feeling more in the spirit of making my operating system do what I want it to do. New OS, new me! So let&amp;rsquo;s get hacking.&lt;/p&gt;
 &lt;h2 id=&#34;creating-a-launcher-plugin&#34;&gt;Creating a launcher plugin&lt;/h2&gt;

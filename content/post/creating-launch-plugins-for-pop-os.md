@@ -7,6 +7,10 @@ categories: ["Pop!_OS", "plugins", "System76"]
 tags: ["programming", "plugins", "PopOS", "linux"]
 ---
 
+# Update
+
+This post was written in 2021 for Pop!_OS 21.04. These instructions no longer work for Pop!_OS 21.10. Please see [the new, updated post](post/creating-launch-plugins-for-pop-os-updated/)
+
 ## Background
 
 I've been running linux on all of my machines for almost 15 years. For the first five I probably used a dozen or more flavours of Linux including OpenSuse, Fedora, Arch, Ubuntu, and many others. Eventually wiping my computer every month became more and more impractical and I abandoned my distro-hopping ways, settling on Ubuntu. Ubuntu was stable, regularly updated, had an environment that I really liked (despite what some people may say about the unity interface) and I never looked back. That is until recently when I started using Pop!_OS.

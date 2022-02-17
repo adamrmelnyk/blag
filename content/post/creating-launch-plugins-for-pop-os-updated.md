@@ -1,5 +1,5 @@
 ---
-title: "Creating Launch Plugins for Pop Os [Updated]"
+title: "Creating Launch Plugins for Pop Os [Updated for 21.10]"
 date: 2022-02-16T22:08:48-06:00
 draft: false
 description: "[UPDATE] Customizing your desktop with Pop!_OS"
