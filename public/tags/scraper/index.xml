@@ -21,16 +21,16 @@
 &lt;p&gt;The first thing we need is a library to actually make requests to a webpage. There are more than a few of them, but the one I settled on is &lt;a href=&#34;https://docs.rs/reqwest/0.10.6/reqwest/&#34;&gt;reqwest&lt;/a&gt;, a highly recommended library with good support. You can find plenty of examples on how to use it and it also supports async await.&lt;/p&gt;
 &lt;p&gt;Using reqwest is as easy as this:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; body &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; reqwest::get(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;https://www.arm64.ca&amp;#34;&lt;/span&gt;)
-    .await&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;
+    .&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;
     .text()
-    .await&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;;
+    .&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;;
 
 println&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;body = {:?}&amp;#34;&lt;/span&gt;, body);
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The use case I had for this wasn&amp;rsquo;t too much more complicated than this. I just needed to check that the response code had a successful response and I could continue with scraping the data I needed.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;match&lt;/span&gt; get(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;url).await {
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;match&lt;/span&gt; get(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;url).&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt; {
     Ok(resp) &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; {
         &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; resp.status().is_success() {
-            &lt;span style=&#34;color:#66d9ef&#34;&gt;match&lt;/span&gt; resp.text().await {
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;match&lt;/span&gt; resp.text().&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt; {
                 Ok(body) &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; extract_data(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;body),
                 Err(_) &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; {
                     eprintln(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Oh noes! What happened to my body!&amp;#34;&lt;/span&gt;);
@@ -47,13 +47,13 @@ println&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;(&lt;span style=&
 &lt;p&gt;Once we&amp;rsquo;ve made a request to a website we need to actually extract that data. To do so we&amp;rsquo;ll need another library so we don&amp;rsquo;t have to reinvent the wheel. Another library &lt;a href=&#34;https://docs.rs/scraper/0.9.1/scraper/&#34;&gt;scraper&lt;/a&gt; does the job for us. It allows us to parse html and select particular elements; Exactly what we&amp;rsquo;ll need if we want to extract data from a table on wiki page. One of the useful parts of Scraper is that the &lt;code&gt;Selector&lt;/code&gt; lets us chain selectors together so we can find elements inside of other elements. This is extremely useful if we want to narrow down our results to exactly what we need.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;use&lt;/span&gt; scraper::{Html, Selector};
 
-&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; html &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; r&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;#&amp;#34;&lt;/span&gt;
-    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;div&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;
-        &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;h1&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;Foo&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/&lt;/span&gt;h1&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;
-        &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;h1&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;Bar&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/&lt;/span&gt;h1&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;
-        &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;h1&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;Baz&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/&lt;/span&gt;h1&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;
-    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/&lt;/span&gt;div&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;
-&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&amp;#34;#&lt;/span&gt;;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; html &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;r#&amp;#34;
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;    &amp;lt;div&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;        &amp;lt;h1&amp;gt;Foo&amp;lt;/h1&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;        &amp;lt;h1&amp;gt;Bar&amp;lt;/h1&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;        &amp;lt;h1&amp;gt;Baz&amp;lt;/h1&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;    &amp;lt;/div&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;#&lt;/span&gt;;
 
 &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; fragment &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Html::parse_fragment(html);
 &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; div_selector &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Selector::parse(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;div&amp;#34;&lt;/span&gt;).unwrap();
@@ -66,12 +66,12 @@ println&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;(&lt;span style=&
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;One disadvantage of using any library is that documentation isn&amp;rsquo;t always perfect. At the time of this writing there&amp;rsquo;s another use case I needed later which was not described in scrapers documentation or README. Selectors can be made to select multiple tags. This turns out to be really useful if you end up finding some heterogeneous data in the html you&amp;rsquo;re parsing as I did. Just like the selector above we put the tag we&amp;rsquo;re looking for into quotes, only this time, we separate all of the tags we&amp;rsquo;re looking for in one string with commas.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;use&lt;/span&gt; scraper::{Html, Selector};
 
-&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; html &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; r&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;#&amp;#34;&lt;/span&gt;
-        &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;div&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;
-            &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;h1&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;foo&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/&lt;/span&gt;h1&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;
-            &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;h2&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;bar&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/&lt;/span&gt;h2&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;
-            &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;h3&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;baz&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/&lt;/span&gt;h3&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;
-        &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/&lt;/span&gt;div&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&amp;#34;#&lt;/span&gt;;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; html &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;r#&amp;#34;
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;        &amp;lt;div&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;            &amp;lt;h1&amp;gt;foo&amp;lt;/h1&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;            &amp;lt;h2&amp;gt;bar&amp;lt;/h2&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;            &amp;lt;h3&amp;gt;baz&amp;lt;/h3&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;        &amp;lt;/div&amp;gt;&amp;#34;#&lt;/span&gt;;
 &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; fragment &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Html::parse_fragment(html);
 &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; selector &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Selector::parse(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;h1,h2,h3&amp;#34;&lt;/span&gt;).unwrap();
 

@@ -7,7 +7,47 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Adam Melnyk 2020</copyright>
-    <lastBuildDate>Sat, 15 May 2021 19:05:48 -0500</lastBuildDate><atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 16 Feb 2022 22:08:48 -0600</lastBuildDate><atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>linux</title>
+      <link>/tags/linux/</link>
+      <pubDate>Wed, 16 Feb 2022 22:08:48 -0600</pubDate>
+      
+      <guid>/tags/linux/</guid>
+      <description></description>
+      <content></content>
+    </item>
+    
+    <item>
+      <title>plugins</title>
+      <link>/tags/plugins/</link>
+      <pubDate>Wed, 16 Feb 2022 22:08:48 -0600</pubDate>
+      
+      <guid>/tags/plugins/</guid>
+      <description></description>
+      <content></content>
+    </item>
+    
+    <item>
+      <title>PopOS</title>
+      <link>/tags/popos/</link>
+      <pubDate>Wed, 16 Feb 2022 22:08:48 -0600</pubDate>
+      
+      <guid>/tags/popos/</guid>
+      <description></description>
+      <content></content>
+    </item>
+    
+    <item>
+      <title>programming</title>
+      <link>/tags/programming/</link>
+      <pubDate>Wed, 16 Feb 2022 22:08:48 -0600</pubDate>
+      
+      <guid>/tags/programming/</guid>
+      <description></description>
+      <content></content>
+    </item>
+    
     <item>
       <title>browsers</title>
       <link>/tags/browsers/</link>
@@ -44,46 +84,6 @@
       <pubDate>Sat, 15 May 2021 19:05:48 -0500</pubDate>
       
       <guid>/tags/web/</guid>
-      <description></description>
-      <content></content>
-    </item>
-    
-    <item>
-      <title>linux</title>
-      <link>/tags/linux/</link>
-      <pubDate>Sat, 17 Apr 2021 15:16:33 -0500</pubDate>
-      
-      <guid>/tags/linux/</guid>
-      <description></description>
-      <content></content>
-    </item>
-    
-    <item>
-      <title>plugins</title>
-      <link>/tags/plugins/</link>
-      <pubDate>Sat, 17 Apr 2021 15:16:33 -0500</pubDate>
-      
-      <guid>/tags/plugins/</guid>
-      <description></description>
-      <content></content>
-    </item>
-    
-    <item>
-      <title>PopOS</title>
-      <link>/tags/popos/</link>
-      <pubDate>Sat, 17 Apr 2021 15:16:33 -0500</pubDate>
-      
-      <guid>/tags/popos/</guid>
-      <description></description>
-      <content></content>
-    </item>
-    
-    <item>
-      <title>programming</title>
-      <link>/tags/programming/</link>
-      <pubDate>Sat, 17 Apr 2021 15:16:33 -0500</pubDate>
-      
-      <guid>/tags/programming/</guid>
       <description></description>
       <content></content>
     </item>

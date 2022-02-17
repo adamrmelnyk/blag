@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>Creating Launch Plugins for Pop Os [Updated] :: Adam&#39;s Blag</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="[UPDATE] Customizing your desktop with Pop!_OS" />
+<meta name="keywords" content="" />
+<meta name="robots" content="noodp" />
+<link rel="canonical" href="/post/creating-launch-plugins-for-pop-os-updated/" />
+
+
+
+
+<link rel="stylesheet" href="/assets/style.css">
+
+  <link rel="stylesheet" href="/assets/green.css">
+
+
+
+
+
+
+<link rel="apple-touch-icon" href="/img/apple-touch-icon-192x192.png">
+
+  <link rel="shortcut icon" href="/img/favicon/green.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+  
+    <meta name="twitter:site" content="" />
+  
+    <meta name="twitter:creator" content="" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Creating Launch Plugins for Pop Os [Updated]">
+<meta property="og:description" content="[UPDATE] Customizing your desktop with Pop!_OS" />
+<meta property="og:url" content="/post/creating-launch-plugins-for-pop-os-updated/" />
+<meta property="og:site_name" content="Adam&#39;s Blag" />
+
+  
+    <meta property="og:image" content="/img/favicon/green.png">
+  
+
+<meta property="og:image:width" content="2048">
+<meta property="og:image:height" content="1024">
+
+  <meta property="article:section" content="Pop!_OS" />
+
+  <meta property="article:section" content="plugins" />
+
+  <meta property="article:section" content="System76" />
+
+
+  <meta property="article:published_time" content="2022-02-16 22:08:48 -0600 CST" />
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body class="green">
+
+
+<div class="container full headings--one-size">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="/">
+  <div class="logo">
+    Adam&#39;s Blag
+  </div>
+</a>
+
+    </div>
+    
+      <div class="menu-trigger">menu</div>
+    
+  </div>
+  
+    <nav class="menu">
+  <ul class="menu__inner menu__inner--desktop">
+    
+      
+        
+          <li><a href="https://adammelnyk.ca">Contact</a></li>
+        
+      
+      
+    
+
+    
+  </ul>
+
+  <ul class="menu__inner menu__inner--mobile">
+    
+      
+        <li><a href="https://adammelnyk.ca">Contact</a></li>
+      
+    
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+<div class="post">
+  <h1 class="post-title">
+    <a href="/post/creating-launch-plugins-for-pop-os-updated/">Creating Launch Plugins for Pop Os [Updated]</a></h1>
+  <div class="post-meta">
+    
+      <span class="post-date">
+        2022-02-16 
+      </span>
+    
+    
+  </div>
+
+  
+  <span class="post-tags">
+    
+    #<a href="/tags/programming/">programming</a>&nbsp;
+    
+    #<a href="/tags/plugins/">plugins</a>&nbsp;
+    
+    #<a href="/tags/popos/">PopOS</a>&nbsp;
+    
+    #<a href="/tags/linux/">linux</a>&nbsp;
+    
+  </span>
+  
+
+  
+
+  
+
+  <div class="post-content"><div>
+        <h2 id="background">Background<a href="#background" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>This is an update to a <a href="/post/creating-launch-plugins-for-pop-os/">previous post</a>. In 2021, I wrote a short blog post on an easy way to create a plugin using the Pop_launcher in Pop!_OS. Unfortunately for me, Pop!_OS completely changed the way the their plugins work in 21.10! I found out when I received an email from someone saying that they had followed my instructions but didn&rsquo;t have any success with the plugin. Luckily for us the solution turned out to be really simple.</p>
+<h2 id="creating-a-launcher-plugin">Creating a launcher plugin<a href="#creating-a-launcher-plugin" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>One of the cool features of Pop!_OS is the <a href="https://github.com/pop-os/shell">Pop Shell</a>, which brings the features of other tiling window managers like i3wm to GNOME. It also features launcher plugins which we can write ourselves in JS which is what we&rsquo;ll be doing in this post.</p>
+<p>The easiest way to try this out is just to simply copy one of the existing plugin examples and just drop and replace what features we want to add instead.</p>
+<h2 id="making-a-spotify-plugin">Making a Spotify plugin<a href="#making-a-spotify-plugin" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>I use Spotify pretty regularly, so it might be pretty handy to include a command on the launcher to pause/play Spotify or just select the next track.</p>
+<h2 id="where-plugins-are-located">Where Plugins are located<a href="#where-plugins-are-located" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>Pop!_OS keeps it&rsquo;s plugins in two places:</p>
+<ul>
+<li>Apps are kept at <code>/usr/lib/pop-launcher/plugins/{plugin}/</code> and are written in Rust</li>
+<li>Scripts are kept in <code>/usr/lib/pop-launcher/scripts/{scripts}</code> and are written in Bash</li>
+</ul>
+<p>For our purposes, writing a bash script will be sufficient, so we&rsquo;ll be working in the scripts directory.</p>
+<h2 id="pulling-down-an-example">Pulling down an example<a href="#pulling-down-an-example" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>The first thing we can do is take an existing plugin and adapt it to our needs. We’ll need to copy one of the plugins from the scripts directory above. You can find these files on your machine running Pop!_OS at: <code>/usr/lib/pop-launcher/scripts/session</code>. <em>Do Not edit these plugins in place!!!</em>, otherwise the next time you try to restart your computer from the launcher you&rsquo;ll just end up switching the track on spotify. Copy them into some new directory of your choice, You can also take a look at them directly on <a href="https://github.com/pop-os/launcher/blob/master/scripts/session/session-logout.sh">github</a>. I&rsquo;ve called mine <code>popify</code> and I&rsquo;ve created a new file for the script we&rsquo;ll execute called: <code>popify-play.sh</code>.</p>
+<h2 id="toggling-pause-and-play-in-spotify">Toggling Pause and Play in Spotify<a href="#toggling-pause-and-play-in-spotify" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>The next step is straight forward. We edit the file to look something like this:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#75715e">#!/bin/sh
+</span><span style="color:#75715e"></span><span style="color:#75715e">#</span>
+<span style="color:#75715e"># name: Pause or Play Spotify</span>
+<span style="color:#75715e"># icon: com.spotify.Client</span>
+<span style="color:#75715e"># description: Pause or Play Spotify</span>
+<span style="color:#75715e"># keywords: pause play spotify</span>
+
+
+dbus-send --print-reply --dest<span style="color:#f92672">=</span>org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause
+</code></pre></div><p>The file is pretty simple:</p>
+<ul>
+<li>We&rsquo;ve given it a name</li>
+<li>An existing icon (It&rsquo;s an svg file already on your computer if you already have spotify installed)</li>
+<li>A helpful description</li>
+<li>keywords which will be used to search for our plugin in the launcher</li>
+<li>lastly the command that will actually pause and play spotify</li>
+</ul>
+<p>This is actually quite a bit easier than it was previously as it no longer requires a more complicated and rather boilerplate JavaScript setup, provided that you are comfortable doing it in Bash or don&rsquo;t want to do anything particularly complicated.</p>
+<h2 id="testing-it-out">Testing it out<a href="#testing-it-out" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>Unlike the previous plugin which required you to restart the gnome shell. You should be able to save run the plugin as soon as you save the file.</p>
+<p><img src="/images/launcher-2.png" alt="Pop_OS launcher"></p>
+<h2 id="skipping-to-the-next-track">Skipping to the next track<a href="#skipping-to-the-next-track" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>Now that you&rsquo;ve made Spotify pause and play, you can easily make a second script to switch tracks: Simply make a new file in the same directory as you previous script. I&rsquo;ve called mine: <code>popify-next.sh</code></p>
+<p>The file contents might look something like:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#75715e">#!/bin/sh
+</span><span style="color:#75715e"></span><span style="color:#75715e">#</span>
+<span style="color:#75715e"># name: Play Next Song Spotify</span>
+<span style="color:#75715e"># icon: com.spotify.Client</span>
+<span style="color:#75715e"># description: Skip to the Next Song on Spotify</span>
+<span style="color:#75715e"># keywords: next play spotify</span>
+
+dbus-send --print-reply --dest<span style="color:#f92672">=</span>org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Next
+</code></pre></div><p>After you save the script above you should be able to skip to the next track.</p>
+<p><img src="/images/launcher-next.png" alt="Pop_OS launcher"></p>
+<p>If you feel like a hacker at this point, it&rsquo;s because you are! So throw on those shades, put on your best black hoodie, and go forth and hack away on some cool plugins. Hack the <del>Planet</del> OS!</p>
+<h2 id="building-more-plugins">Building more plugins<a href="#building-more-plugins" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>Hopefully this gives you a starting point for developing new plugins for Pop!_OS. There isn&rsquo;t much official documentation or tutorials on writing plugins other than what&rsquo;s in the github readme, but hopefully this inspires anyone who wanted to give Pop!_OS a try, another reason to checkout it out.</p>
+<h2 id="sources">Sources<a href="#sources" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<ul>
+<li><a href="https://github.com/pop-os/launcher/blob/master/README.md">https://github.com/pop-os/launcher/blob/master/README.md</a></li>
+<li>Sample plugin: <a href="https://github.com/pop-os/launcher/blob/master/scripts/session/session-logout.sh">https://github.com/pop-os/launcher/blob/master/scripts/session/session-logout.sh</a></li>
+</ul>
+
+      </div></div>
+
+  
+  
+<div class="pagination">
+    <div class="pagination__title">
+        <span class="pagination__title-h">Read other posts</span>
+        <hr />
+    </div>
+    <div class="pagination__buttons">
+        
+        
+        <span class="button next">
+            <a href="/post/browser/">
+                <span class="button__text">Why I use Lynx</span>
+                <span class="button__icon">→</span>
+            </a>
+        </span>
+        
+    </div>
+</div>
+
+  
+
+  
+
+</div>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright copyright--user">
+        <span>Adam Melnyk 2020</span>
+    
+        <span>:: Theme made by <a href="https://twitter.com/panr">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+<script src="/assets/main.js"></script>
+<script src="/assets/prism.js"></script>
+
+
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>

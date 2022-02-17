@@ -154,16 +154,16 @@
 <p>The first thing we need is a library to actually make requests to a webpage. There are more than a few of them, but the one I settled on is <a href="https://docs.rs/reqwest/0.10.6/reqwest/">reqwest</a>, a highly recommended library with good support. You can find plenty of examples on how to use it and it also supports async await.</p>
 <p>Using reqwest is as easy as this:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">let</span> body <span style="color:#f92672">=</span> reqwest::get(<span style="color:#e6db74">&#34;https://www.arm64.ca&#34;</span>)
-    .await<span style="color:#f92672">?</span>
+    .<span style="color:#66d9ef">await</span><span style="color:#f92672">?</span>
     .text()
-    .await<span style="color:#f92672">?</span>;
+    .<span style="color:#66d9ef">await</span><span style="color:#f92672">?</span>;
 
 println<span style="color:#f92672">!</span>(<span style="color:#e6db74">&#34;body = {:?}&#34;</span>, body);
 </code></pre></div><p>The use case I had for this wasn&rsquo;t too much more complicated than this. I just needed to check that the response code had a successful response and I could continue with scraping the data I needed.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">match</span> get(<span style="color:#f92672">&amp;</span>url).await {
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">match</span> get(<span style="color:#f92672">&amp;</span>url).<span style="color:#66d9ef">await</span> {
     Ok(resp) <span style="color:#f92672">=&gt;</span> {
         <span style="color:#66d9ef">if</span> resp.status().is_success() {
-            <span style="color:#66d9ef">match</span> resp.text().await {
+            <span style="color:#66d9ef">match</span> resp.text().<span style="color:#66d9ef">await</span> {
                 Ok(body) <span style="color:#f92672">=&gt;</span> extract_data(<span style="color:#f92672">&amp;</span>body),
                 Err(_) <span style="color:#f92672">=&gt;</span> {
                     eprintln(<span style="color:#e6db74">&#34;Oh noes! What happened to my body!&#34;</span>);
@@ -180,13 +180,13 @@ println<span style="color:#f92672">!</span>(<span style="color:#e6db74">&#34;bod
 <p>Once we&rsquo;ve made a request to a website we need to actually extract that data. To do so we&rsquo;ll need another library so we don&rsquo;t have to reinvent the wheel. Another library <a href="https://docs.rs/scraper/0.9.1/scraper/">scraper</a> does the job for us. It allows us to parse html and select particular elements; Exactly what we&rsquo;ll need if we want to extract data from a table on wiki page. One of the useful parts of Scraper is that the <code>Selector</code> lets us chain selectors together so we can find elements inside of other elements. This is extremely useful if we want to narrow down our results to exactly what we need.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">use</span> scraper::{Html, Selector};
 
-<span style="color:#66d9ef">let</span> html <span style="color:#f92672">=</span> r<span style="color:#960050;background-color:#1e0010">#&#34;</span>
-    <span style="color:#f92672">&lt;</span>div<span style="color:#f92672">&gt;</span>
-        <span style="color:#f92672">&lt;</span>h1<span style="color:#f92672">&gt;</span>Foo<span style="color:#f92672">&lt;/</span>h1<span style="color:#f92672">&gt;</span>
-        <span style="color:#f92672">&lt;</span>h1<span style="color:#f92672">&gt;</span>Bar<span style="color:#f92672">&lt;/</span>h1<span style="color:#f92672">&gt;</span>
-        <span style="color:#f92672">&lt;</span>h1<span style="color:#f92672">&gt;</span>Baz<span style="color:#f92672">&lt;/</span>h1<span style="color:#f92672">&gt;</span>
-    <span style="color:#f92672">&lt;/</span>div<span style="color:#f92672">&gt;</span>
-<span style="color:#960050;background-color:#1e0010">&#34;#</span>;
+<span style="color:#66d9ef">let</span> html <span style="color:#f92672">=</span> <span style="color:#e6db74">r#&#34;
+</span><span style="color:#e6db74">    &lt;div&gt;
+</span><span style="color:#e6db74">        &lt;h1&gt;Foo&lt;/h1&gt;
+</span><span style="color:#e6db74">        &lt;h1&gt;Bar&lt;/h1&gt;
+</span><span style="color:#e6db74">        &lt;h1&gt;Baz&lt;/h1&gt;
+</span><span style="color:#e6db74">    &lt;/div&gt;
+</span><span style="color:#e6db74">&#34;#</span>;
 
 <span style="color:#66d9ef">let</span> fragment <span style="color:#f92672">=</span> Html::parse_fragment(html);
 <span style="color:#66d9ef">let</span> div_selector <span style="color:#f92672">=</span> Selector::parse(<span style="color:#e6db74">&#34;div&#34;</span>).unwrap();
@@ -199,12 +199,12 @@ println<span style="color:#f92672">!</span>(<span style="color:#e6db74">&#34;bod
 </code></pre></div><p>One disadvantage of using any library is that documentation isn&rsquo;t always perfect. At the time of this writing there&rsquo;s another use case I needed later which was not described in scrapers documentation or README. Selectors can be made to select multiple tags. This turns out to be really useful if you end up finding some heterogeneous data in the html you&rsquo;re parsing as I did. Just like the selector above we put the tag we&rsquo;re looking for into quotes, only this time, we separate all of the tags we&rsquo;re looking for in one string with commas.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">use</span> scraper::{Html, Selector};
 
-<span style="color:#66d9ef">let</span> html <span style="color:#f92672">=</span> r<span style="color:#960050;background-color:#1e0010">#&#34;</span>
-        <span style="color:#f92672">&lt;</span>div<span style="color:#f92672">&gt;</span>
-            <span style="color:#f92672">&lt;</span>h1<span style="color:#f92672">&gt;</span>foo<span style="color:#f92672">&lt;/</span>h1<span style="color:#f92672">&gt;</span>
-            <span style="color:#f92672">&lt;</span>h2<span style="color:#f92672">&gt;</span>bar<span style="color:#f92672">&lt;/</span>h2<span style="color:#f92672">&gt;</span>
-            <span style="color:#f92672">&lt;</span>h3<span style="color:#f92672">&gt;</span>baz<span style="color:#f92672">&lt;/</span>h3<span style="color:#f92672">&gt;</span>
-        <span style="color:#f92672">&lt;/</span>div<span style="color:#f92672">&gt;</span><span style="color:#960050;background-color:#1e0010">&#34;#</span>;
+<span style="color:#66d9ef">let</span> html <span style="color:#f92672">=</span> <span style="color:#e6db74">r#&#34;
+</span><span style="color:#e6db74">        &lt;div&gt;
+</span><span style="color:#e6db74">            &lt;h1&gt;foo&lt;/h1&gt;
+</span><span style="color:#e6db74">            &lt;h2&gt;bar&lt;/h2&gt;
+</span><span style="color:#e6db74">            &lt;h3&gt;baz&lt;/h3&gt;
+</span><span style="color:#e6db74">        &lt;/div&gt;&#34;#</span>;
 <span style="color:#66d9ef">let</span> fragment <span style="color:#f92672">=</span> Html::parse_fragment(html);
 <span style="color:#66d9ef">let</span> selector <span style="color:#f92672">=</span> Selector::parse(<span style="color:#e6db74">&#34;h1,h2,h3&#34;</span>).unwrap();
 
