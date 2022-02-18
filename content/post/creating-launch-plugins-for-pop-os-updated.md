@@ -13,7 +13,7 @@ This is an update to a [previous post](/post/creating-launch-plugins-for-pop-os/
 
 ## Creating a launcher plugin
 
-One of the cool features of Pop!_OS is the [Pop Shell](https://github.com/pop-os/shell), which brings the features of other tiling window managers like i3wm to GNOME. It also features launcher plugins which we can write ourselves in JS which is what we'll be doing in this post.
+One of the cool features of Pop!_OS is the [Pop Shell](https://github.com/pop-os/shell), which brings the features of other tiling window managers like i3wm to GNOME. It also features launcher plugins which we can write ourselves in Rust or anything we can execute from the shell which is what we'll be doing in this post.
 
 The easiest way to try this out is just to simply copy one of the existing plugin examples and just drop and replace what features we want to add instead.
 
@@ -23,7 +23,7 @@ I use Spotify pretty regularly, so it might be pretty handy to include a command
 
 ## Where Plugins are located
 
-Pop!_OS keeps it's plugins in two places:
+Pop!_OS keeps its plugins in two places:
 
 - Apps are kept at `/usr/lib/pop-launcher/plugins/{plugin}/` and are written in Rust
 - Scripts are kept in `/usr/lib/pop-launcher/scripts/{scripts}` and are written in Bash

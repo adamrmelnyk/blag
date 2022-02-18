@@ -128,7 +128,7 @@ and not:
 
 `<span class="flagicon"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Flag_of_the_People%27s_Republic_of_China.svg/23px-Flag_of_the_People%27s_Republic_of_China.svg.png" decoding="async" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Flag_of_the_People%27s_Republic_of_China.svg/35px-Flag_of_the_People%27s_Republic_of_China.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Flag_of_the_People%27s_Republic_of_China.svg/45px-Flag_of_the_People%27s_Republic_of_China.svg.png 2x" data-file-width="900" data-file-height="600" width="23" height="15"></span>&nbsp;<a href="/wiki/Demographics_of_China" title="Demographics of China">China</a><sup id="cite_ref-4" class="reference"><a href="#cite_note-4">[b]</a></sup>`
 
-Cleaning up this data is pretty tedious and requires a lot of tweaking depending on how each page is styled so I won't include any sort of insite here. You can see what I did in the project [here](https://github.com/adamrmelnyk/wtd/blob/master/src/main.rs#L225).
+Cleaning up this data is pretty tedious and requires a lot of tweaking depending on how each page is styled so I won't include any sort of insight here. You can see what I did in the project [here](https://github.com/adamrmelnyk/wtd/blob/master/src/main.rs#L225).
 
 ### Building the CLI tool elements
 
