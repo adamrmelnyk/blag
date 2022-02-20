@@ -7,7 +7,77 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Adam Melnyk 2020</copyright>
-    <lastBuildDate>Sat, 15 May 2021 19:05:48 -0500</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 16 Feb 2022 22:08:48 -0600</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Creating Launch Plugins for Pop Os [Updated for 21.10]</title>
+      <link>/post/creating-launch-plugins-for-pop-os-updated/</link>
+      <pubDate>Wed, 16 Feb 2022 22:08:48 -0600</pubDate>
+      
+      <guid>/post/creating-launch-plugins-for-pop-os-updated/</guid>
+      <description>Background This is an update to a previous post. In 2021, I wrote a short blog post on an easy way to create a plugin using the Pop_launcher in Pop!_OS. Unfortunately for me, Pop!_OS completely changed the way the their plugins work in 21.10! I found out when I received an email from someone saying that they had followed my instructions but didn&amp;rsquo;t have any success with the plugin. Luckily for us the solution turned out to be really simple.</description>
+      <content>&lt;h2 id=&#34;background&#34;&gt;Background&lt;/h2&gt;
+&lt;p&gt;This is an update to a &lt;a href=&#34;/post/creating-launch-plugins-for-pop-os/&#34;&gt;previous post&lt;/a&gt;. In 2021, I wrote a short blog post on an easy way to create a plugin using the Pop_launcher in Pop!_OS. Unfortunately for me, Pop!_OS completely changed the way the their plugins work in 21.10! I found out when I received an email from someone saying that they had followed my instructions but didn&amp;rsquo;t have any success with the plugin. Luckily for us the solution turned out to be really simple.&lt;/p&gt;
+&lt;h2 id=&#34;creating-a-launcher-plugin&#34;&gt;Creating a launcher plugin&lt;/h2&gt;
+&lt;p&gt;One of the cool features of Pop!_OS is the &lt;a href=&#34;https://github.com/pop-os/shell&#34;&gt;Pop Shell&lt;/a&gt;, which brings the features of other tiling window managers like i3wm to GNOME. It also features launcher plugins which we can write ourselves in Rust or anything we can execute from the shell which is what we&amp;rsquo;ll be doing in this post.&lt;/p&gt;
+&lt;p&gt;The easiest way to try this out is just to simply copy one of the existing plugin examples and just drop and replace what features we want to add instead.&lt;/p&gt;
+&lt;h2 id=&#34;making-a-spotify-plugin&#34;&gt;Making a Spotify plugin&lt;/h2&gt;
+&lt;p&gt;I use Spotify pretty regularly, so it might be pretty handy to include a command on the launcher to pause/play Spotify or just select the next track.&lt;/p&gt;
+&lt;h2 id=&#34;where-plugins-are-located&#34;&gt;Where Plugins are located&lt;/h2&gt;
+&lt;p&gt;Pop!_OS keeps its plugins in two places:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Apps are kept at &lt;code&gt;/usr/lib/pop-launcher/plugins/{plugin}/&lt;/code&gt; and are written in Rust&lt;/li&gt;
+&lt;li&gt;Scripts are kept in &lt;code&gt;/usr/lib/pop-launcher/scripts/{scripts}&lt;/code&gt; and are written in Bash&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;For our purposes, writing a bash script will be sufficient, so we&amp;rsquo;ll be working in the scripts directory.&lt;/p&gt;
+&lt;h2 id=&#34;pulling-down-an-example&#34;&gt;Pulling down an example&lt;/h2&gt;
+&lt;p&gt;The first thing we can do is take an existing plugin and adapt it to our needs. We’ll need to copy one of the plugins from the scripts directory above. You can find these files on your machine running Pop!_OS at: &lt;code&gt;/usr/lib/pop-launcher/scripts/session&lt;/code&gt;. &lt;em&gt;Do Not edit these plugins in place!!!&lt;/em&gt;, otherwise the next time you try to restart your computer from the launcher you&amp;rsquo;ll just end up switching the track on spotify. Copy them into some new directory of your choice, You can also take a look at them directly on &lt;a href=&#34;https://github.com/pop-os/launcher/blob/master/scripts/session/session-logout.sh&#34;&gt;github&lt;/a&gt;. I&amp;rsquo;ve called mine &lt;code&gt;popify&lt;/code&gt; and I&amp;rsquo;ve created a new file for the script we&amp;rsquo;ll execute called: &lt;code&gt;popify-play.sh&lt;/code&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;toggling-pause-and-play-in-spotify&#34;&gt;Toggling Pause and Play in Spotify&lt;/h2&gt;
+&lt;p&gt;The next step is straight forward. We edit the file to look something like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#!/bin/sh
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# name: Pause or Play Spotify&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# icon: com.spotify.Client&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# description: Pause or Play Spotify&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# keywords: pause play spotify&lt;/span&gt;
+
+
+dbus-send --print-reply --dest&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The file is pretty simple:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;We&amp;rsquo;ve given it a name&lt;/li&gt;
+&lt;li&gt;An existing icon (It&amp;rsquo;s an svg file already on your computer if you already have spotify installed)&lt;/li&gt;
+&lt;li&gt;A helpful description&lt;/li&gt;
+&lt;li&gt;keywords which will be used to search for our plugin in the launcher&lt;/li&gt;
+&lt;li&gt;lastly the command that will actually pause and play spotify&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;This is actually quite a bit easier than it was previously as it no longer requires a more complicated and rather boilerplate JavaScript setup, provided that you are comfortable doing it in Bash or don&amp;rsquo;t want to do anything particularly complicated.&lt;/p&gt;
+&lt;h2 id=&#34;testing-it-out&#34;&gt;Testing it out&lt;/h2&gt;
+&lt;p&gt;Unlike the previous plugin which required you to restart the gnome shell. You should be able to save run the plugin as soon as you save the file.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/launcher-2.png&#34; alt=&#34;Pop_OS launcher&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;skipping-to-the-next-track&#34;&gt;Skipping to the next track&lt;/h2&gt;
+&lt;p&gt;Now that you&amp;rsquo;ve made Spotify pause and play, you can easily make a second script to switch tracks: Simply make a new file in the same directory as you previous script. I&amp;rsquo;ve called mine: &lt;code&gt;popify-next.sh&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;The file contents might look something like:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#!/bin/sh
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# name: Play Next Song Spotify&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# icon: com.spotify.Client&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# description: Skip to the Next Song on Spotify&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# keywords: next play spotify&lt;/span&gt;
+
+dbus-send --print-reply --dest&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Next
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;After you save the script above you should be able to skip to the next track.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/launcher-next.png&#34; alt=&#34;Pop_OS launcher&#34;&gt;&lt;/p&gt;
+&lt;p&gt;If you feel like a hacker at this point, it&amp;rsquo;s because you are! So throw on those shades, put on your best black hoodie, and go forth and hack away on some cool plugins. Hack the &lt;del&gt;Planet&lt;/del&gt; OS!&lt;/p&gt;
+&lt;h2 id=&#34;building-more-plugins&#34;&gt;Building more plugins&lt;/h2&gt;
+&lt;p&gt;Hopefully this gives you a starting point for developing new plugins for Pop!_OS. There isn&amp;rsquo;t much official documentation or tutorials on writing plugins other than what&amp;rsquo;s in the github readme, but hopefully this inspires anyone who wanted to give Pop!_OS a try, another reason to checkout it out.&lt;/p&gt;
+&lt;h2 id=&#34;sources&#34;&gt;Sources&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/pop-os/launcher/blob/master/README.md&#34;&gt;https://github.com/pop-os/launcher/blob/master/README.md&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Sample plugin: &lt;a href=&#34;https://github.com/pop-os/launcher/blob/master/scripts/session/session-logout.sh&#34;&gt;https://github.com/pop-os/launcher/blob/master/scripts/session/session-logout.sh&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+    </item>
+    
     <item>
       <title>Why I use Lynx</title>
       <link>/post/browser/</link>
@@ -73,8 +143,11 @@ alias lynxwhistory&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;sp
       <pubDate>Sat, 17 Apr 2021 15:16:33 -0500</pubDate>
       
       <guid>/post/creating-launch-plugins-for-pop-os/</guid>
-      <description>Background I&amp;rsquo;ve been running linux on all of my machines for almost 15 years. For the first five I probably used a dozen or more flavours of Linux including OpenSuse, Fedora, Arch, Ubuntu, and many others. Eventually wiping my computer every month became more and more impractical and I abandoned my distro-hopping ways, settling on Ubuntu. Ubuntu was stable, regularly updated, had an environment that I really liked (despite what some people may say about the unity interface) and I never looked back.</description>
-      <content>&lt;h2 id=&#34;background&#34;&gt;Background&lt;/h2&gt;
+      <description>Update This post was written in 2021 for Pop!_OS 21.04. These instructions no longer work for Pop!_OS 21.10. Please see the new, updated post
+Background I&amp;rsquo;ve been running linux on all of my machines for almost 15 years. For the first five I probably used a dozen or more flavours of Linux including OpenSuse, Fedora, Arch, Ubuntu, and many others. Eventually wiping my computer every month became more and more impractical and I abandoned my distro-hopping ways, settling on Ubuntu.</description>
+      <content>&lt;h1 id=&#34;update&#34;&gt;Update&lt;/h1&gt;
+&lt;p&gt;This post was written in 2021 for Pop!_OS 21.04. These instructions no longer work for Pop!_OS 21.10. Please see &lt;a href=&#34;https://www.arm64.ca/post/creating-launch-plugins-for-pop-os-updated/&#34;&gt;the new, updated post&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;background&#34;&gt;Background&lt;/h2&gt;
 &lt;p&gt;I&amp;rsquo;ve been running linux on all of my machines for almost 15 years. For the first five I probably used a dozen or more flavours of Linux including OpenSuse, Fedora, Arch, Ubuntu, and many others. Eventually wiping my computer every month became more and more impractical and I abandoned my distro-hopping ways, settling on Ubuntu. Ubuntu was stable, regularly updated, had an environment that I really liked (despite what some people may say about the unity interface) and I never looked back. That is until recently when I started using Pop!_OS.&lt;/p&gt;
 &lt;p&gt;It&amp;rsquo;s been a long time since I last switched operating systems but, it made me realize what I liked about Linux so much to begin with: You control the software, not the other way around. Want to install a new desktop environment? There are multiple to choose from. Want to add custom key mappings and shortcuts? You can do that. Want add additional functionality to an existing app on your machine? Download the source code and modify it as you like. Ubuntu was the clear, safe course but, now that I&amp;rsquo;m running a new OS, I&amp;rsquo;m feeling more in the spirit of making my operating system do what I want it to do. New OS, new me! So let&amp;rsquo;s get hacking.&lt;/p&gt;
 &lt;h2 id=&#34;creating-a-launcher-plugin&#34;&gt;Creating a launcher plugin&lt;/h2&gt;
@@ -659,16 +732,16 @@ alias lynxwhistory&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;sp
 &lt;p&gt;The first thing we need is a library to actually make requests to a webpage. There are more than a few of them, but the one I settled on is &lt;a href=&#34;https://docs.rs/reqwest/0.10.6/reqwest/&#34;&gt;reqwest&lt;/a&gt;, a highly recommended library with good support. You can find plenty of examples on how to use it and it also supports async await.&lt;/p&gt;
 &lt;p&gt;Using reqwest is as easy as this:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; body &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; reqwest::get(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;https://www.arm64.ca&amp;#34;&lt;/span&gt;)
-    .await&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;
+    .&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;
     .text()
-    .await&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;;
+    .&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;;
 
 println&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;body = {:?}&amp;#34;&lt;/span&gt;, body);
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The use case I had for this wasn&amp;rsquo;t too much more complicated than this. I just needed to check that the response code had a successful response and I could continue with scraping the data I needed.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;match&lt;/span&gt; get(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;url).await {
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;match&lt;/span&gt; get(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;url).&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt; {
     Ok(resp) &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; {
         &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; resp.status().is_success() {
-            &lt;span style=&#34;color:#66d9ef&#34;&gt;match&lt;/span&gt; resp.text().await {
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;match&lt;/span&gt; resp.text().&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt; {
                 Ok(body) &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; extract_data(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;body),
                 Err(_) &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; {
                     eprintln(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Oh noes! What happened to my body!&amp;#34;&lt;/span&gt;);
@@ -685,13 +758,13 @@ println&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;(&lt;span style=&
 &lt;p&gt;Once we&amp;rsquo;ve made a request to a website we need to actually extract that data. To do so we&amp;rsquo;ll need another library so we don&amp;rsquo;t have to reinvent the wheel. Another library &lt;a href=&#34;https://docs.rs/scraper/0.9.1/scraper/&#34;&gt;scraper&lt;/a&gt; does the job for us. It allows us to parse html and select particular elements; Exactly what we&amp;rsquo;ll need if we want to extract data from a table on wiki page. One of the useful parts of Scraper is that the &lt;code&gt;Selector&lt;/code&gt; lets us chain selectors together so we can find elements inside of other elements. This is extremely useful if we want to narrow down our results to exactly what we need.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;use&lt;/span&gt; scraper::{Html, Selector};
 
-&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; html &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; r&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;#&amp;#34;&lt;/span&gt;
-    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;div&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;
-        &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;h1&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;Foo&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/&lt;/span&gt;h1&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;
-        &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;h1&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;Bar&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/&lt;/span&gt;h1&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;
-        &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;h1&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;Baz&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/&lt;/span&gt;h1&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;
-    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/&lt;/span&gt;div&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;
-&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&amp;#34;#&lt;/span&gt;;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; html &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;r#&amp;#34;
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;    &amp;lt;div&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;        &amp;lt;h1&amp;gt;Foo&amp;lt;/h1&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;        &amp;lt;h1&amp;gt;Bar&amp;lt;/h1&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;        &amp;lt;h1&amp;gt;Baz&amp;lt;/h1&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;    &amp;lt;/div&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;#&lt;/span&gt;;
 
 &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; fragment &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Html::parse_fragment(html);
 &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; div_selector &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Selector::parse(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;div&amp;#34;&lt;/span&gt;).unwrap();
@@ -704,12 +777,12 @@ println&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;(&lt;span style=&
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;One disadvantage of using any library is that documentation isn&amp;rsquo;t always perfect. At the time of this writing there&amp;rsquo;s another use case I needed later which was not described in scrapers documentation or README. Selectors can be made to select multiple tags. This turns out to be really useful if you end up finding some heterogeneous data in the html you&amp;rsquo;re parsing as I did. Just like the selector above we put the tag we&amp;rsquo;re looking for into quotes, only this time, we separate all of the tags we&amp;rsquo;re looking for in one string with commas.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;use&lt;/span&gt; scraper::{Html, Selector};
 
-&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; html &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; r&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;#&amp;#34;&lt;/span&gt;
-        &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;div&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;
-            &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;h1&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;foo&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/&lt;/span&gt;h1&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;
-            &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;h2&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;bar&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/&lt;/span&gt;h2&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;
-            &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;h3&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;baz&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/&lt;/span&gt;h3&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;
-        &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/&lt;/span&gt;div&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&amp;#34;#&lt;/span&gt;;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; html &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;r#&amp;#34;
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;        &amp;lt;div&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;            &amp;lt;h1&amp;gt;foo&amp;lt;/h1&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;            &amp;lt;h2&amp;gt;bar&amp;lt;/h2&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;            &amp;lt;h3&amp;gt;baz&amp;lt;/h3&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;        &amp;lt;/div&amp;gt;&amp;#34;#&lt;/span&gt;;
 &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; fragment &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Html::parse_fragment(html);
 &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; selector &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Selector::parse(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;h1,h2,h3&amp;#34;&lt;/span&gt;).unwrap();
 
@@ -737,7 +810,7 @@ connection
 &lt;p&gt;&lt;code&gt;1|China|1403191760|18.0|21 Jun 2020|National population clock&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;and not:&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;&amp;lt;span class=&amp;quot;flagicon&amp;quot;&amp;gt;&amp;lt;img alt=&amp;quot;&amp;quot; src=&amp;quot;//upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Flag_of_the_People%27s_Republic_of_China.svg/23px-Flag_of_the_People%27s_Republic_of_China.svg.png&amp;quot; decoding=&amp;quot;async&amp;quot; class=&amp;quot;thumbborder&amp;quot; srcset=&amp;quot;//upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Flag_of_the_People%27s_Republic_of_China.svg/35px-Flag_of_the_People%27s_Republic_of_China.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Flag_of_the_People%27s_Republic_of_China.svg/45px-Flag_of_the_People%27s_Republic_of_China.svg.png 2x&amp;quot; data-file-width=&amp;quot;900&amp;quot; data-file-height=&amp;quot;600&amp;quot; width=&amp;quot;23&amp;quot; height=&amp;quot;15&amp;quot;&amp;gt;&amp;lt;/span&amp;gt;&amp;amp;nbsp;&amp;lt;a href=&amp;quot;/wiki/Demographics_of_China&amp;quot; title=&amp;quot;Demographics of China&amp;quot;&amp;gt;China&amp;lt;/a&amp;gt;&amp;lt;sup id=&amp;quot;cite_ref-4&amp;quot; class=&amp;quot;reference&amp;quot;&amp;gt;&amp;lt;a href=&amp;quot;#cite_note-4&amp;quot;&amp;gt;[b]&amp;lt;/a&amp;gt;&amp;lt;/sup&amp;gt;&lt;/code&gt;&lt;/p&gt;
-&lt;p&gt;Cleaning up this data is pretty tedious and requires a lot of tweaking depending on how each page is styled so I won&amp;rsquo;t include any sort of insite here. You can see what I did in the project &lt;a href=&#34;https://github.com/adamrmelnyk/wtd/blob/master/src/main.rs#L225&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Cleaning up this data is pretty tedious and requires a lot of tweaking depending on how each page is styled so I won&amp;rsquo;t include any sort of insight here. You can see what I did in the project &lt;a href=&#34;https://github.com/adamrmelnyk/wtd/blob/master/src/main.rs#L225&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
 &lt;h3 id=&#34;building-the-cli-tool-elements&#34;&gt;Building the CLI tool elements&lt;/h3&gt;
 &lt;p&gt;Because this is meant to be a CLI tool, we&amp;rsquo;ll also need to add those elements such as Structop which will do a lot of the heavy lifting for us. For an example of how to set up a CLI tool, see the previous post &lt;a href=&#34;/post/building-a-cli-tool-in-rust/&#34;&gt;here&lt;/a&gt;&lt;/p&gt;
 &lt;h3 id=&#34;data-types&#34;&gt;Data types&lt;/h3&gt;
@@ -798,10 +871,10 @@ structopt = { version = &amp;#34;0.3&amp;#34;, default-features = false }
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;running-a-single-command-from-sonor&#34;&gt;Running a single command from sonor&lt;/h3&gt;
 &lt;p&gt;The first thing I want to do is the most basic thing I can find with sonor. The sonor repo has some examples so we’re going to start a little smaller and then expand upon it a little bit. Looking at the example the first thing we can do is find a speaker and return the name. So we can replace the main method with something like this:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Rust&#34; data-lang=&#34;Rust&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#[tokio::main]&lt;/span&gt;
-async &lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;() -&amp;gt; Result&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;(), sonor::Error&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; {
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; speaker &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; sonor::find(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Bedroom&amp;#34;&lt;/span&gt;, Duration::from_secs(&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;)).await&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;async&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;() -&amp;gt; Result&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;(), sonor::Error&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; speaker &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; sonor::find(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Bedroom&amp;#34;&lt;/span&gt;, Duration::from_secs(&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;)).&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;
     .expect(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;room exists&amp;#34;&lt;/span&gt;);
-    println&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Name: {}&amp;#34;&lt;/span&gt;, speaker.name().await&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;);
+    println&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Name: {}&amp;#34;&lt;/span&gt;, speaker.name().&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;);
     &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; Ok(())
 }
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In this example, we have a speaker, or speaker set in our home called &lt;code&gt;&amp;quot;Bedroom&amp;quot;&lt;/code&gt; but you’ll need to use whatever name your speaker might be called.&lt;/p&gt;
@@ -896,15 +969,15 @@ SUBCOMMANDS:
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;making-use-of-the-commands&#34;&gt;Making use of the commands&lt;/h3&gt;
 &lt;p&gt;Now that we have the commands laid out we just need to parse our command line arguments and then implement the three functions. For our functions we can implement them similarly to the first method where we printed our speakers name however, this time we’ll need to provide a param to specify which speaker we will be sending the command to.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Rust&#34; data-lang=&#34;Rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;play&lt;/span&gt;(name: String) -&amp;gt; Result&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;(), sonor::Error&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; {
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; speaker &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; sonor::find(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;name, Duration::from_secs(&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;)).await&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; speaker &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; sonor::find(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;name, Duration::from_secs(&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;)).&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;
         .expect(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;room exists&amp;#34;&lt;/span&gt;);
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; speaker.play().await;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; speaker.play().&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;;
 }
 
 &lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;pause&lt;/span&gt;(name: String) -&amp;gt; Result&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;(), sonor::Error&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; {
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; speaker &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; sonor::find(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;name, Duration::from_secs(&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;)).await&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; speaker &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; sonor::find(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;name, Duration::from_secs(&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;)).&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;
         .expect(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;room exists&amp;#34;&lt;/span&gt;);
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; speaker.pause().await;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; speaker.pause().&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;;
 }
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Trying to build this however, will return an error:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;error&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;E0728&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;await&lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt; is only allowed inside &lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;async&lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt; functions and blocks
@@ -924,34 +997,34 @@ error&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;E0728&lt;span style
 &lt;span style=&#34;color:#ae81ff&#34;&gt;123&lt;/span&gt; |     &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; speaker.pause&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;.await;
     |            ^^^^^^^^^^^^^^^^^^^^^ only allowed inside &lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;async&lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt; functions and blocks
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Rust is laying out exactly what we need to make this work. The function needs to be &lt;code&gt;async&lt;/code&gt; just like the main method. It’s an easy fix and all we need is to do is change our method to:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Rust&#34; data-lang=&#34;Rust&#34;&gt;async &lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;play&lt;/span&gt;(name: String) -&amp;gt; Result&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;(), sonor::Error&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; {
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; speaker &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; sonor::find(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;name, Duration::from_secs(&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;)).await&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Rust&#34; data-lang=&#34;Rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;async&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;play&lt;/span&gt;(name: String) -&amp;gt; Result&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;(), sonor::Error&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; speaker &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; sonor::find(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;name, Duration::from_secs(&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;)).&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;
         .expect(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;room exists&amp;#34;&lt;/span&gt;);
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; speaker.play().await;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; speaker.play().&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;;
 }
 
-async &lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;pause&lt;/span&gt;(name: String) -&amp;gt; Result&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;(), sonor::Error&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; {
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; speaker &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; sonor::find(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;name, Duration::from_secs(&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;)).await&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;async&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;pause&lt;/span&gt;(name: String) -&amp;gt; Result&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;(), sonor::Error&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; speaker &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; sonor::find(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;name, Duration::from_secs(&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;)).&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;
         .expect(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;room exists&amp;#34;&lt;/span&gt;);
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; speaker.pause().await;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; speaker.pause().&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;;
 }
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Our info command will take a little more work. This function won’t be passed a name of a speaker like the other two functions, but rather, we’ll use it to find all our speakers on our wifi network and display some general info about the state of them.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Rust&#34; data-lang=&#34;Rust&#34;&gt;async &lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;info&lt;/span&gt;() -&amp;gt; Result&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;(), sonor::Error&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; {
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;mut&lt;/span&gt; devices &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; sonor::discover(Duration::from_secs(&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;)).await&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Rust&#34; data-lang=&#34;Rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;async&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;info&lt;/span&gt;() -&amp;gt; Result&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;(), sonor::Error&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;mut&lt;/span&gt; devices &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; sonor::discover(Duration::from_secs(&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;)).&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;;
 
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; Some(device) &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; devices.try_next().await&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt; {
-        &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; name &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; device.name().await&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;;
-        &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; speaker &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; sonor::find(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;name, Duration::from_secs(&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;)).await&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; Some(device) &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; devices.try_next().&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt; {
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; name &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; device.name().&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; speaker &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; sonor::find(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;name, Duration::from_secs(&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;)).&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;
             .expect(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;room exists&amp;#34;&lt;/span&gt;);
-        &lt;span style=&#34;color:#66d9ef&#34;&gt;match&lt;/span&gt; speaker.track().await&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt; {
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;match&lt;/span&gt; speaker.track().&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt; {
             Some(track_info) &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; {
                 println&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Room: {}&amp;#34;&lt;/span&gt;, name);
-                println&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Volume: {}&amp;#34;&lt;/span&gt;, speaker.volume().await&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;);
+                println&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Volume: {}&amp;#34;&lt;/span&gt;, speaker.volume().&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;);
                 println&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Track: {}&amp;#34;&lt;/span&gt;, track_info.track());
             }
             None &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; {
                 println&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Room: {}&amp;#34;&lt;/span&gt;, name);
-                println&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Volume: {}&amp;#34;&lt;/span&gt;, speaker.volume().await&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;);
+                println&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Volume: {}&amp;#34;&lt;/span&gt;, speaker.volume().&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;);
             }
         }
         println&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;----------&amp;#34;&lt;/span&gt;);
@@ -963,12 +1036,12 @@ async &lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&
 &lt;h3 id=&#34;putting-it-all-together&#34;&gt;Putting it all together&lt;/h3&gt;
 &lt;p&gt;Now that we have our methods we just need to call set them up in our main method&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Rust&#34; data-lang=&#34;Rust&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#[tokio::main]&lt;/span&gt;
-async &lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;() -&amp;gt; Result&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;(), sonor::Error&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; {
+&lt;span style=&#34;color:#66d9ef&#34;&gt;async&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;() -&amp;gt; Result&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;(), sonor::Error&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; {
     &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; args &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Command::from_args();
     &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;match&lt;/span&gt; args {
-        Command::Info &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; info().await,
-        Command::Play { name } &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; play(name).await,
-        Command::Pause { name } &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; pause(name).await,
+        Command::Info &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; info().&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;,
+        Command::Play { name } &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; play(name).&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;,
+        Command::Pause { name } &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; pause(name).&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;,
     }
 }
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The first thing you may notice is how we pass the name that we defined in our enum above, to each &lt;code&gt;match&lt;/code&gt; arm. The second thing is that each of these async methods, like the methods from sonor are all async and as such will need &lt;code&gt;.await&lt;/code&gt; to be executed. Without this, nothing will happen. Luckily Rust will prevent us from doing this, as you’ll be able to see if you remove one of them and try to build the project.&lt;/p&gt;

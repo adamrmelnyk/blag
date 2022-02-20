@@ -7,15 +7,88 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Adam Melnyk 2020</copyright>
-    <lastBuildDate>Sat, 17 Apr 2021 15:16:33 -0500</lastBuildDate><atom:link href="/tags/linux/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 16 Feb 2022 22:08:48 -0600</lastBuildDate><atom:link href="/tags/linux/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Creating Launch Plugins for Pop Os [Updated for 21.10]</title>
+      <link>/post/creating-launch-plugins-for-pop-os-updated/</link>
+      <pubDate>Wed, 16 Feb 2022 22:08:48 -0600</pubDate>
+      
+      <guid>/post/creating-launch-plugins-for-pop-os-updated/</guid>
+      <description>Background This is an update to a previous post. In 2021, I wrote a short blog post on an easy way to create a plugin using the Pop_launcher in Pop!_OS. Unfortunately for me, Pop!_OS completely changed the way the their plugins work in 21.10! I found out when I received an email from someone saying that they had followed my instructions but didn&amp;rsquo;t have any success with the plugin. Luckily for us the solution turned out to be really simple.</description>
+      <content>&lt;h2 id=&#34;background&#34;&gt;Background&lt;/h2&gt;
+&lt;p&gt;This is an update to a &lt;a href=&#34;/post/creating-launch-plugins-for-pop-os/&#34;&gt;previous post&lt;/a&gt;. In 2021, I wrote a short blog post on an easy way to create a plugin using the Pop_launcher in Pop!_OS. Unfortunately for me, Pop!_OS completely changed the way the their plugins work in 21.10! I found out when I received an email from someone saying that they had followed my instructions but didn&amp;rsquo;t have any success with the plugin. Luckily for us the solution turned out to be really simple.&lt;/p&gt;
+&lt;h2 id=&#34;creating-a-launcher-plugin&#34;&gt;Creating a launcher plugin&lt;/h2&gt;
+&lt;p&gt;One of the cool features of Pop!_OS is the &lt;a href=&#34;https://github.com/pop-os/shell&#34;&gt;Pop Shell&lt;/a&gt;, which brings the features of other tiling window managers like i3wm to GNOME. It also features launcher plugins which we can write ourselves in Rust or anything we can execute from the shell which is what we&amp;rsquo;ll be doing in this post.&lt;/p&gt;
+&lt;p&gt;The easiest way to try this out is just to simply copy one of the existing plugin examples and just drop and replace what features we want to add instead.&lt;/p&gt;
+&lt;h2 id=&#34;making-a-spotify-plugin&#34;&gt;Making a Spotify plugin&lt;/h2&gt;
+&lt;p&gt;I use Spotify pretty regularly, so it might be pretty handy to include a command on the launcher to pause/play Spotify or just select the next track.&lt;/p&gt;
+&lt;h2 id=&#34;where-plugins-are-located&#34;&gt;Where Plugins are located&lt;/h2&gt;
+&lt;p&gt;Pop!_OS keeps its plugins in two places:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Apps are kept at &lt;code&gt;/usr/lib/pop-launcher/plugins/{plugin}/&lt;/code&gt; and are written in Rust&lt;/li&gt;
+&lt;li&gt;Scripts are kept in &lt;code&gt;/usr/lib/pop-launcher/scripts/{scripts}&lt;/code&gt; and are written in Bash&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;For our purposes, writing a bash script will be sufficient, so we&amp;rsquo;ll be working in the scripts directory.&lt;/p&gt;
+&lt;h2 id=&#34;pulling-down-an-example&#34;&gt;Pulling down an example&lt;/h2&gt;
+&lt;p&gt;The first thing we can do is take an existing plugin and adapt it to our needs. We’ll need to copy one of the plugins from the scripts directory above. You can find these files on your machine running Pop!_OS at: &lt;code&gt;/usr/lib/pop-launcher/scripts/session&lt;/code&gt;. &lt;em&gt;Do Not edit these plugins in place!!!&lt;/em&gt;, otherwise the next time you try to restart your computer from the launcher you&amp;rsquo;ll just end up switching the track on spotify. Copy them into some new directory of your choice, You can also take a look at them directly on &lt;a href=&#34;https://github.com/pop-os/launcher/blob/master/scripts/session/session-logout.sh&#34;&gt;github&lt;/a&gt;. I&amp;rsquo;ve called mine &lt;code&gt;popify&lt;/code&gt; and I&amp;rsquo;ve created a new file for the script we&amp;rsquo;ll execute called: &lt;code&gt;popify-play.sh&lt;/code&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;toggling-pause-and-play-in-spotify&#34;&gt;Toggling Pause and Play in Spotify&lt;/h2&gt;
+&lt;p&gt;The next step is straight forward. We edit the file to look something like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#!/bin/sh
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# name: Pause or Play Spotify&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# icon: com.spotify.Client&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# description: Pause or Play Spotify&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# keywords: pause play spotify&lt;/span&gt;
+
+
+dbus-send --print-reply --dest&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The file is pretty simple:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;We&amp;rsquo;ve given it a name&lt;/li&gt;
+&lt;li&gt;An existing icon (It&amp;rsquo;s an svg file already on your computer if you already have spotify installed)&lt;/li&gt;
+&lt;li&gt;A helpful description&lt;/li&gt;
+&lt;li&gt;keywords which will be used to search for our plugin in the launcher&lt;/li&gt;
+&lt;li&gt;lastly the command that will actually pause and play spotify&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;This is actually quite a bit easier than it was previously as it no longer requires a more complicated and rather boilerplate JavaScript setup, provided that you are comfortable doing it in Bash or don&amp;rsquo;t want to do anything particularly complicated.&lt;/p&gt;
+&lt;h2 id=&#34;testing-it-out&#34;&gt;Testing it out&lt;/h2&gt;
+&lt;p&gt;Unlike the previous plugin which required you to restart the gnome shell. You should be able to save run the plugin as soon as you save the file.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/launcher-2.png&#34; alt=&#34;Pop_OS launcher&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;skipping-to-the-next-track&#34;&gt;Skipping to the next track&lt;/h2&gt;
+&lt;p&gt;Now that you&amp;rsquo;ve made Spotify pause and play, you can easily make a second script to switch tracks: Simply make a new file in the same directory as you previous script. I&amp;rsquo;ve called mine: &lt;code&gt;popify-next.sh&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;The file contents might look something like:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#!/bin/sh
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# name: Play Next Song Spotify&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# icon: com.spotify.Client&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# description: Skip to the Next Song on Spotify&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# keywords: next play spotify&lt;/span&gt;
+
+dbus-send --print-reply --dest&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Next
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;After you save the script above you should be able to skip to the next track.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/launcher-next.png&#34; alt=&#34;Pop_OS launcher&#34;&gt;&lt;/p&gt;
+&lt;p&gt;If you feel like a hacker at this point, it&amp;rsquo;s because you are! So throw on those shades, put on your best black hoodie, and go forth and hack away on some cool plugins. Hack the &lt;del&gt;Planet&lt;/del&gt; OS!&lt;/p&gt;
+&lt;h2 id=&#34;building-more-plugins&#34;&gt;Building more plugins&lt;/h2&gt;
+&lt;p&gt;Hopefully this gives you a starting point for developing new plugins for Pop!_OS. There isn&amp;rsquo;t much official documentation or tutorials on writing plugins other than what&amp;rsquo;s in the github readme, but hopefully this inspires anyone who wanted to give Pop!_OS a try, another reason to checkout it out.&lt;/p&gt;
+&lt;h2 id=&#34;sources&#34;&gt;Sources&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/pop-os/launcher/blob/master/README.md&#34;&gt;https://github.com/pop-os/launcher/blob/master/README.md&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Sample plugin: &lt;a href=&#34;https://github.com/pop-os/launcher/blob/master/scripts/session/session-logout.sh&#34;&gt;https://github.com/pop-os/launcher/blob/master/scripts/session/session-logout.sh&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+    </item>
+    
     <item>
       <title>Creating Launch Plugins for Pop!_OS</title>
       <link>/post/creating-launch-plugins-for-pop-os/</link>
       <pubDate>Sat, 17 Apr 2021 15:16:33 -0500</pubDate>
       
       <guid>/post/creating-launch-plugins-for-pop-os/</guid>
-      <description>Background I&amp;rsquo;ve been running linux on all of my machines for almost 15 years. For the first five I probably used a dozen or more flavours of Linux including OpenSuse, Fedora, Arch, Ubuntu, and many others. Eventually wiping my computer every month became more and more impractical and I abandoned my distro-hopping ways, settling on Ubuntu. Ubuntu was stable, regularly updated, had an environment that I really liked (despite what some people may say about the unity interface) and I never looked back.</description>
-      <content>&lt;h2 id=&#34;background&#34;&gt;Background&lt;/h2&gt;
+      <description>Update This post was written in 2021 for Pop!_OS 21.04. These instructions no longer work for Pop!_OS 21.10. Please see the new, updated post
+Background I&amp;rsquo;ve been running linux on all of my machines for almost 15 years. For the first five I probably used a dozen or more flavours of Linux including OpenSuse, Fedora, Arch, Ubuntu, and many others. Eventually wiping my computer every month became more and more impractical and I abandoned my distro-hopping ways, settling on Ubuntu.</description>
+      <content>&lt;h1 id=&#34;update&#34;&gt;Update&lt;/h1&gt;
+&lt;p&gt;This post was written in 2021 for Pop!_OS 21.04. These instructions no longer work for Pop!_OS 21.10. Please see &lt;a href=&#34;https://www.arm64.ca/post/creating-launch-plugins-for-pop-os-updated/&#34;&gt;the new, updated post&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;background&#34;&gt;Background&lt;/h2&gt;
 &lt;p&gt;I&amp;rsquo;ve been running linux on all of my machines for almost 15 years. For the first five I probably used a dozen or more flavours of Linux including OpenSuse, Fedora, Arch, Ubuntu, and many others. Eventually wiping my computer every month became more and more impractical and I abandoned my distro-hopping ways, settling on Ubuntu. Ubuntu was stable, regularly updated, had an environment that I really liked (despite what some people may say about the unity interface) and I never looked back. That is until recently when I started using Pop!_OS.&lt;/p&gt;
 &lt;p&gt;It&amp;rsquo;s been a long time since I last switched operating systems but, it made me realize what I liked about Linux so much to begin with: You control the software, not the other way around. Want to install a new desktop environment? There are multiple to choose from. Want to add custom key mappings and shortcuts? You can do that. Want add additional functionality to an existing app on your machine? Download the source code and modify it as you like. Ubuntu was the clear, safe course but, now that I&amp;rsquo;m running a new OS, I&amp;rsquo;m feeling more in the spirit of making my operating system do what I want it to do. New OS, new me! So let&amp;rsquo;s get hacking.&lt;/p&gt;
 &lt;h2 id=&#34;creating-a-launcher-plugin&#34;&gt;Creating a launcher plugin&lt;/h2&gt;
