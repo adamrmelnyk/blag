@@ -9,7 +9,7 @@ tags: ["programming", "plugins", "PopOS", "linux"]
 
 # Update
 
-This post was written in 2021 for Pop!_OS 21.04. These instructions no longer work for Pop!_OS 21.10. Please see [the new, updated post](post/creating-launch-plugins-for-pop-os-updated/)
+This post was written in 2021 for Pop!_OS 21.04. These instructions no longer work for Pop!_OS 21.10. Please see [the new, updated post](https://www.arm64.ca/post/creating-launch-plugins-for-pop-os-updated/)
 
 ## Background
 
