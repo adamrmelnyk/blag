@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>doom on Adam&#39;s Blag</title>
+    <link>/categories/doom/</link>
+    <description>Recent content in doom on Adam&#39;s Blag</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Adam Melnyk 2020</copyright>
+    <lastBuildDate>Tue, 20 Sep 2022 18:50:41 -0500</lastBuildDate><atom:link href="/categories/doom/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Creating a Résumé in Doom</title>
+      <link>/post/creating-a-resume-in-doom/</link>
+      <pubDate>Tue, 20 Sep 2022 18:50:41 -0500</pubDate>
+      
+      <guid>/post/creating-a-resume-in-doom/</guid>
+      <description>Crafting an effective Résumé My current résumé looks professional and lays out all the information I need to convey to potential employers. I made it with a LaTeX template that I&amp;rsquo;ve modified over the years to suit my needs. This format allows me to comment out information like employers from years ago that I don&amp;rsquo;t want to include, skills that aren&amp;rsquo;t relevant, and of course it&amp;rsquo;s on github, so I&amp;rsquo;m not trying to remember what some bullet point used to say, or sifting through 10 versions of the same document.</description>
+      <content>&lt;h2 id=&#34;crafting-an-effective-résumé&#34;&gt;Crafting an effective Résumé&lt;/h2&gt;
+&lt;p&gt;My current résumé looks professional and lays out all the information I need to convey to potential employers. I made it with a LaTeX template that I&amp;rsquo;ve modified over the years to suit my needs. This format allows me to comment out information like employers from years ago that I don&amp;rsquo;t want to include, skills that aren&amp;rsquo;t relevant, and of course &lt;a href=&#34;https://github.com/adamrmelnyk/Resume&#34;&gt;it&amp;rsquo;s on github&lt;/a&gt;, so I&amp;rsquo;m not trying to remember what some bullet point used to say, or sifting through 10 versions of the same document.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;But we&amp;rsquo;re not here to talk about that&lt;/strong&gt;. This is about a &lt;strong&gt;DOOM&lt;/strong&gt; résumé, whatever that hell that is. It does none of the above. It&amp;rsquo;s built into a DOOM WAD file. It is absurdly difficult to edit, requires constant testing while developing, installing programs, knowledge of the command line, and oh&amp;hellip; there are monsters trying to kill you while you try to learn where I was working from 2017 to 2021, so it&amp;rsquo;s not easy to read either.&lt;/p&gt;
+&lt;h2 id=&#34;creating-a-map&#34;&gt;Creating a Map&lt;/h2&gt;
+&lt;h3 id=&#34;euerka&#34;&gt;Euerka&lt;/h3&gt;
+&lt;p&gt;Eureka was the first map making tool that I found. I found a &lt;a href=&#34;https://www.youtube.com/watch?v=6ZZfIQsXyzo&#34;&gt;tutorial on youtube&lt;/a&gt; that made it look somewhat easy, so I went with it. You can toggle between a few different modes, that let you add rooms, monsters, objects and edit walls, textures, ceilings, as well as adding room effects.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/eureka.png&#34; alt=&#34;Eureka editor&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;doors&#34;&gt;Doors&lt;/h3&gt;
+&lt;p&gt;Luckily there have been some updates on doors since the videos on youtube had been released. It was now as easy as highlighting the lines I needed to make into a door, hitting the &amp;ldquo;Gen&amp;rdquo; button, and selecting &amp;ldquo;door&amp;rdquo;. The first door I made, before I knew about this option, took far too long to make and had a few pitfalls since it&amp;rsquo;s so easy to accidentally click something in the environment and edit another wall you didn&amp;rsquo;t intend to. The same tools are available for a few other features that would normally take a lot more time to make, such as stairs.&lt;/p&gt;
+&lt;h3 id=&#34;adding-textures&#34;&gt;Adding Textures&lt;/h3&gt;
+&lt;p&gt;The only way I could think of adding my resume info, was to throw the information up on the walls as you go through the level. Unfortunately, adding textures required a completely different program. Although Eureka had great tools for building maps and setting objects down in your map, it didn&amp;rsquo;t seem to have any way of easily adding textures or files. In comes &lt;a href=&#34;https://slade.mancubus.net/index.php?page=downloads&#34;&gt;Slade&lt;/a&gt;. This editor allows you to edit, add, and remove the files inside of the WAD.&lt;/p&gt;
+&lt;p&gt;It does however, require a lot of steps:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Open Slade, and open the base DOOM WAD&lt;/li&gt;
+&lt;li&gt;There&amp;rsquo;s a bug in Slade so open any image file, THEN open the textures file otherwise Slade will crash&lt;/li&gt;
+&lt;li&gt;Find the texture you want to edit and export the image to somewhere we can find it.&lt;/li&gt;
+&lt;li&gt;Edit the image in Krita&lt;/li&gt;
+&lt;li&gt;Go back into Slade, and import the texture into the WAD I&amp;rsquo;m editing&lt;/li&gt;
+&lt;li&gt;Convert the file to a DOOM graphics file&lt;/li&gt;
+&lt;li&gt;Add the file to the Patch table&lt;/li&gt;
+&lt;li&gt;Add the file to the TextureX&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;You can see a sample of how the texture looks here (This is the actual size):&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/ADAM.png&#34; alt=&#34;UofA Logo DOOM PNG&#34;&gt;&lt;/p&gt;
+&lt;p&gt;The end result of after it&amp;rsquo;s been added:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/entranceTex.png&#34; alt=&#34;Custom Entrance Textures featuring my name&#34;&gt;&lt;/p&gt;
+&lt;p&gt;There are limitations to this as well. To avoid the &lt;a href=&#34;https://doom.fandom.com/wiki/Tutti-frutti_effect&#34;&gt;tutti-frutti effect&lt;/a&gt;, it is easiest to just edit existing textures so we won&amp;rsquo;t make a mistake making them in a size that doesn&amp;rsquo;t work well.&lt;/p&gt;
+&lt;p&gt;This part took by far, the longest. Creating textures, importing, converting et al. took longer than I would have expected. I have a lot of respect for the people who are still making doom mods in 2022, this is a ton of work.&lt;/p&gt;
+&lt;h3 id=&#34;laying-out-the-level&#34;&gt;Laying out the level&lt;/h3&gt;
+&lt;p&gt;The idea behind this was primarily to play DOOM while somehow displaying my résumé. So I needed to lay out the level in a way that the user is forced to see the info I put on the wall. I can say that I know almost nothing about level design so the best way I could think to do this is to put monsters where I want the user to look.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/UofADoom.png&#34; alt=&#34;University of Alberta Crest&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Perfect, the user faces towards the monsters when they start shooting, and they&amp;rsquo;re forced to see where I went to school and what I studied. Now all that&amp;rsquo;s needed to to keep adding more rooms, and with it, more information from my résumé.&lt;/p&gt;
+&lt;h3 id=&#34;ending-the-level&#34;&gt;Ending the Level&lt;/h3&gt;
+&lt;p&gt;If you want to avoid spoilers for&amp;hellip; my résumé, you may want to leave and &lt;a href=&#34;https://github.com/adamrmelnyk/thisResumeRunsDoom&#34;&gt;play the level&lt;/a&gt; before reading further.&lt;/p&gt;
+&lt;p&gt;One of my favorite endings of DOOM was the end of DOOM Zero, where you walk into a coffin only to be crushed. Luckily, Eureka came with the right tools to do exactly this. You can set an area to give damage and then exit, this combined with using &amp;ldquo;gen&amp;rdquo; to make a hallway into a crusher, I had my ending. the player walks down a hallway towards a Skull button, only to be crushed by hallway before they can reach it.&lt;/p&gt;
+&lt;h2 id=&#34;just-want-to-watch&#34;&gt;Just want to watch?&lt;/h2&gt;
+&lt;p&gt;I took a quick screen capture of the level er&amp;hellip; résumé. You can watch it &lt;a href=&#34;https://www.youtube.com/watch?v=6wuJgT9RoGU&#34;&gt;here&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;or-are-you-ready-to-play&#34;&gt;Or are you ready to play?&lt;/h2&gt;
+&lt;p&gt;You can find the rest of the info you need &lt;a href=&#34;https://github.com/adamrmelnyk/thisResumeRunsDoom&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;h1 id=&#34;-rip-and-tear-&#34;&gt;~~ &lt;strong&gt;Rip and Tear&lt;/strong&gt; ~~&lt;/h1&gt;
+</content>
+    </item>
+    
+  </channel>
+</rss>

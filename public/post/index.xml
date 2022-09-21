@@ -7,7 +7,57 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Adam Melnyk 2020</copyright>
-    <lastBuildDate>Wed, 16 Feb 2022 22:08:48 -0600</lastBuildDate><atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 20 Sep 2022 18:50:41 -0500</lastBuildDate><atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Creating a Résumé in Doom</title>
+      <link>/post/creating-a-resume-in-doom/</link>
+      <pubDate>Tue, 20 Sep 2022 18:50:41 -0500</pubDate>
+      
+      <guid>/post/creating-a-resume-in-doom/</guid>
+      <description>Crafting an effective Résumé My current résumé looks professional and lays out all the information I need to convey to potential employers. I made it with a LaTeX template that I&amp;rsquo;ve modified over the years to suit my needs. This format allows me to comment out information like employers from years ago that I don&amp;rsquo;t want to include, skills that aren&amp;rsquo;t relevant, and of course it&amp;rsquo;s on github, so I&amp;rsquo;m not trying to remember what some bullet point used to say, or sifting through 10 versions of the same document.</description>
+      <content>&lt;h2 id=&#34;crafting-an-effective-résumé&#34;&gt;Crafting an effective Résumé&lt;/h2&gt;
+&lt;p&gt;My current résumé looks professional and lays out all the information I need to convey to potential employers. I made it with a LaTeX template that I&amp;rsquo;ve modified over the years to suit my needs. This format allows me to comment out information like employers from years ago that I don&amp;rsquo;t want to include, skills that aren&amp;rsquo;t relevant, and of course &lt;a href=&#34;https://github.com/adamrmelnyk/Resume&#34;&gt;it&amp;rsquo;s on github&lt;/a&gt;, so I&amp;rsquo;m not trying to remember what some bullet point used to say, or sifting through 10 versions of the same document.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;But we&amp;rsquo;re not here to talk about that&lt;/strong&gt;. This is about a &lt;strong&gt;DOOM&lt;/strong&gt; résumé, whatever that hell that is. It does none of the above. It&amp;rsquo;s built into a DOOM WAD file. It is absurdly difficult to edit, requires constant testing while developing, installing programs, knowledge of the command line, and oh&amp;hellip; there are monsters trying to kill you while you try to learn where I was working from 2017 to 2021, so it&amp;rsquo;s not easy to read either.&lt;/p&gt;
+&lt;h2 id=&#34;creating-a-map&#34;&gt;Creating a Map&lt;/h2&gt;
+&lt;h3 id=&#34;euerka&#34;&gt;Euerka&lt;/h3&gt;
+&lt;p&gt;Eureka was the first map making tool that I found. I found a &lt;a href=&#34;https://www.youtube.com/watch?v=6ZZfIQsXyzo&#34;&gt;tutorial on youtube&lt;/a&gt; that made it look somewhat easy, so I went with it. You can toggle between a few different modes, that let you add rooms, monsters, objects and edit walls, textures, ceilings, as well as adding room effects.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/eureka.png&#34; alt=&#34;Eureka editor&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;doors&#34;&gt;Doors&lt;/h3&gt;
+&lt;p&gt;Luckily there have been some updates on doors since the videos on youtube had been released. It was now as easy as highlighting the lines I needed to make into a door, hitting the &amp;ldquo;Gen&amp;rdquo; button, and selecting &amp;ldquo;door&amp;rdquo;. The first door I made, before I knew about this option, took far too long to make and had a few pitfalls since it&amp;rsquo;s so easy to accidentally click something in the environment and edit another wall you didn&amp;rsquo;t intend to. The same tools are available for a few other features that would normally take a lot more time to make, such as stairs.&lt;/p&gt;
+&lt;h3 id=&#34;adding-textures&#34;&gt;Adding Textures&lt;/h3&gt;
+&lt;p&gt;The only way I could think of adding my resume info, was to throw the information up on the walls as you go through the level. Unfortunately, adding textures required a completely different program. Although Eureka had great tools for building maps and setting objects down in your map, it didn&amp;rsquo;t seem to have any way of easily adding textures or files. In comes &lt;a href=&#34;https://slade.mancubus.net/index.php?page=downloads&#34;&gt;Slade&lt;/a&gt;. This editor allows you to edit, add, and remove the files inside of the WAD.&lt;/p&gt;
+&lt;p&gt;It does however, require a lot of steps:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Open Slade, and open the base DOOM WAD&lt;/li&gt;
+&lt;li&gt;There&amp;rsquo;s a bug in Slade so open any image file, THEN open the textures file otherwise Slade will crash&lt;/li&gt;
+&lt;li&gt;Find the texture you want to edit and export the image to somewhere we can find it.&lt;/li&gt;
+&lt;li&gt;Edit the image in Krita&lt;/li&gt;
+&lt;li&gt;Go back into Slade, and import the texture into the WAD I&amp;rsquo;m editing&lt;/li&gt;
+&lt;li&gt;Convert the file to a DOOM graphics file&lt;/li&gt;
+&lt;li&gt;Add the file to the Patch table&lt;/li&gt;
+&lt;li&gt;Add the file to the TextureX&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;You can see a sample of how the texture looks here (This is the actual size):&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/ADAM.png&#34; alt=&#34;UofA Logo DOOM PNG&#34;&gt;&lt;/p&gt;
+&lt;p&gt;The end result of after it&amp;rsquo;s been added:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/entranceTex.png&#34; alt=&#34;Custom Entrance Textures featuring my name&#34;&gt;&lt;/p&gt;
+&lt;p&gt;There are limitations to this as well. To avoid the &lt;a href=&#34;https://doom.fandom.com/wiki/Tutti-frutti_effect&#34;&gt;tutti-frutti effect&lt;/a&gt;, it is easiest to just edit existing textures so we won&amp;rsquo;t make a mistake making them in a size that doesn&amp;rsquo;t work well.&lt;/p&gt;
+&lt;p&gt;This part took by far, the longest. Creating textures, importing, converting et al. took longer than I would have expected. I have a lot of respect for the people who are still making doom mods in 2022, this is a ton of work.&lt;/p&gt;
+&lt;h3 id=&#34;laying-out-the-level&#34;&gt;Laying out the level&lt;/h3&gt;
+&lt;p&gt;The idea behind this was primarily to play DOOM while somehow displaying my résumé. So I needed to lay out the level in a way that the user is forced to see the info I put on the wall. I can say that I know almost nothing about level design so the best way I could think to do this is to put monsters where I want the user to look.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/images/UofADoom.png&#34; alt=&#34;University of Alberta Crest&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Perfect, the user faces towards the monsters when they start shooting, and they&amp;rsquo;re forced to see where I went to school and what I studied. Now all that&amp;rsquo;s needed to to keep adding more rooms, and with it, more information from my résumé.&lt;/p&gt;
+&lt;h3 id=&#34;ending-the-level&#34;&gt;Ending the Level&lt;/h3&gt;
+&lt;p&gt;If you want to avoid spoilers for&amp;hellip; my résumé, you may want to leave and &lt;a href=&#34;https://github.com/adamrmelnyk/thisResumeRunsDoom&#34;&gt;play the level&lt;/a&gt; before reading further.&lt;/p&gt;
+&lt;p&gt;One of my favorite endings of DOOM was the end of DOOM Zero, where you walk into a coffin only to be crushed. Luckily, Eureka came with the right tools to do exactly this. You can set an area to give damage and then exit, this combined with using &amp;ldquo;gen&amp;rdquo; to make a hallway into a crusher, I had my ending. the player walks down a hallway towards a Skull button, only to be crushed by hallway before they can reach it.&lt;/p&gt;
+&lt;h2 id=&#34;just-want-to-watch&#34;&gt;Just want to watch?&lt;/h2&gt;
+&lt;p&gt;I took a quick screen capture of the level er&amp;hellip; résumé. You can watch it &lt;a href=&#34;https://www.youtube.com/watch?v=6wuJgT9RoGU&#34;&gt;here&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;or-are-you-ready-to-play&#34;&gt;Or are you ready to play?&lt;/h2&gt;
+&lt;p&gt;You can find the rest of the info you need &lt;a href=&#34;https://github.com/adamrmelnyk/thisResumeRunsDoom&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;h1 id=&#34;-rip-and-tear-&#34;&gt;~~ &lt;strong&gt;Rip and Tear&lt;/strong&gt; ~~&lt;/h1&gt;
+</content>
+    </item>
+    
     <item>
       <title>Creating Launch Plugins for Pop Os [Updated for 21.10]</title>
       <link>/post/creating-launch-plugins-for-pop-os-updated/</link>
@@ -33,7 +83,7 @@
 &lt;p&gt;The first thing we can do is take an existing plugin and adapt it to our needs. We’ll need to copy one of the plugins from the scripts directory above. You can find these files on your machine running Pop!_OS at: &lt;code&gt;/usr/lib/pop-launcher/scripts/session&lt;/code&gt;. &lt;em&gt;Do Not edit these plugins in place!!!&lt;/em&gt;, otherwise the next time you try to restart your computer from the launcher you&amp;rsquo;ll just end up switching the track on spotify. Copy them into some new directory of your choice, You can also take a look at them directly on &lt;a href=&#34;https://github.com/pop-os/launcher/blob/master/scripts/session/session-logout.sh&#34;&gt;github&lt;/a&gt;. I&amp;rsquo;ve called mine &lt;code&gt;popify&lt;/code&gt; and I&amp;rsquo;ve created a new file for the script we&amp;rsquo;ll execute called: &lt;code&gt;popify-play.sh&lt;/code&gt;.&lt;/p&gt;
 &lt;h2 id=&#34;toggling-pause-and-play-in-spotify&#34;&gt;Toggling Pause and Play in Spotify&lt;/h2&gt;
 &lt;p&gt;The next step is straight forward. We edit the file to look something like this:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#!/bin/sh
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#!/bin/sh
 &lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#&lt;/span&gt;
 &lt;span style=&#34;color:#75715e&#34;&gt;# name: Pause or Play Spotify&lt;/span&gt;
 &lt;span style=&#34;color:#75715e&#34;&gt;# icon: com.spotify.Client&lt;/span&gt;
@@ -57,7 +107,7 @@ dbus-send --print-reply --dest&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/sp
 &lt;h2 id=&#34;skipping-to-the-next-track&#34;&gt;Skipping to the next track&lt;/h2&gt;
 &lt;p&gt;Now that you&amp;rsquo;ve made Spotify pause and play, you can easily make a second script to switch tracks: Simply make a new file in the same directory as you previous script. I&amp;rsquo;ve called mine: &lt;code&gt;popify-next.sh&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;The file contents might look something like:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#!/bin/sh
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#!/bin/sh
 &lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#&lt;/span&gt;
 &lt;span style=&#34;color:#75715e&#34;&gt;# name: Play Next Song Spotify&lt;/span&gt;
 &lt;span style=&#34;color:#75715e&#34;&gt;# icon: com.spotify.Client&lt;/span&gt;
@@ -99,24 +149,24 @@ What Lynx offers:
 &lt;/ul&gt;
 &lt;h2 id=&#34;simple-user-interface&#34;&gt;Simple user interface&lt;/h2&gt;
 &lt;p&gt;Like everything else in the terminal, the user interface for lynx is all keyboard based. &lt;code&gt;Q&lt;/code&gt; quits, the arrow keys move your cursor to the next, clickable link, and the space bar will scroll you down to the next page. Everything else is listed at the bottom of the terminal.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;Commands: Use arrow keys to move, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;?&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; help, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;q&amp;#39;&lt;/span&gt; to quit, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&amp;lt;-&amp;#39;&lt;/span&gt; to go back.
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;Commands: Use arrow keys to move, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;?&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; help, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;q&amp;#39;&lt;/span&gt; to quit, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&amp;lt;-&amp;#39;&lt;/span&gt; to go back.
   Arrow keys: Up and Down to move.  Right to follow a link; Left to go back.
  H&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;elp O&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;ptions P&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;rint G&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;o M&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;ain screen Q&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;uit /&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;search &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;delete&lt;span style=&#34;color:#f92672&#34;&gt;]=&lt;/span&gt;history list
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;minimal-user-tracking&#34;&gt;Minimal user tracking&lt;/h2&gt;
 &lt;p&gt;If you&amp;rsquo;re concerned about privacy and being tracked online, then look no further! Because lynx is a &lt;strong&gt;text&lt;/strong&gt; browser and does not load any graphics, CSS, or javascript, there is very little that can be used to track the user other than accepting cookies in which case, Lynx will prompt you to accept or reject each cookie. You can also view which cookies have already been stored by hitting &lt;code&gt;Ctrl + k&lt;/code&gt;.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;www.theglobeandmail.com cookie: ak_user&lt;span style=&#34;color:#f92672&#34;&gt;={&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;latitude&amp;#34;&lt;/span&gt;:&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;30.2669&amp;#34;&lt;/span&gt; Allow? &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;Y/N/Always/neVer&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;www.theglobeandmail.com cookie: ak_user&lt;span style=&#34;color:#f92672&#34;&gt;={&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;latitude&amp;#34;&lt;/span&gt;:&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;30.2669&amp;#34;&lt;/span&gt; Allow? &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;Y/N/Always/neVer&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Viewing your favorite news website on lynx can be an eye opening experience, it&amp;rsquo;s one of the few times when you might be suspicious of someone offering you a dozen different cookies. Of course if your intention is to reject all cookies, this can get very tedious so it&amp;rsquo;s best to just black hole everything and do something like:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;lynx -accept_all_cookies -cookie_file&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;/dev/null
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;lynx -accept_all_cookies -cookie_file&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;/dev/null
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;!-- raw HTML omitted --&gt;
 &lt;p&gt;Though changing your user agent likely provides very minimal amounts of privacy, Lynx will also let you easily change your user agent to anything you&amp;rsquo;d like:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;lynx -useragent&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;NotChrome&amp;#34;&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;lynx -useragent&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;NotChrome&amp;#34;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Or if you&amp;rsquo;re feeling particularly evil:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;lynx -useragent&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&amp;#39;&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;lynx -useragent&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&amp;#39;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;focus-and-readability&#34;&gt;Focus and Readability&lt;/h2&gt;
 &lt;p&gt;One of the key features that makes Lynx valuable as a browser, is how much easier it makes focusing on what I&amp;rsquo;m reading. Many websites feature a lot of really distracting content, images, pop up modals, banner ads, colours, and sponsored content, all of which are designed and A/B tested to maximize attention grabbing and get you to click away to somewhere else or keep you on their website longer. All of this pushing and pulling makes for a very unfocused reading experience. Lynx cuts down on the noise. Much like the reader view in Firefox, Lynx makes it a lot easier to focus on what you&amp;rsquo;re reading rather than be distracted by anything else. All you see is the text on the website. No click-bait headlines in the margins, just text.&lt;/p&gt;
 &lt;h3 id=&#34;a-cleaner-experience&#34;&gt;A cleaner experience&lt;/h3&gt;
 &lt;p&gt;Incredibly, some websites actually provide super light versions when viewed with lynx. DuckDuckGo automatically redirects to a &amp;ldquo;lite&amp;rdquo; version when using lynx (though not if you change the user agent!) giving you a very clean and usable webpage in lynx.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#←←←                                                                     DuckDuckGo&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#←←←                                                                     DuckDuckGo&lt;/span&gt;
    &lt;span style=&#34;color:#75715e&#34;&gt;#DuckDuckGo (Lite)&lt;/span&gt;
 
                                    DuckDuckGo
@@ -124,7 +174,7 @@ What Lynx offers:
 
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;configurability&#34;&gt;Configurability&lt;/h2&gt;
 &lt;p&gt;Like many other command line utils, lynx is also configurable. It has it&amp;rsquo;s own editable configuration file as well as giving you the option of defining your own &lt;code&gt;.lynxrc&lt;/code&gt; file so you can take your configuration to other machines. There are &lt;a href=&#34;https://lynx.invisible-island.net/lynx_help/cattoc.html&#34;&gt;a lot of options&lt;/a&gt;, many browsers provide similar functionality, though not without signing in. As well, because a lot of these configurations are available as command line flags, you can alias commands with flags giving you the ability to almost have various browser profiles depending on what you&amp;rsquo;re doing.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;alias lynxnocookies&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;lynx -accept_all_cookies -cookie_file=/dev/null&amp;#39;&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;alias lynxnocookies&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;lynx -accept_all_cookies -cookie_file=/dev/null&amp;#39;&lt;/span&gt;
 alias lynxwhistory&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;lynx -accept_all_cookies -cookie_file=~/.lynx_cookies&amp;#39;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;what-lynx-cant-do&#34;&gt;What Lynx can&amp;rsquo;t do&lt;/h2&gt;
 &lt;p&gt;I&amp;rsquo;ll admit there are some things that are less than perfect about Lynx. You aren&amp;rsquo;t going to be able to watch Youtube, scroll Instagram, or browse Reddit easily. As modern web development evolves, more and more of the web is being developed with javascript. Many websites no longer work at all without javascript being enabled (Not this website! It looks great in lynx! Try it out!). &amp;lsquo;Web apps&amp;rsquo; will almost never work with lynx as they will require javascript to do the most basic of functions such as submit forms and opening menus. Lynx will never excel at this kind of task, what it does well is text, and text only.&lt;/p&gt;
@@ -160,7 +210,7 @@ Background I&amp;rsquo;ve been running linux on all of my machines for almost 15
 &lt;h3 id=&#34;adapting-the-plugin-to-use-with-spotify-instead&#34;&gt;Adapting the plugin to use with Spotify instead&lt;/h3&gt;
 &lt;p&gt;Adapting the plugin for our purposes is actually relatively little work. The launcher plugin we&amp;rsquo;re looking at, just has a list of ID&amp;rsquo;s that map to some command that can be executed in a shell, so the first thing we need to do is change those commands.&lt;/p&gt;
 &lt;p&gt;The App class contains a constructor with default selections. We want to change that to something like this:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;constructor&lt;/span&gt;() {
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;constructor&lt;/span&gt;() {
         &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;last_query&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;
         &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;shell_only&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;false&lt;/span&gt;
 
@@ -179,7 +229,7 @@ Background I&amp;rsquo;ve been running linux on all of my machines for almost 15
         ]
     }
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If you walk through the code you&amp;rsquo;ll see that it contains a function called &lt;code&gt;submit()&lt;/code&gt; that reads the id codes from above and executes a command. We can change the variable being set by the switches above to something like:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;submit&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;id&lt;/span&gt;) {
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;submit&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;id&lt;/span&gt;) {
         &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;cmd&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt;
 
         &lt;span style=&#34;color:#66d9ef&#34;&gt;switch&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;id&lt;/span&gt;) {
@@ -193,7 +243,7 @@ Background I&amp;rsquo;ve been running linux on all of my machines for almost 15
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;NOTE:&lt;/strong&gt; I&amp;rsquo;ve also removed the line &lt;code&gt;let sinks = pactl_sinks()&lt;/code&gt; above as well as the associated function &lt;code&gt;pactl_sinks()&lt;/code&gt; since it&amp;rsquo;s only related to pulse audio and not necessary for our spotify plugin.&lt;/p&gt;
 &lt;p&gt;If you&amp;rsquo;re curious about what the commands above do, you can try running spotify and then plugging them in your terminal yourself. The first toggles pausing and playing spotify, the second switches to the next song.&lt;/p&gt;
 &lt;p&gt;The code for utilizing spotify is actually a bit simpler as well. We can just execute the string &lt;code&gt;cmd&lt;/code&gt; instead of going through a loop.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;cmd&lt;/span&gt;) {
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;cmd&lt;/span&gt;) {
             &lt;span style=&#34;color:#66d9ef&#34;&gt;try&lt;/span&gt; {
                 &lt;span style=&#34;color:#a6e22e&#34;&gt;GLib&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;spawn_command_line_async&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;${&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;cmd&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;)
             } &lt;span style=&#34;color:#66d9ef&#34;&gt;catch&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;e&lt;/span&gt;) {
@@ -204,14 +254,14 @@ Background I&amp;rsquo;ve been running linux on all of my machines for almost 15
         &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;send&lt;/span&gt;({ &lt;span style=&#34;color:#a6e22e&#34;&gt;event&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;close&amp;#34;&lt;/span&gt; })
     }
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;There&amp;rsquo;s one thing left to change, we need to change the &lt;code&gt;meta.json&lt;/code&gt; file to something that makes a little more sense:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;{
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;{
     &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;name&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Spotify Control&amp;#34;&lt;/span&gt;,
     &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;description&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Control Spotify Play and Track selection&amp;#34;&lt;/span&gt;,
     &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;exec&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;main.js&amp;#34;&lt;/span&gt;,
     &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;icon&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;multimedia-volume-control&amp;#34;&lt;/span&gt;
 }
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now that we&amp;rsquo;ve made the necessary changes we need to move it to where the rest of the plugins are. I&amp;rsquo;ve called my plugin popify (I know, so clever) but use whatever folder you&amp;rsquo;ve put your files into. You&amp;rsquo;ll need to use sudo because the location requires privileged access.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;sudo cp -r popify/ /usr/lib/pop-shell/launcher/.
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;sudo cp -r popify/ /usr/lib/pop-shell/launcher/.
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;After copying the files over to the correct directory last thing to do is restart the GNOME shell. There are many ways to do this such as just killing GNOME &lt;code&gt;killall -1 gnome-shell&lt;/code&gt;, but if you&amp;rsquo;re unsure, you can simply reboot your machine and the new plugin will be ready. If you&amp;rsquo;ve done everything right you should be able to see the new launcher when we type pause:&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;/images/launcher.png&#34; alt=&#34;Pop_OS launcher&#34;&gt;&lt;/p&gt;
 &lt;p&gt;this should toggle spotify to pause or play. You should also be able to type next and the player should switch songs.&lt;/p&gt;
@@ -283,7 +333,7 @@ Background I&amp;rsquo;ve been running linux on all of my machines for almost 15
 &lt;/table&gt;
 &lt;p&gt;In this small program, what we&amp;rsquo;re doing is printing a single letter to the top right hand corner of the screen. In this case, the letter &amp;ldquo;A&amp;rdquo;. We load the address of where we want to start reading our letter from, into register 0, Then draw from five locations in memory beginning at the location stored in register 0. I should also note that although I am creating this letter myself after the Halt operation, CHIP8 loads sprites for letters and numbers in the first 512 address spaces so we could actually make this easier on ourselves by using the sprites given to us.&lt;/p&gt;
 &lt;p&gt;The result looks like this:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;// ******** 0xFF 0b1111_1111
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;// ******** 0xFF 0b1111_1111
 // **    ** 0xC3 0b1100_0011
 // ******** 0xFF 0b1111_1111
 // **    ** 0xC3 0b1100_0011
@@ -356,7 +406,7 @@ Background I&amp;rsquo;ve been running linux on all of my machines for almost 15
 &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;p&gt;This should produce and A, and then a &amp;ldquo;+&amp;rdquo; that looks like this:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;//    **    0x18 0b0001_1000
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;//    **    0x18 0b0001_1000
 //    **    0x18 0b0001_1000
 // ******** 0xFF 0b1111_1111
 // ******** 0xFF 0b1111_1111
@@ -692,7 +742,7 @@ Background I&amp;rsquo;ve been running linux on all of my machines for almost 15
 &lt;p&gt;After moving our sprites down to location &lt;code&gt;0x500&lt;/code&gt;, we now have a little more room to work with, so we can add some extra operations in between before we need to worry. The caveat is that in a larger one we&amp;rsquo;d need to be more efficient with our space as our memory constraints are a lot lower than more modern machines.&lt;/p&gt;
 &lt;h3 id=&#34;adding-a-debugger&#34;&gt;Adding a debugger&lt;/h3&gt;
 &lt;p&gt;After overcoming a few actual bugs within the emulator itself, I ran into some bugs with my code much like the ones above. Unfortunately for us, there are very few tools to help us debug. There&amp;rsquo;s no CHIP8 IDE that will let us know that we didn&amp;rsquo;t load anything into the register we&amp;rsquo;re going to read from, or that we&amp;rsquo;re going to read from the wrong place in memory. Because this is an emulator, we&amp;rsquo;re no longer limited by the orginal technology of CHIP8, we can add our own debugging tools. To help overcome these challenges, I added a debugger which would halt the execution cycle, waiting for enter to be pressed, exiting debug mode, or exit the emulator itself which looks like this:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Rust&#34; data-lang=&#34;Rust&#34;&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;/// Loop until a valid key is pressed
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Rust&#34; data-lang=&#34;Rust&#34;&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;/// Loop until a valid key is pressed
 &lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;wait_on_debug_input&lt;/span&gt;(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;mut&lt;/span&gt; self) {
     &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;mut&lt;/span&gt; key_pressed &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;false&lt;/span&gt;;
     &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;key_pressed {
@@ -731,14 +781,14 @@ Background I&amp;rsquo;ve been running linux on all of my machines for almost 15
 &lt;h2 id=&#34;making-a-request&#34;&gt;Making a Request&lt;/h2&gt;
 &lt;p&gt;The first thing we need is a library to actually make requests to a webpage. There are more than a few of them, but the one I settled on is &lt;a href=&#34;https://docs.rs/reqwest/0.10.6/reqwest/&#34;&gt;reqwest&lt;/a&gt;, a highly recommended library with good support. You can find plenty of examples on how to use it and it also supports async await.&lt;/p&gt;
 &lt;p&gt;Using reqwest is as easy as this:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; body &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; reqwest::get(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;https://www.arm64.ca&amp;#34;&lt;/span&gt;)
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; body &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; reqwest::get(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;https://www.arm64.ca&amp;#34;&lt;/span&gt;)
     .&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;
     .text()
     .&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;;
 
-println&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;body = {:?}&amp;#34;&lt;/span&gt;, body);
+println!(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;body = {:?}&amp;#34;&lt;/span&gt;, body);
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The use case I had for this wasn&amp;rsquo;t too much more complicated than this. I just needed to check that the response code had a successful response and I could continue with scraping the data I needed.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;match&lt;/span&gt; get(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;url).&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt; {
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;match&lt;/span&gt; get(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;url).&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt; {
     Ok(resp) &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; {
         &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; resp.status().is_success() {
             &lt;span style=&#34;color:#66d9ef&#34;&gt;match&lt;/span&gt; resp.text().&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt; {
@@ -756,7 +806,7 @@ println&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;(&lt;span style=&
 &lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;}status
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;scraping-data&#34;&gt;Scraping data&lt;/h2&gt;
 &lt;p&gt;Once we&amp;rsquo;ve made a request to a website we need to actually extract that data. To do so we&amp;rsquo;ll need another library so we don&amp;rsquo;t have to reinvent the wheel. Another library &lt;a href=&#34;https://docs.rs/scraper/0.9.1/scraper/&#34;&gt;scraper&lt;/a&gt; does the job for us. It allows us to parse html and select particular elements; Exactly what we&amp;rsquo;ll need if we want to extract data from a table on wiki page. One of the useful parts of Scraper is that the &lt;code&gt;Selector&lt;/code&gt; lets us chain selectors together so we can find elements inside of other elements. This is extremely useful if we want to narrow down our results to exactly what we need.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;use&lt;/span&gt; scraper::{Html, Selector};
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;use&lt;/span&gt; scraper::{Html, Selector};
 
 &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; html &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;r#&amp;#34;
 &lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;    &amp;lt;div&amp;gt;
@@ -772,10 +822,10 @@ println&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;(&lt;span style=&
 
 &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; h1 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; fragment.select(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;div_selector).next().unwrap();
 &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; element &lt;span style=&#34;color:#66d9ef&#34;&gt;in&lt;/span&gt; h1.select(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;h1_selector) {
-    assert_eq&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;h1&amp;#34;&lt;/span&gt;, element.value().name());
+    assert_eq!(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;h1&amp;#34;&lt;/span&gt;, element.value().name());
 }
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;One disadvantage of using any library is that documentation isn&amp;rsquo;t always perfect. At the time of this writing there&amp;rsquo;s another use case I needed later which was not described in scrapers documentation or README. Selectors can be made to select multiple tags. This turns out to be really useful if you end up finding some heterogeneous data in the html you&amp;rsquo;re parsing as I did. Just like the selector above we put the tag we&amp;rsquo;re looking for into quotes, only this time, we separate all of the tags we&amp;rsquo;re looking for in one string with commas.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;use&lt;/span&gt; scraper::{Html, Selector};
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;use&lt;/span&gt; scraper::{Html, Selector};
 
 &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; html &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;r#&amp;#34;
 &lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;        &amp;lt;div&amp;gt;
@@ -789,17 +839,17 @@ println&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;(&lt;span style=&
 &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; element &lt;span style=&#34;color:#66d9ef&#34;&gt;in&lt;/span&gt; fragment.select(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;selector) {
     &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; name &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; element.value().name();
     &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; is_htag &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; name &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;h1&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;||&lt;/span&gt; name &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;h2&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;||&lt;/span&gt; name &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;h3&amp;#34;&lt;/span&gt;;
-    assert_eq&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;true&lt;/span&gt;, is_htag);
+    assert_eq!(&lt;span style=&#34;color:#66d9ef&#34;&gt;true&lt;/span&gt;, is_htag);
 }
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;working-with-the-db&#34;&gt;Working with the DB&lt;/h2&gt;
 &lt;p&gt;Now that we can request the data and search it for what we&amp;rsquo;re looking for, the last thing is to store it somewhere. I mentioned before that I&amp;rsquo;d like to put it in the SQL table so I chose SQLite3 because it&amp;rsquo;s easily available and lightweight. There were a few different libraries to choose from, such as &lt;a href=&#34;https://github.com/rusqlite/rusqlite&#34;&gt;rusqlite&lt;/a&gt; but I went with &lt;a href=&#34;https://docs.rs/sqlite/0.24.0/sqlite/&#34;&gt;sqlite&lt;/a&gt; which was simple enough to use. We simply open a connection to the database and then execute a command.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; connection &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; sqlite::open(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;mySqlite3DbFileName.db&amp;#34;&lt;/span&gt;).unwrap();
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; connection &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; sqlite::open(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;mySqlite3DbFileName.db&amp;#34;&lt;/span&gt;).unwrap();
 
 connection
     .execute(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;CREATE TABLE mytable (col1 TEXT, col2 INTEGER);&amp;#34;&lt;/span&gt;)
     .unwrap();
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Inserting is essentially the same though the library gives you a few better options if you are doing this more than once.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; connection &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; sqlite::open(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;mySqlite3DbFileName.db&amp;#34;&lt;/span&gt;).unwrap();
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; connection &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; sqlite::open(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;mySqlite3DbFileName.db&amp;#34;&lt;/span&gt;).unwrap();
 
 connection
     .execute(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;INSERT INTO mytable (col1, col2) VALUES (&amp;#39;a&amp;#39;, 10);&amp;#34;&lt;/span&gt;)
@@ -816,7 +866,7 @@ connection
 &lt;h3 id=&#34;data-types&#34;&gt;Data types&lt;/h3&gt;
 &lt;p&gt;Because we want to build a tool that requires as little work from the user as possible, we also need to determine the data type of each column if we want to put everything in a database table. Luckily, &lt;a href=&#34;https://doc.rust-lang.org/std/primitive.str.html#method.parse&#34;&gt;parse&lt;/a&gt; comes in handy. We use the turbofish syntax (a fancy name for &lt;code&gt;::&amp;lt;u32&amp;gt;&lt;/code&gt; or &lt;code&gt;::&amp;lt;f64&amp;gt;&lt;/code&gt; etc) to specify the type and if we return &lt;code&gt;Ok()&lt;/code&gt; we can determine what kind of data each element might be.&lt;/p&gt;
 &lt;p&gt;The finished method looks something like this&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;/// Derives the type of the string
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;/// Derives the type of the string
 &lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;derive_type&lt;/span&gt;(sample_datum: &lt;span style=&#34;color:#66d9ef&#34;&gt;&amp;amp;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;str&lt;/span&gt;) -&amp;gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;SqlTypes&lt;/span&gt; {
     &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; html_cleaned_data &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; remove_html_tags(sample_datum);
     &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; removed_citations &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; remove_wiki_citation_links(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;html_cleaned_data);
@@ -854,32 +904,32 @@ connection
 &lt;h2 id=&#34;building-the-tool&#34;&gt;Building the Tool&lt;/h2&gt;
 &lt;h3 id=&#34;setting-up-the-project&#34;&gt;Setting up the project&lt;/h3&gt;
 &lt;p&gt;Rust has some great tooling that is really easy to use and setup. Once you have Rust installed you can use cargo to start a new project like so:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;cargo new sonos_tool
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;cargo new sonos_tool
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Running it is just one more step, just &lt;code&gt;cd&lt;/code&gt; into the directory and then use &lt;code&gt;cargo run&lt;/code&gt;&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;cargo run
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;cargo run
    Compiling sonos_tool v0.1.0 &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;/home/arm/src/sonos_tool&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
     Finished dev &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;unoptimized + debuginfo&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; target&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;s&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; in 6.61s
      Running &lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;target/debug/sonos_tool&lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;
 Hello, world!
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;adding-dependencies&#34;&gt;Adding dependencies&lt;/h3&gt;
 &lt;p&gt;Before going further we’ll need to add a few dependencies to our &lt;code&gt;Cargo.toml&lt;/code&gt; file:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;[dependencies]
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;[dependencies]
 sonor = &amp;#34;0.1.2&amp;#34;
 tokio = { version = &amp;#34;0.2&amp;#34;, features = [&amp;#34;macros&amp;#34;, &amp;#34;time&amp;#34;]}
 futures = &amp;#34;0.3&amp;#34;
 structopt = { version = &amp;#34;0.3&amp;#34;, default-features = false }
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;running-a-single-command-from-sonor&#34;&gt;Running a single command from sonor&lt;/h3&gt;
 &lt;p&gt;The first thing I want to do is the most basic thing I can find with sonor. The sonor repo has some examples so we’re going to start a little smaller and then expand upon it a little bit. Looking at the example the first thing we can do is find a speaker and return the name. So we can replace the main method with something like this:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Rust&#34; data-lang=&#34;Rust&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#[tokio::main]&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Rust&#34; data-lang=&#34;Rust&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#[tokio::main]&lt;/span&gt;
 &lt;span style=&#34;color:#66d9ef&#34;&gt;async&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;() -&amp;gt; Result&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;(), sonor::Error&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; {
     &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; speaker &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; sonor::find(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Bedroom&amp;#34;&lt;/span&gt;, Duration::from_secs(&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;)).&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;
     .expect(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;room exists&amp;#34;&lt;/span&gt;);
-    println&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Name: {}&amp;#34;&lt;/span&gt;, speaker.name().&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;);
+    println!(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Name: {}&amp;#34;&lt;/span&gt;, speaker.name().&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;);
     &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; Ok(())
 }
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In this example, we have a speaker, or speaker set in our home called &lt;code&gt;&amp;quot;Bedroom&amp;quot;&lt;/code&gt; but you’ll need to use whatever name your speaker might be called.&lt;/p&gt;
 &lt;p&gt;Running this should produce something like this:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;    Finished dev &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;unoptimized + debuginfo&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; target&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;s&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; in 5.88s
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;    Finished dev &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;unoptimized + debuginfo&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; target&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;s&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; in 5.88s
      Running &lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;target/debug/sonos_tool&lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;
 Name: Bedroom
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The library makes working with your sonos speakers easy as pie, we just need add more functions, and then make it usable as a command line tool.&lt;/p&gt;
@@ -887,16 +937,16 @@ Name: Bedroom
 &lt;p&gt;Now that we can find the speaker we can use any of these commands at our disposal. All we need to do is make the commands available from the command line somehow and match them up with the appropriate speaker function.&lt;/p&gt;
 &lt;p&gt;Unless you want to dig into the docs to see what else we can do, the &lt;code&gt;speaker.rs&lt;/code&gt; file has all the commands we can access and some good examples on how one might use what’s available. To start with we should add some basic functionality that we might need: &lt;code&gt;Play&lt;/code&gt;, &lt;code&gt;Pause&lt;/code&gt;, and because we’re going to need to know the names of what’s available, an &lt;code&gt;Info&lt;/code&gt; command used for discovery.&lt;/p&gt;
 &lt;p&gt;To make things easier on ourselves, the first thing we can do is take a look at the &lt;a href=&#34;https://docs.rs/structopt/0.3.14/structopt/&#34;&gt;&lt;code&gt;structop&lt;/code&gt; crate&lt;/a&gt; which will be helpful for listing the available commands.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Rust&#34; data-lang=&#34;Rust&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#[derive(StructOpt)]&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Rust&#34; data-lang=&#34;Rust&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#[derive(StructOpt)]&lt;/span&gt;
 &lt;span style=&#34;color:#66d9ef&#34;&gt;enum&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Command&lt;/span&gt; {
     Info,
     Play,
     Pause,
 }
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We’ll also add this to our main method though we don’t need to do anything with the cmd variable for now&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Rust&#34; data-lang=&#34;Rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; cmd &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Command::from_args();
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Rust&#34; data-lang=&#34;Rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; cmd &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Command::from_args();
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now we can run &lt;code&gt;cargo build&lt;/code&gt; and this time we’ll execute our binary like so&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;$ ./target/debug/sonos_tool --help
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;$ ./target/debug/sonos_tool --help
 Name: Bedroom
 sonos_tool 0.1.0
 
@@ -915,7 +965,7 @@ SUBCOMMANDS:
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Without needing to do anything else at all, Structop gives us a help command (we can use &lt;code&gt;-h&lt;/code&gt; as well), as well as a &lt;code&gt;--version&lt;/code&gt; command, and some helpful info.&lt;/p&gt;
 &lt;h3 id=&#34;adding-some-better-documentation-to-the-command-line-tool&#34;&gt;Adding some better documentation to the command line tool&lt;/h3&gt;
 &lt;p&gt;We aren’t making use of everything structop gives us however. Looking at the docs we can add the annotations which will build out the rest of this info for us.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Rust&#34; data-lang=&#34;Rust&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#[derive(StructOpt)]&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Rust&#34; data-lang=&#34;Rust&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#[derive(StructOpt)]&lt;/span&gt;
 &lt;span style=&#34;color:#66d9ef&#34;&gt;enum&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Cli&lt;/span&gt; {
     Info,
     &lt;span style=&#34;color:#75715e&#34;&gt;#[structopt(
@@ -930,7 +980,7 @@ SUBCOMMANDS:
     Pause,
 }
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now that we’ve added the about and help data, using &lt;code&gt;-h&lt;/code&gt; gives us something much more useful.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;   Compiling sonos_tool v0.1.0 &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;/home/arm/src/sonos_tool&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;   Compiling sonos_tool v0.1.0 &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;/home/arm/src/sonos_tool&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
     Finished dev &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;unoptimized + debuginfo&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; target&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;s&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; in 6.61s
      Running &lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;target/debug/sonos_tool&lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;
 sonos_tool 0.1.0
@@ -948,7 +998,7 @@ SUBCOMMANDS:
     pause         Pauses a specified room
     play          Plays specified room
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;There’s one last thing we need in our structop enum, as we saw with the first example, we’ll need a name to specify which speaker or group we’re talking about. This is just as easy as Rust enums are not normal enums and can have properties like this:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Rust&#34; data-lang=&#34;Rust&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#[derive(StructOpt)]&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Rust&#34; data-lang=&#34;Rust&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#[derive(StructOpt)]&lt;/span&gt;
 &lt;span style=&#34;color:#66d9ef&#34;&gt;enum&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Command&lt;/span&gt; {
     Info,
     &lt;span style=&#34;color:#75715e&#34;&gt;#[structopt(
@@ -968,7 +1018,7 @@ SUBCOMMANDS:
 }
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;making-use-of-the-commands&#34;&gt;Making use of the commands&lt;/h3&gt;
 &lt;p&gt;Now that we have the commands laid out we just need to parse our command line arguments and then implement the three functions. For our functions we can implement them similarly to the first method where we printed our speakers name however, this time we’ll need to provide a param to specify which speaker we will be sending the command to.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Rust&#34; data-lang=&#34;Rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;play&lt;/span&gt;(name: String) -&amp;gt; Result&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;(), sonor::Error&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; {
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Rust&#34; data-lang=&#34;Rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;play&lt;/span&gt;(name: String) -&amp;gt; Result&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;(), sonor::Error&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; {
     &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; speaker &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; sonor::find(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;name, Duration::from_secs(&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;)).&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;
         .expect(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;room exists&amp;#34;&lt;/span&gt;);
     &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; speaker.play().&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;;
@@ -980,7 +1030,7 @@ SUBCOMMANDS:
     &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; speaker.pause().&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;;
 }
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Trying to build this however, will return an error:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;error&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;E0728&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;await&lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt; is only allowed inside &lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;async&lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt; functions and blocks
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;error&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;E0728&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;await&lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt; is only allowed inside &lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;async&lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt; functions and blocks
    --&amp;gt; src/main.rs:121:19
     |
 &lt;span style=&#34;color:#ae81ff&#34;&gt;120&lt;/span&gt; | fn pause&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;name: String&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; -&amp;gt; Result&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;, sonor::Error&amp;gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
@@ -997,7 +1047,7 @@ error&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;E0728&lt;span style
 &lt;span style=&#34;color:#ae81ff&#34;&gt;123&lt;/span&gt; |     &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; speaker.pause&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;.await;
     |            ^^^^^^^^^^^^^^^^^^^^^ only allowed inside &lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;async&lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt; functions and blocks
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Rust is laying out exactly what we need to make this work. The function needs to be &lt;code&gt;async&lt;/code&gt; just like the main method. It’s an easy fix and all we need is to do is change our method to:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Rust&#34; data-lang=&#34;Rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;async&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;play&lt;/span&gt;(name: String) -&amp;gt; Result&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;(), sonor::Error&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; {
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Rust&#34; data-lang=&#34;Rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;async&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;play&lt;/span&gt;(name: String) -&amp;gt; Result&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;(), sonor::Error&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; {
     &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; speaker &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; sonor::find(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;name, Duration::from_secs(&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;)).&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;
         .expect(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;room exists&amp;#34;&lt;/span&gt;);
     &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; speaker.play().&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;;
@@ -1009,7 +1059,7 @@ error&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;E0728&lt;span style
     &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; speaker.pause().&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;;
 }
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Our info command will take a little more work. This function won’t be passed a name of a speaker like the other two functions, but rather, we’ll use it to find all our speakers on our wifi network and display some general info about the state of them.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Rust&#34; data-lang=&#34;Rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;async&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;info&lt;/span&gt;() -&amp;gt; Result&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;(), sonor::Error&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; {
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Rust&#34; data-lang=&#34;Rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;async&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;info&lt;/span&gt;() -&amp;gt; Result&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;(), sonor::Error&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; {
     &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;mut&lt;/span&gt; devices &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; sonor::discover(Duration::from_secs(&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;)).&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;;
 
     &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; Some(device) &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; devices.try_next().&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt; {
@@ -1018,16 +1068,16 @@ error&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;E0728&lt;span style
             .expect(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;room exists&amp;#34;&lt;/span&gt;);
         &lt;span style=&#34;color:#66d9ef&#34;&gt;match&lt;/span&gt; speaker.track().&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt; {
             Some(track_info) &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; {
-                println&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Room: {}&amp;#34;&lt;/span&gt;, name);
-                println&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Volume: {}&amp;#34;&lt;/span&gt;, speaker.volume().&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;);
-                println&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Track: {}&amp;#34;&lt;/span&gt;, track_info.track());
+                println!(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Room: {}&amp;#34;&lt;/span&gt;, name);
+                println!(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Volume: {}&amp;#34;&lt;/span&gt;, speaker.volume().&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;);
+                println!(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Track: {}&amp;#34;&lt;/span&gt;, track_info.track());
             }
             None &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; {
-                println&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Room: {}&amp;#34;&lt;/span&gt;, name);
-                println&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Volume: {}&amp;#34;&lt;/span&gt;, speaker.volume().&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;);
+                println!(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Room: {}&amp;#34;&lt;/span&gt;, name);
+                println!(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Volume: {}&amp;#34;&lt;/span&gt;, speaker.volume().&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;);
             }
         }
-        println&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;----------&amp;#34;&lt;/span&gt;);
+        println!(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;----------&amp;#34;&lt;/span&gt;);
     }
 
     Ok(())
@@ -1035,7 +1085,7 @@ error&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;E0728&lt;span style
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The main difference here is we need to use &lt;code&gt;sonor::discover&lt;/code&gt; to find our speakers before we can do anything, the rest is fairly self explanatory. For each device we find we want to print it’s name, the volume, and if it’s playing, display the track.&lt;/p&gt;
 &lt;h3 id=&#34;putting-it-all-together&#34;&gt;Putting it all together&lt;/h3&gt;
 &lt;p&gt;Now that we have our methods we just need to call set them up in our main method&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Rust&#34; data-lang=&#34;Rust&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#[tokio::main]&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Rust&#34; data-lang=&#34;Rust&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#[tokio::main]&lt;/span&gt;
 &lt;span style=&#34;color:#66d9ef&#34;&gt;async&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;() -&amp;gt; Result&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;(), sonor::Error&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; {
     &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; args &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Command::from_args();
     &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;match&lt;/span&gt; args {
@@ -1047,7 +1097,7 @@ error&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;E0728&lt;span style
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The first thing you may notice is how we pass the name that we defined in our enum above, to each &lt;code&gt;match&lt;/code&gt; arm. The second thing is that each of these async methods, like the methods from sonor are all async and as such will need &lt;code&gt;.await&lt;/code&gt; to be executed. Without this, nothing will happen. Luckily Rust will prevent us from doing this, as you’ll be able to see if you remove one of them and try to build the project.&lt;/p&gt;
 &lt;h3 id=&#34;running-the-basic-program&#34;&gt;Running the basic program&lt;/h3&gt;
 &lt;p&gt;Now that our barebones tool is finished, we can try it out. Running the info command should give you something like this, depending on what your speakers are named:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Shell&#34; data-lang=&#34;Shell&#34;&gt;$ ./target/debug/sonos_tool info
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Shell&#34; data-lang=&#34;Shell&#34;&gt;$ ./target/debug/sonos_tool info
 Room: LivingRoom
 Volume: &lt;span style=&#34;color:#ae81ff&#34;&gt;21&lt;/span&gt;
 ----------
@@ -1065,7 +1115,7 @@ Volume: &lt;span style=&#34;color:#ae81ff&#34;&gt;23&lt;/span&gt;
 &lt;p&gt;This was put together relatively quickly so there’s a lot left that we can add. Looking in the Speaker implementation there are a ton of other features to be added that we can play around with.&lt;/p&gt;
 &lt;h4 id=&#34;better-error-handling&#34;&gt;Better Error handling&lt;/h4&gt;
 &lt;p&gt;All of our functions are using &lt;code&gt;.expect()&lt;/code&gt; right now. What this means is that when we give them a room that can’t be found, the tool will panic and stop.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Shell&#34; data-lang=&#34;Shell&#34;&gt;$ ./target/debug/sonos_tool play asdf
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Shell&#34; data-lang=&#34;Shell&#34;&gt;$ ./target/debug/sonos_tool play asdf
 thread &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;main&amp;#39;&lt;/span&gt; panicked at &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;room exists&amp;#39;&lt;/span&gt;, src/main.rs:152:19
 note: run with &lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;RUST_BACKTRACE&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;1&lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt; environment variable to display a backtrace
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;It would be much better if we removed this and handled the error gracefully.&lt;/p&gt;
@@ -1094,7 +1144,7 @@ note: run with &lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;RUST_BACK
 &lt;p&gt;Early in the volume Knuth shows how difficult it is to create a sufficiently random pseudorandom number generator. Simply adding a number of complicated steps will not yield truly random numbers. Knuth includes the following algorithm, &lt;em&gt;Algorithm-K&lt;/em&gt;, to illustrate this point. You can find an excerpt of the algorithm &lt;a href=&#34;http://www.informit.com/articles/article.aspx?p=2221790&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
 &lt;h4 id=&#34;algorithm-k&#34;&gt;Algorithm K&lt;/h4&gt;
 &lt;p&gt;For the purposes of demonstration I&amp;rsquo;ve implemented the algorithm below. The steps aren&amp;rsquo;t particularly important, but as you can see it&amp;rsquo;s a fairly involved algorithm that looks like it might produce something random.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-scheme&#34; data-lang=&#34;scheme&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;#&lt;/span&gt;lang racket
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-scheme&#34; data-lang=&#34;scheme&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;#&lt;/span&gt;lang racket
 
 (&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;algorithm-k&lt;/span&gt; x)
   (&lt;span style=&#34;color:#a6e22e&#34;&gt;do-algorithm-k&lt;/span&gt; x (+ &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; (floor (/ x (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;9&lt;/span&gt;))))))
@@ -1173,7 +1223,7 @@ note: run with &lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;RUST_BACK
 (&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;k12&lt;/span&gt; x iterations)
   (&lt;span style=&#34;color:#a6e22e&#34;&gt;do-algorithm-k&lt;/span&gt; (modulo (floor (* x (/ (- x &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;) (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;)))) (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;)) (- iterations &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)))
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The results however random seeming do present a problem:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&amp;gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;algorithm-k 1&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&amp;gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;algorithm-k 1&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
 &lt;span style=&#34;color:#ae81ff&#34;&gt;3831577709&lt;/span&gt;
 &amp;gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;algorithm-k 12345&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
 &lt;span style=&#34;color:#ae81ff&#34;&gt;5827337884&lt;/span&gt;
@@ -1186,7 +1236,7 @@ note: run with &lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;RUST_BACK
 &lt;p&gt;The most common pseudorandom number generator (according to Knuth) is a &lt;a href=&#34;https://en.wikipedia.org/wiki/Linear_congruential_generator&#34;&gt;Linear congruential generator&lt;/a&gt;, which has the following equation:&lt;/p&gt;
 &lt;p&gt;&lt;em&gt;Xn + 1 = (a * Xn + c) mod m&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;Unlike the previous algorithm, the equation isn&amp;rsquo;t difficult to explain; numbers for m,a, and c are chosen and set by the language or library designers (hopefully not randomly) and a seed is chosen for the first value of Xn. This being a recurrence relation, the result of each run then becomes the next seed or starting value for a subsequent run. You can see this in the code below:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-scheme&#34; data-lang=&#34;scheme&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;#&lt;/span&gt;lang racket
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-scheme&#34; data-lang=&#34;scheme&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;#&lt;/span&gt;lang racket
 
 (&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;next (&lt;span style=&#34;color:#a6e22e&#34;&gt;current-seconds&lt;/span&gt;))
 
@@ -1196,7 +1246,7 @@ note: run with &lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;RUST_BACK
               (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;64&lt;/span&gt;)))
   next)
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You can see the output this produces from the racket repl here:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&amp;gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;my-random&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&amp;gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;my-random&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
 &lt;span style=&#34;color:#ae81ff&#34;&gt;14843871667761315205&lt;/span&gt;
 &amp;gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;my-random&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
 &lt;span style=&#34;color:#ae81ff&#34;&gt;534325907729616048&lt;/span&gt;
@@ -1237,7 +1287,7 @@ note: run with &lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;RUST_BACK
 &lt;h3 id=&#34;running-some-tests&#34;&gt;Running some tests&lt;/h3&gt;
 &lt;p&gt;Reading about these tests was interesting, but what would be more interesting is to run it on the two generators I had used above, as well as RANDU which is shown below. Comparing the results should highlight the differences between the generators that we expect to preform well, and those that we know will preform poorly. There are a number of random number generator testers out there but the one I used was &lt;code&gt;dieharder&lt;/code&gt; based on a suite of tests called diehard. For each run I generated 1,000,0000 random numbers (algorithm k took significantly longer ~20 min) and fed it to diehard. You can see the results here:&lt;/p&gt;
 &lt;h1 id=&#34;standard-lcg&#34;&gt;Standard LCG&lt;/h1&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#=============================================================================#&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#=============================================================================#&lt;/span&gt;
 &lt;span style=&#34;color:#75715e&#34;&gt;#            dieharder version 3.31.1 Copyright 2003 Robert G. Brown          #&lt;/span&gt;
 &lt;span style=&#34;color:#75715e&#34;&gt;#=============================================================================#&lt;/span&gt;
    rng_name    |           filename             |rands/second|
@@ -1339,7 +1389,7 @@ rgb_minimum_distance|   5|     10000|    1000|0.00000000|  FAILED
 &lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 662 times&lt;/span&gt;
       rgb_lagged_sum|   4|   1000000|     100|0.00000000|  FAILED
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h1 id=&#34;randu&#34;&gt;RANDU&lt;/h1&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-scheme&#34; data-lang=&#34;scheme&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;#&lt;/span&gt;lang racket
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-scheme&#34; data-lang=&#34;scheme&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;#&lt;/span&gt;lang racket
 
 (&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;next &lt;span style=&#34;color:#ae81ff&#34;&gt;1090815429&lt;/span&gt;)
 
@@ -1348,7 +1398,7 @@ rgb_minimum_distance|   5|     10000|    1000|0.00000000|  FAILED
   next)
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;!-- raw HTML omitted --&gt;
 &lt;h1 id=&#34;algorithm-k-1&#34;&gt;Algorithm-k&lt;/h1&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#=============================================================================#&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#=============================================================================#&lt;/span&gt;
 &lt;span style=&#34;color:#75715e&#34;&gt;#            dieharder version 3.31.1 Copyright 2003 Robert G. Brown          #&lt;/span&gt;
 &lt;span style=&#34;color:#75715e&#34;&gt;#=============================================================================#&lt;/span&gt;
    rng_name    |           filename             |rands/second|
@@ -1451,7 +1501,7 @@ rgb_minimum_distance|   5|     10000|    1000|0.00000000|  FAILED
 &lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 660 times&lt;/span&gt;
       rgb_lagged_sum|   4|   1000000|     100|0.00000000|  FAILED
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;There&amp;rsquo;s already quite a bit to digest here so I didn&amp;rsquo;t include all of the test results as the first few are enough to illustrate the differences between the three algorithms. One thing you will notice is that the standard LCG used actually failed a lot of tests. After doing a little testing and some digging it seems that dieharder will also fail these tests with its own generator with the same amount of numbers. In fact, you can really only expect good results with about 10 million or more numbers, but because diehard runs on a single cpu this would have taken a considerable amount of time to run. The comparison is really what we&amp;rsquo;re after and from the results it&amp;rsquo;s clear that algorithm-k is not suitable, nor is RANDU much better. I wanted to be able to see what kind of results I would see from running a much larger set so I ran one last run with 100,000,000 which shows that the lcg faired a little bit better.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#=============================================================================#&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#=============================================================================#&lt;/span&gt;
 &lt;span style=&#34;color:#75715e&#34;&gt;#            dieharder version 3.31.1 Copyright 2003 Robert G. Brown          #&lt;/span&gt;
 &lt;span style=&#34;color:#75715e&#34;&gt;#=============================================================================#&lt;/span&gt;
    rng_name    |           filename             |rands/second|
@@ -1574,7 +1624,7 @@ Preface I&amp;rsquo;ve been playing around with functional languages for a few y
 &lt;p&gt;Almost two years ago, I found about about the Racket language and worked through the &lt;a href=&#34;https://beautifulracket.com/&#34;&gt;Beautiful Racket&lt;/a&gt; tutorial. I found the language to actually be pretty fun to work with and was interested in writing a DSL which Racket was built for. Though I have used Clojure and scala before as well, I had written more code in Racket as well as some Chez-Scheme (which is quite similar) in school. Between that and &lt;a href=&#34;https://twitter.com/ID_AA_Carmack/status/577877590070919168&#34;&gt;John Carmacks tweet from a few years ago&lt;/a&gt;, Racket seemed like a good choice.&lt;/p&gt;
 &lt;h1 id=&#34;getting-started&#34;&gt;Getting started&lt;/h1&gt;
 &lt;p&gt;Before I start building something I want to get a feel for the language so I started by making a simple FizzBuzz function. The code is simple enough to read, define the function, which loops through 0 to some given argument and prints when certain conditions are met. I&amp;rsquo;m not sure if this is idiomatic Racket but I&amp;rsquo;m not concerned about that just yet.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-scheme&#34; data-lang=&#34;scheme&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;#&lt;/span&gt;lang racket
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-scheme&#34; data-lang=&#34;scheme&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;#&lt;/span&gt;lang racket
 (&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;fizz-buzz&lt;/span&gt; num)
   (&lt;span style=&#34;color:#a6e22e&#34;&gt;for&lt;/span&gt; ([i num])
     (&lt;span style=&#34;color:#a6e22e&#34;&gt;cond&lt;/span&gt;
@@ -1611,7 +1661,7 @@ Preface I&amp;rsquo;ve been playing around with functional languages for a few y
 &lt;p&gt;Though most OO languages have some aspects of functional programming with lambdas, it&amp;rsquo;s nowhere near as intuitive. Treating functions are arguments allows you to things you would never even think about in Object Oriented programming. Instead of checking if an argument was a string or an Integer, casting it and then applying the correct function we check if it&amp;rsquo;s a string and pass the function along to the two arguments. This isn&amp;rsquo;t something unique to Racket, but it is something that I appreciated a lot the longer I used it. The example taken from the docs here, shows off just how easy it is:&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-scheme&#34; data-lang=&#34;scheme&#34;&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;double&lt;/span&gt; v)
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-scheme&#34; data-lang=&#34;scheme&#34;&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;double&lt;/span&gt; v)
     ((&lt;span style=&#34;color:#66d9ef&#34;&gt;if &lt;/span&gt;(string? v) string-append +) v v))
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
 &lt;li&gt;Racket is almost syntax-less; whereas many languages have different structures, rules and often shortcuts for defining variables, checking conditionals, creating switches, or creating functions is all the same. Not having to look up syntax greatly simplified the process of learning the language.&lt;/li&gt;
@@ -1622,8 +1672,8 @@ Preface I&amp;rsquo;ve been playing around with functional languages for a few y
 &lt;p&gt;This may have not been the best choice for the first thing I should try to build, but I wanted to pick something somewhat off the beaten path to see what kind of problems I might run into. I thought I might run into issues with bracket completion, but that never really happened even though there wasn&amp;rsquo;t any bracket completion turned on. The majority of the issues that I ran into where more or less around using functions properly such as returning an expression or passing in the correct types to a function as even though the language is untyped there are functions that return errors if passed the wrong type of data.&lt;/p&gt;
 &lt;h2 id=&#34;getting-to-work&#34;&gt;Getting to work&lt;/h2&gt;
 &lt;p&gt;Bytes can be read using &lt;code&gt;read-bytes&lt;/code&gt; and passes an input port which in this case was made from opening a file, and reads bytes in octal. I won&amp;rsquo;t include the entire script here, just enough to show off the simplicity of Racket.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-scheme&#34; data-lang=&#34;scheme&#34;&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;in (open-input-file &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;gif.gif&amp;#34;&lt;/span&gt;))
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-scheme&#34; data-lang=&#34;scheme&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;#&lt;/span&gt;lang racket
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-scheme&#34; data-lang=&#34;scheme&#34;&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;in (open-input-file &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;gif.gif&amp;#34;&lt;/span&gt;))
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-scheme&#34; data-lang=&#34;scheme&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;#&lt;/span&gt;lang racket
 
 (&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;size-of-color-table-from-packed-field&lt;/span&gt; bstr bytes-before-pf)
   (&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;packed-field (&lt;span style=&#34;color:#a6e22e&#34;&gt;extract-packed-field&lt;/span&gt; bstr bytes-before-pf))
@@ -1638,7 +1688,7 @@ Preface I&amp;rsquo;ve been playing around with functional languages for a few y
          extract-packed-field)
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;testing&#34;&gt;Testing&lt;/h3&gt;
 &lt;p&gt;If I&amp;rsquo;m going to want to use this for anything useful, a good test suite is an important consideration. Luckily testing was pretty straightforward as well, just make sure you provide the functions you intend to expose and &lt;a href=&#34;https://docs.racket-lang.org/rackunit/index.html&#34;&gt;rackUnit&lt;/a&gt; provides easy methods for testing.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-scheme&#34; data-lang=&#34;scheme&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;#&lt;/span&gt;lang racket
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-scheme&#34; data-lang=&#34;scheme&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;#&lt;/span&gt;lang racket
 
 (&lt;span style=&#34;color:#a6e22e&#34;&gt;require&lt;/span&gt; rackunit &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;readgif.rkt&amp;#34;&lt;/span&gt;)
 
@@ -1655,7 +1705,7 @@ Preface I&amp;rsquo;ve been playing around with functional languages for a few y
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You of course don&amp;rsquo;t need all of this, the &lt;code&gt;check-equal?&lt;/code&gt; is enough, but being able to organize the test suites like this is nice if you want to run just one of them. Though I don&amp;rsquo;t know exactly how complicated a larger test suite would be overall, I&amp;rsquo;m happy with the minimal test framework that racket provides.&lt;/p&gt;
 &lt;h2 id=&#34;web-development&#34;&gt;Web development&lt;/h2&gt;
 &lt;p&gt;The majority of my experience is in web development so the next step was to create a small website or an api. I had heard that Hackernews was written in racket or, more accurately, written arc, a language written in Racket, so I wanted to see how easy it would be to write a webpage in racket. The docs again shine through here with instant web servlets:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-scheme&#34; data-lang=&#34;scheme&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;#&lt;/span&gt;lang web-server/insta
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-scheme&#34; data-lang=&#34;scheme&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;#&lt;/span&gt;lang web-server/insta
  
 (&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;start&lt;/span&gt; req)
   (&lt;span style=&#34;color:#a6e22e&#34;&gt;response/xexpr&lt;/span&gt;
@@ -1668,7 +1718,7 @@ Preface I&amp;rsquo;ve been playing around with functional languages for a few y
 &lt;/ul&gt;
 &lt;h3 id=&#34;taking-spin-for-a-whirl&#34;&gt;Taking Spin for a whirl&lt;/h3&gt;
 &lt;p&gt;I decided to take a look at spin mostly because it reminded me a lot of the minimalist framework &lt;a href=&#34;http://sinatrarb.com/&#34;&gt;Sinatra&lt;/a&gt; which I have used before.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-scheme&#34; data-lang=&#34;scheme&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;#&lt;/span&gt;lang racket
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-scheme&#34; data-lang=&#34;scheme&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;#&lt;/span&gt;lang racket
 
 (&lt;span style=&#34;color:#a6e22e&#34;&gt;require&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;planet&lt;/span&gt; dmac/spin))
 (&lt;span style=&#34;color:#a6e22e&#34;&gt;require&lt;/span&gt; web-server/templates)
@@ -1683,7 +1733,7 @@ Preface I&amp;rsquo;ve been playing around with functional languages for a few y
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Boom! This was more what I was looking for: Throw down some routes and then then the use whatever logic needs to run. The framework also includes templating and the like if you need something a little more complicated but there doesn&amp;rsquo;t really seem to be anything in the way of react, rails, spring, or anything in the realm of fully fleshed out web frameworks. That really shouldn&amp;rsquo;t be that surprising considering how small the user base is, and what the typical use case for the language is, so I didn&amp;rsquo;t go much further in the way of creating a more robust web application though there is a static site generator &lt;a href=&#34;https://docs.racket-lang.org/frog/index.html&#34;&gt;Frog&lt;/a&gt;. Though I probably won&amp;rsquo;t consider moving over to Frog from the current static site generator I use for this site: &lt;a href=&#34;https://gohugo.io/&#34;&gt;Hugo&lt;/a&gt;. It looked like it had some thorough documentation and room for customization.&lt;/p&gt;
 &lt;h3 id=&#34;making-web-requests&#34;&gt;Making web requests&lt;/h3&gt;
 &lt;p&gt;A lot of applications depend on making calls to third party apis, so I wanted to see what parsing json was like. There are a number of useful libraries for making &lt;a href=&#34;https://github.com/jackfirth/racket-request&#34;&gt;rest requests&lt;/a&gt; with racket, but I wanted to use just the base language. There were a few different ways to make requests but I found this to be the most intuitive and relevant to the majority of my use cases.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-scheme&#34; data-lang=&#34;scheme&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;#&lt;/span&gt;lang racket
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-scheme&#34; data-lang=&#34;scheme&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;#&lt;/span&gt;lang racket
 (&lt;span style=&#34;color:#a6e22e&#34;&gt;require&lt;/span&gt; net/http-client
          json)
 
@@ -1711,7 +1761,7 @@ Preface I&amp;rsquo;ve been playing around with functional languages for a few y
 &lt;p&gt;I was recently gifted the first volume of Donald Knuth&amp;rsquo;s: &amp;ldquo;The Art of Computer Programming&amp;rdquo;. Being the computer geek that I am, I have never been so excited yet, intimidated about sitting down and working through what some people would call a Reference book.&lt;/p&gt;
 &lt;h2 id=&#34;reading-the-book&#34;&gt;Reading the book&lt;/h2&gt;
 &lt;p&gt;The biggest misconception that I had about this book was that I thought it would be more like a reference book, something you can quickly open, flip to the table of contents, and then over to page 254 for linked lists (or linked allocation in this case) and learn everything there is to know about linked lists. As stated by peers, Stack Overflow posts, Reddit, and Hacker News users, it&amp;rsquo;s not something you would want to actually go about reading through. It&amp;rsquo;s long, highly technical, and full of math equations. I suspect that the average reader would quickly get lost the first time Knuth shows off an algorithm in a custom assembly language written specifically for this book (yes, really). To put this more plainly: &lt;em&gt;Reading through TAOCP is an NP hard problem&lt;/em&gt;. Naturally, I couldn&amp;rsquo;t wait to read through it. So how should we go about reading the book? Luckily for us Knuth provides the reader with instructions, and of course, being the computer scientist that he is, a helpful algorithm flow chart to guide the reader through the process of reading the books which looks something like this:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;           +
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;           +
            |
            |
      +-----v-----+
@@ -1748,7 +1798,7 @@ Preface I&amp;rsquo;ve been playing around with functional languages for a few y
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The flow chart and written procedure following this contains other suggestions on how to read through the book based on if you&amp;rsquo;ve read through it before or just based on what your interests are.&lt;/p&gt;
 &lt;h3 id=&#34;exercises&#34;&gt;Exercises&lt;/h3&gt;
 &lt;p&gt;A large portion of this book is dedicated to exercises as well as the included solutions in the back. &lt;em&gt;Ugh, homework&lt;/em&gt;. One of the more helpful things that Knuth does is break down the relative difficulty of each problem using this notation:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;00 Immediate                        &amp;gt; Recommended
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;00 Immediate                        &amp;gt; Recommended
 10 Simple (one minute)                M Mathematically oriented
 20 Medium (15 minutes)                HM Requiring &amp;quot;higher math&amp;quot;
 30 Moderately Hard
@@ -1777,7 +1827,7 @@ Preface I&amp;rsquo;ve been playing around with functional languages for a few y
       <content>&lt;p&gt;A simple way of reading Parquet files without the need to use Spark.&lt;/p&gt;
 &lt;p&gt;I recently ran into an issue where I needed to read from &lt;a href=&#34;https://parquet.apache.org/&#34;&gt;Parquet&lt;/a&gt; files in a simple way without having to use the entire Spark framework. Though inspecting the contents of a Parquet file turns out to be pretty simple using the &lt;code&gt;spark-shell&lt;/code&gt;, doing so without the framework ended up being more difficult because of a lack of documentation about how to read the actual content of Parquet files, the columnar format used by Hadoop and Spark.&lt;/p&gt;
 &lt;p&gt;If all you need to do is inspect the contents of a parquet file you can do so pretty easily if you already have spark set up like so&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;
 $ spark-shell
 scala&amp;gt; val sqlContext &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; new org.apache.spark.sql.SQLContext&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;sc&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
 scala&amp;gt; val parqfile &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; sqlContext.read.parquet&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Objects.parquet&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
@@ -1786,7 +1836,7 @@ scala&amp;gt; val allrecords &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/spa
 scala&amp;gt; allrecords.show&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;However if that&amp;rsquo;s not an option or you need a more programmatic way to inspect the elements you&amp;rsquo;ll have to use the &lt;a href=&#34;https://github.com/apache/parquet-mr&#34;&gt;libraries internally used by Hadoop and Spark&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;If you&amp;rsquo;re using Maven you&amp;rsquo;ll want to get the following dependancies&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-xml&#34; data-lang=&#34;xml&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;dependencies&amp;gt;&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-xml&#34; data-lang=&#34;xml&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;dependencies&amp;gt;&lt;/span&gt;
     &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
         &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.apache.parquet&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
         &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;parquet-avro&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
@@ -1798,7 +1848,7 @@ scala&amp;gt; allrecords.show&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/sp
         &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;version&amp;gt;&lt;/span&gt;3.1.0&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/version&amp;gt;&lt;/span&gt;
     &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
 &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/dependencies&amp;gt;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; org.apache.hadoop.conf.Configuration&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; org.apache.hadoop.conf.Configuration&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
 &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; org.apache.hadoop.fs.Path&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
 &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; org.apache.parquet.column.page.PageReadStore&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
 &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; org.apache.parquet.example.data.simple.SimpleGroup&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
@@ -1838,7 +1888,7 @@ scala&amp;gt; allrecords.show&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/sp
     &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
 &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;And to make things easier A Parquet data object&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; org.apache.parquet.example.data.simple.SimpleGroup&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; org.apache.parquet.example.data.simple.SimpleGroup&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
 &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; org.apache.parquet.schema.Type&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
 
 &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; java.util.List&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
@@ -1861,11 +1911,11 @@ scala&amp;gt; allrecords.show&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/sp
     &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
 &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Once we return the Parquet Object we can read whats inside each of the SimpleGroups like so:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;  Parquet parquet &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; ParquetReaderUtils&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;getParquetData&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;();&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;  Parquet parquet &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; ParquetReaderUtils&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;getParquetData&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;();&lt;/span&gt;
   SimpleGroup simpleGroup &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; parquet&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;getData&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;().&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;get&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;0&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
   String storedString &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; simpleGroups&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;get&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;0&lt;span style=&#34;color:#f92672&#34;&gt;).&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;getString&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;theFieldIWant&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; 0&lt;span style=&#34;color:#f92672&#34;&gt;);&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The only caveat here being, we must determine the name of the field as well as the type in order to extract it. The fields we already have from the schema we stored on the Parquet object, however the type we may want to determine by manually inspecting the data with a debugger, though it can be determined dynamically using&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;  parquet&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;getSchema&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;().&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;get&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;0&lt;span style=&#34;color:#f92672&#34;&gt;).&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;getOriginalType&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;();&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;  parquet&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;getSchema&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;().&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;get&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;0&lt;span style=&#34;color:#f92672&#34;&gt;).&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;getOriginalType&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;();&lt;/span&gt;
   parquet&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;getSchema&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;().&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;get&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;0&lt;span style=&#34;color:#f92672&#34;&gt;).&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;asPrimitiveType&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;();&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content>
     </item>

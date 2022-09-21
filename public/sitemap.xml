@@ -1,240 +1,161 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
-  
   <url>
     <loc>/</loc>
-    <lastmod>2022-02-16T22:08:48-06:00</lastmod>
-  </url>
-  
-  <url>
+    <lastmod>2022-09-20T18:50:41-05:00</lastmod>
+  </url><url>
     <loc>/categories/</loc>
-    <lastmod>2022-02-16T22:08:48-06:00</lastmod>
-  </url>
-  
-  <url>
+    <lastmod>2022-09-20T18:50:41-05:00</lastmod>
+  </url><url>
+    <loc>/post/creating-a-resume-in-doom/</loc>
+    <lastmod>2022-09-20T18:50:41-05:00</lastmod>
+  </url><url>
+    <loc>/tags/doom/</loc>
+    <lastmod>2022-09-20T18:50:41-05:00</lastmod>
+  </url><url>
+    <loc>/categories/doom/</loc>
+    <lastmod>2022-09-20T18:50:41-05:00</lastmod>
+  </url><url>
+    <loc>/post/</loc>
+    <lastmod>2022-09-20T18:50:41-05:00</lastmod>
+  </url><url>
+    <loc>/tags/r%C3%A9sum%C3%A9/</loc>
+    <lastmod>2022-09-20T18:50:41-05:00</lastmod>
+  </url><url>
+    <loc>/tags/</loc>
+    <lastmod>2022-09-20T18:50:41-05:00</lastmod>
+  </url><url>
+    <loc>/tags/technology/</loc>
+    <lastmod>2022-09-20T18:50:41-05:00</lastmod>
+  </url><url>
+    <loc>/categories/technology/</loc>
+    <lastmod>2022-09-20T18:50:41-05:00</lastmod>
+  </url><url>
     <loc>/post/creating-launch-plugins-for-pop-os-updated/</loc>
     <lastmod>2022-02-16T22:08:48-06:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/tags/linux/</loc>
     <lastmod>2022-02-16T22:08:48-06:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/tags/plugins/</loc>
     <lastmod>2022-02-16T22:08:48-06:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/categories/plugins/</loc>
     <lastmod>2022-02-16T22:08:48-06:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/categories/pop_os/</loc>
     <lastmod>2022-02-16T22:08:48-06:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/tags/popos/</loc>
     <lastmod>2022-02-16T22:08:48-06:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/post/</loc>
-    <lastmod>2022-02-16T22:08:48-06:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/tags/programming/</loc>
     <lastmod>2022-02-16T22:08:48-06:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/categories/system76/</loc>
     <lastmod>2022-02-16T22:08:48-06:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/</loc>
-    <lastmod>2022-02-16T22:08:48-06:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/tags/browsers/</loc>
     <lastmod>2021-05-15T19:05:48-05:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/tags/lynx/</loc>
     <lastmod>2021-05-15T19:05:48-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/categories/technology/</loc>
-    <lastmod>2021-05-15T19:05:48-05:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/tags/terminal/</loc>
     <lastmod>2021-05-15T19:05:48-05:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/tags/web/</loc>
     <lastmod>2021-05-15T19:05:48-05:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/post/browser/</loc>
     <lastmod>2021-05-15T19:05:48-05:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/post/creating-launch-plugins-for-pop-os/</loc>
     <lastmod>2021-04-17T15:16:33-05:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/tags/chip8/</loc>
     <lastmod>2020-08-23T15:45:10-05:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/post/debugging-chip8-code/</loc>
     <lastmod>2020-08-23T15:45:10-05:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/tags/emulator/</loc>
     <lastmod>2020-08-23T15:45:10-05:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/categories/emulator/</loc>
     <lastmod>2020-08-23T15:45:10-05:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/tags/hexcode/</loc>
     <lastmod>2020-08-23T15:45:10-05:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/tags/rust/</loc>
     <lastmod>2020-08-23T15:45:10-05:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/categories/rust/</loc>
     <lastmod>2020-08-23T15:45:10-05:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/categories/programming/</loc>
     <lastmod>2020-06-20T23:15:02-05:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/tags/scraper/</loc>
     <lastmod>2020-06-20T23:15:02-05:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/post/scraping-wikipedia-with-rust/</loc>
     <lastmod>2020-06-20T23:15:02-05:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/tags/wikipedia/</loc>
     <lastmod>2020-06-20T23:15:02-05:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/post/building-a-cli-tool-in-rust/</loc>
     <lastmod>2020-05-02T11:20:54-05:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/tags/cli/</loc>
     <lastmod>2020-05-02T11:20:54-05:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/tags/sonos/</loc>
     <lastmod>2020-05-02T11:20:54-05:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/categories/computer-science/</loc>
     <lastmod>2019-05-08T15:30:34-05:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/tags/knuth/</loc>
     <lastmod>2019-05-08T15:30:34-05:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/post/taocp-vol-2-seminumerical-algorithms/</loc>
     <lastmod>2019-05-08T15:30:34-05:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/tags/taocp/</loc>
     <lastmod>2019-05-08T15:30:34-05:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/tags/vol2/</loc>
     <lastmod>2019-05-08T15:30:34-05:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/tags/functional/</loc>
     <lastmod>2019-03-03T11:14:34-06:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/post/functional-programming-in-racket/</loc>
     <lastmod>2019-03-03T11:14:34-06:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/categories/languages/</loc>
     <lastmod>2019-03-03T11:14:34-06:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/tags/racket/</loc>
     <lastmod>2019-03-03T11:14:34-06:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/post/the-art-of-computer-programming/</loc>
     <lastmod>2018-08-25T17:56:57-05:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/tags/vol1/</loc>
     <lastmod>2018-08-25T17:56:57-05:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/tags/java/</loc>
     <lastmod>2018-04-21T12:41:54-05:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/tags/parquet/</loc>
     <lastmod>2018-04-21T12:41:54-05:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/post/reading-parquet-files-java/</loc>
     <lastmod>2018-04-21T12:41:54-05:00</lastmod>
   </url>
-  
 </urlset>
