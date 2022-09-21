@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>Creating a Résumé in Doom :: Adam&#39;s Blag</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Running your Resume on Doom" />
+<meta name="keywords" content="" />
+<meta name="robots" content="noodp" />
+<link rel="canonical" href="/post/creating-a-resume-in-doom/" />
+
+
+
+
+<link rel="stylesheet" href="/assets/style.css">
+
+  <link rel="stylesheet" href="/assets/green.css">
+
+
+
+
+
+
+<link rel="apple-touch-icon" href="/img/apple-touch-icon-192x192.png">
+
+  <link rel="shortcut icon" href="/img/favicon/green.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+  
+    <meta name="twitter:site" content="" />
+  
+    <meta name="twitter:creator" content="" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Creating a Résumé in Doom">
+<meta property="og:description" content="Running your Resume on Doom" />
+<meta property="og:url" content="/post/creating-a-resume-in-doom/" />
+<meta property="og:site_name" content="Adam&#39;s Blag" />
+
+  
+    <meta property="og:image" content="/img/favicon/green.png">
+  
+
+<meta property="og:image:width" content="2048">
+<meta property="og:image:height" content="1024">
+
+  <meta property="article:section" content="technology" />
+
+  <meta property="article:section" content="doom" />
+
+
+  <meta property="article:published_time" content="2022-09-20 18:50:41 -0500 CDT" />
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body class="green">
+
+
+<div class="container full headings--one-size">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="/">
+  <div class="logo">
+    Adam&#39;s Blag
+  </div>
+</a>
+
+    </div>
+    
+      <div class="menu-trigger">menu</div>
+    
+  </div>
+  
+    <nav class="menu">
+  <ul class="menu__inner menu__inner--desktop">
+    
+      
+        
+          <li><a href="https://adammelnyk.ca">Contact</a></li>
+        
+      
+      
+    
+
+    
+  </ul>
+
+  <ul class="menu__inner menu__inner--mobile">
+    
+      
+        <li><a href="https://adammelnyk.ca">Contact</a></li>
+      
+    
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+<div class="post">
+  <h1 class="post-title">
+    <a href="/post/creating-a-resume-in-doom/">Creating a Résumé in Doom</a></h1>
+  <div class="post-meta">
+    
+      <span class="post-date">
+        2022-09-20
+        
+      </span>
+    
+    
+    
+  </div>
+
+  
+  <span class="post-tags">
+    
+    #<a href="/tags/technology/">technology</a>&nbsp;
+    
+    #<a href="/tags/doom/">doom</a>&nbsp;
+    
+    #<a href="/tags/r%C3%A9sum%C3%A9/">résumé</a>&nbsp;
+    
+  </span>
+  
+  
+
+
+  
+
+  <div class="post-content"><div>
+        <h2 id="crafting-an-effective-résumé">Crafting an effective Résumé<a href="#crafting-an-effective-résumé" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>My current résumé looks professional and lays out all the information I need to convey to potential employers. I made it with a LaTeX template that I&rsquo;ve modified over the years to suit my needs. This format allows me to comment out information like employers from years ago that I don&rsquo;t want to include, skills that aren&rsquo;t relevant, and of course <a href="https://github.com/adamrmelnyk/Resume">it&rsquo;s on github</a>, so I&rsquo;m not trying to remember what some bullet point used to say, or sifting through 10 versions of the same document.</p>
+<p><strong>But we&rsquo;re not here to talk about that</strong>. This is about a <strong>DOOM</strong> résumé, whatever that hell that is. It does none of the above. It&rsquo;s built into a DOOM WAD file. It is absurdly difficult to edit, requires constant testing while developing, installing programs, knowledge of the command line, and oh&hellip; there are monsters trying to kill you while you try to learn where I was working from 2017 to 2021, so it&rsquo;s not easy to read either.</p>
+<h2 id="creating-a-map">Creating a Map<a href="#creating-a-map" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<h3 id="euerka">Euerka<a href="#euerka" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<p>Eureka was the first map making tool that I found. I found a <a href="https://www.youtube.com/watch?v=6ZZfIQsXyzo">tutorial on youtube</a> that made it look somewhat easy, so I went with it. You can toggle between a few different modes, that let you add rooms, monsters, objects and edit walls, textures, ceilings, as well as adding room effects.</p>
+<p><img src="/images/eureka.png" alt="Eureka editor"></p>
+<h3 id="doors">Doors<a href="#doors" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<p>Luckily there have been some updates on doors since the videos on youtube had been released. It was now as easy as highlighting the lines I needed to make into a door, hitting the &ldquo;Gen&rdquo; button, and selecting &ldquo;door&rdquo;. The first door I made, before I knew about this option, took far too long to make and had a few pitfalls since it&rsquo;s so easy to accidentally click something in the environment and edit another wall you didn&rsquo;t intend to. The same tools are available for a few other features that would normally take a lot more time to make, such as stairs.</p>
+<h3 id="adding-textures">Adding Textures<a href="#adding-textures" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<p>The only way I could think of adding my resume info, was to throw the information up on the walls as you go through the level. Unfortunately, adding textures required a completely different program. Although Eureka had great tools for building maps and setting objects down in your map, it didn&rsquo;t seem to have any way of easily adding textures or files. In comes <a href="https://slade.mancubus.net/index.php?page=downloads">Slade</a>. This editor allows you to edit, add, and remove the files inside of the WAD.</p>
+<p>It does however, require a lot of steps:</p>
+<ul>
+<li>Open Slade, and open the base DOOM WAD</li>
+<li>There&rsquo;s a bug in Slade so open any image file, THEN open the textures file otherwise Slade will crash</li>
+<li>Find the texture you want to edit and export the image to somewhere we can find it.</li>
+<li>Edit the image in Krita</li>
+<li>Go back into Slade, and import the texture into the WAD I&rsquo;m editing</li>
+<li>Convert the file to a DOOM graphics file</li>
+<li>Add the file to the Patch table</li>
+<li>Add the file to the TextureX</li>
+</ul>
+<p>You can see a sample of how the texture looks here (This is the actual size):</p>
+<p><img src="/images/ADAM.png" alt="UofA Logo DOOM PNG"></p>
+<p>The end result of after it&rsquo;s been added:</p>
+<p><img src="/images/entranceTex.png" alt="Custom Entrance Textures featuring my name"></p>
+<p>There are limitations to this as well. To avoid the <a href="https://doom.fandom.com/wiki/Tutti-frutti_effect">tutti-frutti effect</a>, it is easiest to just edit existing textures so we won&rsquo;t make a mistake making them in a size that doesn&rsquo;t work well.</p>
+<p>This part took by far, the longest. Creating textures, importing, converting et al. took longer than I would have expected. I have a lot of respect for the people who are still making doom mods in 2022, this is a ton of work.</p>
+<h3 id="laying-out-the-level">Laying out the level<a href="#laying-out-the-level" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<p>The idea behind this was primarily to play DOOM while somehow displaying my résumé. So I needed to lay out the level in a way that the user is forced to see the info I put on the wall. I can say that I know almost nothing about level design so the best way I could think to do this is to put monsters where I want the user to look.</p>
+<p><img src="/images/UofADoom.png" alt="University of Alberta Crest"></p>
+<p>Perfect, the user faces towards the monsters when they start shooting, and they&rsquo;re forced to see where I went to school and what I studied. Now all that&rsquo;s needed to to keep adding more rooms, and with it, more information from my résumé.</p>
+<h3 id="ending-the-level">Ending the Level<a href="#ending-the-level" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<p>If you want to avoid spoilers for&hellip; my résumé, you may want to leave and <a href="https://github.com/adamrmelnyk/thisResumeRunsDoom">play the level</a> before reading further.</p>
+<p>One of my favorite endings of DOOM was the end of DOOM Zero, where you walk into a coffin only to be crushed. Luckily, Eureka came with the right tools to do exactly this. You can set an area to give damage and then exit, this combined with using &ldquo;gen&rdquo; to make a hallway into a crusher, I had my ending. the player walks down a hallway towards a Skull button, only to be crushed by hallway before they can reach it.</p>
+<h2 id="want-to-see-my-actual-résumé">Want to see my actual résumé?<a href="#want-to-see-my-actual-résumé" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>You can find it <a href="https://github.com/adamrmelnyk/Resume/blob/master/resume.pdf">here</a></p>
+<h2 id="just-want-to-watch">Just want to watch?<a href="#just-want-to-watch" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>I took a quick screen capture of the level er&hellip; résumé. You can watch it <a href="https://www.youtube.com/watch?v=dhgLfnGSlJk">here</a></p>
+<h2 id="or-are-you-ready-to-play">Or are you ready to play?<a href="#or-are-you-ready-to-play" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>You can find the rest of the info you need <a href="https://github.com/adamrmelnyk/thisResumeRunsDoom">here</a>.</p>
+<h1 id="-rip-and-tear-">~~ <strong>Rip and Tear</strong> ~~<a href="#-rip-and-tear-" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+
+      </div></div>
+
+  
+  
+<div class="pagination">
+    <div class="pagination__title">
+        <span class="pagination__title-h">Read other posts</span>
+        <hr />
+    </div>
+    <div class="pagination__buttons">
+        
+        
+        <span class="button next">
+            <a href="/post/creating-launch-plugins-for-pop-os-updated/">
+                <span class="button__text">Creating Launch Plugins for Pop Os [Updated for 21.10]</span>
+                <span class="button__icon">→</span>
+            </a>
+        </span>
+        
+    </div>
+</div>
+
+  
+
+  
+
+</div>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright copyright--user">
+        <span>Adam Melnyk 2020</span>
+    
+        <span>:: Theme made by <a href="https://twitter.com/panr">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+<script src="/assets/main.js"></script>
+<script src="/assets/prism.js"></script>
+
+
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>

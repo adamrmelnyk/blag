@@ -151,7 +151,7 @@
         <p>A simple way of reading Parquet files without the need to use Spark.</p>
 <p>I recently ran into an issue where I needed to read from <a href="https://parquet.apache.org/">Parquet</a> files in a simple way without having to use the entire Spark framework. Though inspecting the contents of a Parquet file turns out to be pretty simple using the <code>spark-shell</code>, doing so without the framework ended up being more difficult because of a lack of documentation about how to read the actual content of Parquet files, the columnar format used by Hadoop and Spark.</p>
 <p>If all you need to do is inspect the contents of a parquet file you can do so pretty easily if you already have spark set up like so</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">
 $ spark-shell
 scala&gt; val sqlContext <span style="color:#f92672">=</span> new org.apache.spark.sql.SQLContext<span style="color:#f92672">(</span>sc<span style="color:#f92672">)</span>
 scala&gt; val parqfile <span style="color:#f92672">=</span> sqlContext.read.parquet<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Objects.parquet&#34;</span><span style="color:#f92672">)</span>
@@ -160,7 +160,7 @@ scala&gt; val allrecords <span style="color:#f92672">=</span> sqlContext.sql<spa
 scala&gt; allrecords.show<span style="color:#f92672">()</span>
 </code></pre></div><p>However if that&rsquo;s not an option or you need a more programmatic way to inspect the elements you&rsquo;ll have to use the <a href="https://github.com/apache/parquet-mr">libraries internally used by Hadoop and Spark</a>.</p>
 <p>If you&rsquo;re using Maven you&rsquo;ll want to get the following dependancies</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#f92672">&lt;dependencies&gt;</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#f92672">&lt;dependencies&gt;</span>
     <span style="color:#f92672">&lt;dependency&gt;</span>
         <span style="color:#f92672">&lt;groupId&gt;</span>org.apache.parquet<span style="color:#f92672">&lt;/groupId&gt;</span>
         <span style="color:#f92672">&lt;artifactId&gt;</span>parquet-avro<span style="color:#f92672">&lt;/artifactId&gt;</span>
@@ -172,7 +172,7 @@ scala&gt; allrecords.show<span style="color:#f92672">()</span>
         <span style="color:#f92672">&lt;version&gt;</span>3.1.0<span style="color:#f92672">&lt;/version&gt;</span>
     <span style="color:#f92672">&lt;/dependency&gt;</span>
 <span style="color:#f92672">&lt;/dependencies&gt;</span>
-</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> org.apache.hadoop.conf.Configuration<span style="color:#f92672">;</span>
+</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> org.apache.hadoop.conf.Configuration<span style="color:#f92672">;</span>
 <span style="color:#f92672">import</span> org.apache.hadoop.fs.Path<span style="color:#f92672">;</span>
 <span style="color:#f92672">import</span> org.apache.parquet.column.page.PageReadStore<span style="color:#f92672">;</span>
 <span style="color:#f92672">import</span> org.apache.parquet.example.data.simple.SimpleGroup<span style="color:#f92672">;</span>
@@ -212,7 +212,7 @@ scala&gt; allrecords.show<span style="color:#f92672">()</span>
     <span style="color:#f92672">}</span>
 <span style="color:#f92672">}</span>
 </code></pre></div><p>And to make things easier A Parquet data object</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> org.apache.parquet.example.data.simple.SimpleGroup<span style="color:#f92672">;</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> org.apache.parquet.example.data.simple.SimpleGroup<span style="color:#f92672">;</span>
 <span style="color:#f92672">import</span> org.apache.parquet.schema.Type<span style="color:#f92672">;</span>
 
 <span style="color:#f92672">import</span> java.util.List<span style="color:#f92672">;</span>
@@ -235,11 +235,11 @@ scala&gt; allrecords.show<span style="color:#f92672">()</span>
     <span style="color:#f92672">}</span>
 <span style="color:#f92672">}</span>
 </code></pre></div><p>Once we return the Parquet Object we can read whats inside each of the SimpleGroups like so:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">  Parquet parquet <span style="color:#f92672">=</span> ParquetReaderUtils<span style="color:#f92672">.</span><span style="color:#a6e22e">getParquetData</span><span style="color:#f92672">();</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">  Parquet parquet <span style="color:#f92672">=</span> ParquetReaderUtils<span style="color:#f92672">.</span><span style="color:#a6e22e">getParquetData</span><span style="color:#f92672">();</span>
   SimpleGroup simpleGroup <span style="color:#f92672">=</span> parquet<span style="color:#f92672">.</span><span style="color:#a6e22e">getData</span><span style="color:#f92672">().</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>0<span style="color:#f92672">)</span>
   String storedString <span style="color:#f92672">=</span> simpleGroups<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>0<span style="color:#f92672">).</span><span style="color:#a6e22e">getString</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;theFieldIWant&#34;</span><span style="color:#f92672">,</span> 0<span style="color:#f92672">);</span>
 </code></pre></div><p>The only caveat here being, we must determine the name of the field as well as the type in order to extract it. The fields we already have from the schema we stored on the Parquet object, however the type we may want to determine by manually inspecting the data with a debugger, though it can be determined dynamically using</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">  parquet<span style="color:#f92672">.</span><span style="color:#a6e22e">getSchema</span><span style="color:#f92672">().</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>0<span style="color:#f92672">).</span><span style="color:#a6e22e">getOriginalType</span><span style="color:#f92672">();</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">  parquet<span style="color:#f92672">.</span><span style="color:#a6e22e">getSchema</span><span style="color:#f92672">().</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>0<span style="color:#f92672">).</span><span style="color:#a6e22e">getOriginalType</span><span style="color:#f92672">();</span>
   parquet<span style="color:#f92672">.</span><span style="color:#a6e22e">getSchema</span><span style="color:#f92672">().</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>0<span style="color:#f92672">).</span><span style="color:#a6e22e">asPrimitiveType</span><span style="color:#f92672">();</span>
 </code></pre></div>
       </div></div>

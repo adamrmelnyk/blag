@@ -209,7 +209,7 @@
 </table>
 <p>In this small program, what we&rsquo;re doing is printing a single letter to the top right hand corner of the screen. In this case, the letter &ldquo;A&rdquo;. We load the address of where we want to start reading our letter from, into register 0, Then draw from five locations in memory beginning at the location stored in register 0. I should also note that although I am creating this letter myself after the Halt operation, CHIP8 loads sprites for letters and numbers in the first 512 address spaces so we could actually make this easier on ourselves by using the sprites given to us.</p>
 <p>The result looks like this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">// ******** 0xFF 0b1111_1111
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">// ******** 0xFF 0b1111_1111
 // **    ** 0xC3 0b1100_0011
 // ******** 0xFF 0b1111_1111
 // **    ** 0xC3 0b1100_0011
@@ -282,7 +282,7 @@
 </tbody>
 </table>
 <p>This should produce and A, and then a &ldquo;+&rdquo; that looks like this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">//    **    0x18 0b0001_1000
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">//    **    0x18 0b0001_1000
 //    **    0x18 0b0001_1000
 // ******** 0xFF 0b1111_1111
 // ******** 0xFF 0b1111_1111
@@ -618,7 +618,7 @@
 <p>After moving our sprites down to location <code>0x500</code>, we now have a little more room to work with, so we can add some extra operations in between before we need to worry. The caveat is that in a larger one we&rsquo;d need to be more efficient with our space as our memory constraints are a lot lower than more modern machines.</p>
 <h3 id="adding-a-debugger">Adding a debugger<a href="#adding-a-debugger" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
 <p>After overcoming a few actual bugs within the emulator itself, I ran into some bugs with my code much like the ones above. Unfortunately for us, there are very few tools to help us debug. There&rsquo;s no CHIP8 IDE that will let us know that we didn&rsquo;t load anything into the register we&rsquo;re going to read from, or that we&rsquo;re going to read from the wrong place in memory. Because this is an emulator, we&rsquo;re no longer limited by the orginal technology of CHIP8, we can add our own debugging tools. To help overcome these challenges, I added a debugger which would halt the execution cycle, waiting for enter to be pressed, exiting debug mode, or exit the emulator itself which looks like this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-Rust" data-lang="Rust"><span style="color:#e6db74">/// Loop until a valid key is pressed
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-Rust" data-lang="Rust"><span style="color:#e6db74">/// Loop until a valid key is pressed
 </span><span style="color:#e6db74"></span><span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">wait_on_debug_input</span>(<span style="color:#f92672">&amp;</span><span style="color:#66d9ef">mut</span> self) {
     <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> key_pressed <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span>;
     <span style="color:#66d9ef">while</span> <span style="color:#f92672">!</span>key_pressed {

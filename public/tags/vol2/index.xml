@@ -22,7 +22,7 @@
 &lt;p&gt;Early in the volume Knuth shows how difficult it is to create a sufficiently random pseudorandom number generator. Simply adding a number of complicated steps will not yield truly random numbers. Knuth includes the following algorithm, &lt;em&gt;Algorithm-K&lt;/em&gt;, to illustrate this point. You can find an excerpt of the algorithm &lt;a href=&#34;http://www.informit.com/articles/article.aspx?p=2221790&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
 &lt;h4 id=&#34;algorithm-k&#34;&gt;Algorithm K&lt;/h4&gt;
 &lt;p&gt;For the purposes of demonstration I&amp;rsquo;ve implemented the algorithm below. The steps aren&amp;rsquo;t particularly important, but as you can see it&amp;rsquo;s a fairly involved algorithm that looks like it might produce something random.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-scheme&#34; data-lang=&#34;scheme&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;#&lt;/span&gt;lang racket
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-scheme&#34; data-lang=&#34;scheme&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;#&lt;/span&gt;lang racket
 
 (&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;algorithm-k&lt;/span&gt; x)
   (&lt;span style=&#34;color:#a6e22e&#34;&gt;do-algorithm-k&lt;/span&gt; x (+ &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; (floor (/ x (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;9&lt;/span&gt;))))))
@@ -101,7 +101,7 @@
 (&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;k12&lt;/span&gt; x iterations)
   (&lt;span style=&#34;color:#a6e22e&#34;&gt;do-algorithm-k&lt;/span&gt; (modulo (floor (* x (/ (- x &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;) (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;)))) (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;)) (- iterations &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)))
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The results however random seeming do present a problem:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&amp;gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;algorithm-k 1&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&amp;gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;algorithm-k 1&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
 &lt;span style=&#34;color:#ae81ff&#34;&gt;3831577709&lt;/span&gt;
 &amp;gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;algorithm-k 12345&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
 &lt;span style=&#34;color:#ae81ff&#34;&gt;5827337884&lt;/span&gt;
@@ -114,7 +114,7 @@
 &lt;p&gt;The most common pseudorandom number generator (according to Knuth) is a &lt;a href=&#34;https://en.wikipedia.org/wiki/Linear_congruential_generator&#34;&gt;Linear congruential generator&lt;/a&gt;, which has the following equation:&lt;/p&gt;
 &lt;p&gt;&lt;em&gt;Xn + 1 = (a * Xn + c) mod m&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;Unlike the previous algorithm, the equation isn&amp;rsquo;t difficult to explain; numbers for m,a, and c are chosen and set by the language or library designers (hopefully not randomly) and a seed is chosen for the first value of Xn. This being a recurrence relation, the result of each run then becomes the next seed or starting value for a subsequent run. You can see this in the code below:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-scheme&#34; data-lang=&#34;scheme&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;#&lt;/span&gt;lang racket
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-scheme&#34; data-lang=&#34;scheme&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;#&lt;/span&gt;lang racket
 
 (&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;next (&lt;span style=&#34;color:#a6e22e&#34;&gt;current-seconds&lt;/span&gt;))
 
@@ -124,7 +124,7 @@
               (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;64&lt;/span&gt;)))
   next)
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You can see the output this produces from the racket repl here:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&amp;gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;my-random&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&amp;gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;my-random&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
 &lt;span style=&#34;color:#ae81ff&#34;&gt;14843871667761315205&lt;/span&gt;
 &amp;gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;my-random&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
 &lt;span style=&#34;color:#ae81ff&#34;&gt;534325907729616048&lt;/span&gt;
@@ -165,7 +165,7 @@
 &lt;h3 id=&#34;running-some-tests&#34;&gt;Running some tests&lt;/h3&gt;
 &lt;p&gt;Reading about these tests was interesting, but what would be more interesting is to run it on the two generators I had used above, as well as RANDU which is shown below. Comparing the results should highlight the differences between the generators that we expect to preform well, and those that we know will preform poorly. There are a number of random number generator testers out there but the one I used was &lt;code&gt;dieharder&lt;/code&gt; based on a suite of tests called diehard. For each run I generated 1,000,0000 random numbers (algorithm k took significantly longer ~20 min) and fed it to diehard. You can see the results here:&lt;/p&gt;
 &lt;h1 id=&#34;standard-lcg&#34;&gt;Standard LCG&lt;/h1&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#=============================================================================#&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#=============================================================================#&lt;/span&gt;
 &lt;span style=&#34;color:#75715e&#34;&gt;#            dieharder version 3.31.1 Copyright 2003 Robert G. Brown          #&lt;/span&gt;
 &lt;span style=&#34;color:#75715e&#34;&gt;#=============================================================================#&lt;/span&gt;
    rng_name    |           filename             |rands/second|
@@ -267,7 +267,7 @@ rgb_minimum_distance|   5|     10000|    1000|0.00000000|  FAILED
 &lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 662 times&lt;/span&gt;
       rgb_lagged_sum|   4|   1000000|     100|0.00000000|  FAILED
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h1 id=&#34;randu&#34;&gt;RANDU&lt;/h1&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-scheme&#34; data-lang=&#34;scheme&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;#&lt;/span&gt;lang racket
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-scheme&#34; data-lang=&#34;scheme&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;#&lt;/span&gt;lang racket
 
 (&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;next &lt;span style=&#34;color:#ae81ff&#34;&gt;1090815429&lt;/span&gt;)
 
@@ -276,7 +276,7 @@ rgb_minimum_distance|   5|     10000|    1000|0.00000000|  FAILED
   next)
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;!-- raw HTML omitted --&gt;
 &lt;h1 id=&#34;algorithm-k-1&#34;&gt;Algorithm-k&lt;/h1&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#=============================================================================#&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#=============================================================================#&lt;/span&gt;
 &lt;span style=&#34;color:#75715e&#34;&gt;#            dieharder version 3.31.1 Copyright 2003 Robert G. Brown          #&lt;/span&gt;
 &lt;span style=&#34;color:#75715e&#34;&gt;#=============================================================================#&lt;/span&gt;
    rng_name    |           filename             |rands/second|
@@ -379,7 +379,7 @@ rgb_minimum_distance|   5|     10000|    1000|0.00000000|  FAILED
 &lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 660 times&lt;/span&gt;
       rgb_lagged_sum|   4|   1000000|     100|0.00000000|  FAILED
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;There&amp;rsquo;s already quite a bit to digest here so I didn&amp;rsquo;t include all of the test results as the first few are enough to illustrate the differences between the three algorithms. One thing you will notice is that the standard LCG used actually failed a lot of tests. After doing a little testing and some digging it seems that dieharder will also fail these tests with its own generator with the same amount of numbers. In fact, you can really only expect good results with about 10 million or more numbers, but because diehard runs on a single cpu this would have taken a considerable amount of time to run. The comparison is really what we&amp;rsquo;re after and from the results it&amp;rsquo;s clear that algorithm-k is not suitable, nor is RANDU much better. I wanted to be able to see what kind of results I would see from running a much larger set so I ran one last run with 100,000,000 which shows that the lcg faired a little bit better.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#=============================================================================#&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#=============================================================================#&lt;/span&gt;
 &lt;span style=&#34;color:#75715e&#34;&gt;#            dieharder version 3.31.1 Copyright 2003 Robert G. Brown          #&lt;/span&gt;
 &lt;span style=&#34;color:#75715e&#34;&gt;#=============================================================================#&lt;/span&gt;
    rng_name    |           filename             |rands/second|

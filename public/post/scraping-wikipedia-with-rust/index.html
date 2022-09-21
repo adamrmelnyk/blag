@@ -155,14 +155,14 @@
 <h2 id="making-a-request">Making a Request<a href="#making-a-request" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
 <p>The first thing we need is a library to actually make requests to a webpage. There are more than a few of them, but the one I settled on is <a href="https://docs.rs/reqwest/0.10.6/reqwest/">reqwest</a>, a highly recommended library with good support. You can find plenty of examples on how to use it and it also supports async await.</p>
 <p>Using reqwest is as easy as this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">let</span> body <span style="color:#f92672">=</span> reqwest::get(<span style="color:#e6db74">&#34;https://www.arm64.ca&#34;</span>)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">let</span> body <span style="color:#f92672">=</span> reqwest::get(<span style="color:#e6db74">&#34;https://www.arm64.ca&#34;</span>)
     .<span style="color:#66d9ef">await</span><span style="color:#f92672">?</span>
     .text()
     .<span style="color:#66d9ef">await</span><span style="color:#f92672">?</span>;
 
-println<span style="color:#f92672">!</span>(<span style="color:#e6db74">&#34;body = {:?}&#34;</span>, body);
+println!(<span style="color:#e6db74">&#34;body = {:?}&#34;</span>, body);
 </code></pre></div><p>The use case I had for this wasn&rsquo;t too much more complicated than this. I just needed to check that the response code had a successful response and I could continue with scraping the data I needed.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">match</span> get(<span style="color:#f92672">&amp;</span>url).<span style="color:#66d9ef">await</span> {
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">match</span> get(<span style="color:#f92672">&amp;</span>url).<span style="color:#66d9ef">await</span> {
     Ok(resp) <span style="color:#f92672">=&gt;</span> {
         <span style="color:#66d9ef">if</span> resp.status().is_success() {
             <span style="color:#66d9ef">match</span> resp.text().<span style="color:#66d9ef">await</span> {
@@ -180,7 +180,7 @@ println<span style="color:#f92672">!</span>(<span style="color:#e6db74">&#34;bod
 </span><span style="color:#75715e"></span>}status
 </code></pre></div><h2 id="scraping-data">Scraping data<a href="#scraping-data" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
 <p>Once we&rsquo;ve made a request to a website we need to actually extract that data. To do so we&rsquo;ll need another library so we don&rsquo;t have to reinvent the wheel. Another library <a href="https://docs.rs/scraper/0.9.1/scraper/">scraper</a> does the job for us. It allows us to parse html and select particular elements; Exactly what we&rsquo;ll need if we want to extract data from a table on wiki page. One of the useful parts of Scraper is that the <code>Selector</code> lets us chain selectors together so we can find elements inside of other elements. This is extremely useful if we want to narrow down our results to exactly what we need.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">use</span> scraper::{Html, Selector};
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">use</span> scraper::{Html, Selector};
 
 <span style="color:#66d9ef">let</span> html <span style="color:#f92672">=</span> <span style="color:#e6db74">r#&#34;
 </span><span style="color:#e6db74">    &lt;div&gt;
@@ -196,10 +196,10 @@ println<span style="color:#f92672">!</span>(<span style="color:#e6db74">&#34;bod
 
 <span style="color:#66d9ef">let</span> h1 <span style="color:#f92672">=</span> fragment.select(<span style="color:#f92672">&amp;</span>div_selector).next().unwrap();
 <span style="color:#66d9ef">for</span> element <span style="color:#66d9ef">in</span> h1.select(<span style="color:#f92672">&amp;</span>h1_selector) {
-    assert_eq<span style="color:#f92672">!</span>(<span style="color:#e6db74">&#34;h1&#34;</span>, element.value().name());
+    assert_eq!(<span style="color:#e6db74">&#34;h1&#34;</span>, element.value().name());
 }
 </code></pre></div><p>One disadvantage of using any library is that documentation isn&rsquo;t always perfect. At the time of this writing there&rsquo;s another use case I needed later which was not described in scrapers documentation or README. Selectors can be made to select multiple tags. This turns out to be really useful if you end up finding some heterogeneous data in the html you&rsquo;re parsing as I did. Just like the selector above we put the tag we&rsquo;re looking for into quotes, only this time, we separate all of the tags we&rsquo;re looking for in one string with commas.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">use</span> scraper::{Html, Selector};
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">use</span> scraper::{Html, Selector};
 
 <span style="color:#66d9ef">let</span> html <span style="color:#f92672">=</span> <span style="color:#e6db74">r#&#34;
 </span><span style="color:#e6db74">        &lt;div&gt;
@@ -213,17 +213,17 @@ println<span style="color:#f92672">!</span>(<span style="color:#e6db74">&#34;bod
 <span style="color:#66d9ef">for</span> element <span style="color:#66d9ef">in</span> fragment.select(<span style="color:#f92672">&amp;</span>selector) {
     <span style="color:#66d9ef">let</span> name <span style="color:#f92672">=</span> element.value().name();
     <span style="color:#66d9ef">let</span> is_htag <span style="color:#f92672">=</span> name <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;h1&#34;</span> <span style="color:#f92672">||</span> name <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;h2&#34;</span> <span style="color:#f92672">||</span> name <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;h3&#34;</span>;
-    assert_eq<span style="color:#f92672">!</span>(<span style="color:#66d9ef">true</span>, is_htag);
+    assert_eq!(<span style="color:#66d9ef">true</span>, is_htag);
 }
 </code></pre></div><h2 id="working-with-the-db">Working with the DB<a href="#working-with-the-db" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
 <p>Now that we can request the data and search it for what we&rsquo;re looking for, the last thing is to store it somewhere. I mentioned before that I&rsquo;d like to put it in the SQL table so I chose SQLite3 because it&rsquo;s easily available and lightweight. There were a few different libraries to choose from, such as <a href="https://github.com/rusqlite/rusqlite">rusqlite</a> but I went with <a href="https://docs.rs/sqlite/0.24.0/sqlite/">sqlite</a> which was simple enough to use. We simply open a connection to the database and then execute a command.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">let</span> connection <span style="color:#f92672">=</span> sqlite::open(<span style="color:#e6db74">&#34;mySqlite3DbFileName.db&#34;</span>).unwrap();
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">let</span> connection <span style="color:#f92672">=</span> sqlite::open(<span style="color:#e6db74">&#34;mySqlite3DbFileName.db&#34;</span>).unwrap();
 
 connection
     .execute(<span style="color:#e6db74">&#34;CREATE TABLE mytable (col1 TEXT, col2 INTEGER);&#34;</span>)
     .unwrap();
 </code></pre></div><p>Inserting is essentially the same though the library gives you a few better options if you are doing this more than once.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">let</span> connection <span style="color:#f92672">=</span> sqlite::open(<span style="color:#e6db74">&#34;mySqlite3DbFileName.db&#34;</span>).unwrap();
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">let</span> connection <span style="color:#f92672">=</span> sqlite::open(<span style="color:#e6db74">&#34;mySqlite3DbFileName.db&#34;</span>).unwrap();
 
 connection
     .execute(<span style="color:#e6db74">&#34;INSERT INTO mytable (col1, col2) VALUES (&#39;a&#39;, 10);&#34;</span>)
@@ -240,7 +240,7 @@ connection
 <h3 id="data-types">Data types<a href="#data-types" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
 <p>Because we want to build a tool that requires as little work from the user as possible, we also need to determine the data type of each column if we want to put everything in a database table. Luckily, <a href="https://doc.rust-lang.org/std/primitive.str.html#method.parse">parse</a> comes in handy. We use the turbofish syntax (a fancy name for <code>::&lt;u32&gt;</code> or <code>::&lt;f64&gt;</code> etc) to specify the type and if we return <code>Ok()</code> we can determine what kind of data each element might be.</p>
 <p>The finished method looks something like this</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#e6db74">/// Derives the type of the string
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#e6db74">/// Derives the type of the string
 </span><span style="color:#e6db74"></span><span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">derive_type</span>(sample_datum: <span style="color:#66d9ef">&amp;</span><span style="color:#66d9ef">str</span>) -&gt; <span style="color:#a6e22e">SqlTypes</span> {
     <span style="color:#66d9ef">let</span> html_cleaned_data <span style="color:#f92672">=</span> remove_html_tags(sample_datum);
     <span style="color:#66d9ef">let</span> removed_citations <span style="color:#f92672">=</span> remove_wiki_citation_links(<span style="color:#f92672">&amp;</span>html_cleaned_data);

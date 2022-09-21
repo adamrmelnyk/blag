@@ -70,7 +70,7 @@
 &lt;/table&gt;
 &lt;p&gt;In this small program, what we&amp;rsquo;re doing is printing a single letter to the top right hand corner of the screen. In this case, the letter &amp;ldquo;A&amp;rdquo;. We load the address of where we want to start reading our letter from, into register 0, Then draw from five locations in memory beginning at the location stored in register 0. I should also note that although I am creating this letter myself after the Halt operation, CHIP8 loads sprites for letters and numbers in the first 512 address spaces so we could actually make this easier on ourselves by using the sprites given to us.&lt;/p&gt;
 &lt;p&gt;The result looks like this:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;// ******** 0xFF 0b1111_1111
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;// ******** 0xFF 0b1111_1111
 // **    ** 0xC3 0b1100_0011
 // ******** 0xFF 0b1111_1111
 // **    ** 0xC3 0b1100_0011
@@ -143,7 +143,7 @@
 &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;p&gt;This should produce and A, and then a &amp;ldquo;+&amp;rdquo; that looks like this:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;//    **    0x18 0b0001_1000
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;//    **    0x18 0b0001_1000
 //    **    0x18 0b0001_1000
 // ******** 0xFF 0b1111_1111
 // ******** 0xFF 0b1111_1111
@@ -479,7 +479,7 @@
 &lt;p&gt;After moving our sprites down to location &lt;code&gt;0x500&lt;/code&gt;, we now have a little more room to work with, so we can add some extra operations in between before we need to worry. The caveat is that in a larger one we&amp;rsquo;d need to be more efficient with our space as our memory constraints are a lot lower than more modern machines.&lt;/p&gt;
 &lt;h3 id=&#34;adding-a-debugger&#34;&gt;Adding a debugger&lt;/h3&gt;
 &lt;p&gt;After overcoming a few actual bugs within the emulator itself, I ran into some bugs with my code much like the ones above. Unfortunately for us, there are very few tools to help us debug. There&amp;rsquo;s no CHIP8 IDE that will let us know that we didn&amp;rsquo;t load anything into the register we&amp;rsquo;re going to read from, or that we&amp;rsquo;re going to read from the wrong place in memory. Because this is an emulator, we&amp;rsquo;re no longer limited by the orginal technology of CHIP8, we can add our own debugging tools. To help overcome these challenges, I added a debugger which would halt the execution cycle, waiting for enter to be pressed, exiting debug mode, or exit the emulator itself which looks like this:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Rust&#34; data-lang=&#34;Rust&#34;&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;/// Loop until a valid key is pressed
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Rust&#34; data-lang=&#34;Rust&#34;&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;/// Loop until a valid key is pressed
 &lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;wait_on_debug_input&lt;/span&gt;(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;mut&lt;/span&gt; self) {
     &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;mut&lt;/span&gt; key_pressed &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;false&lt;/span&gt;;
     &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;key_pressed {
