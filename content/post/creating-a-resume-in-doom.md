@@ -73,7 +73,7 @@ You can find it [here](https://github.com/adamrmelnyk/Resume/blob/master/resume.
 
 ## Just want to watch?
 
-I took a quick screen capture of the level er... résumé. You can watch it [here](https://www.youtube.com/watch?v=dhgLfnGSlJk)
+I took a quick screen capture of the level er... résumé. You can watch it [here](https://www.youtube.com/watch?v=_lUSQOMB0No)
 
 ## Or are you ready to play?
 
