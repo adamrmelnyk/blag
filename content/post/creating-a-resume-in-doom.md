@@ -61,6 +61,18 @@ The idea behind this was primarily to play DOOM while somehow displaying my rés
 
 Perfect, the user faces towards the monsters when they start shooting, and they're forced to see where I went to school and what I studied. Now all that's needed to to keep adding more rooms, and with it, more information from my résumé.
 
+### Showing off my experience
+
+I need a novel way of showing off my experience, ideally something that takes advantage of it being part of DOOM but, plastering the projects that I've worked on all over the walls alone isn't going to cut it. It wouldn't be DOOM if there wasn't a secret room somewhere so that's exactly how I'm going show this information.
+
+![My workplace from 2016 to 2017](/images/ol.png)
+
+Here you can see the startup I worked at in 2016 and 2017, but walk through the wall and...
+
+![My experience at Ownlocal](/images/olexp.png)
+
+You're greeted with some of the things I worked on and the company logo. We can even use Eureka to make this sector "secret", which means when we walk into into the room it should let us know that we've discovered a secret!
+
 ### Ending the Level
 
 If you want to avoid spoilers for... my résumé, you may want to leave and [play the level](https://github.com/adamrmelnyk/thisResumeRunsDoom) before reading further.
