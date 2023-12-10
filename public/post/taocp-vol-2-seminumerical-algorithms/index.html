@@ -167,115 +167,115 @@
 <p>Early in the volume Knuth shows how difficult it is to create a sufficiently random pseudorandom number generator. Simply adding a number of complicated steps will not yield truly random numbers. Knuth includes the following algorithm, <em>Algorithm-K</em>, to illustrate this point. You can find an excerpt of the algorithm <a href="http://www.informit.com/articles/article.aspx?p=2221790">here</a>.</p>
 <h4 id="algorithm-k">Algorithm K<a href="#algorithm-k" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h4>
 <p>For the purposes of demonstration I&rsquo;ve implemented the algorithm below. The steps aren&rsquo;t particularly important, but as you can see it&rsquo;s a fairly involved algorithm that looks like it might produce something random.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scheme" data-lang="scheme"><span style="color:#f92672">#</span>lang racket
-
-(<span style="color:#66d9ef">define </span>(<span style="color:#a6e22e">algorithm-k</span> x)
-  (<span style="color:#a6e22e">do-algorithm-k</span> x (+ <span style="color:#ae81ff">1</span> (floor (/ x (expt <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">9</span>))))))
-
-(<span style="color:#66d9ef">define </span>ns (<span style="color:#a6e22e">variable-reference-&gt;namespace</span> (<span style="color:#f92672">#</span>%variable-reference)))
-
-(<span style="color:#66d9ef">define </span>(<span style="color:#a6e22e">string-&gt;procedure</span> s)
-  (<span style="color:#66d9ef">define </span>sym (string-&gt;symbol s))
-  (eval sym ns))
-
-(<span style="color:#66d9ef">define </span>(<span style="color:#a6e22e">do-algorithm-k</span> x iterations)
-  (<span style="color:#66d9ef">define </span>step (<span style="color:#a6e22e">string-append</span>
-                <span style="color:#e6db74">&#34;k&#34;</span>
-                (<span style="color:#a6e22e">number-&gt;string</span>
-                 (+ (modulo (floor (/ x (expt <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">8</span>))) <span style="color:#ae81ff">10</span>) <span style="color:#ae81ff">3</span>))))
-  (<span style="color:#66d9ef">if </span>(eq? iterations <span style="color:#ae81ff">0</span>)
-      x
-      ((<span style="color:#a6e22e">string-&gt;procedure</span> step) x iterations)))
-
-<span style="color:#75715e">;; Ensure &gt;= 5 x 10^9</span>
-(<span style="color:#66d9ef">define </span>(<span style="color:#a6e22e">k3</span> x iterations)
-  (<span style="color:#66d9ef">if </span>(&gt; x <span style="color:#ae81ff">5000000000</span>)
-      (<span style="color:#a6e22e">k4</span> x iterations)
-      (<span style="color:#a6e22e">k4</span> (+ x <span style="color:#ae81ff">5000000000</span>) iterations)))
-
-<span style="color:#75715e">;; Middle square</span>
-(<span style="color:#66d9ef">define </span>(<span style="color:#a6e22e">k4</span> x iterations)
-  (<span style="color:#a6e22e">k5</span> (modulo (floor (/ (expt x <span style="color:#ae81ff">2</span>) (expt <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">5</span>))) (expt <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">10</span>)) iterations))
-
-<span style="color:#75715e">;; Multiply</span>
-(<span style="color:#66d9ef">define </span>(<span style="color:#a6e22e">k5</span> x iterations)
-  (<span style="color:#a6e22e">k6</span> (modulo (* x <span style="color:#ae81ff">1001001001</span>) (expt <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">10</span>)) iterations))
-
-<span style="color:#75715e">;; Psuedo-complement</span>
-(<span style="color:#66d9ef">define </span>(<span style="color:#a6e22e">k6</span> x iterations)
-  (<span style="color:#66d9ef">if </span>(&lt; x <span style="color:#ae81ff">100000000</span>)
-      (<span style="color:#a6e22e">k7</span> (+ x <span style="color:#ae81ff">9814055677</span>) iterations)
-      (<span style="color:#a6e22e">k7</span> (- (expt <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">10</span>) x) iterations)))
-
-<span style="color:#75715e">;; Interchange halves</span>
-<span style="color:#75715e">;; ie 1234567890 -&gt; 6789012345</span>
-(<span style="color:#66d9ef">define </span>(<span style="color:#a6e22e">k7</span> x iterations)
-  (<span style="color:#a6e22e">k8</span> (<span style="color:#a6e22e">+</span>
-       (* (expt <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">5</span>) (modulo x (expt <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">5</span>)))
-       (floor (/ x (expt <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">5</span>)))) iterations))
-
-<span style="color:#75715e">;; Multiply / same as k5</span>
-(<span style="color:#66d9ef">define </span>(<span style="color:#a6e22e">k8</span> x iterations)
-  (<span style="color:#a6e22e">k9</span> (modulo (* x <span style="color:#ae81ff">1001001001</span>) (expt <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">10</span>)) iterations))
-
-<span style="color:#75715e">;; Decrease digits</span>
-(<span style="color:#66d9ef">define </span>(<span style="color:#a6e22e">k9</span> x iterations)
-  (<span style="color:#a6e22e">k10</span> (<span style="color:#a6e22e">sub-one</span> x <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">0</span>) iterations))
-
-(<span style="color:#66d9ef">define </span>(<span style="color:#a6e22e">sub-one</span> x sum mult)
-  (<span style="color:#66d9ef">if </span>(eq? x <span style="color:#ae81ff">0</span>)
-      sum
-      (<span style="color:#66d9ef">if </span>(eq? (modulo x <span style="color:#ae81ff">10</span>) <span style="color:#ae81ff">0</span>)
-          (<span style="color:#a6e22e">sub-one</span> (floor (/ x <span style="color:#ae81ff">10</span>)) (+ (* (modulo x <span style="color:#ae81ff">10</span>) (expt <span style="color:#ae81ff">10</span> mult)) sum) (+ <span style="color:#ae81ff">1</span> mult))
-          (<span style="color:#a6e22e">sub-one</span> (floor (/ x <span style="color:#ae81ff">10</span>)) (+ (* (- (modulo x <span style="color:#ae81ff">10</span>) <span style="color:#ae81ff">1</span>) (expt <span style="color:#ae81ff">10</span> mult)) sum) (+ <span style="color:#ae81ff">1</span> mult)))))
-
-<span style="color:#75715e">;; 99999 modify</span>
-(<span style="color:#66d9ef">define </span>(<span style="color:#a6e22e">k10</span> x iterations)
-  (<span style="color:#66d9ef">if </span>(&lt; x (expt <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">5</span>))
-      (<span style="color:#a6e22e">k11</span> (+ (expt x <span style="color:#ae81ff">2</span>) <span style="color:#ae81ff">99999</span>) iterations)
-      (<span style="color:#a6e22e">k11</span> (- x <span style="color:#ae81ff">99999</span>) iterations)))
-
-<span style="color:#75715e">;; Normalize</span>
-(<span style="color:#66d9ef">define </span>(<span style="color:#a6e22e">k11</span> x iterations)
-  (<span style="color:#a6e22e">k12</span> (<span style="color:#a6e22e">go-until</span> x) iterations))
-
-(<span style="color:#66d9ef">define </span>(<span style="color:#a6e22e">go-until</span> x)
-  (<span style="color:#66d9ef">if </span>(&lt; x (expt <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">9</span>)) (<span style="color:#a6e22e">go-until</span> (* x <span style="color:#ae81ff">10</span>)) x))
-
-<span style="color:#75715e">;; Modified middle square</span>
-(<span style="color:#66d9ef">define </span>(<span style="color:#a6e22e">k12</span> x iterations)
-  (<span style="color:#a6e22e">do-algorithm-k</span> (modulo (floor (* x (/ (- x <span style="color:#ae81ff">1</span>) (expt <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">5</span>)))) (expt <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">10</span>)) (- iterations <span style="color:#ae81ff">1</span>)))
-</code></pre></div><p>The results however random seeming do present a problem:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">&gt; <span style="color:#f92672">(</span>algorithm-k 1<span style="color:#f92672">)</span>
-<span style="color:#ae81ff">3831577709</span>
-&gt; <span style="color:#f92672">(</span>algorithm-k 12345<span style="color:#f92672">)</span>
-<span style="color:#ae81ff">5827337884</span>
-&gt; <span style="color:#f92672">(</span>algorithm-k 6065038420<span style="color:#f92672">)</span>
-<span style="color:#ae81ff">6065038420</span>
-</code></pre></div><p>The first two examples produce what one might expect, but the third produces itself. Knuth points out that the algorithm happens to degenerate to 6065038420, with the lesson being:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-scheme" data-lang="scheme"><span style="display:flex;"><span><span style="color:#f92672">#</span>lang racket
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">define </span>(<span style="color:#a6e22e">algorithm-k</span> x)
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">do-algorithm-k</span> x (+ <span style="color:#ae81ff">1</span> (floor (/ x (expt <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">9</span>))))))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">define </span>ns (<span style="color:#a6e22e">variable-reference-&gt;namespace</span> (<span style="color:#f92672">#</span>%variable-reference)))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">define </span>(<span style="color:#a6e22e">string-&gt;procedure</span> s)
+</span></span><span style="display:flex;"><span>  (<span style="color:#66d9ef">define </span>sym (string-&gt;symbol s))
+</span></span><span style="display:flex;"><span>  (eval sym ns))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">define </span>(<span style="color:#a6e22e">do-algorithm-k</span> x iterations)
+</span></span><span style="display:flex;"><span>  (<span style="color:#66d9ef">define </span>step (<span style="color:#a6e22e">string-append</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#e6db74">&#34;k&#34;</span>
+</span></span><span style="display:flex;"><span>                (<span style="color:#a6e22e">number-&gt;string</span>
+</span></span><span style="display:flex;"><span>                 (+ (modulo (floor (/ x (expt <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">8</span>))) <span style="color:#ae81ff">10</span>) <span style="color:#ae81ff">3</span>))))
+</span></span><span style="display:flex;"><span>  (<span style="color:#66d9ef">if </span>(eq? iterations <span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>      x
+</span></span><span style="display:flex;"><span>      ((<span style="color:#a6e22e">string-&gt;procedure</span> step) x iterations)))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; Ensure &gt;= 5 x 10^9</span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">define </span>(<span style="color:#a6e22e">k3</span> x iterations)
+</span></span><span style="display:flex;"><span>  (<span style="color:#66d9ef">if </span>(&gt; x <span style="color:#ae81ff">5000000000</span>)
+</span></span><span style="display:flex;"><span>      (<span style="color:#a6e22e">k4</span> x iterations)
+</span></span><span style="display:flex;"><span>      (<span style="color:#a6e22e">k4</span> (+ x <span style="color:#ae81ff">5000000000</span>) iterations)))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; Middle square</span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">define </span>(<span style="color:#a6e22e">k4</span> x iterations)
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">k5</span> (modulo (floor (/ (expt x <span style="color:#ae81ff">2</span>) (expt <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">5</span>))) (expt <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">10</span>)) iterations))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; Multiply</span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">define </span>(<span style="color:#a6e22e">k5</span> x iterations)
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">k6</span> (modulo (* x <span style="color:#ae81ff">1001001001</span>) (expt <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">10</span>)) iterations))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; Psuedo-complement</span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">define </span>(<span style="color:#a6e22e">k6</span> x iterations)
+</span></span><span style="display:flex;"><span>  (<span style="color:#66d9ef">if </span>(&lt; x <span style="color:#ae81ff">100000000</span>)
+</span></span><span style="display:flex;"><span>      (<span style="color:#a6e22e">k7</span> (+ x <span style="color:#ae81ff">9814055677</span>) iterations)
+</span></span><span style="display:flex;"><span>      (<span style="color:#a6e22e">k7</span> (- (expt <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">10</span>) x) iterations)))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; Interchange halves</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; ie 1234567890 -&gt; 6789012345</span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">define </span>(<span style="color:#a6e22e">k7</span> x iterations)
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">k8</span> (<span style="color:#a6e22e">+</span>
+</span></span><span style="display:flex;"><span>       (* (expt <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">5</span>) (modulo x (expt <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">5</span>)))
+</span></span><span style="display:flex;"><span>       (floor (/ x (expt <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">5</span>)))) iterations))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; Multiply / same as k5</span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">define </span>(<span style="color:#a6e22e">k8</span> x iterations)
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">k9</span> (modulo (* x <span style="color:#ae81ff">1001001001</span>) (expt <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">10</span>)) iterations))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; Decrease digits</span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">define </span>(<span style="color:#a6e22e">k9</span> x iterations)
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">k10</span> (<span style="color:#a6e22e">sub-one</span> x <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">0</span>) iterations))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">define </span>(<span style="color:#a6e22e">sub-one</span> x sum mult)
+</span></span><span style="display:flex;"><span>  (<span style="color:#66d9ef">if </span>(eq? x <span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>      sum
+</span></span><span style="display:flex;"><span>      (<span style="color:#66d9ef">if </span>(eq? (modulo x <span style="color:#ae81ff">10</span>) <span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>          (<span style="color:#a6e22e">sub-one</span> (floor (/ x <span style="color:#ae81ff">10</span>)) (+ (* (modulo x <span style="color:#ae81ff">10</span>) (expt <span style="color:#ae81ff">10</span> mult)) sum) (+ <span style="color:#ae81ff">1</span> mult))
+</span></span><span style="display:flex;"><span>          (<span style="color:#a6e22e">sub-one</span> (floor (/ x <span style="color:#ae81ff">10</span>)) (+ (* (- (modulo x <span style="color:#ae81ff">10</span>) <span style="color:#ae81ff">1</span>) (expt <span style="color:#ae81ff">10</span> mult)) sum) (+ <span style="color:#ae81ff">1</span> mult)))))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; 99999 modify</span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">define </span>(<span style="color:#a6e22e">k10</span> x iterations)
+</span></span><span style="display:flex;"><span>  (<span style="color:#66d9ef">if </span>(&lt; x (expt <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">5</span>))
+</span></span><span style="display:flex;"><span>      (<span style="color:#a6e22e">k11</span> (+ (expt x <span style="color:#ae81ff">2</span>) <span style="color:#ae81ff">99999</span>) iterations)
+</span></span><span style="display:flex;"><span>      (<span style="color:#a6e22e">k11</span> (- x <span style="color:#ae81ff">99999</span>) iterations)))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; Normalize</span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">define </span>(<span style="color:#a6e22e">k11</span> x iterations)
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">k12</span> (<span style="color:#a6e22e">go-until</span> x) iterations))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">define </span>(<span style="color:#a6e22e">go-until</span> x)
+</span></span><span style="display:flex;"><span>  (<span style="color:#66d9ef">if </span>(&lt; x (expt <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">9</span>)) (<span style="color:#a6e22e">go-until</span> (* x <span style="color:#ae81ff">10</span>)) x))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; Modified middle square</span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">define </span>(<span style="color:#a6e22e">k12</span> x iterations)
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">do-algorithm-k</span> (modulo (floor (* x (/ (- x <span style="color:#ae81ff">1</span>) (expt <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">5</span>)))) (expt <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">10</span>)) (- iterations <span style="color:#ae81ff">1</span>)))
+</span></span></code></pre></div><p>The results however random seeming do present a problem:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>&gt; <span style="color:#f92672">(</span>algorithm-k 1<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">3831577709</span>
+</span></span><span style="display:flex;"><span>&gt; <span style="color:#f92672">(</span>algorithm-k 12345<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">5827337884</span>
+</span></span><span style="display:flex;"><span>&gt; <span style="color:#f92672">(</span>algorithm-k 6065038420<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">6065038420</span>
+</span></span></code></pre></div><p>The first two examples produce what one might expect, but the third produces itself. Knuth points out that the algorithm happens to degenerate to 6065038420, with the lesson being:</p>
 <p><em>&ldquo;Random numbers should not be generated with a method chosen at random&rdquo;</em></p>
 <p>Besides coincidentally degenerating to a seemingly random number, Algorithm K has a number of other downsides, it&rsquo;s difficult to implement and because it iterates a certain amount of times depending on the input, takes a relatively long time to produce a single random number. Somewhere inside that complexity there is a reason why the generator degenerates to 6065038420. In order to be usable we need to be able to easily prove that won&rsquo;t happen. The key take away from that is that we need this to be fast and simple.</p>
 <h3 id="linear-congruential-generator">Linear Congruential Generator<a href="#linear-congruential-generator" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
 <p>The most common pseudorandom number generator (according to Knuth) is a <a href="https://en.wikipedia.org/wiki/Linear_congruential_generator">Linear congruential generator</a>, which has the following equation:</p>
 <p><em>Xn + 1 = (a * Xn + c) mod m</em></p>
 <p>Unlike the previous algorithm, the equation isn&rsquo;t difficult to explain; numbers for m,a, and c are chosen and set by the language or library designers (hopefully not randomly) and a seed is chosen for the first value of Xn. This being a recurrence relation, the result of each run then becomes the next seed or starting value for a subsequent run. You can see this in the code below:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scheme" data-lang="scheme"><span style="color:#f92672">#</span>lang racket
-
-(<span style="color:#66d9ef">define </span>next (<span style="color:#a6e22e">current-seconds</span>))
-
-(<span style="color:#66d9ef">define </span>(<span style="color:#a6e22e">my-random</span>)
-  (<span style="color:#66d9ef">set! </span>next (<span style="color:#a6e22e">modulo</span>
-              (+ (* next <span style="color:#ae81ff">6364136223846793005</span>) <span style="color:#ae81ff">1442695040888963407</span>)
-              (expt <span style="color:#ae81ff">2</span> <span style="color:#ae81ff">64</span>)))
-  next)
-</code></pre></div><p>You can see the output this produces from the racket repl here:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">&gt; <span style="color:#f92672">(</span>my-random<span style="color:#f92672">)</span>
-<span style="color:#ae81ff">14843871667761315205</span>
-&gt; <span style="color:#f92672">(</span>my-random<span style="color:#f92672">)</span>
-<span style="color:#ae81ff">534325907729616048</span>
-&gt; <span style="color:#f92672">(</span>my-random<span style="color:#f92672">)</span>
-<span style="color:#ae81ff">5734414832404007999</span>
-</code></pre></div><p>This isn&rsquo;t how Racket generates its random numbers (it uses an implementation of the <a href="https://github.com/racket/racket/blob/5bb837661c12a9752c6a99f952c0e1b267645b33/racket/src/cs/rumble/random.ss">MRG32k3a algorithm</a>), however this method is used by other languages such as the function defined in <a href="https://sourceware.org/git/?p=glibc.git;a=blob;f=stdlib/random_r.c;hb=glibc-2.26#l362">glibc</a></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-scheme" data-lang="scheme"><span style="display:flex;"><span><span style="color:#f92672">#</span>lang racket
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">define </span>next (<span style="color:#a6e22e">current-seconds</span>))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">define </span>(<span style="color:#a6e22e">my-random</span>)
+</span></span><span style="display:flex;"><span>  (<span style="color:#66d9ef">set! </span>next (<span style="color:#a6e22e">modulo</span>
+</span></span><span style="display:flex;"><span>              (+ (* next <span style="color:#ae81ff">6364136223846793005</span>) <span style="color:#ae81ff">1442695040888963407</span>)
+</span></span><span style="display:flex;"><span>              (expt <span style="color:#ae81ff">2</span> <span style="color:#ae81ff">64</span>)))
+</span></span><span style="display:flex;"><span>  next)
+</span></span></code></pre></div><p>You can see the output this produces from the racket repl here:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>&gt; <span style="color:#f92672">(</span>my-random<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">14843871667761315205</span>
+</span></span><span style="display:flex;"><span>&gt; <span style="color:#f92672">(</span>my-random<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">534325907729616048</span>
+</span></span><span style="display:flex;"><span>&gt; <span style="color:#f92672">(</span>my-random<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">5734414832404007999</span>
+</span></span></code></pre></div><p>This isn&rsquo;t how Racket generates its random numbers (it uses an implementation of the <a href="https://github.com/racket/racket/blob/5bb837661c12a9752c6a99f952c0e1b267645b33/racket/src/cs/rumble/random.ss">MRG32k3a algorithm</a>), however this method is used by other languages such as the function defined in <a href="https://sourceware.org/git/?p=glibc.git;a=blob;f=stdlib/random_r.c;hb=glibc-2.26#l362">glibc</a></p>
 <h4 id="choosing-our-m-and-a-values">Choosing our <em>m</em> and <em>a</em> values<a href="#choosing-our-m-and-a-values" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h4>
 <p>It&rsquo;s important to note here that the numbers used above were not chosen by random, in particular it is important to pay extra attention to the numbers we choose for <em>m</em> and <em>a</em>.</p>
 <ul>
@@ -310,326 +310,326 @@
 <h3 id="running-some-tests">Running some tests<a href="#running-some-tests" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
 <p>Reading about these tests was interesting, but what would be more interesting is to run it on the two generators I had used above, as well as RANDU which is shown below. Comparing the results should highlight the differences between the generators that we expect to preform well, and those that we know will preform poorly. There are a number of random number generator testers out there but the one I used was <code>dieharder</code> based on a suite of tests called diehard. For each run I generated 1,000,0000 random numbers (algorithm k took significantly longer ~20 min) and fed it to diehard. You can see the results here:</p>
 <h1 id="standard-lcg">Standard LCG<a href="#standard-lcg" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#75715e">#=============================================================================#</span>
-<span style="color:#75715e">#            dieharder version 3.31.1 Copyright 2003 Robert G. Brown          #</span>
-<span style="color:#75715e">#=============================================================================#</span>
-   rng_name    |           filename             |rands/second|
-     file_input|                   example.input|  6.15e+06  |
-<span style="color:#75715e">#=============================================================================#</span>
-        test_name   |ntup| tsamples |psamples|  p-value |Assessment
-<span style="color:#75715e">#=============================================================================#</span>
-<span style="color:#75715e"># The file file_input was rewound 1 times</span>
-   diehard_birthdays|   0|       100|     100|0.72874473|  PASSED  
-<span style="color:#75715e"># The file file_input was rewound 11 times</span>
-      diehard_operm5|   0|   1000000|     100|0.00008973|   WEAK   
-<span style="color:#75715e"># The file file_input was rewound 24 times</span>
-  diehard_rank_32x32|   0|     40000|     100|0.24249094|  PASSED  
-<span style="color:#75715e"># The file file_input was rewound 30 times</span>
-    diehard_rank_6x8|   0|    100000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 32 times</span>
-   diehard_bitstream|   0|   2097152|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 53 times</span>
-        diehard_opso|   0|   2097152|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 67 times</span>
-        diehard_oqso|   0|   2097152|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 74 times</span>
-         diehard_dna|   0|   2097152|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 74 times</span>
-diehard_count_1s_str|   0|    256000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 87 times</span>
-diehard_count_1s_byt|   0|    256000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 87 times</span>
- diehard_parking_lot|   0|     12000|     100|0.33164281|  PASSED  
-<span style="color:#75715e"># The file file_input was rewound 88 times</span>
-    diehard_2dsphere|   2|      8000|     100|0.08003531|  PASSED  
-<span style="color:#75715e"># The file file_input was rewound 88 times</span>
-    diehard_3dsphere|   3|      4000|     100|0.55288986|  PASSED  
-<span style="color:#75715e"># The file file_input was rewound 111 times</span>
-     diehard_squeeze|   0|    100000|     100|0.00371770|   WEAK   
-<span style="color:#75715e"># The file file_input was rewound 111 times</span>
-        diehard_sums|   0|       100|     100|0.06120371|  PASSED  
-<span style="color:#75715e"># The file file_input was rewound 112 times</span>
-        diehard_runs|   0|    100000|     100|0.35781871|  PASSED  
-        diehard_runs|   0|    100000|     100|0.07426726|  PASSED  
-<span style="color:#75715e"># The file file_input was rewound 125 times</span>
-       diehard_craps|   0|    200000|     100|0.00004611|   WEAK   
-       diehard_craps|   0|    200000|     100|0.44395534|  PASSED  
-<span style="color:#75715e"># The file file_input was rewound 325 times</span>
- marsaglia_tsang_gcd|   0|  10000000|     100|0.00000000|  FAILED  
- marsaglia_tsang_gcd|   0|  10000000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 326 times</span>
-         sts_monobit|   1|    100000|     100|0.34446776|  PASSED  
-<span style="color:#75715e"># The file file_input was rewound 327 times</span>
-            sts_runs|   2|    100000|     100|0.34889544|  PASSED  
-<span style="color:#75715e"># The file file_input was rewound 330 times</span>
-         rgb_bitdist|   1|    100000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 334 times</span>
-         rgb_bitdist|   2|    100000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 340 times</span>
-         rgb_bitdist|   3|    100000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 348 times</span>
-         rgb_bitdist|   4|    100000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 358 times</span>
-         rgb_bitdist|   5|    100000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 370 times</span>
-         rgb_bitdist|   6|    100000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 384 times</span>
-         rgb_bitdist|   7|    100000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 400 times</span>
-         rgb_bitdist|   8|    100000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 418 times</span>
-         rgb_bitdist|   9|    100000|     100|0.00005693|   WEAK   
-<span style="color:#75715e"># The file file_input was rewound 438 times</span>
-         rgb_bitdist|  10|    100000|     100|0.53597412|  PASSED  
-<span style="color:#75715e"># The file file_input was rewound 460 times</span>
-         rgb_bitdist|  11|    100000|     100|0.89275780|  PASSED  
-<span style="color:#75715e"># The file file_input was rewound 484 times</span>
-         rgb_bitdist|  12|    100000|     100|0.01596294|  PASSED  
-<span style="color:#75715e"># The file file_input was rewound 486 times</span>
-rgb_minimum_distance|   2|     10000|    1000|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 489 times</span>
-rgb_minimum_distance|   3|     10000|    1000|0.00020551|   WEAK   
-<span style="color:#75715e"># The file file_input was rewound 493 times</span>
-rgb_minimum_distance|   4|     10000|    1000|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 498 times</span>
-rgb_minimum_distance|   5|     10000|    1000|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 500 times</span>
-    rgb_permutations|   2|    100000|     100|0.27181166|  PASSED  
-<span style="color:#75715e"># The file file_input was rewound 503 times</span>
-    rgb_permutations|   3|    100000|     100|0.67601712|  PASSED  
-<span style="color:#75715e"># The file file_input was rewound 507 times</span>
-    rgb_permutations|   4|    100000|     100|0.05999982|  PASSED  
-<span style="color:#75715e"># The file file_input was rewound 512 times</span>
-    rgb_permutations|   5|    100000|     100|0.16764489|  PASSED  
-<span style="color:#75715e"># The file file_input was rewound 522 times</span>
-      rgb_lagged_sum|   0|   1000000|     100|0.00003809|   WEAK   
-<span style="color:#75715e"># The file file_input was rewound 542 times</span>
-      rgb_lagged_sum|   1|   1000000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 572 times</span>
-      rgb_lagged_sum|   2|   1000000|     100|0.00000015|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 612 times</span>
-      rgb_lagged_sum|   3|   1000000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 662 times</span>
-      rgb_lagged_sum|   4|   1000000|     100|0.00000000|  FAILED
-</code></pre></div><h1 id="randu">RANDU<a href="#randu" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scheme" data-lang="scheme"><span style="color:#f92672">#</span>lang racket
-
-(<span style="color:#66d9ef">define </span>next <span style="color:#ae81ff">1090815429</span>)
-
-(<span style="color:#66d9ef">define </span>(<span style="color:#a6e22e">randu</span>)
-  (<span style="color:#66d9ef">set! </span>next (modulo (* next <span style="color:#ae81ff">65539</span>) (expt <span style="color:#ae81ff">2</span> <span style="color:#ae81ff">31</span>)))
-  next)
-</code></pre></div><!-- raw HTML omitted -->
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#75715e">#=============================================================================#</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#            dieharder version 3.31.1 Copyright 2003 Robert G. Brown          #</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#=============================================================================#</span>
+</span></span><span style="display:flex;"><span>   rng_name    |           filename             |rands/second|
+</span></span><span style="display:flex;"><span>     file_input|                   example.input|  6.15e+06  |
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#=============================================================================#</span>
+</span></span><span style="display:flex;"><span>        test_name   |ntup| tsamples |psamples|  p-value |Assessment
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#=============================================================================#</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 1 times</span>
+</span></span><span style="display:flex;"><span>   diehard_birthdays|   0|       100|     100|0.72874473|  PASSED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 11 times</span>
+</span></span><span style="display:flex;"><span>      diehard_operm5|   0|   1000000|     100|0.00008973|   WEAK   
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 24 times</span>
+</span></span><span style="display:flex;"><span>  diehard_rank_32x32|   0|     40000|     100|0.24249094|  PASSED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 30 times</span>
+</span></span><span style="display:flex;"><span>    diehard_rank_6x8|   0|    100000|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 32 times</span>
+</span></span><span style="display:flex;"><span>   diehard_bitstream|   0|   2097152|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 53 times</span>
+</span></span><span style="display:flex;"><span>        diehard_opso|   0|   2097152|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 67 times</span>
+</span></span><span style="display:flex;"><span>        diehard_oqso|   0|   2097152|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 74 times</span>
+</span></span><span style="display:flex;"><span>         diehard_dna|   0|   2097152|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 74 times</span>
+</span></span><span style="display:flex;"><span>diehard_count_1s_str|   0|    256000|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 87 times</span>
+</span></span><span style="display:flex;"><span>diehard_count_1s_byt|   0|    256000|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 87 times</span>
+</span></span><span style="display:flex;"><span> diehard_parking_lot|   0|     12000|     100|0.33164281|  PASSED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 88 times</span>
+</span></span><span style="display:flex;"><span>    diehard_2dsphere|   2|      8000|     100|0.08003531|  PASSED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 88 times</span>
+</span></span><span style="display:flex;"><span>    diehard_3dsphere|   3|      4000|     100|0.55288986|  PASSED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 111 times</span>
+</span></span><span style="display:flex;"><span>     diehard_squeeze|   0|    100000|     100|0.00371770|   WEAK   
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 111 times</span>
+</span></span><span style="display:flex;"><span>        diehard_sums|   0|       100|     100|0.06120371|  PASSED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 112 times</span>
+</span></span><span style="display:flex;"><span>        diehard_runs|   0|    100000|     100|0.35781871|  PASSED  
+</span></span><span style="display:flex;"><span>        diehard_runs|   0|    100000|     100|0.07426726|  PASSED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 125 times</span>
+</span></span><span style="display:flex;"><span>       diehard_craps|   0|    200000|     100|0.00004611|   WEAK   
+</span></span><span style="display:flex;"><span>       diehard_craps|   0|    200000|     100|0.44395534|  PASSED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 325 times</span>
+</span></span><span style="display:flex;"><span> marsaglia_tsang_gcd|   0|  10000000|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span> marsaglia_tsang_gcd|   0|  10000000|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 326 times</span>
+</span></span><span style="display:flex;"><span>         sts_monobit|   1|    100000|     100|0.34446776|  PASSED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 327 times</span>
+</span></span><span style="display:flex;"><span>            sts_runs|   2|    100000|     100|0.34889544|  PASSED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 330 times</span>
+</span></span><span style="display:flex;"><span>         rgb_bitdist|   1|    100000|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 334 times</span>
+</span></span><span style="display:flex;"><span>         rgb_bitdist|   2|    100000|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 340 times</span>
+</span></span><span style="display:flex;"><span>         rgb_bitdist|   3|    100000|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 348 times</span>
+</span></span><span style="display:flex;"><span>         rgb_bitdist|   4|    100000|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 358 times</span>
+</span></span><span style="display:flex;"><span>         rgb_bitdist|   5|    100000|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 370 times</span>
+</span></span><span style="display:flex;"><span>         rgb_bitdist|   6|    100000|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 384 times</span>
+</span></span><span style="display:flex;"><span>         rgb_bitdist|   7|    100000|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 400 times</span>
+</span></span><span style="display:flex;"><span>         rgb_bitdist|   8|    100000|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 418 times</span>
+</span></span><span style="display:flex;"><span>         rgb_bitdist|   9|    100000|     100|0.00005693|   WEAK   
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 438 times</span>
+</span></span><span style="display:flex;"><span>         rgb_bitdist|  10|    100000|     100|0.53597412|  PASSED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 460 times</span>
+</span></span><span style="display:flex;"><span>         rgb_bitdist|  11|    100000|     100|0.89275780|  PASSED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 484 times</span>
+</span></span><span style="display:flex;"><span>         rgb_bitdist|  12|    100000|     100|0.01596294|  PASSED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 486 times</span>
+</span></span><span style="display:flex;"><span>rgb_minimum_distance|   2|     10000|    1000|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 489 times</span>
+</span></span><span style="display:flex;"><span>rgb_minimum_distance|   3|     10000|    1000|0.00020551|   WEAK   
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 493 times</span>
+</span></span><span style="display:flex;"><span>rgb_minimum_distance|   4|     10000|    1000|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 498 times</span>
+</span></span><span style="display:flex;"><span>rgb_minimum_distance|   5|     10000|    1000|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 500 times</span>
+</span></span><span style="display:flex;"><span>    rgb_permutations|   2|    100000|     100|0.27181166|  PASSED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 503 times</span>
+</span></span><span style="display:flex;"><span>    rgb_permutations|   3|    100000|     100|0.67601712|  PASSED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 507 times</span>
+</span></span><span style="display:flex;"><span>    rgb_permutations|   4|    100000|     100|0.05999982|  PASSED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 512 times</span>
+</span></span><span style="display:flex;"><span>    rgb_permutations|   5|    100000|     100|0.16764489|  PASSED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 522 times</span>
+</span></span><span style="display:flex;"><span>      rgb_lagged_sum|   0|   1000000|     100|0.00003809|   WEAK   
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 542 times</span>
+</span></span><span style="display:flex;"><span>      rgb_lagged_sum|   1|   1000000|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 572 times</span>
+</span></span><span style="display:flex;"><span>      rgb_lagged_sum|   2|   1000000|     100|0.00000015|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 612 times</span>
+</span></span><span style="display:flex;"><span>      rgb_lagged_sum|   3|   1000000|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 662 times</span>
+</span></span><span style="display:flex;"><span>      rgb_lagged_sum|   4|   1000000|     100|0.00000000|  FAILED
+</span></span></code></pre></div><h1 id="randu">RANDU<a href="#randu" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-scheme" data-lang="scheme"><span style="display:flex;"><span><span style="color:#f92672">#</span>lang racket
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">define </span>next <span style="color:#ae81ff">1090815429</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">define </span>(<span style="color:#a6e22e">randu</span>)
+</span></span><span style="display:flex;"><span>  (<span style="color:#66d9ef">set! </span>next (modulo (* next <span style="color:#ae81ff">65539</span>) (expt <span style="color:#ae81ff">2</span> <span style="color:#ae81ff">31</span>)))
+</span></span><span style="display:flex;"><span>  next)
+</span></span></code></pre></div><!-- raw HTML omitted -->
 <h1 id="algorithm-k-1">Algorithm-k<a href="#algorithm-k-1" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#75715e">#=============================================================================#</span>
-<span style="color:#75715e">#            dieharder version 3.31.1 Copyright 2003 Robert G. Brown          #</span>
-<span style="color:#75715e">#=============================================================================#</span>
-   rng_name    |           filename             |rands/second|
-     file_input|                    backup.input|  7.99e+06  |
-<span style="color:#75715e">#=============================================================================#</span>
-        test_name   |ntup| tsamples |psamples|  p-value |Assessment
-<span style="color:#75715e">#=============================================================================#</span>
-<span style="color:#75715e"># The file file_input was rewound 1 times</span>
-   diehard_birthdays|   0|       100|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 11 times</span>
-      diehard_operm5|   0|   1000000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 24 times</span>
-  diehard_rank_32x32|   0|     40000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 30 times</span>
-    diehard_rank_6x8|   0|    100000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 32 times</span>
-   diehard_bitstream|   0|   2097152|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 53 times</span>
-        diehard_opso|   0|   2097152|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 67 times</span>
-        diehard_oqso|   0|   2097152|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 74 times</span>
-         diehard_dna|   0|   2097152|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 74 times</span>
-diehard_count_1s_str|   0|    256000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 87 times</span>
-diehard_count_1s_byt|   0|    256000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 87 times</span>
- diehard_parking_lot|   0|     12000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 88 times</span>
-    diehard_2dsphere|   2|      8000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 88 times</span>
-    diehard_3dsphere|   3|      4000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 108 times</span>
-     diehard_squeeze|   0|    100000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 108 times</span>
-        diehard_sums|   0|       100|     100|0.00000018|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 109 times</span>
-        diehard_runs|   0|    100000|     100|0.00000000|  FAILED  
-        diehard_runs|   0|    100000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 123 times</span>
-       diehard_craps|   0|    200000|     100|0.00000000|  FAILED  
-       diehard_craps|   0|    200000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 323 times</span>
- marsaglia_tsang_gcd|   0|  10000000|     100|0.00000000|  FAILED  
- marsaglia_tsang_gcd|   0|  10000000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 324 times</span>
-         sts_monobit|   1|    100000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 325 times</span>
-      diehard_operm5|   0|   1000000|     100|0.34393548|  PASSED  
-            sts_runs|   2|    100000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 328 times</span>
-         rgb_bitdist|   1|    100000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 332 times</span>
-         rgb_bitdist|   2|    100000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 338 times</span>
-         rgb_bitdist|   3|    100000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 346 times</span>
-         rgb_bitdist|   4|    100000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 356 times</span>
-         rgb_bitdist|   5|    100000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 368 times</span>
-         rgb_bitdist|   6|    100000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 382 times</span>
-         rgb_bitdist|   7|    100000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 398 times</span>
-         rgb_bitdist|   8|    100000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 416 times</span>
-         rgb_bitdist|   9|    100000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 436 times</span>
-         rgb_bitdist|  10|    100000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 458 times</span>
-         rgb_bitdist|  11|    100000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 482 times</span>
-         rgb_bitdist|  12|    100000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 484 times</span>
-rgb_minimum_distance|   2|     10000|    1000|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 487 times</span>
-rgb_minimum_distance|   3|     10000|    1000|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 491 times</span>
-rgb_minimum_distance|   4|     10000|    1000|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 496 times</span>
-rgb_minimum_distance|   5|     10000|    1000|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 498 times</span>
-    rgb_permutations|   2|    100000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 501 times</span>
-    rgb_permutations|   3|    100000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 505 times</span>
-    rgb_permutations|   4|    100000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 510 times</span>
-    rgb_permutations|   5|    100000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 520 times</span>
-      rgb_lagged_sum|   0|   1000000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 540 times</span>
-      rgb_lagged_sum|   1|   1000000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 570 times</span>
-      rgb_lagged_sum|   2|   1000000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 610 times</span>
-      rgb_lagged_sum|   3|   1000000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 660 times</span>
-      rgb_lagged_sum|   4|   1000000|     100|0.00000000|  FAILED
-</code></pre></div><p>There&rsquo;s already quite a bit to digest here so I didn&rsquo;t include all of the test results as the first few are enough to illustrate the differences between the three algorithms. One thing you will notice is that the standard LCG used actually failed a lot of tests. After doing a little testing and some digging it seems that dieharder will also fail these tests with its own generator with the same amount of numbers. In fact, you can really only expect good results with about 10 million or more numbers, but because diehard runs on a single cpu this would have taken a considerable amount of time to run. The comparison is really what we&rsquo;re after and from the results it&rsquo;s clear that algorithm-k is not suitable, nor is RANDU much better. I wanted to be able to see what kind of results I would see from running a much larger set so I ran one last run with 100,000,000 which shows that the lcg faired a little bit better.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#75715e">#=============================================================================#</span>
-<span style="color:#75715e">#            dieharder version 3.31.1 Copyright 2003 Robert G. Brown          #</span>
-<span style="color:#75715e">#=============================================================================#</span>
-   rng_name    |           filename             |rands/second|
-     file_input|                   example.input|  6.16e+06  |
-<span style="color:#75715e">#=============================================================================#</span>
-        test_name   |ntup| tsamples |psamples|  p-value |Assessment
-<span style="color:#75715e">#=============================================================================#</span>
-   diehard_birthdays|   0|       100|     100|0.50369944|  PASSED  
-<span style="color:#75715e"># The file file_input was rewound 1 times</span>
-      diehard_operm5|   0|   1000000|     100|0.34393548|  PASSED  
-<span style="color:#75715e"># The file file_input was rewound 2 times</span>
-  diehard_rank_32x32|   0|     40000|     100|0.76284541|  PASSED  
-<span style="color:#75715e"># The file file_input was rewound 3 times</span>
-    diehard_rank_6x8|   0|    100000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 3 times</span>
-   diehard_bitstream|   0|   2097152|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 5 times</span>
-        diehard_opso|   0|   2097152|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 6 times</span>
-        diehard_oqso|   0|   2097152|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 7 times</span>
-         diehard_dna|   0|   2097152|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 7 times</span>
-diehard_count_1s_str|   0|    256000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 8 times</span>
-diehard_count_1s_byt|   0|    256000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 8 times</span>
- diehard_parking_lot|   0|     12000|     100|0.82658516|  PASSED  
-<span style="color:#75715e"># The file file_input was rewound 8 times</span>
-    diehard_2dsphere|   2|      8000|     100|0.48942059|  PASSED  
-<span style="color:#75715e"># The file file_input was rewound 8 times</span>
-    diehard_3dsphere|   3|      4000|     100|0.95108230|  PASSED  
-<span style="color:#75715e"># The file file_input was rewound 11 times</span>
-     diehard_squeeze|   0|    100000|     100|0.38225241|  PASSED  
-<span style="color:#75715e"># The file file_input was rewound 11 times</span>
-        diehard_sums|   0|       100|     100|0.07389024|  PASSED  
-<span style="color:#75715e"># The file file_input was rewound 11 times</span>
-        diehard_runs|   0|    100000|     100|0.69622840|  PASSED  
-        diehard_runs|   0|    100000|     100|0.74440767|  PASSED  
-<span style="color:#75715e"># The file file_input was rewound 12 times</span>
-       diehard_craps|   0|    200000|     100|0.34755313|  PASSED  
-       diehard_craps|   0|    200000|     100|0.93778967|  PASSED  
-<span style="color:#75715e"># The file file_input was rewound 32 times</span>
- marsaglia_tsang_gcd|   0|  10000000|     100|0.00000000|  FAILED  
- marsaglia_tsang_gcd|   0|  10000000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 32 times</span>
-         sts_monobit|   1|    100000|     100|0.13113454|  PASSED  
-<span style="color:#75715e"># The file file_input was rewound 32 times</span>
-            sts_runs|   2|    100000|     100|0.22502954|  PASSED  
-<span style="color:#75715e"># The file file_input was rewound 33 times</span>
-         rgb_bitdist|   1|    100000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 33 times</span>
-         rgb_bitdist|   2|    100000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 34 times</span>
-         rgb_bitdist|   3|    100000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 34 times</span>
-         rgb_bitdist|   4|    100000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 35 times</span>
-         rgb_bitdist|   5|    100000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 37 times</span>
-         rgb_bitdist|   6|    100000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 38 times</span>
-         rgb_bitdist|   7|    100000|     100|0.00000000|  FAILED  
-^<span style="color:#f92672">[[</span>1;5D# The file file_input was rewound <span style="color:#ae81ff">40</span> times
-         rgb_bitdist|   8|    100000|     100|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 41 times</span>
-         rgb_bitdist|   9|    100000|     100|0.00048263|   WEAK   
-<span style="color:#75715e"># The file file_input was rewound 43 times</span>
-         rgb_bitdist|  10|    100000|     100|0.00000207|   WEAK   
-<span style="color:#75715e"># The file file_input was rewound 46 times</span>
-         rgb_bitdist|  11|    100000|     100|0.11712560|  PASSED  
-<span style="color:#75715e"># The file file_input was rewound 48 times</span>
-         rgb_bitdist|  12|    100000|     100|0.00070481|   WEAK   
-<span style="color:#75715e"># The file file_input was rewound 48 times</span>
-rgb_minimum_distance|   2|     10000|    1000|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 48 times</span>
-rgb_minimum_distance|   3|     10000|    1000|0.00073621|   WEAK   
-<span style="color:#75715e"># The file file_input was rewound 49 times</span>
-rgb_minimum_distance|   4|     10000|    1000|0.00000000|  FAILED  
-<span style="color:#75715e"># The file file_input was rewound 49 times</span>
-rgb_minimum_distance|   5|     10000|    1000|0.00000148|   WEAK   
-<span style="color:#75715e"># The file file_input was rewound 50 times</span>
-    rgb_permutations|   2|    100000|     100|0.64531526|  PASSED  
-<span style="color:#75715e"># The file file_input was rewound 50 times</span>
-    rgb_permutations|   3|    100000|     100|0.12491885|  PASSED  
-<span style="color:#75715e"># The file file_input was rewound 50 times</span>
-    rgb_permutations|   4|    100000|     100|0.29544943|  PASSED  
-<span style="color:#75715e"># The file file_input was rewound 51 times</span>
-    rgb_permutations|   5|    100000|     100|0.57519225|  PASSED  
-<span style="color:#75715e"># The file file_input was rewound 52 times</span>
-      rgb_lagged_sum|   0|   1000000|     100|0.42557400|  PASSED  
-<span style="color:#75715e"># The file file_input was rewound 54 times</span>
-      rgb_lagged_sum|   1|   1000000|     100|0.94028320|  PASSED  
-<span style="color:#75715e"># The file file_input was rewound 57 times</span>
-      rgb_lagged_sum|   2|   1000000|     100|0.34329913|  PASSED  
-<span style="color:#75715e"># The file file_input was rewound 61 times</span>
-      rgb_lagged_sum|   3|   1000000|     100|0.02887377|  PASSED  
-<span style="color:#75715e"># The file file_input was rewound 66 times</span>
-      rgb_lagged_sum|   4|   1000000|     100|0.02328575|  PASSED  
-<span style="color:#75715e"># The file file_input was rewound 72 times</span>
-      rgb_lagged_sum|   5|   1000000|     100|0.10863760|  PASSED  
-</code></pre></div><p>Here we can see the larger set actually did quite a bit better, passing where it was either weak or had even failed before. It&rsquo;s not perfect of course, and certainly not suitable for cryptographic use but we can see that the generator works well enough. I would have liked to have run more tests and tried a few different random number generators, but testing with dieharder was taking quite a long time on my underpowered laptop CPU. Of course no generator is going to pass every test as Knuth states: <em>&ldquo;A truly random sequence will exhibit local non-randomness&rdquo;</em>. Proving that a generator is suitable would require many more multiple runs on larger data sets. Only then might say that the PRNG is satisfiably random.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#75715e">#=============================================================================#</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#            dieharder version 3.31.1 Copyright 2003 Robert G. Brown          #</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#=============================================================================#</span>
+</span></span><span style="display:flex;"><span>   rng_name    |           filename             |rands/second|
+</span></span><span style="display:flex;"><span>     file_input|                    backup.input|  7.99e+06  |
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#=============================================================================#</span>
+</span></span><span style="display:flex;"><span>        test_name   |ntup| tsamples |psamples|  p-value |Assessment
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#=============================================================================#</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 1 times</span>
+</span></span><span style="display:flex;"><span>   diehard_birthdays|   0|       100|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 11 times</span>
+</span></span><span style="display:flex;"><span>      diehard_operm5|   0|   1000000|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 24 times</span>
+</span></span><span style="display:flex;"><span>  diehard_rank_32x32|   0|     40000|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 30 times</span>
+</span></span><span style="display:flex;"><span>    diehard_rank_6x8|   0|    100000|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 32 times</span>
+</span></span><span style="display:flex;"><span>   diehard_bitstream|   0|   2097152|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 53 times</span>
+</span></span><span style="display:flex;"><span>        diehard_opso|   0|   2097152|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 67 times</span>
+</span></span><span style="display:flex;"><span>        diehard_oqso|   0|   2097152|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 74 times</span>
+</span></span><span style="display:flex;"><span>         diehard_dna|   0|   2097152|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 74 times</span>
+</span></span><span style="display:flex;"><span>diehard_count_1s_str|   0|    256000|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 87 times</span>
+</span></span><span style="display:flex;"><span>diehard_count_1s_byt|   0|    256000|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 87 times</span>
+</span></span><span style="display:flex;"><span> diehard_parking_lot|   0|     12000|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 88 times</span>
+</span></span><span style="display:flex;"><span>    diehard_2dsphere|   2|      8000|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 88 times</span>
+</span></span><span style="display:flex;"><span>    diehard_3dsphere|   3|      4000|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 108 times</span>
+</span></span><span style="display:flex;"><span>     diehard_squeeze|   0|    100000|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 108 times</span>
+</span></span><span style="display:flex;"><span>        diehard_sums|   0|       100|     100|0.00000018|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 109 times</span>
+</span></span><span style="display:flex;"><span>        diehard_runs|   0|    100000|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span>        diehard_runs|   0|    100000|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 123 times</span>
+</span></span><span style="display:flex;"><span>       diehard_craps|   0|    200000|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span>       diehard_craps|   0|    200000|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 323 times</span>
+</span></span><span style="display:flex;"><span> marsaglia_tsang_gcd|   0|  10000000|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span> marsaglia_tsang_gcd|   0|  10000000|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 324 times</span>
+</span></span><span style="display:flex;"><span>         sts_monobit|   1|    100000|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 325 times</span>
+</span></span><span style="display:flex;"><span>      diehard_operm5|   0|   1000000|     100|0.34393548|  PASSED  
+</span></span><span style="display:flex;"><span>            sts_runs|   2|    100000|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 328 times</span>
+</span></span><span style="display:flex;"><span>         rgb_bitdist|   1|    100000|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 332 times</span>
+</span></span><span style="display:flex;"><span>         rgb_bitdist|   2|    100000|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 338 times</span>
+</span></span><span style="display:flex;"><span>         rgb_bitdist|   3|    100000|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 346 times</span>
+</span></span><span style="display:flex;"><span>         rgb_bitdist|   4|    100000|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 356 times</span>
+</span></span><span style="display:flex;"><span>         rgb_bitdist|   5|    100000|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 368 times</span>
+</span></span><span style="display:flex;"><span>         rgb_bitdist|   6|    100000|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 382 times</span>
+</span></span><span style="display:flex;"><span>         rgb_bitdist|   7|    100000|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 398 times</span>
+</span></span><span style="display:flex;"><span>         rgb_bitdist|   8|    100000|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 416 times</span>
+</span></span><span style="display:flex;"><span>         rgb_bitdist|   9|    100000|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 436 times</span>
+</span></span><span style="display:flex;"><span>         rgb_bitdist|  10|    100000|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 458 times</span>
+</span></span><span style="display:flex;"><span>         rgb_bitdist|  11|    100000|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 482 times</span>
+</span></span><span style="display:flex;"><span>         rgb_bitdist|  12|    100000|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 484 times</span>
+</span></span><span style="display:flex;"><span>rgb_minimum_distance|   2|     10000|    1000|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 487 times</span>
+</span></span><span style="display:flex;"><span>rgb_minimum_distance|   3|     10000|    1000|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 491 times</span>
+</span></span><span style="display:flex;"><span>rgb_minimum_distance|   4|     10000|    1000|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 496 times</span>
+</span></span><span style="display:flex;"><span>rgb_minimum_distance|   5|     10000|    1000|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 498 times</span>
+</span></span><span style="display:flex;"><span>    rgb_permutations|   2|    100000|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 501 times</span>
+</span></span><span style="display:flex;"><span>    rgb_permutations|   3|    100000|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 505 times</span>
+</span></span><span style="display:flex;"><span>    rgb_permutations|   4|    100000|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 510 times</span>
+</span></span><span style="display:flex;"><span>    rgb_permutations|   5|    100000|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 520 times</span>
+</span></span><span style="display:flex;"><span>      rgb_lagged_sum|   0|   1000000|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 540 times</span>
+</span></span><span style="display:flex;"><span>      rgb_lagged_sum|   1|   1000000|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 570 times</span>
+</span></span><span style="display:flex;"><span>      rgb_lagged_sum|   2|   1000000|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 610 times</span>
+</span></span><span style="display:flex;"><span>      rgb_lagged_sum|   3|   1000000|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 660 times</span>
+</span></span><span style="display:flex;"><span>      rgb_lagged_sum|   4|   1000000|     100|0.00000000|  FAILED
+</span></span></code></pre></div><p>There&rsquo;s already quite a bit to digest here so I didn&rsquo;t include all of the test results as the first few are enough to illustrate the differences between the three algorithms. One thing you will notice is that the standard LCG used actually failed a lot of tests. After doing a little testing and some digging it seems that dieharder will also fail these tests with its own generator with the same amount of numbers. In fact, you can really only expect good results with about 10 million or more numbers, but because diehard runs on a single cpu this would have taken a considerable amount of time to run. The comparison is really what we&rsquo;re after and from the results it&rsquo;s clear that algorithm-k is not suitable, nor is RANDU much better. I wanted to be able to see what kind of results I would see from running a much larger set so I ran one last run with 100,000,000 which shows that the lcg faired a little bit better.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#75715e">#=============================================================================#</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#            dieharder version 3.31.1 Copyright 2003 Robert G. Brown          #</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#=============================================================================#</span>
+</span></span><span style="display:flex;"><span>   rng_name    |           filename             |rands/second|
+</span></span><span style="display:flex;"><span>     file_input|                   example.input|  6.16e+06  |
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#=============================================================================#</span>
+</span></span><span style="display:flex;"><span>        test_name   |ntup| tsamples |psamples|  p-value |Assessment
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#=============================================================================#</span>
+</span></span><span style="display:flex;"><span>   diehard_birthdays|   0|       100|     100|0.50369944|  PASSED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 1 times</span>
+</span></span><span style="display:flex;"><span>      diehard_operm5|   0|   1000000|     100|0.34393548|  PASSED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 2 times</span>
+</span></span><span style="display:flex;"><span>  diehard_rank_32x32|   0|     40000|     100|0.76284541|  PASSED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 3 times</span>
+</span></span><span style="display:flex;"><span>    diehard_rank_6x8|   0|    100000|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 3 times</span>
+</span></span><span style="display:flex;"><span>   diehard_bitstream|   0|   2097152|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 5 times</span>
+</span></span><span style="display:flex;"><span>        diehard_opso|   0|   2097152|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 6 times</span>
+</span></span><span style="display:flex;"><span>        diehard_oqso|   0|   2097152|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 7 times</span>
+</span></span><span style="display:flex;"><span>         diehard_dna|   0|   2097152|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 7 times</span>
+</span></span><span style="display:flex;"><span>diehard_count_1s_str|   0|    256000|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 8 times</span>
+</span></span><span style="display:flex;"><span>diehard_count_1s_byt|   0|    256000|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 8 times</span>
+</span></span><span style="display:flex;"><span> diehard_parking_lot|   0|     12000|     100|0.82658516|  PASSED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 8 times</span>
+</span></span><span style="display:flex;"><span>    diehard_2dsphere|   2|      8000|     100|0.48942059|  PASSED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 8 times</span>
+</span></span><span style="display:flex;"><span>    diehard_3dsphere|   3|      4000|     100|0.95108230|  PASSED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 11 times</span>
+</span></span><span style="display:flex;"><span>     diehard_squeeze|   0|    100000|     100|0.38225241|  PASSED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 11 times</span>
+</span></span><span style="display:flex;"><span>        diehard_sums|   0|       100|     100|0.07389024|  PASSED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 11 times</span>
+</span></span><span style="display:flex;"><span>        diehard_runs|   0|    100000|     100|0.69622840|  PASSED  
+</span></span><span style="display:flex;"><span>        diehard_runs|   0|    100000|     100|0.74440767|  PASSED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 12 times</span>
+</span></span><span style="display:flex;"><span>       diehard_craps|   0|    200000|     100|0.34755313|  PASSED  
+</span></span><span style="display:flex;"><span>       diehard_craps|   0|    200000|     100|0.93778967|  PASSED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 32 times</span>
+</span></span><span style="display:flex;"><span> marsaglia_tsang_gcd|   0|  10000000|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span> marsaglia_tsang_gcd|   0|  10000000|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 32 times</span>
+</span></span><span style="display:flex;"><span>         sts_monobit|   1|    100000|     100|0.13113454|  PASSED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 32 times</span>
+</span></span><span style="display:flex;"><span>            sts_runs|   2|    100000|     100|0.22502954|  PASSED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 33 times</span>
+</span></span><span style="display:flex;"><span>         rgb_bitdist|   1|    100000|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 33 times</span>
+</span></span><span style="display:flex;"><span>         rgb_bitdist|   2|    100000|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 34 times</span>
+</span></span><span style="display:flex;"><span>         rgb_bitdist|   3|    100000|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 34 times</span>
+</span></span><span style="display:flex;"><span>         rgb_bitdist|   4|    100000|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 35 times</span>
+</span></span><span style="display:flex;"><span>         rgb_bitdist|   5|    100000|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 37 times</span>
+</span></span><span style="display:flex;"><span>         rgb_bitdist|   6|    100000|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 38 times</span>
+</span></span><span style="display:flex;"><span>         rgb_bitdist|   7|    100000|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span>^<span style="color:#f92672">[[</span>1;5D# The file file_input was rewound <span style="color:#ae81ff">40</span> times
+</span></span><span style="display:flex;"><span>         rgb_bitdist|   8|    100000|     100|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 41 times</span>
+</span></span><span style="display:flex;"><span>         rgb_bitdist|   9|    100000|     100|0.00048263|   WEAK   
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 43 times</span>
+</span></span><span style="display:flex;"><span>         rgb_bitdist|  10|    100000|     100|0.00000207|   WEAK   
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 46 times</span>
+</span></span><span style="display:flex;"><span>         rgb_bitdist|  11|    100000|     100|0.11712560|  PASSED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 48 times</span>
+</span></span><span style="display:flex;"><span>         rgb_bitdist|  12|    100000|     100|0.00070481|   WEAK   
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 48 times</span>
+</span></span><span style="display:flex;"><span>rgb_minimum_distance|   2|     10000|    1000|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 48 times</span>
+</span></span><span style="display:flex;"><span>rgb_minimum_distance|   3|     10000|    1000|0.00073621|   WEAK   
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 49 times</span>
+</span></span><span style="display:flex;"><span>rgb_minimum_distance|   4|     10000|    1000|0.00000000|  FAILED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 49 times</span>
+</span></span><span style="display:flex;"><span>rgb_minimum_distance|   5|     10000|    1000|0.00000148|   WEAK   
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 50 times</span>
+</span></span><span style="display:flex;"><span>    rgb_permutations|   2|    100000|     100|0.64531526|  PASSED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 50 times</span>
+</span></span><span style="display:flex;"><span>    rgb_permutations|   3|    100000|     100|0.12491885|  PASSED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 50 times</span>
+</span></span><span style="display:flex;"><span>    rgb_permutations|   4|    100000|     100|0.29544943|  PASSED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 51 times</span>
+</span></span><span style="display:flex;"><span>    rgb_permutations|   5|    100000|     100|0.57519225|  PASSED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 52 times</span>
+</span></span><span style="display:flex;"><span>      rgb_lagged_sum|   0|   1000000|     100|0.42557400|  PASSED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 54 times</span>
+</span></span><span style="display:flex;"><span>      rgb_lagged_sum|   1|   1000000|     100|0.94028320|  PASSED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 57 times</span>
+</span></span><span style="display:flex;"><span>      rgb_lagged_sum|   2|   1000000|     100|0.34329913|  PASSED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 61 times</span>
+</span></span><span style="display:flex;"><span>      rgb_lagged_sum|   3|   1000000|     100|0.02887377|  PASSED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 66 times</span>
+</span></span><span style="display:flex;"><span>      rgb_lagged_sum|   4|   1000000|     100|0.02328575|  PASSED  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The file file_input was rewound 72 times</span>
+</span></span><span style="display:flex;"><span>      rgb_lagged_sum|   5|   1000000|     100|0.10863760|  PASSED  
+</span></span></code></pre></div><p>Here we can see the larger set actually did quite a bit better, passing where it was either weak or had even failed before. It&rsquo;s not perfect of course, and certainly not suitable for cryptographic use but we can see that the generator works well enough. I would have liked to have run more tests and tried a few different random number generators, but testing with dieharder was taking quite a long time on my underpowered laptop CPU. Of course no generator is going to pass every test as Knuth states: <em>&ldquo;A truly random sequence will exhibit local non-randomness&rdquo;</em>. Proving that a generator is suitable would require many more multiple runs on larger data sets. Only then might say that the PRNG is satisfiably random.</p>
 <h2 id="not-so-random-musings">Not So Random Musings<a href="#not-so-random-musings" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
 <p>In a set of infinite numbers we might expect to see 1,000,000 7&rsquo;s or 8&rsquo;s in a row at some point. Maybe the numbers, viewed in a single line would map to ascii values that could print the works of Shakespeare. It may not be desirable for applications, but it would be consistent with a truly random number generator. Though the math was certainly beyond me, the first half of volume 2 was incredibly interesting. If anything it&rsquo;s made me question how random numbers are generated a little more, forcing me to dig through the random number generators that I have trusted. A simple mistake could result in unexpected deterministic behaviour. Though this is unlikely to be a problem in my day to day life as a web developer, it will still make me think the next time I need to rely on random behaviour. Further fueling my paranoia, Knuth gives some great advice to summarise the learnings of the chapter:</p>
-<p><em>&ldquo;Look at the subroutine library of each computer installation in your organization, and replace the random number generators by good ones. Try to avoid being too shocked at what you find.&quot;</em></p>
+<p><em>&ldquo;Look at the subroutine library of each computer installation in your organization, and replace the random number generators by good ones. Try to avoid being too shocked at what you find.&rdquo;</em></p>
       </div></div>
 
   

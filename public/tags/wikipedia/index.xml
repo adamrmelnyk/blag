@@ -5,7 +5,7 @@
     <link>/tags/wikipedia/</link>
     <description>Recent content in wikipedia on Adam&#39;s Blag</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
+    <language>en</language>
     <copyright>Adam Melnyk 2020</copyright>
     <lastBuildDate>Sat, 20 Jun 2020 23:15:02 -0500</lastBuildDate><atom:link href="/tags/wikipedia/index.xml" rel="self" type="application/rss+xml" />
     <item>
@@ -20,80 +20,80 @@
 &lt;h2 id=&#34;making-a-request&#34;&gt;Making a Request&lt;/h2&gt;
 &lt;p&gt;The first thing we need is a library to actually make requests to a webpage. There are more than a few of them, but the one I settled on is &lt;a href=&#34;https://docs.rs/reqwest/0.10.6/reqwest/&#34;&gt;reqwest&lt;/a&gt;, a highly recommended library with good support. You can find plenty of examples on how to use it and it also supports async await.&lt;/p&gt;
 &lt;p&gt;Using reqwest is as easy as this:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; body &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; reqwest::get(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;https://www.arm64.ca&amp;#34;&lt;/span&gt;)
-    .&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;
-    .text()
-    .&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;;
-
-println!(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;body = {:?}&amp;#34;&lt;/span&gt;, body);
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The use case I had for this wasn&amp;rsquo;t too much more complicated than this. I just needed to check that the response code had a successful response and I could continue with scraping the data I needed.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;match&lt;/span&gt; get(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;url).&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt; {
-    Ok(resp) &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; {
-        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; resp.status().is_success() {
-            &lt;span style=&#34;color:#66d9ef&#34;&gt;match&lt;/span&gt; resp.text().&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt; {
-                Ok(body) &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; extract_data(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;body),
-                Err(_) &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; {
-                    eprintln(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Oh noes! What happened to my body!&amp;#34;&lt;/span&gt;);
-                    std::process::exit(&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;);
-                },
-            }
-        } &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; {
-            &lt;span style=&#34;color:#75715e&#34;&gt;// Return some err
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;        }
-    }
-    Err(_) &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;// Return some err,
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;}status
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;scraping-data&#34;&gt;Scraping data&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; body &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; reqwest::get(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;https://www.arm64.ca&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    .&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    .text()
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    .&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;println!(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;body = &lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;{:?}&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;, body);
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The use case I had for this wasn&amp;rsquo;t too much more complicated than this. I just needed to check that the response code had a successful response and I could continue with scraping the data I needed.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;match&lt;/span&gt; get(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;url).&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    Ok(resp) &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; resp.status().is_success() {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#66d9ef&#34;&gt;match&lt;/span&gt; resp.text().&lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                Ok(body) &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; extract_data(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;body),
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                Err(_) &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                    eprintln(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Oh noes! What happened to my body!&amp;#34;&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                    std::process::exit(&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                },
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        } &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#75715e&#34;&gt;// Return some err
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;        }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    Err(_) &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;// Return some err,
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;}status
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;scraping-data&#34;&gt;Scraping data&lt;/h2&gt;
 &lt;p&gt;Once we&amp;rsquo;ve made a request to a website we need to actually extract that data. To do so we&amp;rsquo;ll need another library so we don&amp;rsquo;t have to reinvent the wheel. Another library &lt;a href=&#34;https://docs.rs/scraper/0.9.1/scraper/&#34;&gt;scraper&lt;/a&gt; does the job for us. It allows us to parse html and select particular elements; Exactly what we&amp;rsquo;ll need if we want to extract data from a table on wiki page. One of the useful parts of Scraper is that the &lt;code&gt;Selector&lt;/code&gt; lets us chain selectors together so we can find elements inside of other elements. This is extremely useful if we want to narrow down our results to exactly what we need.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;use&lt;/span&gt; scraper::{Html, Selector};
-
-&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; html &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;r#&amp;#34;
-&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;    &amp;lt;div&amp;gt;
-&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;        &amp;lt;h1&amp;gt;Foo&amp;lt;/h1&amp;gt;
-&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;        &amp;lt;h1&amp;gt;Bar&amp;lt;/h1&amp;gt;
-&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;        &amp;lt;h1&amp;gt;Baz&amp;lt;/h1&amp;gt;
-&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;    &amp;lt;/div&amp;gt;
-&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;#&lt;/span&gt;;
-
-&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; fragment &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Html::parse_fragment(html);
-&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; div_selector &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Selector::parse(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;div&amp;#34;&lt;/span&gt;).unwrap();
-&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; h1_selector &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Selector::parse(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;h1&amp;#34;&lt;/span&gt;).unwrap();
-
-&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; h1 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; fragment.select(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;div_selector).next().unwrap();
-&lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; element &lt;span style=&#34;color:#66d9ef&#34;&gt;in&lt;/span&gt; h1.select(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;h1_selector) {
-    assert_eq!(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;h1&amp;#34;&lt;/span&gt;, element.value().name());
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;One disadvantage of using any library is that documentation isn&amp;rsquo;t always perfect. At the time of this writing there&amp;rsquo;s another use case I needed later which was not described in scrapers documentation or README. Selectors can be made to select multiple tags. This turns out to be really useful if you end up finding some heterogeneous data in the html you&amp;rsquo;re parsing as I did. Just like the selector above we put the tag we&amp;rsquo;re looking for into quotes, only this time, we separate all of the tags we&amp;rsquo;re looking for in one string with commas.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;use&lt;/span&gt; scraper::{Html, Selector};
-
-&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; html &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;r#&amp;#34;
-&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;        &amp;lt;div&amp;gt;
-&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;            &amp;lt;h1&amp;gt;foo&amp;lt;/h1&amp;gt;
-&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;            &amp;lt;h2&amp;gt;bar&amp;lt;/h2&amp;gt;
-&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;            &amp;lt;h3&amp;gt;baz&amp;lt;/h3&amp;gt;
-&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;        &amp;lt;/div&amp;gt;&amp;#34;#&lt;/span&gt;;
-&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; fragment &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Html::parse_fragment(html);
-&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; selector &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Selector::parse(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;h1,h2,h3&amp;#34;&lt;/span&gt;).unwrap();
-
-&lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; element &lt;span style=&#34;color:#66d9ef&#34;&gt;in&lt;/span&gt; fragment.select(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;selector) {
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; name &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; element.value().name();
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; is_htag &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; name &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;h1&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;||&lt;/span&gt; name &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;h2&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;||&lt;/span&gt; name &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;h3&amp;#34;&lt;/span&gt;;
-    assert_eq!(&lt;span style=&#34;color:#66d9ef&#34;&gt;true&lt;/span&gt;, is_htag);
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;working-with-the-db&#34;&gt;Working with the DB&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;use&lt;/span&gt; scraper::{Html, Selector};
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; html &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;r&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;#&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;    &amp;lt;div&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;        &amp;lt;h1&amp;gt;Foo&amp;lt;/h1&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;        &amp;lt;h1&amp;gt;Bar&amp;lt;/h1&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;        &amp;lt;h1&amp;gt;Baz&amp;lt;/h1&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;    &amp;lt;/div&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;#&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; fragment &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Html::parse_fragment(html);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; div_selector &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Selector::parse(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;div&amp;#34;&lt;/span&gt;).unwrap();
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; h1_selector &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Selector::parse(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;h1&amp;#34;&lt;/span&gt;).unwrap();
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; h1 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; fragment.select(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;div_selector).next().unwrap();
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; element &lt;span style=&#34;color:#66d9ef&#34;&gt;in&lt;/span&gt; h1.select(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;h1_selector) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    assert_eq!(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;h1&amp;#34;&lt;/span&gt;, element.value().name());
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;One disadvantage of using any library is that documentation isn&amp;rsquo;t always perfect. At the time of this writing there&amp;rsquo;s another use case I needed later which was not described in scrapers documentation or README. Selectors can be made to select multiple tags. This turns out to be really useful if you end up finding some heterogeneous data in the html you&amp;rsquo;re parsing as I did. Just like the selector above we put the tag we&amp;rsquo;re looking for into quotes, only this time, we separate all of the tags we&amp;rsquo;re looking for in one string with commas.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;use&lt;/span&gt; scraper::{Html, Selector};
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; html &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;r&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;#&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;        &amp;lt;div&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;            &amp;lt;h1&amp;gt;foo&amp;lt;/h1&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;            &amp;lt;h2&amp;gt;bar&amp;lt;/h2&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;            &amp;lt;h3&amp;gt;baz&amp;lt;/h3&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;        &amp;lt;/div&amp;gt;&amp;#34;#&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; fragment &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Html::parse_fragment(html);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; selector &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Selector::parse(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;h1,h2,h3&amp;#34;&lt;/span&gt;).unwrap();
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; element &lt;span style=&#34;color:#66d9ef&#34;&gt;in&lt;/span&gt; fragment.select(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;selector) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; name &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; element.value().name();
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; is_htag &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; name &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;h1&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;||&lt;/span&gt; name &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;h2&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;||&lt;/span&gt; name &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;h3&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    assert_eq!(&lt;span style=&#34;color:#66d9ef&#34;&gt;true&lt;/span&gt;, is_htag);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;working-with-the-db&#34;&gt;Working with the DB&lt;/h2&gt;
 &lt;p&gt;Now that we can request the data and search it for what we&amp;rsquo;re looking for, the last thing is to store it somewhere. I mentioned before that I&amp;rsquo;d like to put it in the SQL table so I chose SQLite3 because it&amp;rsquo;s easily available and lightweight. There were a few different libraries to choose from, such as &lt;a href=&#34;https://github.com/rusqlite/rusqlite&#34;&gt;rusqlite&lt;/a&gt; but I went with &lt;a href=&#34;https://docs.rs/sqlite/0.24.0/sqlite/&#34;&gt;sqlite&lt;/a&gt; which was simple enough to use. We simply open a connection to the database and then execute a command.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; connection &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; sqlite::open(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;mySqlite3DbFileName.db&amp;#34;&lt;/span&gt;).unwrap();
-
-connection
-    .execute(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;CREATE TABLE mytable (col1 TEXT, col2 INTEGER);&amp;#34;&lt;/span&gt;)
-    .unwrap();
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Inserting is essentially the same though the library gives you a few better options if you are doing this more than once.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; connection &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; sqlite::open(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;mySqlite3DbFileName.db&amp;#34;&lt;/span&gt;).unwrap();
-
-connection
-    .execute(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;INSERT INTO mytable (col1, col2) VALUES (&amp;#39;a&amp;#39;, 10);&amp;#34;&lt;/span&gt;)
-    .unwrap();
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;putting-everything-together&#34;&gt;Putting everything together&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; connection &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; sqlite::open(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;mySqlite3DbFileName.db&amp;#34;&lt;/span&gt;).unwrap();
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;connection
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    .execute(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;CREATE TABLE mytable (col1 TEXT, col2 INTEGER);&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    .unwrap();
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Inserting is essentially the same though the library gives you a few better options if you are doing this more than once.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; connection &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; sqlite::open(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;mySqlite3DbFileName.db&amp;#34;&lt;/span&gt;).unwrap();
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;connection
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    .execute(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;INSERT INTO mytable (col1, col2) VALUES (&amp;#39;a&amp;#39;, 10);&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    .unwrap();
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;putting-everything-together&#34;&gt;Putting everything together&lt;/h2&gt;
 &lt;h3 id=&#34;cleaning-the-data&#34;&gt;Cleaning the data&lt;/h3&gt;
 &lt;p&gt;Now we have all the tools we need to start retrieving, parsing and storing data. The main work of course is going to be in parsing. We not only need to find the correct table elements we need, but there&amp;rsquo;s also a lot of extra information that needs to be removed such as spans, fonts, and other invisible elements so that we insert data that looks like this:&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;1|China|1403191760|18.0|21 Jun 2020|National population clock&lt;/code&gt;&lt;/p&gt;
@@ -105,17 +105,17 @@ connection
 &lt;h3 id=&#34;data-types&#34;&gt;Data types&lt;/h3&gt;
 &lt;p&gt;Because we want to build a tool that requires as little work from the user as possible, we also need to determine the data type of each column if we want to put everything in a database table. Luckily, &lt;a href=&#34;https://doc.rust-lang.org/std/primitive.str.html#method.parse&#34;&gt;parse&lt;/a&gt; comes in handy. We use the turbofish syntax (a fancy name for &lt;code&gt;::&amp;lt;u32&amp;gt;&lt;/code&gt; or &lt;code&gt;::&amp;lt;f64&amp;gt;&lt;/code&gt; etc) to specify the type and if we return &lt;code&gt;Ok()&lt;/code&gt; we can determine what kind of data each element might be.&lt;/p&gt;
 &lt;p&gt;The finished method looks something like this&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;/// Derives the type of the string
-&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;derive_type&lt;/span&gt;(sample_datum: &lt;span style=&#34;color:#66d9ef&#34;&gt;&amp;amp;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;str&lt;/span&gt;) -&amp;gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;SqlTypes&lt;/span&gt; {
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; html_cleaned_data &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; remove_html_tags(sample_datum);
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; removed_citations &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; remove_wiki_citation_links(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;html_cleaned_data);
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; cleaned &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; clean_integer_or_double_string(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;removed_citations);
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; cleaned.parse::&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;i64&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;().is_ok() { &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; SqlTypes::INTEGER }
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; cleaned.parse::&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;f64&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;().is_ok() { &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; SqlTypes::REAL }
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; removed_citations.parse::&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;bool&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;().is_ok() { &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; SqlTypes::NUMERIC }
-    SqlTypes::TEXT
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This isn&amp;rsquo;t an exhaustive list of types supported by Sqlite3 but it covers the basics that we might need.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;/// Derives the type of the string
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;derive_type&lt;/span&gt;(sample_datum: &lt;span style=&#34;color:#66d9ef&#34;&gt;&amp;amp;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;str&lt;/span&gt;) -&amp;gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;SqlTypes&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; html_cleaned_data &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; remove_html_tags(sample_datum);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; removed_citations &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; remove_wiki_citation_links(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;html_cleaned_data);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; cleaned &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; clean_integer_or_double_string(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;removed_citations);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; cleaned.parse::&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;i64&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;().is_ok() { &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; SqlTypes::&lt;span style=&#34;color:#66d9ef&#34;&gt;INTEGER&lt;/span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; cleaned.parse::&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;f64&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;().is_ok() { &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; SqlTypes::&lt;span style=&#34;color:#66d9ef&#34;&gt;REAL&lt;/span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; removed_citations.parse::&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;bool&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;().is_ok() { &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; SqlTypes::&lt;span style=&#34;color:#66d9ef&#34;&gt;NUMERIC&lt;/span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    SqlTypes::&lt;span style=&#34;color:#66d9ef&#34;&gt;TEXT&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This isn&amp;rsquo;t an exhaustive list of types supported by Sqlite3 but it covers the basics that we might need.&lt;/p&gt;
 &lt;h2 id=&#34;whats-missing&#34;&gt;What&amp;rsquo;s missing&lt;/h2&gt;
 &lt;h3 id=&#34;dates&#34;&gt;Dates&lt;/h3&gt;
 &lt;p&gt;Perhaps one of the trickier points left to work on are dates. &lt;a href=&#34;https://www.sqlitetutorial.net/sqlite-date/&#34;&gt;Sqlite3 has a few options&lt;/a&gt; so we need to decide on what format of date we will use (perhaps a Real and use epoch time?). Because there are so many accepted date formats and many types of date formats a webpage might use. This is a more general problem that is beyond the scope of this small project but there is likely a rust library somewhere that will do some of this for you, much like Javascripts &lt;code&gt;Date.parse()&lt;/code&gt; method.&lt;/p&gt;

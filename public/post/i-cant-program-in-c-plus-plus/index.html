@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>I Can&#39;t Program in C&#43;&#43; :: Adam&#39;s Blag</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Learning C&#43;&#43; by creating a BASIC transpiler" />
+<meta name="keywords" content="" />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="/post/i-cant-program-in-c-plus-plus/" />
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="/styles.css">
+
+
+
+
+
+
+
+  <link rel="shortcut icon" href="/img/theme-colors/green.png">
+  <link rel="apple-touch-icon" href="/img/theme-colors/green.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+  
+    <meta name="twitter:site" content="" />
+  
+    <meta name="twitter:creator" content="" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="I Can&#39;t Program in C&#43;&#43;">
+<meta property="og:description" content="Learning C&#43;&#43; by creating a BASIC transpiler" />
+<meta property="og:url" content="/post/i-cant-program-in-c-plus-plus/" />
+<meta property="og:site_name" content="Adam&#39;s Blag" />
+
+  
+    <meta property="og:image" content="/img/favicon/green.png">
+  
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+  <meta property="article:section" content="technology" />
+
+  <meta property="article:section" content="programming" />
+
+  <meta property="article:section" content="C&#43;&#43;" />
+
+
+  <meta property="article:published_time" content="2023-11-18 16:42:42 -0600 CST" />
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body class="green">
+
+
+<div class="container full headings--one-size">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="/">
+  <div class="logo">
+    Adam&#39;s Blag
+  </div>
+</a>
+
+    </div>
+    
+      <ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        
+          <li><a href="https://adammelnyk.ca">Contact</a></li>
+        
+      
+      
+    </ul>
+  </li>
+</ul>
+
+    
+    
+  </div>
+  
+    <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="https://adammelnyk.ca">Contact</a></li>
+        
+      
+      
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+<article class="post">
+  <h1 class="post-title">
+    <a href="/post/i-cant-program-in-c-plus-plus/">I Can&rsquo;t Program in C++</a>
+  </h1>
+  <div class="post-meta">
+    
+      <time class="post-date">
+        2023-11-18 ::
+        
+      </time>
+    
+    
+    
+  </div>
+
+  
+    <span class="post-tags">
+      
+      #<a href="/tags/c&#43;&#43;/">C&#43;&#43;</a>&nbsp;
+      
+      #<a href="/tags/jazz/">jazz</a>&nbsp;
+      
+    </span>
+  
+  
+
+
+  
+
+  <div class="post-content"><div>
+        <p>H. Jon Benjamin, known for voicing Sterling Archer, and Bob in the shows Archer, and Bobs burgers released a Jazz album in 2015 titled: <em>&ldquo;Well, I should have&hellip; Learned How To Play Piano&rdquo;</em>. As the title of the album and the second track &ldquo;I can&rsquo;t play piano&rdquo; suggests, Jon can&rsquo;t play piano, nor does he really like Jazz. Feel free to listen to some of the music and idea behind the album <a href="https://youtu.be/JuKJkghC2u0">here</a>. It sounds like jazz&hellip; <em>sort of</em>. Jon is just following the patterns of what a piano in a jazz ensemble <em>ought</em> to sound like, but not playing the any of the right chords.</p>
+<p>I&rsquo;ve found myself in a similar position a few times when I&rsquo;m thrown into a new project at work or something of my own design where I&rsquo;m using a language I&rsquo;m not familiar with. I&rsquo;ve used enough programming languages to know to how to generally code in just about any language just by following patterns left for me&hellip; Ok maybe not <code>APL</code>, seriously wtf is this language:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-apl" data-lang="apl"><span style="display:flex;"><span>life <span style="color:#66d9ef">←</span> <span style="color:#66d9ef">{</span><span style="color:#f92672">⊃</span><span style="color:#ae81ff">1</span> ⍵ <span style="color:#f92672">∨</span><span style="color:#a6e22e">.</span><span style="color:#f92672">∧</span> <span style="color:#ae81ff">3</span> <span style="color:#ae81ff">4</span> <span style="color:#f92672">=</span> <span style="color:#f92672">+</span><span style="color:#a6e22e">/</span> <span style="color:#f92672">+</span><span style="color:#a6e22e">⌿</span> <span style="color:#ae81ff">¯1</span> <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">1</span> <span style="color:#a6e22e">∘.</span><span style="color:#f92672">⊖</span> <span style="color:#ae81ff">¯1</span> <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">⌽</span><span style="color:#a6e22e">¨</span> <span style="color:#f92672">⊂</span>⍵<span style="color:#66d9ef">}</span>
+</span></span></code></pre></div><p>The code I end up writing however, is something that is always&hellip; not quite idiomatic. My first efforts coding in any new language tend to miss some of the <em>best</em> ways to accomplish a task. Sure it&rsquo;s going to work, but I&rsquo;m probably missing some key feature of the language that would simplify everything for me. It can also take time to get proficient at using a language to the point were you stop needing to look up basic syntax and you can just get working. Some languages like python or ruby are so simple that you can pick up the basics of the language quickly, and before you know it you feel like you&rsquo;re an expert. C++ is not one of those languages, or so I am told. Recently I found myself in a situation where I need to do a bit of C/C++ development professionally, and rather than just jump in to the code base I wanted to see if I could learn a little before I started cranking out code. All of this is just a really long winded way of saying: Fake it &rsquo;til you make it, so I&rsquo;m going to do just that.</p>
+<h2 id="picking-a-project">Picking a project<a href="#picking-a-project" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>A blog post I&rsquo;ve always gone back to when I want to challenge myself is Austin Henley&rsquo;s <a href="https://austinhenley.com/blog/challengingprojects.html">&ldquo;Challenging projects every programmer should try&rdquo;</a>. So today I&rsquo;m going to make a BASIC compiler in C++. I suspect that when I&rsquo;m done I probably still won&rsquo;t be able to program in C++, but I&rsquo;ll know enough that it should compile and run. I&rsquo;m following along with <a href="https://austinhenley.com/blog/teenytinycompiler1.html">the tutorial for building a BASIC</a> which is written in python, but it should be pretty simple to follow along in C++.</p>
+<h2 id="strings">Strings<a href="#strings" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>I don&rsquo;t know any thing about C++ at all so, first thing is first, what is wrong here:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span>    _currentChar <span style="color:#f92672">=</span> <span style="color:#960050;background-color:#1e0010">&#39;&#39;</span>;
+</span></span></code></pre></div><p>Unlike in python <code>''</code> is not allowed for an empty character. This needs to be changed to <code>_currentChar = '\0';</code>. Interesting.</p>
+<p>The next thing I ran into was <code>myString.size()</code> gives you the size in bytes of a string. This really threw me off, if you&rsquo;re using a language like ruby for example, <code>&quot;asdf&quot;.size</code> will give you the length of a string, in fact it&rsquo;s just an alias of the <code>length</code> function. The IDE I used just suggested it and I sort of guessed that&rsquo;s what I needed to be using. What I needed to be using was <code>length()</code>, which gives you the number of characters.</p>
+<p><code>str::substr</code> Does not work the way you&rsquo;d expect it to. In python you choose the indicies of the beginning and the end of your string. In CPP, the second parameter is the length! I made this mistake more than once and had to retrace my steps as to why I wasn&rsquo;t parsing my strings correctly. Here&rsquo;s an example of some python code and the corresponding c++ code I wrote to instead.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>startPos <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>curPos
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">while</span> self<span style="color:#f92672">.</span>peek()<span style="color:#f92672">.</span>isalnum():
+</span></span><span style="display:flex;"><span>    self<span style="color:#f92672">.</span>nextChar()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Check if the token is in the list of keywords.</span>
+</span></span><span style="display:flex;"><span>tokText <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>source[startPos : self<span style="color:#f92672">.</span>curPos <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>] <span style="color:#75715e"># Get the substring.</span>
+</span></span><span style="display:flex;"><span>keyword <span style="color:#f92672">=</span> Token<span style="color:#f92672">.</span>checkIfKeyword(tokText)
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> startPosition <span style="color:#f92672">=</span> _currentPosition;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> tokenLength <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">while</span> (std<span style="color:#f92672">::</span>isalpha(peek()) <span style="color:#f92672">||</span> std<span style="color:#f92672">::</span>isdigit(_currentChar)) {
+</span></span><span style="display:flex;"><span>    nextChar();
+</span></span><span style="display:flex;"><span>    tokenLength<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>string tokenText <span style="color:#f92672">=</span> _source.substr(startPosition, tokenLength);
+</span></span></code></pre></div><p>because I needed the length, it just became easier to have counters wherever I used substring.</p>
+<h2 id="enums">Enums<a href="#enums" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>enums are a lot easier to work with in python, period. In python you can just check if a string is a member of the enum class. Not so in C++, there is no built in way of determining if a string is a valid enum of some type. You need to map it all out yourself. That means creating methods like:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#66d9ef">bool</span> <span style="color:#a6e22e">isKeyword</span>(<span style="color:#66d9ef">const</span> std<span style="color:#f92672">::</span>string<span style="color:#f92672">&amp;</span> str) {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">static</span> <span style="color:#66d9ef">const</span> std<span style="color:#f92672">::</span>unordered_set<span style="color:#f92672">&lt;</span>std<span style="color:#f92672">::</span>string<span style="color:#f92672">&gt;</span> keywordSet <span style="color:#f92672">=</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#e6db74">&#34;LABEL&#34;</span>, <span style="color:#e6db74">&#34;GOTO&#34;</span>, <span style="color:#e6db74">&#34;PRINT&#34;</span>, <span style="color:#e6db74">&#34;INPUT&#34;</span>, <span style="color:#e6db74">&#34;LET&#34;</span>, <span style="color:#e6db74">&#34;IF&#34;</span>,
+</span></span><span style="display:flex;"><span>		<span style="color:#e6db74">&#34;THEN&#34;</span>, <span style="color:#e6db74">&#34;ENDIF&#34;</span>, <span style="color:#e6db74">&#34;WHILE&#34;</span>, <span style="color:#e6db74">&#34;REPEAT&#34;</span>, <span style="color:#e6db74">&#34;ENDWHILE&#34;</span>
+</span></span><span style="display:flex;"><span>	};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> keywordSet.find(str) <span style="color:#f92672">!=</span> keywordSet.end();
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>or</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span>string <span style="color:#a6e22e">tokenTypeToString</span>(TokenType type) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">switch</span> (type) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">case</span> INVALIDTOKEN: <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;INVALIDTOKEN&#34;</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">case</span> ENDOFFILE: <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;ENDOFFILE&#34;</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">case</span> NEWLINE: <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;NEWLINE&#34;</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">case</span> NUMBER: <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;NUMBER&#34;</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">case</span> IDENT: <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;IDENT&#34;</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">case</span> STRING: <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;STRING&#34;</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">case</span> LABEL: <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;LABEL&#34;</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// etc
+</span></span></span></code></pre></div><p>This process is a lot more manual than I had anticipated and the way I am going about it at least, seems to be prone to error. Inevitably I&rsquo;ll add a new enum and forget to add it to one of the corresponding methods.</p>
+<h2 id="objects">Objects<a href="#objects" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>Want to initialize an object as Null or None like you might do in Python on Java?</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MyObject</span> {}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Main</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> args) {
+</span></span><span style="display:flex;"><span>        MyClass myObject <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>You can&rsquo;t do it this way at all. You need to initialize it as a null pointer, so you&rsquo;re dealing with a reference to the object.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MyClass</span> {};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>    MyClass<span style="color:#f92672">*</span> my_object <span style="color:#f92672">=</span> <span style="color:#66d9ef">nullptr</span>;
+</span></span></code></pre></div><p>I found the easiest you need is a member initializer list <a href="https://en.cppreference.com/w/cpp/language/constructor">https://en.cppreference.com/w/cpp/language/constructor</a>. I&rsquo;m not going to lie, I don&rsquo;t really understand what&rsquo;s going on here, or why this works. I can&rsquo;t play C++ but, I&rsquo;m going to keep trying.</p>
+<h2 id="sets">Sets<a href="#sets" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>Sets. Checking if an element is in a set seems so unnecessarily complicated when compared to python. In python you may simply just do something like:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">if</span> <span style="color:#e6db74">&#34;myemelent&#34;</span> <span style="color:#f92672">in</span> mySet:
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#34;we found it&#34;</span>)
+</span></span></code></pre></div><p>Not so in C++. For an unordered set, you use the method <code>find(&quot;myElement&quot;)</code> this method returns an iterator pointing to the element. If the iterator is not pointing to the end of the set, then you&rsquo;ve found the element you&rsquo;re looking for. So it looks more like:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#66d9ef">if</span> (mySet.find(<span style="color:#e6db74">&#34;myElement&#34;</span>) <span style="color:#f92672">!=</span> mySet.end()) {
+</span></span><span style="display:flex;"><span>    cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;we found it&#34;</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>This is fine, but it&rsquo;s a little confusing the first few times because you have to realize that having the <code>!=</code> means that you&rsquo;ve found something that matches your element and <code>== mySet.end()</code> means that you haven&rsquo;t found what you&rsquo;re looking for. This sort of feels like the opposite of every other language I&rsquo;ve used so I needed to remap my brain a little bit.</p>
+<h2 id="thoughts">Thoughts<a href="#thoughts" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>I&rsquo;m not quite done learning C++, in fact even after finishing the transpiler, I feel that I&rsquo;m still nowhere near proficient in the language. It reminds me a lot of when I was trying to learn how to code in rust. I felt like was relearning how to program, and I feel that way a lot about c++. Many established patterns that I used in OO programming get thrown out the window. It has it&rsquo;s own advantages, but so far only made me appreciate all the niceties of Java and Python that I&rsquo;ve come to enjoy.</p>
+
+      </div></div>
+
+  
+    
+<div class="pagination">
+    <div class="pagination__title">
+        <span class="pagination__title-h">Read other posts</span>
+        <hr />
+    </div>
+    <div class="pagination__buttons">
+        
+        
+        <span class="button next">
+            <a href="/post/creating-a-resume-in-doom/">
+                <span class="button__text">Creating a Résumé in Doom</span>
+                <span class="button__icon">→</span>
+            </a>
+        </span>
+        
+    </div>
+</div>
+
+  
+
+  
+    
+
+  
+</article>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright copyright--user">
+        <span>Adam Melnyk 2020</span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>

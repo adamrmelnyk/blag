@@ -185,16 +185,16 @@
 <p>The first thing we can do is take an existing plugin and adapt it to our needs. We’ll need to copy one of the plugins from the scripts directory above. You can find these files on your machine running Pop!_OS at: <code>/usr/lib/pop-launcher/scripts/session</code>. <em>Do Not edit these plugins in place!!!</em>, otherwise the next time you try to restart your computer from the launcher you&rsquo;ll just end up switching the track on spotify. Copy them into some new directory of your choice, You can also take a look at them directly on <a href="https://github.com/pop-os/launcher/blob/master/scripts/session/session-logout.sh">github</a>. I&rsquo;ve called mine <code>popify</code> and I&rsquo;ve created a new file for the script we&rsquo;ll execute called: <code>popify-play.sh</code>.</p>
 <h2 id="toggling-pause-and-play-in-spotify">Toggling Pause and Play in Spotify<a href="#toggling-pause-and-play-in-spotify" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
 <p>The next step is straight forward. We edit the file to look something like this:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#75715e">#!/bin/sh
-</span><span style="color:#75715e"></span><span style="color:#75715e">#</span>
-<span style="color:#75715e"># name: Pause or Play Spotify</span>
-<span style="color:#75715e"># icon: com.spotify.Client</span>
-<span style="color:#75715e"># description: Pause or Play Spotify</span>
-<span style="color:#75715e"># keywords: pause play spotify</span>
-
-
-dbus-send --print-reply --dest<span style="color:#f92672">=</span>org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause
-</code></pre></div><p>The file is pretty simple:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#75715e">#!/bin/sh
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#75715e">#</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># name: Pause or Play Spotify</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># icon: com.spotify.Client</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># description: Pause or Play Spotify</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># keywords: pause play spotify</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>dbus-send --print-reply --dest<span style="color:#f92672">=</span>org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause
+</span></span></code></pre></div><p>The file is pretty simple:</p>
 <ul>
 <li>We&rsquo;ve given it a name</li>
 <li>An existing icon (It&rsquo;s an svg file already on your computer if you already have spotify installed)</li>
@@ -209,15 +209,15 @@ dbus-send --print-reply --dest<span style="color:#f92672">=</span>org.mpris.Medi
 <h2 id="skipping-to-the-next-track">Skipping to the next track<a href="#skipping-to-the-next-track" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
 <p>Now that you&rsquo;ve made Spotify pause and play, you can easily make a second script to switch tracks: Simply make a new file in the same directory as you previous script. I&rsquo;ve called mine: <code>popify-next.sh</code></p>
 <p>The file contents might look something like:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#75715e">#!/bin/sh
-</span><span style="color:#75715e"></span><span style="color:#75715e">#</span>
-<span style="color:#75715e"># name: Play Next Song Spotify</span>
-<span style="color:#75715e"># icon: com.spotify.Client</span>
-<span style="color:#75715e"># description: Skip to the Next Song on Spotify</span>
-<span style="color:#75715e"># keywords: next play spotify</span>
-
-dbus-send --print-reply --dest<span style="color:#f92672">=</span>org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Next
-</code></pre></div><p>After you save the script above you should be able to skip to the next track.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#75715e">#!/bin/sh
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#75715e">#</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># name: Play Next Song Spotify</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># icon: com.spotify.Client</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># description: Skip to the Next Song on Spotify</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># keywords: next play spotify</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>dbus-send --print-reply --dest<span style="color:#f92672">=</span>org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Next
+</span></span></code></pre></div><p>After you save the script above you should be able to skip to the next track.</p>
 <p><img src="/images/launcher-next.png" alt="Pop_OS launcher"></p>
 <p>If you feel like a hacker at this point, it&rsquo;s because you are! So throw on those shades, put on your best black hoodie, and go forth and hack away on some cool plugins. Hack the <del>Planet</del> OS!</p>
 <h2 id="building-more-plugins">Building more plugins<a href="#building-more-plugins" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>

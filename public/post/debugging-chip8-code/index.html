@@ -220,12 +220,12 @@
 </table>
 <p>In this small program, what we&rsquo;re doing is printing a single letter to the top right hand corner of the screen. In this case, the letter &ldquo;A&rdquo;. We load the address of where we want to start reading our letter from, into register 0, Then draw from five locations in memory beginning at the location stored in register 0. I should also note that although I am creating this letter myself after the Halt operation, CHIP8 loads sprites for letters and numbers in the first 512 address spaces so we could actually make this easier on ourselves by using the sprites given to us.</p>
 <p>The result looks like this:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">// ******** 0xFF 0b1111_1111
-// **    ** 0xC3 0b1100_0011
-// ******** 0xFF 0b1111_1111
-// **    ** 0xC3 0b1100_0011
-// **    ** 0xC3 0b1100_0011
-</code></pre></div><p>The next thing I wanted to do was put a &ldquo;+&rdquo; sign next to the A. To do this I just repeat what I did before. Add the sprite for the plus after the A. Then I&rsquo;ll just draw once more.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>// ******** 0xFF 0b1111_1111
+</span></span><span style="display:flex;"><span>// **    ** 0xC3 0b1100_0011
+</span></span><span style="display:flex;"><span>// ******** 0xFF 0b1111_1111
+</span></span><span style="display:flex;"><span>// **    ** 0xC3 0b1100_0011
+</span></span><span style="display:flex;"><span>// **    ** 0xC3 0b1100_0011
+</span></span></code></pre></div><p>The next thing I wanted to do was put a &ldquo;+&rdquo; sign next to the A. To do this I just repeat what I did before. Add the sprite for the plus after the A. Then I&rsquo;ll just draw once more.</p>
 <table>
 <thead>
 <tr>
@@ -293,13 +293,13 @@
 </tbody>
 </table>
 <p>This should produce and A, and then a &ldquo;+&rdquo; that looks like this:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">//    **    0x18 0b0001_1000
-//    **    0x18 0b0001_1000
-// ******** 0xFF 0b1111_1111
-// ******** 0xFF 0b1111_1111
-//    **    0x18 0b0001_1000
-//    **    0x18 0b0001_1000
-</code></pre></div><p>Of course <em>it doesn&rsquo;t</em>, because we&rsquo;ve made a few mistakes which we&rsquo;ll fix next. Not only are we drawing twice in the same spot, but we&rsquo;re also reading our sprite from the wrong location! When we added the extra draw function, our sprite was loaded into a different place! To fix this we need to make a few changes. Part of why this doesn&rsquo;t work is because of how much set up the draw function requires. It reads the X coordinate from a specified register, the Y coordinate from another register, and then begins drawing a sprite reading from wherever the address register or <em>i</em> register is pointing to. What this means is that though we got our first drawing without much work since everything defaulted to zero we&rsquo;ll need to:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>//    **    0x18 0b0001_1000
+</span></span><span style="display:flex;"><span>//    **    0x18 0b0001_1000
+</span></span><span style="display:flex;"><span>// ******** 0xFF 0b1111_1111
+</span></span><span style="display:flex;"><span>// ******** 0xFF 0b1111_1111
+</span></span><span style="display:flex;"><span>//    **    0x18 0b0001_1000
+</span></span><span style="display:flex;"><span>//    **    0x18 0b0001_1000
+</span></span></code></pre></div><p>Of course <em>it doesn&rsquo;t</em>, because we&rsquo;ve made a few mistakes which we&rsquo;ll fix next. Not only are we drawing twice in the same spot, but we&rsquo;re also reading our sprite from the wrong location! When we added the extra draw function, our sprite was loaded into a different place! To fix this we need to make a few changes. Part of why this doesn&rsquo;t work is because of how much set up the draw function requires. It reads the X coordinate from a specified register, the Y coordinate from another register, and then begins drawing a sprite reading from wherever the address register or <em>i</em> register is pointing to. What this means is that though we got our first drawing without much work since everything defaulted to zero we&rsquo;ll need to:</p>
 <ul>
 <li>set a register to where we want to start printing our second character</li>
 <li>draw our first sprite</li>
@@ -629,27 +629,27 @@
 <p>After moving our sprites down to location <code>0x500</code>, we now have a little more room to work with, so we can add some extra operations in between before we need to worry. The caveat is that in a larger one we&rsquo;d need to be more efficient with our space as our memory constraints are a lot lower than more modern machines.</p>
 <h3 id="adding-a-debugger">Adding a debugger<a href="#adding-a-debugger" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
 <p>After overcoming a few actual bugs within the emulator itself, I ran into some bugs with my code much like the ones above. Unfortunately for us, there are very few tools to help us debug. There&rsquo;s no CHIP8 IDE that will let us know that we didn&rsquo;t load anything into the register we&rsquo;re going to read from, or that we&rsquo;re going to read from the wrong place in memory. Because this is an emulator, we&rsquo;re no longer limited by the orginal technology of CHIP8, we can add our own debugging tools. To help overcome these challenges, I added a debugger which would halt the execution cycle, waiting for enter to be pressed, exiting debug mode, or exit the emulator itself which looks like this:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-Rust" data-lang="Rust"><span style="color:#e6db74">/// Loop until a valid key is pressed
-</span><span style="color:#e6db74"></span><span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">wait_on_debug_input</span>(<span style="color:#f92672">&amp;</span><span style="color:#66d9ef">mut</span> self) {
-    <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> key_pressed <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span>;
-    <span style="color:#66d9ef">while</span> <span style="color:#f92672">!</span>key_pressed {
-        self.window.update();
-        <span style="color:#66d9ef">if</span> <span style="color:#66d9ef">let</span> Some(keys) <span style="color:#f92672">=</span> self.window.get_keys_pressed(KeyRepeat::No) {
-            <span style="color:#66d9ef">for</span> t <span style="color:#66d9ef">in</span> keys {
-                <span style="color:#66d9ef">match</span> t {
-                    Key::Enter <span style="color:#f92672">=&gt;</span> { key_pressed <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span> },
-                    Key::Escape <span style="color:#f92672">=&gt;</span> { std::process::exit(<span style="color:#ae81ff">0</span>) }, <span style="color:#75715e">// Kills the execution and returns 0
-</span><span style="color:#75715e"></span>                    Key::Delete <span style="color:#f92672">=&gt;</span> {
-                        key_pressed <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span>;
-                        self.debug <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span>; <span style="color:#75715e">// removes us from the debug cycle
-</span><span style="color:#75715e"></span>                    },
-                    _ <span style="color:#f92672">=&gt;</span> {}
-                }
-            }
-        }
-    }
-}
-</code></pre></div><p><img src="https://github.com/adamrmelnyk/chip_8_emulator/raw/master/examples/debug.gif" alt="debuggif"></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-Rust" data-lang="Rust"><span style="display:flex;"><span><span style="color:#e6db74">/// Loop until a valid key is pressed
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74"></span><span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">wait_on_debug_input</span>(<span style="color:#f92672">&amp;</span><span style="color:#66d9ef">mut</span> self) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> key_pressed <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> <span style="color:#f92672">!</span>key_pressed {
+</span></span><span style="display:flex;"><span>        self.window.update();
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#66d9ef">let</span> Some(keys) <span style="color:#f92672">=</span> self.window.get_keys_pressed(KeyRepeat::No) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">for</span> t <span style="color:#66d9ef">in</span> keys {
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">match</span> t {
+</span></span><span style="display:flex;"><span>                    Key::Enter <span style="color:#f92672">=&gt;</span> { key_pressed <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span> },
+</span></span><span style="display:flex;"><span>                    Key::Escape <span style="color:#f92672">=&gt;</span> { std::process::exit(<span style="color:#ae81ff">0</span>) }, <span style="color:#75715e">// Kills the execution and returns 0
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                    Key::Delete <span style="color:#f92672">=&gt;</span> {
+</span></span><span style="display:flex;"><span>                        key_pressed <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span>;
+</span></span><span style="display:flex;"><span>                        self.debug <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span>; <span style="color:#75715e">// removes us from the debug cycle
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                    },
+</span></span><span style="display:flex;"><span>                    _ <span style="color:#f92672">=&gt;</span> {}
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><img src="https://github.com/adamrmelnyk/chip_8_emulator/raw/master/examples/debug.gif" alt="debuggif"></p>
 <p>At each press of the enter key, I either load a register, draw, set the address register, or any other operation. This isn&rsquo;t perfect but it will go a long way to understanding what&rsquo;s going on, one step at a time.</p>
 <h2 id="whats-next">What&rsquo;s next<a href="#whats-next" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
 <p>There&rsquo;s a lot left to be desired here in terms of what tools we can offer the CHIP8 programmer, for one, we aren&rsquo;t displaying the op codes, nor are we showing any additional information about state such as memory and register values. Adding a second window might help to display some of this, though it is a little strange to display that separately. We should also add the concept of state so we can replay operations. We probably won&rsquo;t ever be able to recreate the necessary tools that make modern programming ergonomic, but it can definitely be improved.</p>

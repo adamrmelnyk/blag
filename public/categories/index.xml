@@ -5,15 +5,25 @@
     <link>/categories/</link>
     <description>Recent content in Categories on Adam&#39;s Blag</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
+    <language>en</language>
     <copyright>Adam Melnyk 2020</copyright>
-    <lastBuildDate>Tue, 20 Sep 2022 18:50:41 -0500</lastBuildDate><atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 18 Nov 2023 16:42:42 -0600</lastBuildDate><atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>doom</title>
-      <link>/categories/doom/</link>
-      <pubDate>Tue, 20 Sep 2022 18:50:41 -0500</pubDate>
+      <title>C&#43;&#43;</title>
+      <link>/categories/c&#43;&#43;/</link>
+      <pubDate>Sat, 18 Nov 2023 16:42:42 -0600</pubDate>
       
-      <guid>/categories/doom/</guid>
+      <guid>/categories/c&#43;&#43;/</guid>
+      <description></description>
+      <content></content>
+    </item>
+    
+    <item>
+      <title>programming</title>
+      <link>/categories/programming/</link>
+      <pubDate>Sat, 18 Nov 2023 16:42:42 -0600</pubDate>
+      
+      <guid>/categories/programming/</guid>
       <description></description>
       <content></content>
     </item>
@@ -21,9 +31,19 @@
     <item>
       <title>technology</title>
       <link>/categories/technology/</link>
-      <pubDate>Tue, 20 Sep 2022 18:50:41 -0500</pubDate>
+      <pubDate>Sat, 18 Nov 2023 16:42:42 -0600</pubDate>
       
       <guid>/categories/technology/</guid>
+      <description></description>
+      <content></content>
+    </item>
+    
+    <item>
+      <title>doom</title>
+      <link>/categories/doom/</link>
+      <pubDate>Tue, 20 Sep 2022 18:50:41 -0500</pubDate>
+      
+      <guid>/categories/doom/</guid>
       <description></description>
       <content></content>
     </item>
@@ -74,16 +94,6 @@
       <pubDate>Sun, 23 Aug 2020 15:45:10 -0500</pubDate>
       
       <guid>/categories/rust/</guid>
-      <description></description>
-      <content></content>
-    </item>
-    
-    <item>
-      <title>programming</title>
-      <link>/categories/programming/</link>
-      <pubDate>Sat, 20 Jun 2020 23:15:02 -0500</pubDate>
-      
-      <guid>/categories/programming/</guid>
       <description></description>
       <content></content>
     </item>

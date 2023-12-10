@@ -1,5 +1,8 @@
 {
     "cSpell.words": [
         "popify"
-    ]
+    ],
+    "files.associations": {
+        "iostream": "cpp"
+    }
 }

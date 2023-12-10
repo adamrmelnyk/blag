@@ -182,59 +182,59 @@
 <h3 id="adapting-the-plugin-to-use-with-spotify-instead">Adapting the plugin to use with Spotify instead<a href="#adapting-the-plugin-to-use-with-spotify-instead" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
 <p>Adapting the plugin for our purposes is actually relatively little work. The launcher plugin we&rsquo;re looking at, just has a list of ID&rsquo;s that map to some command that can be executed in a shell, so the first thing we need to do is change those commands.</p>
 <p>The App class contains a constructor with default selections. We want to change that to something like this:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript">    <span style="color:#a6e22e">constructor</span>() {
-        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">last_query</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;&#34;</span>
-        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">shell_only</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span>
-
-        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">default_selections</span> <span style="color:#f92672">=</span> [
-            {
-                <span style="color:#a6e22e">id</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span>,
-                <span style="color:#a6e22e">name</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;Toggle Pause Play Spotify&#34;</span>,
-                <span style="color:#a6e22e">description</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;Plays or pauses the Spotify player&#34;</span>,
-            },
-
-            {
-                <span style="color:#a6e22e">id</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">1</span>,
-                <span style="color:#a6e22e">name</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;Next Spotify&#34;</span>,
-                <span style="color:#a6e22e">description</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;Plays the next track on the Spotify player&#34;</span>
-            },
-        ]
-    }
-</code></pre></div><p>If you walk through the code you&rsquo;ll see that it contains a function called <code>submit()</code> that reads the id codes from above and executes a command. We can change the variable being set by the switches above to something like:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript">    <span style="color:#a6e22e">submit</span>(<span style="color:#a6e22e">id</span>) {
-        <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">cmd</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span>
-
-        <span style="color:#66d9ef">switch</span> (<span style="color:#a6e22e">id</span>) {
-            <span style="color:#66d9ef">case</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">:</span>
-                <span style="color:#a6e22e">cmd</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause&#34;</span>
-                <span style="color:#66d9ef">break</span>
-            <span style="color:#66d9ef">case</span> <span style="color:#ae81ff">1</span><span style="color:#f92672">:</span>
-                <span style="color:#a6e22e">cmd</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Next&#34;</span>
-                <span style="color:#66d9ef">break</span>
-        }
-</code></pre></div><p><strong>NOTE:</strong> I&rsquo;ve also removed the line <code>let sinks = pactl_sinks()</code> above as well as the associated function <code>pactl_sinks()</code> since it&rsquo;s only related to pulse audio and not necessary for our spotify plugin.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span>    <span style="color:#a6e22e">constructor</span>() {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">last_query</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">shell_only</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">default_selections</span> <span style="color:#f92672">=</span> [
+</span></span><span style="display:flex;"><span>            {
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">id</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span>,
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">name</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;Toggle Pause Play Spotify&#34;</span>,
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">description</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;Plays or pauses the Spotify player&#34;</span>,
+</span></span><span style="display:flex;"><span>            },
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            {
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">id</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">1</span>,
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">name</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;Next Spotify&#34;</span>,
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">description</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;Plays the next track on the Spotify player&#34;</span>
+</span></span><span style="display:flex;"><span>            },
+</span></span><span style="display:flex;"><span>        ]
+</span></span><span style="display:flex;"><span>    }
+</span></span></code></pre></div><p>If you walk through the code you&rsquo;ll see that it contains a function called <code>submit()</code> that reads the id codes from above and executes a command. We can change the variable being set by the switches above to something like:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span>    <span style="color:#a6e22e">submit</span>(<span style="color:#a6e22e">id</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">cmd</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">switch</span> (<span style="color:#a6e22e">id</span>) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">case</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">cmd</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause&#34;</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">break</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">case</span> <span style="color:#ae81ff">1</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">cmd</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Next&#34;</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">break</span>
+</span></span><span style="display:flex;"><span>        }
+</span></span></code></pre></div><p><strong>NOTE:</strong> I&rsquo;ve also removed the line <code>let sinks = pactl_sinks()</code> above as well as the associated function <code>pactl_sinks()</code> since it&rsquo;s only related to pulse audio and not necessary for our spotify plugin.</p>
 <p>If you&rsquo;re curious about what the commands above do, you can try running spotify and then plugging them in your terminal yourself. The first toggles pausing and playing spotify, the second switches to the next song.</p>
 <p>The code for utilizing spotify is actually a bit simpler as well. We can just execute the string <code>cmd</code> instead of going through a loop.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript">        <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">cmd</span>) {
-            <span style="color:#66d9ef">try</span> {
-                <span style="color:#a6e22e">GLib</span>.<span style="color:#a6e22e">spawn_command_line_async</span>(<span style="color:#e6db74">`</span><span style="color:#e6db74">${</span><span style="color:#a6e22e">cmd</span><span style="color:#e6db74">}</span><span style="color:#e6db74">`</span>)
-            } <span style="color:#66d9ef">catch</span> (<span style="color:#a6e22e">e</span>) {
-                <span style="color:#a6e22e">log</span>(<span style="color:#e6db74">`session command &#39;</span><span style="color:#e6db74">${</span><span style="color:#a6e22e">cmd</span><span style="color:#e6db74">}</span><span style="color:#e6db74">&#39; failed: </span><span style="color:#e6db74">${</span><span style="color:#a6e22e">e</span><span style="color:#e6db74">}</span><span style="color:#e6db74">`</span>)
-            }
-        }
-
-        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">send</span>({ <span style="color:#a6e22e">event</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;close&#34;</span> })
-    }
-</code></pre></div><p>There&rsquo;s one thing left to change, we need to change the <code>meta.json</code> file to something that makes a little more sense:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{
-    <span style="color:#f92672">&#34;name&#34;</span>: <span style="color:#e6db74">&#34;Spotify Control&#34;</span>,
-    <span style="color:#f92672">&#34;description&#34;</span>: <span style="color:#e6db74">&#34;Control Spotify Play and Track selection&#34;</span>,
-    <span style="color:#f92672">&#34;exec&#34;</span>: <span style="color:#e6db74">&#34;main.js&#34;</span>,
-    <span style="color:#f92672">&#34;icon&#34;</span>: <span style="color:#e6db74">&#34;multimedia-volume-control&#34;</span>
-}
-</code></pre></div><p>Now that we&rsquo;ve made the necessary changes we need to move it to where the rest of the plugins are. I&rsquo;ve called my plugin popify (I know, so clever) but use whatever folder you&rsquo;ve put your files into. You&rsquo;ll need to use sudo because the location requires privileged access.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">sudo cp -r popify/ /usr/lib/pop-shell/launcher/.
-</code></pre></div><p>After copying the files over to the correct directory last thing to do is restart the GNOME shell. There are many ways to do this such as just killing GNOME <code>killall -1 gnome-shell</code>, but if you&rsquo;re unsure, you can simply reboot your machine and the new plugin will be ready. If you&rsquo;ve done everything right you should be able to see the new launcher when we type pause:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">cmd</span>) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">try</span> {
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">GLib</span>.<span style="color:#a6e22e">spawn_command_line_async</span>(<span style="color:#e6db74">`</span><span style="color:#e6db74">${</span><span style="color:#a6e22e">cmd</span><span style="color:#e6db74">}</span><span style="color:#e6db74">`</span>)
+</span></span><span style="display:flex;"><span>            } <span style="color:#66d9ef">catch</span> (<span style="color:#a6e22e">e</span>) {
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">log</span>(<span style="color:#e6db74">`session command &#39;</span><span style="color:#e6db74">${</span><span style="color:#a6e22e">cmd</span><span style="color:#e6db74">}</span><span style="color:#e6db74">&#39; failed: </span><span style="color:#e6db74">${</span><span style="color:#a6e22e">e</span><span style="color:#e6db74">}</span><span style="color:#e6db74">`</span>)
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">send</span>({ <span style="color:#a6e22e">event</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;close&#34;</span> })
+</span></span><span style="display:flex;"><span>    }
+</span></span></code></pre></div><p>There&rsquo;s one thing left to change, we need to change the <code>meta.json</code> file to something that makes a little more sense:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;name&#34;</span>: <span style="color:#e6db74">&#34;Spotify Control&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;description&#34;</span>: <span style="color:#e6db74">&#34;Control Spotify Play and Track selection&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;exec&#34;</span>: <span style="color:#e6db74">&#34;main.js&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;icon&#34;</span>: <span style="color:#e6db74">&#34;multimedia-volume-control&#34;</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Now that we&rsquo;ve made the necessary changes we need to move it to where the rest of the plugins are. I&rsquo;ve called my plugin popify (I know, so clever) but use whatever folder you&rsquo;ve put your files into. You&rsquo;ll need to use sudo because the location requires privileged access.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>sudo cp -r popify/ /usr/lib/pop-shell/launcher/.
+</span></span></code></pre></div><p>After copying the files over to the correct directory last thing to do is restart the GNOME shell. There are many ways to do this such as just killing GNOME <code>killall -1 gnome-shell</code>, but if you&rsquo;re unsure, you can simply reboot your machine and the new plugin will be ready. If you&rsquo;ve done everything right you should be able to see the new launcher when we type pause:</p>
 <p><img src="/images/launcher.png" alt="Pop_OS launcher"></p>
 <p>this should toggle spotify to pause or play. You should also be able to type next and the player should switch songs.</p>
 <p>If you feel like a hacker at this point, it&rsquo;s because you are! So throw on those shades, put on your best black hoodie, and go forth and hack away on some cool plugins. Hack the <del>Planet</del> OS!</p>

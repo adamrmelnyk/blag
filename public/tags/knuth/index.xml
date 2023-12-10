@@ -5,7 +5,7 @@
     <link>/tags/knuth/</link>
     <description>Recent content in knuth on Adam&#39;s Blag</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
+    <language>en</language>
     <copyright>Adam Melnyk 2020</copyright>
     <lastBuildDate>Wed, 08 May 2019 15:30:34 -0500</lastBuildDate><atom:link href="/tags/knuth/index.xml" rel="self" type="application/rss+xml" />
     <item>
@@ -22,115 +22,115 @@
 &lt;p&gt;Early in the volume Knuth shows how difficult it is to create a sufficiently random pseudorandom number generator. Simply adding a number of complicated steps will not yield truly random numbers. Knuth includes the following algorithm, &lt;em&gt;Algorithm-K&lt;/em&gt;, to illustrate this point. You can find an excerpt of the algorithm &lt;a href=&#34;http://www.informit.com/articles/article.aspx?p=2221790&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
 &lt;h4 id=&#34;algorithm-k&#34;&gt;Algorithm K&lt;/h4&gt;
 &lt;p&gt;For the purposes of demonstration I&amp;rsquo;ve implemented the algorithm below. The steps aren&amp;rsquo;t particularly important, but as you can see it&amp;rsquo;s a fairly involved algorithm that looks like it might produce something random.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-scheme&#34; data-lang=&#34;scheme&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;#&lt;/span&gt;lang racket
-
-(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;algorithm-k&lt;/span&gt; x)
-  (&lt;span style=&#34;color:#a6e22e&#34;&gt;do-algorithm-k&lt;/span&gt; x (+ &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; (floor (/ x (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;9&lt;/span&gt;))))))
-
-(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;ns (&lt;span style=&#34;color:#a6e22e&#34;&gt;variable-reference-&amp;gt;namespace&lt;/span&gt; (&lt;span style=&#34;color:#f92672&#34;&gt;#&lt;/span&gt;%variable-reference)))
-
-(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;string-&amp;gt;procedure&lt;/span&gt; s)
-  (&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;sym (string-&amp;gt;symbol s))
-  (eval sym ns))
-
-(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;do-algorithm-k&lt;/span&gt; x iterations)
-  (&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;step (&lt;span style=&#34;color:#a6e22e&#34;&gt;string-append&lt;/span&gt;
-                &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;k&amp;#34;&lt;/span&gt;
-                (&lt;span style=&#34;color:#a6e22e&#34;&gt;number-&amp;gt;string&lt;/span&gt;
-                 (+ (modulo (floor (/ x (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;8&lt;/span&gt;))) &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;) &lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;))))
-  (&lt;span style=&#34;color:#66d9ef&#34;&gt;if &lt;/span&gt;(eq? iterations &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;)
-      x
-      ((&lt;span style=&#34;color:#a6e22e&#34;&gt;string-&amp;gt;procedure&lt;/span&gt; step) x iterations)))
-
-&lt;span style=&#34;color:#75715e&#34;&gt;;; Ensure &amp;gt;= 5 x 10^9&lt;/span&gt;
-(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;k3&lt;/span&gt; x iterations)
-  (&lt;span style=&#34;color:#66d9ef&#34;&gt;if &lt;/span&gt;(&amp;gt; x &lt;span style=&#34;color:#ae81ff&#34;&gt;5000000000&lt;/span&gt;)
-      (&lt;span style=&#34;color:#a6e22e&#34;&gt;k4&lt;/span&gt; x iterations)
-      (&lt;span style=&#34;color:#a6e22e&#34;&gt;k4&lt;/span&gt; (+ x &lt;span style=&#34;color:#ae81ff&#34;&gt;5000000000&lt;/span&gt;) iterations)))
-
-&lt;span style=&#34;color:#75715e&#34;&gt;;; Middle square&lt;/span&gt;
-(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;k4&lt;/span&gt; x iterations)
-  (&lt;span style=&#34;color:#a6e22e&#34;&gt;k5&lt;/span&gt; (modulo (floor (/ (expt x &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;) (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;))) (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;)) iterations))
-
-&lt;span style=&#34;color:#75715e&#34;&gt;;; Multiply&lt;/span&gt;
-(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;k5&lt;/span&gt; x iterations)
-  (&lt;span style=&#34;color:#a6e22e&#34;&gt;k6&lt;/span&gt; (modulo (* x &lt;span style=&#34;color:#ae81ff&#34;&gt;1001001001&lt;/span&gt;) (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;)) iterations))
-
-&lt;span style=&#34;color:#75715e&#34;&gt;;; Psuedo-complement&lt;/span&gt;
-(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;k6&lt;/span&gt; x iterations)
-  (&lt;span style=&#34;color:#66d9ef&#34;&gt;if &lt;/span&gt;(&amp;lt; x &lt;span style=&#34;color:#ae81ff&#34;&gt;100000000&lt;/span&gt;)
-      (&lt;span style=&#34;color:#a6e22e&#34;&gt;k7&lt;/span&gt; (+ x &lt;span style=&#34;color:#ae81ff&#34;&gt;9814055677&lt;/span&gt;) iterations)
-      (&lt;span style=&#34;color:#a6e22e&#34;&gt;k7&lt;/span&gt; (- (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;) x) iterations)))
-
-&lt;span style=&#34;color:#75715e&#34;&gt;;; Interchange halves&lt;/span&gt;
-&lt;span style=&#34;color:#75715e&#34;&gt;;; ie 1234567890 -&amp;gt; 6789012345&lt;/span&gt;
-(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;k7&lt;/span&gt; x iterations)
-  (&lt;span style=&#34;color:#a6e22e&#34;&gt;k8&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;+&lt;/span&gt;
-       (* (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;) (modulo x (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;)))
-       (floor (/ x (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;)))) iterations))
-
-&lt;span style=&#34;color:#75715e&#34;&gt;;; Multiply / same as k5&lt;/span&gt;
-(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;k8&lt;/span&gt; x iterations)
-  (&lt;span style=&#34;color:#a6e22e&#34;&gt;k9&lt;/span&gt; (modulo (* x &lt;span style=&#34;color:#ae81ff&#34;&gt;1001001001&lt;/span&gt;) (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;)) iterations))
-
-&lt;span style=&#34;color:#75715e&#34;&gt;;; Decrease digits&lt;/span&gt;
-(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;k9&lt;/span&gt; x iterations)
-  (&lt;span style=&#34;color:#a6e22e&#34;&gt;k10&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;sub-one&lt;/span&gt; x &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;) iterations))
-
-(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;sub-one&lt;/span&gt; x sum mult)
-  (&lt;span style=&#34;color:#66d9ef&#34;&gt;if &lt;/span&gt;(eq? x &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;)
-      sum
-      (&lt;span style=&#34;color:#66d9ef&#34;&gt;if &lt;/span&gt;(eq? (modulo x &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;) &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;)
-          (&lt;span style=&#34;color:#a6e22e&#34;&gt;sub-one&lt;/span&gt; (floor (/ x &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;)) (+ (* (modulo x &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;) (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; mult)) sum) (+ &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; mult))
-          (&lt;span style=&#34;color:#a6e22e&#34;&gt;sub-one&lt;/span&gt; (floor (/ x &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;)) (+ (* (- (modulo x &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;) &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;) (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; mult)) sum) (+ &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; mult)))))
-
-&lt;span style=&#34;color:#75715e&#34;&gt;;; 99999 modify&lt;/span&gt;
-(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;k10&lt;/span&gt; x iterations)
-  (&lt;span style=&#34;color:#66d9ef&#34;&gt;if &lt;/span&gt;(&amp;lt; x (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;))
-      (&lt;span style=&#34;color:#a6e22e&#34;&gt;k11&lt;/span&gt; (+ (expt x &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;) &lt;span style=&#34;color:#ae81ff&#34;&gt;99999&lt;/span&gt;) iterations)
-      (&lt;span style=&#34;color:#a6e22e&#34;&gt;k11&lt;/span&gt; (- x &lt;span style=&#34;color:#ae81ff&#34;&gt;99999&lt;/span&gt;) iterations)))
-
-&lt;span style=&#34;color:#75715e&#34;&gt;;; Normalize&lt;/span&gt;
-(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;k11&lt;/span&gt; x iterations)
-  (&lt;span style=&#34;color:#a6e22e&#34;&gt;k12&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;go-until&lt;/span&gt; x) iterations))
-
-(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;go-until&lt;/span&gt; x)
-  (&lt;span style=&#34;color:#66d9ef&#34;&gt;if &lt;/span&gt;(&amp;lt; x (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;9&lt;/span&gt;)) (&lt;span style=&#34;color:#a6e22e&#34;&gt;go-until&lt;/span&gt; (* x &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;)) x))
-
-&lt;span style=&#34;color:#75715e&#34;&gt;;; Modified middle square&lt;/span&gt;
-(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;k12&lt;/span&gt; x iterations)
-  (&lt;span style=&#34;color:#a6e22e&#34;&gt;do-algorithm-k&lt;/span&gt; (modulo (floor (* x (/ (- x &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;) (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;)))) (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;)) (- iterations &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)))
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The results however random seeming do present a problem:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&amp;gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;algorithm-k 1&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
-&lt;span style=&#34;color:#ae81ff&#34;&gt;3831577709&lt;/span&gt;
-&amp;gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;algorithm-k 12345&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
-&lt;span style=&#34;color:#ae81ff&#34;&gt;5827337884&lt;/span&gt;
-&amp;gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;algorithm-k 6065038420&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
-&lt;span style=&#34;color:#ae81ff&#34;&gt;6065038420&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The first two examples produce what one might expect, but the third produces itself. Knuth points out that the algorithm happens to degenerate to 6065038420, with the lesson being:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-scheme&#34; data-lang=&#34;scheme&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;#&lt;/span&gt;lang racket
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;algorithm-k&lt;/span&gt; x)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  (&lt;span style=&#34;color:#a6e22e&#34;&gt;do-algorithm-k&lt;/span&gt; x (+ &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; (floor (/ x (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;9&lt;/span&gt;))))))
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;ns (&lt;span style=&#34;color:#a6e22e&#34;&gt;variable-reference-&amp;gt;namespace&lt;/span&gt; (&lt;span style=&#34;color:#f92672&#34;&gt;#&lt;/span&gt;%variable-reference)))
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;string-&amp;gt;procedure&lt;/span&gt; s)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  (&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;sym (string-&amp;gt;symbol s))
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  (eval sym ns))
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;do-algorithm-k&lt;/span&gt; x iterations)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  (&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;step (&lt;span style=&#34;color:#a6e22e&#34;&gt;string-append&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;k&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                (&lt;span style=&#34;color:#a6e22e&#34;&gt;number-&amp;gt;string&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                 (+ (modulo (floor (/ x (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;8&lt;/span&gt;))) &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;) &lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;))))
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  (&lt;span style=&#34;color:#66d9ef&#34;&gt;if &lt;/span&gt;(eq? iterations &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      x
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      ((&lt;span style=&#34;color:#a6e22e&#34;&gt;string-&amp;gt;procedure&lt;/span&gt; step) x iterations)))
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;;; Ensure &amp;gt;= 5 x 10^9&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;k3&lt;/span&gt; x iterations)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  (&lt;span style=&#34;color:#66d9ef&#34;&gt;if &lt;/span&gt;(&amp;gt; x &lt;span style=&#34;color:#ae81ff&#34;&gt;5000000000&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      (&lt;span style=&#34;color:#a6e22e&#34;&gt;k4&lt;/span&gt; x iterations)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      (&lt;span style=&#34;color:#a6e22e&#34;&gt;k4&lt;/span&gt; (+ x &lt;span style=&#34;color:#ae81ff&#34;&gt;5000000000&lt;/span&gt;) iterations)))
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;;; Middle square&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;k4&lt;/span&gt; x iterations)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  (&lt;span style=&#34;color:#a6e22e&#34;&gt;k5&lt;/span&gt; (modulo (floor (/ (expt x &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;) (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;))) (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;)) iterations))
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;;; Multiply&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;k5&lt;/span&gt; x iterations)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  (&lt;span style=&#34;color:#a6e22e&#34;&gt;k6&lt;/span&gt; (modulo (* x &lt;span style=&#34;color:#ae81ff&#34;&gt;1001001001&lt;/span&gt;) (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;)) iterations))
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;;; Psuedo-complement&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;k6&lt;/span&gt; x iterations)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  (&lt;span style=&#34;color:#66d9ef&#34;&gt;if &lt;/span&gt;(&amp;lt; x &lt;span style=&#34;color:#ae81ff&#34;&gt;100000000&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      (&lt;span style=&#34;color:#a6e22e&#34;&gt;k7&lt;/span&gt; (+ x &lt;span style=&#34;color:#ae81ff&#34;&gt;9814055677&lt;/span&gt;) iterations)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      (&lt;span style=&#34;color:#a6e22e&#34;&gt;k7&lt;/span&gt; (- (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;) x) iterations)))
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;;; Interchange halves&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;;; ie 1234567890 -&amp;gt; 6789012345&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;k7&lt;/span&gt; x iterations)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  (&lt;span style=&#34;color:#a6e22e&#34;&gt;k8&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;+&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;       (* (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;) (modulo x (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;)))
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;       (floor (/ x (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;)))) iterations))
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;;; Multiply / same as k5&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;k8&lt;/span&gt; x iterations)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  (&lt;span style=&#34;color:#a6e22e&#34;&gt;k9&lt;/span&gt; (modulo (* x &lt;span style=&#34;color:#ae81ff&#34;&gt;1001001001&lt;/span&gt;) (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;)) iterations))
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;;; Decrease digits&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;k9&lt;/span&gt; x iterations)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  (&lt;span style=&#34;color:#a6e22e&#34;&gt;k10&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;sub-one&lt;/span&gt; x &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;) iterations))
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;sub-one&lt;/span&gt; x sum mult)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  (&lt;span style=&#34;color:#66d9ef&#34;&gt;if &lt;/span&gt;(eq? x &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      sum
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      (&lt;span style=&#34;color:#66d9ef&#34;&gt;if &lt;/span&gt;(eq? (modulo x &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;) &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;          (&lt;span style=&#34;color:#a6e22e&#34;&gt;sub-one&lt;/span&gt; (floor (/ x &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;)) (+ (* (modulo x &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;) (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; mult)) sum) (+ &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; mult))
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;          (&lt;span style=&#34;color:#a6e22e&#34;&gt;sub-one&lt;/span&gt; (floor (/ x &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;)) (+ (* (- (modulo x &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;) &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;) (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; mult)) sum) (+ &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; mult)))))
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;;; 99999 modify&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;k10&lt;/span&gt; x iterations)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  (&lt;span style=&#34;color:#66d9ef&#34;&gt;if &lt;/span&gt;(&amp;lt; x (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;))
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      (&lt;span style=&#34;color:#a6e22e&#34;&gt;k11&lt;/span&gt; (+ (expt x &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;) &lt;span style=&#34;color:#ae81ff&#34;&gt;99999&lt;/span&gt;) iterations)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      (&lt;span style=&#34;color:#a6e22e&#34;&gt;k11&lt;/span&gt; (- x &lt;span style=&#34;color:#ae81ff&#34;&gt;99999&lt;/span&gt;) iterations)))
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;;; Normalize&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;k11&lt;/span&gt; x iterations)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  (&lt;span style=&#34;color:#a6e22e&#34;&gt;k12&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;go-until&lt;/span&gt; x) iterations))
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;go-until&lt;/span&gt; x)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  (&lt;span style=&#34;color:#66d9ef&#34;&gt;if &lt;/span&gt;(&amp;lt; x (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;9&lt;/span&gt;)) (&lt;span style=&#34;color:#a6e22e&#34;&gt;go-until&lt;/span&gt; (* x &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;)) x))
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;;; Modified middle square&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;k12&lt;/span&gt; x iterations)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  (&lt;span style=&#34;color:#a6e22e&#34;&gt;do-algorithm-k&lt;/span&gt; (modulo (floor (* x (/ (- x &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;) (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;)))) (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;)) (- iterations &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)))
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The results however random seeming do present a problem:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&amp;gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;algorithm-k 1&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;3831577709&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&amp;gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;algorithm-k 12345&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;5827337884&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&amp;gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;algorithm-k 6065038420&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;6065038420&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The first two examples produce what one might expect, but the third produces itself. Knuth points out that the algorithm happens to degenerate to 6065038420, with the lesson being:&lt;/p&gt;
 &lt;p&gt;&lt;em&gt;&amp;ldquo;Random numbers should not be generated with a method chosen at random&amp;rdquo;&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;Besides coincidentally degenerating to a seemingly random number, Algorithm K has a number of other downsides, it&amp;rsquo;s difficult to implement and because it iterates a certain amount of times depending on the input, takes a relatively long time to produce a single random number. Somewhere inside that complexity there is a reason why the generator degenerates to 6065038420. In order to be usable we need to be able to easily prove that won&amp;rsquo;t happen. The key take away from that is that we need this to be fast and simple.&lt;/p&gt;
 &lt;h3 id=&#34;linear-congruential-generator&#34;&gt;Linear Congruential Generator&lt;/h3&gt;
 &lt;p&gt;The most common pseudorandom number generator (according to Knuth) is a &lt;a href=&#34;https://en.wikipedia.org/wiki/Linear_congruential_generator&#34;&gt;Linear congruential generator&lt;/a&gt;, which has the following equation:&lt;/p&gt;
 &lt;p&gt;&lt;em&gt;Xn + 1 = (a * Xn + c) mod m&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;Unlike the previous algorithm, the equation isn&amp;rsquo;t difficult to explain; numbers for m,a, and c are chosen and set by the language or library designers (hopefully not randomly) and a seed is chosen for the first value of Xn. This being a recurrence relation, the result of each run then becomes the next seed or starting value for a subsequent run. You can see this in the code below:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-scheme&#34; data-lang=&#34;scheme&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;#&lt;/span&gt;lang racket
-
-(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;next (&lt;span style=&#34;color:#a6e22e&#34;&gt;current-seconds&lt;/span&gt;))
-
-(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;my-random&lt;/span&gt;)
-  (&lt;span style=&#34;color:#66d9ef&#34;&gt;set! &lt;/span&gt;next (&lt;span style=&#34;color:#a6e22e&#34;&gt;modulo&lt;/span&gt;
-              (+ (* next &lt;span style=&#34;color:#ae81ff&#34;&gt;6364136223846793005&lt;/span&gt;) &lt;span style=&#34;color:#ae81ff&#34;&gt;1442695040888963407&lt;/span&gt;)
-              (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;64&lt;/span&gt;)))
-  next)
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You can see the output this produces from the racket repl here:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&amp;gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;my-random&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
-&lt;span style=&#34;color:#ae81ff&#34;&gt;14843871667761315205&lt;/span&gt;
-&amp;gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;my-random&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
-&lt;span style=&#34;color:#ae81ff&#34;&gt;534325907729616048&lt;/span&gt;
-&amp;gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;my-random&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
-&lt;span style=&#34;color:#ae81ff&#34;&gt;5734414832404007999&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This isn&amp;rsquo;t how Racket generates its random numbers (it uses an implementation of the &lt;a href=&#34;https://github.com/racket/racket/blob/5bb837661c12a9752c6a99f952c0e1b267645b33/racket/src/cs/rumble/random.ss&#34;&gt;MRG32k3a algorithm&lt;/a&gt;), however this method is used by other languages such as the function defined in &lt;a href=&#34;https://sourceware.org/git/?p=glibc.git;a=blob;f=stdlib/random_r.c;hb=glibc-2.26#l362&#34;&gt;glibc&lt;/a&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-scheme&#34; data-lang=&#34;scheme&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;#&lt;/span&gt;lang racket
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;next (&lt;span style=&#34;color:#a6e22e&#34;&gt;current-seconds&lt;/span&gt;))
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;my-random&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  (&lt;span style=&#34;color:#66d9ef&#34;&gt;set! &lt;/span&gt;next (&lt;span style=&#34;color:#a6e22e&#34;&gt;modulo&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;              (+ (* next &lt;span style=&#34;color:#ae81ff&#34;&gt;6364136223846793005&lt;/span&gt;) &lt;span style=&#34;color:#ae81ff&#34;&gt;1442695040888963407&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;              (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;64&lt;/span&gt;)))
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  next)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You can see the output this produces from the racket repl here:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&amp;gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;my-random&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;14843871667761315205&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&amp;gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;my-random&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;534325907729616048&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&amp;gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;my-random&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;5734414832404007999&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This isn&amp;rsquo;t how Racket generates its random numbers (it uses an implementation of the &lt;a href=&#34;https://github.com/racket/racket/blob/5bb837661c12a9752c6a99f952c0e1b267645b33/racket/src/cs/rumble/random.ss&#34;&gt;MRG32k3a algorithm&lt;/a&gt;), however this method is used by other languages such as the function defined in &lt;a href=&#34;https://sourceware.org/git/?p=glibc.git;a=blob;f=stdlib/random_r.c;hb=glibc-2.26#l362&#34;&gt;glibc&lt;/a&gt;&lt;/p&gt;
 &lt;h4 id=&#34;choosing-our-m-and-a-values&#34;&gt;Choosing our &lt;em&gt;m&lt;/em&gt; and &lt;em&gt;a&lt;/em&gt; values&lt;/h4&gt;
 &lt;p&gt;It&amp;rsquo;s important to note here that the numbers used above were not chosen by random, in particular it is important to pay extra attention to the numbers we choose for &lt;em&gt;m&lt;/em&gt; and &lt;em&gt;a&lt;/em&gt;.&lt;/p&gt;
 &lt;ul&gt;
@@ -165,326 +165,326 @@
 &lt;h3 id=&#34;running-some-tests&#34;&gt;Running some tests&lt;/h3&gt;
 &lt;p&gt;Reading about these tests was interesting, but what would be more interesting is to run it on the two generators I had used above, as well as RANDU which is shown below. Comparing the results should highlight the differences between the generators that we expect to preform well, and those that we know will preform poorly. There are a number of random number generator testers out there but the one I used was &lt;code&gt;dieharder&lt;/code&gt; based on a suite of tests called diehard. For each run I generated 1,000,0000 random numbers (algorithm k took significantly longer ~20 min) and fed it to diehard. You can see the results here:&lt;/p&gt;
 &lt;h1 id=&#34;standard-lcg&#34;&gt;Standard LCG&lt;/h1&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#=============================================================================#&lt;/span&gt;
-&lt;span style=&#34;color:#75715e&#34;&gt;#            dieharder version 3.31.1 Copyright 2003 Robert G. Brown          #&lt;/span&gt;
-&lt;span style=&#34;color:#75715e&#34;&gt;#=============================================================================#&lt;/span&gt;
-   rng_name    |           filename             |rands/second|
-     file_input|                   example.input|  6.15e+06  |
-&lt;span style=&#34;color:#75715e&#34;&gt;#=============================================================================#&lt;/span&gt;
-        test_name   |ntup| tsamples |psamples|  p-value |Assessment
-&lt;span style=&#34;color:#75715e&#34;&gt;#=============================================================================#&lt;/span&gt;
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 1 times&lt;/span&gt;
-   diehard_birthdays|   0|       100|     100|0.72874473|  PASSED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 11 times&lt;/span&gt;
-      diehard_operm5|   0|   1000000|     100|0.00008973|   WEAK   
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 24 times&lt;/span&gt;
-  diehard_rank_32x32|   0|     40000|     100|0.24249094|  PASSED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 30 times&lt;/span&gt;
-    diehard_rank_6x8|   0|    100000|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 32 times&lt;/span&gt;
-   diehard_bitstream|   0|   2097152|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 53 times&lt;/span&gt;
-        diehard_opso|   0|   2097152|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 67 times&lt;/span&gt;
-        diehard_oqso|   0|   2097152|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 74 times&lt;/span&gt;
-         diehard_dna|   0|   2097152|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 74 times&lt;/span&gt;
-diehard_count_1s_str|   0|    256000|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 87 times&lt;/span&gt;
-diehard_count_1s_byt|   0|    256000|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 87 times&lt;/span&gt;
- diehard_parking_lot|   0|     12000|     100|0.33164281|  PASSED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 88 times&lt;/span&gt;
-    diehard_2dsphere|   2|      8000|     100|0.08003531|  PASSED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 88 times&lt;/span&gt;
-    diehard_3dsphere|   3|      4000|     100|0.55288986|  PASSED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 111 times&lt;/span&gt;
-     diehard_squeeze|   0|    100000|     100|0.00371770|   WEAK   
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 111 times&lt;/span&gt;
-        diehard_sums|   0|       100|     100|0.06120371|  PASSED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 112 times&lt;/span&gt;
-        diehard_runs|   0|    100000|     100|0.35781871|  PASSED  
-        diehard_runs|   0|    100000|     100|0.07426726|  PASSED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 125 times&lt;/span&gt;
-       diehard_craps|   0|    200000|     100|0.00004611|   WEAK   
-       diehard_craps|   0|    200000|     100|0.44395534|  PASSED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 325 times&lt;/span&gt;
- marsaglia_tsang_gcd|   0|  10000000|     100|0.00000000|  FAILED  
- marsaglia_tsang_gcd|   0|  10000000|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 326 times&lt;/span&gt;
-         sts_monobit|   1|    100000|     100|0.34446776|  PASSED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 327 times&lt;/span&gt;
-            sts_runs|   2|    100000|     100|0.34889544|  PASSED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 330 times&lt;/span&gt;
-         rgb_bitdist|   1|    100000|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 334 times&lt;/span&gt;
-         rgb_bitdist|   2|    100000|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 340 times&lt;/span&gt;
-         rgb_bitdist|   3|    100000|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 348 times&lt;/span&gt;
-         rgb_bitdist|   4|    100000|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 358 times&lt;/span&gt;
-         rgb_bitdist|   5|    100000|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 370 times&lt;/span&gt;
-         rgb_bitdist|   6|    100000|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 384 times&lt;/span&gt;
-         rgb_bitdist|   7|    100000|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 400 times&lt;/span&gt;
-         rgb_bitdist|   8|    100000|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 418 times&lt;/span&gt;
-         rgb_bitdist|   9|    100000|     100|0.00005693|   WEAK   
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 438 times&lt;/span&gt;
-         rgb_bitdist|  10|    100000|     100|0.53597412|  PASSED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 460 times&lt;/span&gt;
-         rgb_bitdist|  11|    100000|     100|0.89275780|  PASSED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 484 times&lt;/span&gt;
-         rgb_bitdist|  12|    100000|     100|0.01596294|  PASSED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 486 times&lt;/span&gt;
-rgb_minimum_distance|   2|     10000|    1000|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 489 times&lt;/span&gt;
-rgb_minimum_distance|   3|     10000|    1000|0.00020551|   WEAK   
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 493 times&lt;/span&gt;
-rgb_minimum_distance|   4|     10000|    1000|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 498 times&lt;/span&gt;
-rgb_minimum_distance|   5|     10000|    1000|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 500 times&lt;/span&gt;
-    rgb_permutations|   2|    100000|     100|0.27181166|  PASSED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 503 times&lt;/span&gt;
-    rgb_permutations|   3|    100000|     100|0.67601712|  PASSED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 507 times&lt;/span&gt;
-    rgb_permutations|   4|    100000|     100|0.05999982|  PASSED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 512 times&lt;/span&gt;
-    rgb_permutations|   5|    100000|     100|0.16764489|  PASSED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 522 times&lt;/span&gt;
-      rgb_lagged_sum|   0|   1000000|     100|0.00003809|   WEAK   
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 542 times&lt;/span&gt;
-      rgb_lagged_sum|   1|   1000000|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 572 times&lt;/span&gt;
-      rgb_lagged_sum|   2|   1000000|     100|0.00000015|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 612 times&lt;/span&gt;
-      rgb_lagged_sum|   3|   1000000|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 662 times&lt;/span&gt;
-      rgb_lagged_sum|   4|   1000000|     100|0.00000000|  FAILED
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h1 id=&#34;randu&#34;&gt;RANDU&lt;/h1&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-scheme&#34; data-lang=&#34;scheme&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;#&lt;/span&gt;lang racket
-
-(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;next &lt;span style=&#34;color:#ae81ff&#34;&gt;1090815429&lt;/span&gt;)
-
-(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;randu&lt;/span&gt;)
-  (&lt;span style=&#34;color:#66d9ef&#34;&gt;set! &lt;/span&gt;next (modulo (* next &lt;span style=&#34;color:#ae81ff&#34;&gt;65539&lt;/span&gt;) (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;31&lt;/span&gt;)))
-  next)
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;!-- raw HTML omitted --&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#=============================================================================#&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#            dieharder version 3.31.1 Copyright 2003 Robert G. Brown          #&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#=============================================================================#&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;   rng_name    |           filename             |rands/second|
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;     file_input|                   example.input|  6.15e+06  |
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#=============================================================================#&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        test_name   |ntup| tsamples |psamples|  p-value |Assessment
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#=============================================================================#&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 1 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;   diehard_birthdays|   0|       100|     100|0.72874473|  PASSED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 11 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      diehard_operm5|   0|   1000000|     100|0.00008973|   WEAK   
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 24 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  diehard_rank_32x32|   0|     40000|     100|0.24249094|  PASSED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 30 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    diehard_rank_6x8|   0|    100000|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 32 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;   diehard_bitstream|   0|   2097152|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 53 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        diehard_opso|   0|   2097152|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 67 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        diehard_oqso|   0|   2097152|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 74 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;         diehard_dna|   0|   2097152|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 74 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;diehard_count_1s_str|   0|    256000|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 87 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;diehard_count_1s_byt|   0|    256000|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 87 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; diehard_parking_lot|   0|     12000|     100|0.33164281|  PASSED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 88 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    diehard_2dsphere|   2|      8000|     100|0.08003531|  PASSED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 88 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    diehard_3dsphere|   3|      4000|     100|0.55288986|  PASSED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 111 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;     diehard_squeeze|   0|    100000|     100|0.00371770|   WEAK   
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 111 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        diehard_sums|   0|       100|     100|0.06120371|  PASSED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 112 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        diehard_runs|   0|    100000|     100|0.35781871|  PASSED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        diehard_runs|   0|    100000|     100|0.07426726|  PASSED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 125 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;       diehard_craps|   0|    200000|     100|0.00004611|   WEAK   
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;       diehard_craps|   0|    200000|     100|0.44395534|  PASSED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 325 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; marsaglia_tsang_gcd|   0|  10000000|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; marsaglia_tsang_gcd|   0|  10000000|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 326 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;         sts_monobit|   1|    100000|     100|0.34446776|  PASSED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 327 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            sts_runs|   2|    100000|     100|0.34889544|  PASSED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 330 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;         rgb_bitdist|   1|    100000|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 334 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;         rgb_bitdist|   2|    100000|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 340 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;         rgb_bitdist|   3|    100000|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 348 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;         rgb_bitdist|   4|    100000|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 358 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;         rgb_bitdist|   5|    100000|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 370 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;         rgb_bitdist|   6|    100000|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 384 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;         rgb_bitdist|   7|    100000|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 400 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;         rgb_bitdist|   8|    100000|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 418 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;         rgb_bitdist|   9|    100000|     100|0.00005693|   WEAK   
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 438 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;         rgb_bitdist|  10|    100000|     100|0.53597412|  PASSED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 460 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;         rgb_bitdist|  11|    100000|     100|0.89275780|  PASSED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 484 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;         rgb_bitdist|  12|    100000|     100|0.01596294|  PASSED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 486 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;rgb_minimum_distance|   2|     10000|    1000|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 489 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;rgb_minimum_distance|   3|     10000|    1000|0.00020551|   WEAK   
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 493 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;rgb_minimum_distance|   4|     10000|    1000|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 498 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;rgb_minimum_distance|   5|     10000|    1000|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 500 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    rgb_permutations|   2|    100000|     100|0.27181166|  PASSED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 503 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    rgb_permutations|   3|    100000|     100|0.67601712|  PASSED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 507 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    rgb_permutations|   4|    100000|     100|0.05999982|  PASSED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 512 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    rgb_permutations|   5|    100000|     100|0.16764489|  PASSED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 522 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      rgb_lagged_sum|   0|   1000000|     100|0.00003809|   WEAK   
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 542 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      rgb_lagged_sum|   1|   1000000|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 572 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      rgb_lagged_sum|   2|   1000000|     100|0.00000015|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 612 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      rgb_lagged_sum|   3|   1000000|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 662 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      rgb_lagged_sum|   4|   1000000|     100|0.00000000|  FAILED
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h1 id=&#34;randu&#34;&gt;RANDU&lt;/h1&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-scheme&#34; data-lang=&#34;scheme&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;#&lt;/span&gt;lang racket
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;next &lt;span style=&#34;color:#ae81ff&#34;&gt;1090815429&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;randu&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  (&lt;span style=&#34;color:#66d9ef&#34;&gt;set! &lt;/span&gt;next (modulo (* next &lt;span style=&#34;color:#ae81ff&#34;&gt;65539&lt;/span&gt;) (expt &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;31&lt;/span&gt;)))
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  next)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;!-- raw HTML omitted --&gt;
 &lt;h1 id=&#34;algorithm-k-1&#34;&gt;Algorithm-k&lt;/h1&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#=============================================================================#&lt;/span&gt;
-&lt;span style=&#34;color:#75715e&#34;&gt;#            dieharder version 3.31.1 Copyright 2003 Robert G. Brown          #&lt;/span&gt;
-&lt;span style=&#34;color:#75715e&#34;&gt;#=============================================================================#&lt;/span&gt;
-   rng_name    |           filename             |rands/second|
-     file_input|                    backup.input|  7.99e+06  |
-&lt;span style=&#34;color:#75715e&#34;&gt;#=============================================================================#&lt;/span&gt;
-        test_name   |ntup| tsamples |psamples|  p-value |Assessment
-&lt;span style=&#34;color:#75715e&#34;&gt;#=============================================================================#&lt;/span&gt;
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 1 times&lt;/span&gt;
-   diehard_birthdays|   0|       100|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 11 times&lt;/span&gt;
-      diehard_operm5|   0|   1000000|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 24 times&lt;/span&gt;
-  diehard_rank_32x32|   0|     40000|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 30 times&lt;/span&gt;
-    diehard_rank_6x8|   0|    100000|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 32 times&lt;/span&gt;
-   diehard_bitstream|   0|   2097152|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 53 times&lt;/span&gt;
-        diehard_opso|   0|   2097152|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 67 times&lt;/span&gt;
-        diehard_oqso|   0|   2097152|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 74 times&lt;/span&gt;
-         diehard_dna|   0|   2097152|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 74 times&lt;/span&gt;
-diehard_count_1s_str|   0|    256000|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 87 times&lt;/span&gt;
-diehard_count_1s_byt|   0|    256000|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 87 times&lt;/span&gt;
- diehard_parking_lot|   0|     12000|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 88 times&lt;/span&gt;
-    diehard_2dsphere|   2|      8000|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 88 times&lt;/span&gt;
-    diehard_3dsphere|   3|      4000|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 108 times&lt;/span&gt;
-     diehard_squeeze|   0|    100000|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 108 times&lt;/span&gt;
-        diehard_sums|   0|       100|     100|0.00000018|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 109 times&lt;/span&gt;
-        diehard_runs|   0|    100000|     100|0.00000000|  FAILED  
-        diehard_runs|   0|    100000|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 123 times&lt;/span&gt;
-       diehard_craps|   0|    200000|     100|0.00000000|  FAILED  
-       diehard_craps|   0|    200000|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 323 times&lt;/span&gt;
- marsaglia_tsang_gcd|   0|  10000000|     100|0.00000000|  FAILED  
- marsaglia_tsang_gcd|   0|  10000000|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 324 times&lt;/span&gt;
-         sts_monobit|   1|    100000|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 325 times&lt;/span&gt;
-      diehard_operm5|   0|   1000000|     100|0.34393548|  PASSED  
-            sts_runs|   2|    100000|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 328 times&lt;/span&gt;
-         rgb_bitdist|   1|    100000|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 332 times&lt;/span&gt;
-         rgb_bitdist|   2|    100000|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 338 times&lt;/span&gt;
-         rgb_bitdist|   3|    100000|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 346 times&lt;/span&gt;
-         rgb_bitdist|   4|    100000|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 356 times&lt;/span&gt;
-         rgb_bitdist|   5|    100000|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 368 times&lt;/span&gt;
-         rgb_bitdist|   6|    100000|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 382 times&lt;/span&gt;
-         rgb_bitdist|   7|    100000|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 398 times&lt;/span&gt;
-         rgb_bitdist|   8|    100000|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 416 times&lt;/span&gt;
-         rgb_bitdist|   9|    100000|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 436 times&lt;/span&gt;
-         rgb_bitdist|  10|    100000|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 458 times&lt;/span&gt;
-         rgb_bitdist|  11|    100000|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 482 times&lt;/span&gt;
-         rgb_bitdist|  12|    100000|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 484 times&lt;/span&gt;
-rgb_minimum_distance|   2|     10000|    1000|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 487 times&lt;/span&gt;
-rgb_minimum_distance|   3|     10000|    1000|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 491 times&lt;/span&gt;
-rgb_minimum_distance|   4|     10000|    1000|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 496 times&lt;/span&gt;
-rgb_minimum_distance|   5|     10000|    1000|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 498 times&lt;/span&gt;
-    rgb_permutations|   2|    100000|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 501 times&lt;/span&gt;
-    rgb_permutations|   3|    100000|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 505 times&lt;/span&gt;
-    rgb_permutations|   4|    100000|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 510 times&lt;/span&gt;
-    rgb_permutations|   5|    100000|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 520 times&lt;/span&gt;
-      rgb_lagged_sum|   0|   1000000|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 540 times&lt;/span&gt;
-      rgb_lagged_sum|   1|   1000000|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 570 times&lt;/span&gt;
-      rgb_lagged_sum|   2|   1000000|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 610 times&lt;/span&gt;
-      rgb_lagged_sum|   3|   1000000|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 660 times&lt;/span&gt;
-      rgb_lagged_sum|   4|   1000000|     100|0.00000000|  FAILED
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;There&amp;rsquo;s already quite a bit to digest here so I didn&amp;rsquo;t include all of the test results as the first few are enough to illustrate the differences between the three algorithms. One thing you will notice is that the standard LCG used actually failed a lot of tests. After doing a little testing and some digging it seems that dieharder will also fail these tests with its own generator with the same amount of numbers. In fact, you can really only expect good results with about 10 million or more numbers, but because diehard runs on a single cpu this would have taken a considerable amount of time to run. The comparison is really what we&amp;rsquo;re after and from the results it&amp;rsquo;s clear that algorithm-k is not suitable, nor is RANDU much better. I wanted to be able to see what kind of results I would see from running a much larger set so I ran one last run with 100,000,000 which shows that the lcg faired a little bit better.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#=============================================================================#&lt;/span&gt;
-&lt;span style=&#34;color:#75715e&#34;&gt;#            dieharder version 3.31.1 Copyright 2003 Robert G. Brown          #&lt;/span&gt;
-&lt;span style=&#34;color:#75715e&#34;&gt;#=============================================================================#&lt;/span&gt;
-   rng_name    |           filename             |rands/second|
-     file_input|                   example.input|  6.16e+06  |
-&lt;span style=&#34;color:#75715e&#34;&gt;#=============================================================================#&lt;/span&gt;
-        test_name   |ntup| tsamples |psamples|  p-value |Assessment
-&lt;span style=&#34;color:#75715e&#34;&gt;#=============================================================================#&lt;/span&gt;
-   diehard_birthdays|   0|       100|     100|0.50369944|  PASSED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 1 times&lt;/span&gt;
-      diehard_operm5|   0|   1000000|     100|0.34393548|  PASSED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 2 times&lt;/span&gt;
-  diehard_rank_32x32|   0|     40000|     100|0.76284541|  PASSED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 3 times&lt;/span&gt;
-    diehard_rank_6x8|   0|    100000|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 3 times&lt;/span&gt;
-   diehard_bitstream|   0|   2097152|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 5 times&lt;/span&gt;
-        diehard_opso|   0|   2097152|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 6 times&lt;/span&gt;
-        diehard_oqso|   0|   2097152|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 7 times&lt;/span&gt;
-         diehard_dna|   0|   2097152|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 7 times&lt;/span&gt;
-diehard_count_1s_str|   0|    256000|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 8 times&lt;/span&gt;
-diehard_count_1s_byt|   0|    256000|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 8 times&lt;/span&gt;
- diehard_parking_lot|   0|     12000|     100|0.82658516|  PASSED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 8 times&lt;/span&gt;
-    diehard_2dsphere|   2|      8000|     100|0.48942059|  PASSED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 8 times&lt;/span&gt;
-    diehard_3dsphere|   3|      4000|     100|0.95108230|  PASSED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 11 times&lt;/span&gt;
-     diehard_squeeze|   0|    100000|     100|0.38225241|  PASSED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 11 times&lt;/span&gt;
-        diehard_sums|   0|       100|     100|0.07389024|  PASSED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 11 times&lt;/span&gt;
-        diehard_runs|   0|    100000|     100|0.69622840|  PASSED  
-        diehard_runs|   0|    100000|     100|0.74440767|  PASSED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 12 times&lt;/span&gt;
-       diehard_craps|   0|    200000|     100|0.34755313|  PASSED  
-       diehard_craps|   0|    200000|     100|0.93778967|  PASSED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 32 times&lt;/span&gt;
- marsaglia_tsang_gcd|   0|  10000000|     100|0.00000000|  FAILED  
- marsaglia_tsang_gcd|   0|  10000000|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 32 times&lt;/span&gt;
-         sts_monobit|   1|    100000|     100|0.13113454|  PASSED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 32 times&lt;/span&gt;
-            sts_runs|   2|    100000|     100|0.22502954|  PASSED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 33 times&lt;/span&gt;
-         rgb_bitdist|   1|    100000|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 33 times&lt;/span&gt;
-         rgb_bitdist|   2|    100000|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 34 times&lt;/span&gt;
-         rgb_bitdist|   3|    100000|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 34 times&lt;/span&gt;
-         rgb_bitdist|   4|    100000|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 35 times&lt;/span&gt;
-         rgb_bitdist|   5|    100000|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 37 times&lt;/span&gt;
-         rgb_bitdist|   6|    100000|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 38 times&lt;/span&gt;
-         rgb_bitdist|   7|    100000|     100|0.00000000|  FAILED  
-^&lt;span style=&#34;color:#f92672&#34;&gt;[[&lt;/span&gt;1;5D# The file file_input was rewound &lt;span style=&#34;color:#ae81ff&#34;&gt;40&lt;/span&gt; times
-         rgb_bitdist|   8|    100000|     100|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 41 times&lt;/span&gt;
-         rgb_bitdist|   9|    100000|     100|0.00048263|   WEAK   
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 43 times&lt;/span&gt;
-         rgb_bitdist|  10|    100000|     100|0.00000207|   WEAK   
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 46 times&lt;/span&gt;
-         rgb_bitdist|  11|    100000|     100|0.11712560|  PASSED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 48 times&lt;/span&gt;
-         rgb_bitdist|  12|    100000|     100|0.00070481|   WEAK   
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 48 times&lt;/span&gt;
-rgb_minimum_distance|   2|     10000|    1000|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 48 times&lt;/span&gt;
-rgb_minimum_distance|   3|     10000|    1000|0.00073621|   WEAK   
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 49 times&lt;/span&gt;
-rgb_minimum_distance|   4|     10000|    1000|0.00000000|  FAILED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 49 times&lt;/span&gt;
-rgb_minimum_distance|   5|     10000|    1000|0.00000148|   WEAK   
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 50 times&lt;/span&gt;
-    rgb_permutations|   2|    100000|     100|0.64531526|  PASSED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 50 times&lt;/span&gt;
-    rgb_permutations|   3|    100000|     100|0.12491885|  PASSED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 50 times&lt;/span&gt;
-    rgb_permutations|   4|    100000|     100|0.29544943|  PASSED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 51 times&lt;/span&gt;
-    rgb_permutations|   5|    100000|     100|0.57519225|  PASSED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 52 times&lt;/span&gt;
-      rgb_lagged_sum|   0|   1000000|     100|0.42557400|  PASSED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 54 times&lt;/span&gt;
-      rgb_lagged_sum|   1|   1000000|     100|0.94028320|  PASSED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 57 times&lt;/span&gt;
-      rgb_lagged_sum|   2|   1000000|     100|0.34329913|  PASSED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 61 times&lt;/span&gt;
-      rgb_lagged_sum|   3|   1000000|     100|0.02887377|  PASSED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 66 times&lt;/span&gt;
-      rgb_lagged_sum|   4|   1000000|     100|0.02328575|  PASSED  
-&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 72 times&lt;/span&gt;
-      rgb_lagged_sum|   5|   1000000|     100|0.10863760|  PASSED  
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Here we can see the larger set actually did quite a bit better, passing where it was either weak or had even failed before. It&amp;rsquo;s not perfect of course, and certainly not suitable for cryptographic use but we can see that the generator works well enough. I would have liked to have run more tests and tried a few different random number generators, but testing with dieharder was taking quite a long time on my underpowered laptop CPU. Of course no generator is going to pass every test as Knuth states: &lt;em&gt;&amp;ldquo;A truly random sequence will exhibit local non-randomness&amp;rdquo;&lt;/em&gt;. Proving that a generator is suitable would require many more multiple runs on larger data sets. Only then might say that the PRNG is satisfiably random.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#=============================================================================#&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#            dieharder version 3.31.1 Copyright 2003 Robert G. Brown          #&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#=============================================================================#&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;   rng_name    |           filename             |rands/second|
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;     file_input|                    backup.input|  7.99e+06  |
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#=============================================================================#&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        test_name   |ntup| tsamples |psamples|  p-value |Assessment
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#=============================================================================#&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 1 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;   diehard_birthdays|   0|       100|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 11 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      diehard_operm5|   0|   1000000|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 24 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  diehard_rank_32x32|   0|     40000|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 30 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    diehard_rank_6x8|   0|    100000|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 32 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;   diehard_bitstream|   0|   2097152|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 53 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        diehard_opso|   0|   2097152|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 67 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        diehard_oqso|   0|   2097152|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 74 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;         diehard_dna|   0|   2097152|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 74 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;diehard_count_1s_str|   0|    256000|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 87 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;diehard_count_1s_byt|   0|    256000|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 87 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; diehard_parking_lot|   0|     12000|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 88 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    diehard_2dsphere|   2|      8000|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 88 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    diehard_3dsphere|   3|      4000|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 108 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;     diehard_squeeze|   0|    100000|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 108 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        diehard_sums|   0|       100|     100|0.00000018|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 109 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        diehard_runs|   0|    100000|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        diehard_runs|   0|    100000|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 123 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;       diehard_craps|   0|    200000|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;       diehard_craps|   0|    200000|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 323 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; marsaglia_tsang_gcd|   0|  10000000|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; marsaglia_tsang_gcd|   0|  10000000|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 324 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;         sts_monobit|   1|    100000|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 325 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      diehard_operm5|   0|   1000000|     100|0.34393548|  PASSED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            sts_runs|   2|    100000|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 328 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;         rgb_bitdist|   1|    100000|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 332 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;         rgb_bitdist|   2|    100000|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 338 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;         rgb_bitdist|   3|    100000|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 346 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;         rgb_bitdist|   4|    100000|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 356 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;         rgb_bitdist|   5|    100000|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 368 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;         rgb_bitdist|   6|    100000|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 382 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;         rgb_bitdist|   7|    100000|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 398 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;         rgb_bitdist|   8|    100000|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 416 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;         rgb_bitdist|   9|    100000|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 436 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;         rgb_bitdist|  10|    100000|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 458 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;         rgb_bitdist|  11|    100000|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 482 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;         rgb_bitdist|  12|    100000|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 484 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;rgb_minimum_distance|   2|     10000|    1000|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 487 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;rgb_minimum_distance|   3|     10000|    1000|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 491 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;rgb_minimum_distance|   4|     10000|    1000|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 496 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;rgb_minimum_distance|   5|     10000|    1000|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 498 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    rgb_permutations|   2|    100000|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 501 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    rgb_permutations|   3|    100000|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 505 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    rgb_permutations|   4|    100000|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 510 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    rgb_permutations|   5|    100000|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 520 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      rgb_lagged_sum|   0|   1000000|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 540 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      rgb_lagged_sum|   1|   1000000|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 570 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      rgb_lagged_sum|   2|   1000000|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 610 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      rgb_lagged_sum|   3|   1000000|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 660 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      rgb_lagged_sum|   4|   1000000|     100|0.00000000|  FAILED
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;There&amp;rsquo;s already quite a bit to digest here so I didn&amp;rsquo;t include all of the test results as the first few are enough to illustrate the differences between the three algorithms. One thing you will notice is that the standard LCG used actually failed a lot of tests. After doing a little testing and some digging it seems that dieharder will also fail these tests with its own generator with the same amount of numbers. In fact, you can really only expect good results with about 10 million or more numbers, but because diehard runs on a single cpu this would have taken a considerable amount of time to run. The comparison is really what we&amp;rsquo;re after and from the results it&amp;rsquo;s clear that algorithm-k is not suitable, nor is RANDU much better. I wanted to be able to see what kind of results I would see from running a much larger set so I ran one last run with 100,000,000 which shows that the lcg faired a little bit better.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#=============================================================================#&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#            dieharder version 3.31.1 Copyright 2003 Robert G. Brown          #&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#=============================================================================#&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;   rng_name    |           filename             |rands/second|
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;     file_input|                   example.input|  6.16e+06  |
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#=============================================================================#&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        test_name   |ntup| tsamples |psamples|  p-value |Assessment
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#=============================================================================#&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;   diehard_birthdays|   0|       100|     100|0.50369944|  PASSED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 1 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      diehard_operm5|   0|   1000000|     100|0.34393548|  PASSED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 2 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  diehard_rank_32x32|   0|     40000|     100|0.76284541|  PASSED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 3 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    diehard_rank_6x8|   0|    100000|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 3 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;   diehard_bitstream|   0|   2097152|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 5 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        diehard_opso|   0|   2097152|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 6 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        diehard_oqso|   0|   2097152|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 7 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;         diehard_dna|   0|   2097152|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 7 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;diehard_count_1s_str|   0|    256000|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 8 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;diehard_count_1s_byt|   0|    256000|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 8 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; diehard_parking_lot|   0|     12000|     100|0.82658516|  PASSED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 8 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    diehard_2dsphere|   2|      8000|     100|0.48942059|  PASSED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 8 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    diehard_3dsphere|   3|      4000|     100|0.95108230|  PASSED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 11 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;     diehard_squeeze|   0|    100000|     100|0.38225241|  PASSED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 11 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        diehard_sums|   0|       100|     100|0.07389024|  PASSED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 11 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        diehard_runs|   0|    100000|     100|0.69622840|  PASSED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        diehard_runs|   0|    100000|     100|0.74440767|  PASSED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 12 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;       diehard_craps|   0|    200000|     100|0.34755313|  PASSED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;       diehard_craps|   0|    200000|     100|0.93778967|  PASSED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 32 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; marsaglia_tsang_gcd|   0|  10000000|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; marsaglia_tsang_gcd|   0|  10000000|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 32 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;         sts_monobit|   1|    100000|     100|0.13113454|  PASSED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 32 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            sts_runs|   2|    100000|     100|0.22502954|  PASSED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 33 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;         rgb_bitdist|   1|    100000|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 33 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;         rgb_bitdist|   2|    100000|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 34 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;         rgb_bitdist|   3|    100000|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 34 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;         rgb_bitdist|   4|    100000|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 35 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;         rgb_bitdist|   5|    100000|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 37 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;         rgb_bitdist|   6|    100000|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 38 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;         rgb_bitdist|   7|    100000|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;^&lt;span style=&#34;color:#f92672&#34;&gt;[[&lt;/span&gt;1;5D# The file file_input was rewound &lt;span style=&#34;color:#ae81ff&#34;&gt;40&lt;/span&gt; times
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;         rgb_bitdist|   8|    100000|     100|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 41 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;         rgb_bitdist|   9|    100000|     100|0.00048263|   WEAK   
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 43 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;         rgb_bitdist|  10|    100000|     100|0.00000207|   WEAK   
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 46 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;         rgb_bitdist|  11|    100000|     100|0.11712560|  PASSED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 48 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;         rgb_bitdist|  12|    100000|     100|0.00070481|   WEAK   
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 48 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;rgb_minimum_distance|   2|     10000|    1000|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 48 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;rgb_minimum_distance|   3|     10000|    1000|0.00073621|   WEAK   
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 49 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;rgb_minimum_distance|   4|     10000|    1000|0.00000000|  FAILED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 49 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;rgb_minimum_distance|   5|     10000|    1000|0.00000148|   WEAK   
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 50 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    rgb_permutations|   2|    100000|     100|0.64531526|  PASSED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 50 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    rgb_permutations|   3|    100000|     100|0.12491885|  PASSED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 50 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    rgb_permutations|   4|    100000|     100|0.29544943|  PASSED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 51 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    rgb_permutations|   5|    100000|     100|0.57519225|  PASSED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 52 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      rgb_lagged_sum|   0|   1000000|     100|0.42557400|  PASSED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 54 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      rgb_lagged_sum|   1|   1000000|     100|0.94028320|  PASSED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 57 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      rgb_lagged_sum|   2|   1000000|     100|0.34329913|  PASSED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 61 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      rgb_lagged_sum|   3|   1000000|     100|0.02887377|  PASSED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 66 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      rgb_lagged_sum|   4|   1000000|     100|0.02328575|  PASSED  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The file file_input was rewound 72 times&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      rgb_lagged_sum|   5|   1000000|     100|0.10863760|  PASSED  
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Here we can see the larger set actually did quite a bit better, passing where it was either weak or had even failed before. It&amp;rsquo;s not perfect of course, and certainly not suitable for cryptographic use but we can see that the generator works well enough. I would have liked to have run more tests and tried a few different random number generators, but testing with dieharder was taking quite a long time on my underpowered laptop CPU. Of course no generator is going to pass every test as Knuth states: &lt;em&gt;&amp;ldquo;A truly random sequence will exhibit local non-randomness&amp;rdquo;&lt;/em&gt;. Proving that a generator is suitable would require many more multiple runs on larger data sets. Only then might say that the PRNG is satisfiably random.&lt;/p&gt;
 &lt;h2 id=&#34;not-so-random-musings&#34;&gt;Not So Random Musings&lt;/h2&gt;
 &lt;p&gt;In a set of infinite numbers we might expect to see 1,000,000 7&amp;rsquo;s or 8&amp;rsquo;s in a row at some point. Maybe the numbers, viewed in a single line would map to ascii values that could print the works of Shakespeare. It may not be desirable for applications, but it would be consistent with a truly random number generator. Though the math was certainly beyond me, the first half of volume 2 was incredibly interesting. If anything it&amp;rsquo;s made me question how random numbers are generated a little more, forcing me to dig through the random number generators that I have trusted. A simple mistake could result in unexpected deterministic behaviour. Though this is unlikely to be a problem in my day to day life as a web developer, it will still make me think the next time I need to rely on random behaviour. Further fueling my paranoia, Knuth gives some great advice to summarise the learnings of the chapter:&lt;/p&gt;
-&lt;p&gt;&lt;em&gt;&amp;ldquo;Look at the subroutine library of each computer installation in your organization, and replace the random number generators by good ones. Try to avoid being too shocked at what you find.&amp;quot;&lt;/em&gt;&lt;/p&gt;</content>
+&lt;p&gt;&lt;em&gt;&amp;ldquo;Look at the subroutine library of each computer installation in your organization, and replace the random number generators by good ones. Try to avoid being too shocked at what you find.&amp;rdquo;&lt;/em&gt;&lt;/p&gt;</content>
     </item>
     
     <item>
@@ -538,7 +538,7 @@ rgb_minimum_distance|   5|     10000|    1000|0.00000148|   WEAK
 &lt;p&gt;A large portion of this book is dedicated to exercises as well as the included solutions in the back. &lt;em&gt;Ugh, homework&lt;/em&gt;. One of the more helpful things that Knuth does is break down the relative difficulty of each problem using this notation:&lt;/p&gt;
 &lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;00 Immediate                        &amp;gt; Recommended
 10 Simple (one minute)                M Mathematically oriented
-20 Medium (15 minutes)                HM Requiring &amp;quot;higher math&amp;quot;
+20 Medium (15 minutes)                HM Requiring &amp;#34;higher math&amp;#34;
 30 Moderately Hard
 40 Term Project
 50 Research problem

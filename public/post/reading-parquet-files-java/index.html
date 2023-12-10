@@ -162,97 +162,97 @@
         <p>A simple way of reading Parquet files without the need to use Spark.</p>
 <p>I recently ran into an issue where I needed to read from <a href="https://parquet.apache.org/">Parquet</a> files in a simple way without having to use the entire Spark framework. Though inspecting the contents of a Parquet file turns out to be pretty simple using the <code>spark-shell</code>, doing so without the framework ended up being more difficult because of a lack of documentation about how to read the actual content of Parquet files, the columnar format used by Hadoop and Spark.</p>
 <p>If all you need to do is inspect the contents of a parquet file you can do so pretty easily if you already have spark set up like so</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">
-$ spark-shell
-scala&gt; val sqlContext <span style="color:#f92672">=</span> new org.apache.spark.sql.SQLContext<span style="color:#f92672">(</span>sc<span style="color:#f92672">)</span>
-scala&gt; val parqfile <span style="color:#f92672">=</span> sqlContext.read.parquet<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Objects.parquet&#34;</span><span style="color:#f92672">)</span>
-scala&gt; Parqfile.registerTempTable<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;object&#34;</span><span style="color:#f92672">)</span>
-scala&gt; val allrecords <span style="color:#f92672">=</span> sqlContext.sql<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;SELECT * FROM object&#34;</span><span style="color:#f92672">)</span>
-scala&gt; allrecords.show<span style="color:#f92672">()</span>
-</code></pre></div><p>However if that&rsquo;s not an option or you need a more programmatic way to inspect the elements you&rsquo;ll have to use the <a href="https://github.com/apache/parquet-mr">libraries internally used by Hadoop and Spark</a>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>$ spark-shell
+</span></span><span style="display:flex;"><span>scala&gt; val sqlContext <span style="color:#f92672">=</span> new org.apache.spark.sql.SQLContext<span style="color:#f92672">(</span>sc<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>scala&gt; val parqfile <span style="color:#f92672">=</span> sqlContext.read.parquet<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Objects.parquet&#34;</span><span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>scala&gt; Parqfile.registerTempTable<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;object&#34;</span><span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>scala&gt; val allrecords <span style="color:#f92672">=</span> sqlContext.sql<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;SELECT * FROM object&#34;</span><span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>scala&gt; allrecords.show<span style="color:#f92672">()</span>
+</span></span></code></pre></div><p>However if that&rsquo;s not an option or you need a more programmatic way to inspect the elements you&rsquo;ll have to use the <a href="https://github.com/apache/parquet-mr">libraries internally used by Hadoop and Spark</a>.</p>
 <p>If you&rsquo;re using Maven you&rsquo;ll want to get the following dependancies</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#f92672">&lt;dependencies&gt;</span>
-    <span style="color:#f92672">&lt;dependency&gt;</span>
-        <span style="color:#f92672">&lt;groupId&gt;</span>org.apache.parquet<span style="color:#f92672">&lt;/groupId&gt;</span>
-        <span style="color:#f92672">&lt;artifactId&gt;</span>parquet-avro<span style="color:#f92672">&lt;/artifactId&gt;</span>
-        <span style="color:#f92672">&lt;version&gt;</span>1.10.0<span style="color:#f92672">&lt;/version&gt;</span>
-    <span style="color:#f92672">&lt;/dependency&gt;</span>
-    <span style="color:#f92672">&lt;dependency&gt;</span>
-        <span style="color:#f92672">&lt;groupId&gt;</span>org.apache.hadoop<span style="color:#f92672">&lt;/groupId&gt;</span>
-        <span style="color:#f92672">&lt;artifactId&gt;</span>hadoop-common<span style="color:#f92672">&lt;/artifactId&gt;</span>
-        <span style="color:#f92672">&lt;version&gt;</span>3.1.0<span style="color:#f92672">&lt;/version&gt;</span>
-    <span style="color:#f92672">&lt;/dependency&gt;</span>
-<span style="color:#f92672">&lt;/dependencies&gt;</span>
-</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> org.apache.hadoop.conf.Configuration<span style="color:#f92672">;</span>
-<span style="color:#f92672">import</span> org.apache.hadoop.fs.Path<span style="color:#f92672">;</span>
-<span style="color:#f92672">import</span> org.apache.parquet.column.page.PageReadStore<span style="color:#f92672">;</span>
-<span style="color:#f92672">import</span> org.apache.parquet.example.data.simple.SimpleGroup<span style="color:#f92672">;</span>
-<span style="color:#f92672">import</span> org.apache.parquet.example.data.simple.convert.GroupRecordConverter<span style="color:#f92672">;</span>
-<span style="color:#f92672">import</span> org.apache.parquet.hadoop.ParquetFileReader<span style="color:#f92672">;</span>
-<span style="color:#f92672">import</span> org.apache.parquet.hadoop.util.HadoopInputFile<span style="color:#f92672">;</span>
-<span style="color:#f92672">import</span> org.apache.parquet.io.ColumnIOFactory<span style="color:#f92672">;</span>
-<span style="color:#f92672">import</span> org.apache.parquet.io.MessageColumnIO<span style="color:#f92672">;</span>
-<span style="color:#f92672">import</span> org.apache.parquet.io.RecordReader<span style="color:#f92672">;</span>
-<span style="color:#f92672">import</span> org.apache.parquet.schema.MessageType<span style="color:#f92672">;</span>
-<span style="color:#f92672">import</span> org.apache.parquet.schema.Type<span style="color:#f92672">;</span>
-
-<span style="color:#f92672">import</span> java.io.IOException<span style="color:#f92672">;</span>
-<span style="color:#f92672">import</span> java.util.ArrayList<span style="color:#f92672">;</span>
-<span style="color:#f92672">import</span> java.util.List<span style="color:#f92672">;</span>
-
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ParquetReaderUtils</span> <span style="color:#f92672">{</span>
-
-    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> Parquet <span style="color:#a6e22e">getParquetData</span><span style="color:#f92672">(</span>String filePath<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> IOException <span style="color:#f92672">{</span>
-        List<span style="color:#f92672">&lt;</span>SimpleGroup<span style="color:#f92672">&gt;</span> simpleGroups <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;&gt;();</span>
-        ParquetFileReader reader <span style="color:#f92672">=</span> ParquetFileReader<span style="color:#f92672">.</span><span style="color:#a6e22e">open</span><span style="color:#f92672">(</span>HadoopInputFile<span style="color:#f92672">.</span><span style="color:#a6e22e">fromPath</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> Path<span style="color:#f92672">(</span>filePath<span style="color:#f92672">),</span> <span style="color:#66d9ef">new</span> Configuration<span style="color:#f92672">()));</span>
-        MessageType schema <span style="color:#f92672">=</span> reader<span style="color:#f92672">.</span><span style="color:#a6e22e">getFooter</span><span style="color:#f92672">().</span><span style="color:#a6e22e">getFileMetaData</span><span style="color:#f92672">().</span><span style="color:#a6e22e">getSchema</span><span style="color:#f92672">();</span>
-        List<span style="color:#f92672">&lt;</span>Type<span style="color:#f92672">&gt;</span> fields <span style="color:#f92672">=</span> schema<span style="color:#f92672">.</span><span style="color:#a6e22e">getFields</span><span style="color:#f92672">();</span>
-        PageReadStore pages<span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">while</span> <span style="color:#f92672">((</span>pages <span style="color:#f92672">=</span> reader<span style="color:#f92672">.</span><span style="color:#a6e22e">readNextRowGroup</span><span style="color:#f92672">())</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">long</span> rows <span style="color:#f92672">=</span> pages<span style="color:#f92672">.</span><span style="color:#a6e22e">getRowCount</span><span style="color:#f92672">();</span>
-            MessageColumnIO columnIO <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ColumnIOFactory<span style="color:#f92672">().</span><span style="color:#a6e22e">getColumnIO</span><span style="color:#f92672">(</span>schema<span style="color:#f92672">);</span>
-            RecordReader recordReader <span style="color:#f92672">=</span> columnIO<span style="color:#f92672">.</span><span style="color:#a6e22e">getRecordReader</span><span style="color:#f92672">(</span>pages<span style="color:#f92672">,</span> <span style="color:#66d9ef">new</span> GroupRecordConverter<span style="color:#f92672">(</span>schema<span style="color:#f92672">));</span>
-
-            <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> rows<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
-                SimpleGroup simpleGroup <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>SimpleGroup<span style="color:#f92672">)</span> recordReader<span style="color:#f92672">.</span><span style="color:#a6e22e">read</span><span style="color:#f92672">();</span>
-                simpleGroups<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>simpleGroup<span style="color:#f92672">);</span>
-            <span style="color:#f92672">}</span>
-        <span style="color:#f92672">}</span>
-        reader<span style="color:#f92672">.</span><span style="color:#a6e22e">close</span><span style="color:#f92672">();</span>
-        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> Parquet<span style="color:#f92672">(</span>simpleGroups<span style="color:#f92672">,</span> fields<span style="color:#f92672">);</span>
-    <span style="color:#f92672">}</span>
-<span style="color:#f92672">}</span>
-</code></pre></div><p>And to make things easier A Parquet data object</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> org.apache.parquet.example.data.simple.SimpleGroup<span style="color:#f92672">;</span>
-<span style="color:#f92672">import</span> org.apache.parquet.schema.Type<span style="color:#f92672">;</span>
-
-<span style="color:#f92672">import</span> java.util.List<span style="color:#f92672">;</span>
-
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Parquet</span> <span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">private</span> List<span style="color:#f92672">&lt;</span>SimpleGroup<span style="color:#f92672">&gt;</span> data<span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">private</span> List<span style="color:#f92672">&lt;</span>Type<span style="color:#f92672">&gt;</span> schema<span style="color:#f92672">;</span>
-
-    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">Parquet</span><span style="color:#f92672">(</span>List<span style="color:#f92672">&lt;</span>SimpleGroup<span style="color:#f92672">&gt;</span> data<span style="color:#f92672">,</span> List<span style="color:#f92672">&lt;</span>Type<span style="color:#f92672">&gt;</span> schema<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">data</span> <span style="color:#f92672">=</span> data<span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">schema</span> <span style="color:#f92672">=</span> schema<span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">public</span> List<span style="color:#f92672">&lt;</span>SimpleGroup<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">getData</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> data<span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">public</span> List<span style="color:#f92672">&lt;</span>Type<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">getSchema</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> schema<span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-<span style="color:#f92672">}</span>
-</code></pre></div><p>Once we return the Parquet Object we can read whats inside each of the SimpleGroups like so:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">  Parquet parquet <span style="color:#f92672">=</span> ParquetReaderUtils<span style="color:#f92672">.</span><span style="color:#a6e22e">getParquetData</span><span style="color:#f92672">();</span>
-  SimpleGroup simpleGroup <span style="color:#f92672">=</span> parquet<span style="color:#f92672">.</span><span style="color:#a6e22e">getData</span><span style="color:#f92672">().</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>0<span style="color:#f92672">)</span>
-  String storedString <span style="color:#f92672">=</span> simpleGroups<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>0<span style="color:#f92672">).</span><span style="color:#a6e22e">getString</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;theFieldIWant&#34;</span><span style="color:#f92672">,</span> 0<span style="color:#f92672">);</span>
-</code></pre></div><p>The only caveat here being, we must determine the name of the field as well as the type in order to extract it. The fields we already have from the schema we stored on the Parquet object, however the type we may want to determine by manually inspecting the data with a debugger, though it can be determined dynamically using</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">  parquet<span style="color:#f92672">.</span><span style="color:#a6e22e">getSchema</span><span style="color:#f92672">().</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>0<span style="color:#f92672">).</span><span style="color:#a6e22e">getOriginalType</span><span style="color:#f92672">();</span>
-  parquet<span style="color:#f92672">.</span><span style="color:#a6e22e">getSchema</span><span style="color:#f92672">().</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>0<span style="color:#f92672">).</span><span style="color:#a6e22e">asPrimitiveType</span><span style="color:#f92672">();</span>
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#f92672">&lt;dependencies&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;dependency&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;groupId&gt;</span>org.apache.parquet<span style="color:#f92672">&lt;/groupId&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;artifactId&gt;</span>parquet-avro<span style="color:#f92672">&lt;/artifactId&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;version&gt;</span>1.10.0<span style="color:#f92672">&lt;/version&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;/dependency&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;dependency&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;groupId&gt;</span>org.apache.hadoop<span style="color:#f92672">&lt;/groupId&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;artifactId&gt;</span>hadoop-common<span style="color:#f92672">&lt;/artifactId&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;version&gt;</span>3.1.0<span style="color:#f92672">&lt;/version&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;/dependency&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;/dependencies&gt;</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#f92672">import</span> org.apache.hadoop.conf.Configuration;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> org.apache.hadoop.fs.Path;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> org.apache.parquet.column.page.PageReadStore;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> org.apache.parquet.example.data.simple.SimpleGroup;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> org.apache.parquet.example.data.simple.convert.GroupRecordConverter;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> org.apache.parquet.hadoop.ParquetFileReader;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> org.apache.parquet.hadoop.util.HadoopInputFile;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> org.apache.parquet.io.ColumnIOFactory;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> org.apache.parquet.io.MessageColumnIO;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> org.apache.parquet.io.RecordReader;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> org.apache.parquet.schema.MessageType;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> org.apache.parquet.schema.Type;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> java.io.IOException;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> java.util.ArrayList;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> java.util.List;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ParquetReaderUtils</span> {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> Parquet <span style="color:#a6e22e">getParquetData</span>(String filePath) <span style="color:#66d9ef">throws</span> IOException {
+</span></span><span style="display:flex;"><span>        List<span style="color:#f92672">&lt;</span>SimpleGroup<span style="color:#f92672">&gt;</span> simpleGroups <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;&gt;</span>();
+</span></span><span style="display:flex;"><span>        ParquetFileReader reader <span style="color:#f92672">=</span> ParquetFileReader.<span style="color:#a6e22e">open</span>(HadoopInputFile.<span style="color:#a6e22e">fromPath</span>(<span style="color:#66d9ef">new</span> Path(filePath), <span style="color:#66d9ef">new</span> Configuration()));
+</span></span><span style="display:flex;"><span>        MessageType schema <span style="color:#f92672">=</span> reader.<span style="color:#a6e22e">getFooter</span>().<span style="color:#a6e22e">getFileMetaData</span>().<span style="color:#a6e22e">getSchema</span>();
+</span></span><span style="display:flex;"><span>        List<span style="color:#f92672">&lt;</span>Type<span style="color:#f92672">&gt;</span> fields <span style="color:#f92672">=</span> schema.<span style="color:#a6e22e">getFields</span>();
+</span></span><span style="display:flex;"><span>        PageReadStore pages;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">while</span> ((pages <span style="color:#f92672">=</span> reader.<span style="color:#a6e22e">readNextRowGroup</span>()) <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span>) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">long</span> rows <span style="color:#f92672">=</span> pages.<span style="color:#a6e22e">getRowCount</span>();
+</span></span><span style="display:flex;"><span>            MessageColumnIO columnIO <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ColumnIOFactory().<span style="color:#a6e22e">getColumnIO</span>(schema);
+</span></span><span style="display:flex;"><span>            RecordReader recordReader <span style="color:#f92672">=</span> columnIO.<span style="color:#a6e22e">getRecordReader</span>(pages, <span style="color:#66d9ef">new</span> GroupRecordConverter(schema));
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0; i <span style="color:#f92672">&lt;</span> rows; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>                SimpleGroup simpleGroup <span style="color:#f92672">=</span> (SimpleGroup) recordReader.<span style="color:#a6e22e">read</span>();
+</span></span><span style="display:flex;"><span>                simpleGroups.<span style="color:#a6e22e">add</span>(simpleGroup);
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        reader.<span style="color:#a6e22e">close</span>();
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> Parquet(simpleGroups, fields);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>And to make things easier A Parquet data object</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#f92672">import</span> org.apache.parquet.example.data.simple.SimpleGroup;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> org.apache.parquet.schema.Type;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> java.util.List;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Parquet</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> List<span style="color:#f92672">&lt;</span>SimpleGroup<span style="color:#f92672">&gt;</span> data;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> List<span style="color:#f92672">&lt;</span>Type<span style="color:#f92672">&gt;</span> schema;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">Parquet</span>(List<span style="color:#f92672">&lt;</span>SimpleGroup<span style="color:#f92672">&gt;</span> data, List<span style="color:#f92672">&lt;</span>Type<span style="color:#f92672">&gt;</span> schema) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">data</span> <span style="color:#f92672">=</span> data;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">schema</span> <span style="color:#f92672">=</span> schema;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> List<span style="color:#f92672">&lt;</span>SimpleGroup<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">getData</span>() {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> data;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> List<span style="color:#f92672">&lt;</span>Type<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">getSchema</span>() {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> schema;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Once we return the Parquet Object we can read whats inside each of the SimpleGroups like so:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>  Parquet parquet <span style="color:#f92672">=</span> ParquetReaderUtils.<span style="color:#a6e22e">getParquetData</span>();
+</span></span><span style="display:flex;"><span>  SimpleGroup simpleGroup <span style="color:#f92672">=</span> parquet.<span style="color:#a6e22e">getData</span>().<span style="color:#a6e22e">get</span>(0)
+</span></span><span style="display:flex;"><span>  String storedString <span style="color:#f92672">=</span> simpleGroups.<span style="color:#a6e22e">get</span>(0).<span style="color:#a6e22e">getString</span>(<span style="color:#e6db74">&#34;theFieldIWant&#34;</span>, 0);
+</span></span></code></pre></div><p>The only caveat here being, we must determine the name of the field as well as the type in order to extract it. The fields we already have from the schema we stored on the Parquet object, however the type we may want to determine by manually inspecting the data with a debugger, though it can be determined dynamically using</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>  parquet.<span style="color:#a6e22e">getSchema</span>().<span style="color:#a6e22e">get</span>(0).<span style="color:#a6e22e">getOriginalType</span>();
+</span></span><span style="display:flex;"><span>  parquet.<span style="color:#a6e22e">getSchema</span>().<span style="color:#a6e22e">get</span>(0).<span style="color:#a6e22e">asPrimitiveType</span>();
+</span></span></code></pre></div>
       </div></div>
 
   
