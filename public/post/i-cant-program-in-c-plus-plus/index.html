@@ -227,7 +227,17 @@
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>() {
 </span></span><span style="display:flex;"><span>    MyClass<span style="color:#f92672">*</span> my_object <span style="color:#f92672">=</span> <span style="color:#66d9ef">nullptr</span>;
-</span></span></code></pre></div><p>I found the easiest you need is a member initializer list <a href="https://en.cppreference.com/w/cpp/language/constructor">https://en.cppreference.com/w/cpp/language/constructor</a>. I&rsquo;m not going to lie, I don&rsquo;t really understand what&rsquo;s going on here, or why this works. I can&rsquo;t play C++ but, I&rsquo;m going to keep trying.</p>
+</span></span></code></pre></div><p>I found the easiest way to accomplish this is a member initializer list <a href="https://en.cppreference.com/w/cpp/language/constructor">https://en.cppreference.com/w/cpp/language/constructor</a>. In my case it looked something like this.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span>    Parser(Lexer lexer, Emitter emitter) <span style="color:#f92672">:</span> _lexer(lexer), _emitter(emitter), _currentToken(), _peekToken() {
+</span></span><span style="display:flex;"><span>        _symbols <span style="color:#f92672">=</span> {};
+</span></span><span style="display:flex;"><span>		_labelsDeclared <span style="color:#f92672">=</span> {};
+</span></span><span style="display:flex;"><span>		_labelsGotoed <span style="color:#f92672">=</span> {};
+</span></span><span style="display:flex;"><span>		
+</span></span><span style="display:flex;"><span>		nextToken();
+</span></span><span style="display:flex;"><span>        nextToken();
+</span></span><span style="display:flex;"><span>    }
+</span></span></code></pre></div><p>Lexer and emmiter are initialized with passed in args, but the current token and the peek token are getting set later. I&rsquo;d normally just set that to Null, but since I can&rsquo;t I either need to use a null pointer reference or I just use the member initializer list and it&rsquo;s doing everything I need it to.</p>
+<p>I&rsquo;m not going to lie, I don&rsquo;t really understand what&rsquo;s going on here, why this works, and I&rsquo;ll admit that when it compiled and ran it felt a little like magic. I can&rsquo;t play C++ but, I&rsquo;m going to keep trying.</p>
 <h2 id="sets">Sets<a href="#sets" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
 <p>Sets. Checking if an element is in a set seems so unnecessarily complicated when compared to python. In python you may simply just do something like:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">if</span> <span style="color:#e6db74">&#34;myemelent&#34;</span> <span style="color:#f92672">in</span> mySet:

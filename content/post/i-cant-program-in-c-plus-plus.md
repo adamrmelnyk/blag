@@ -119,7 +119,22 @@ int main() {
     MyClass* my_object = nullptr;
 ```
 
-I found the easiest you need is a member initializer list https://en.cppreference.com/w/cpp/language/constructor. I'm not going to lie, I don't really understand what's going on here, or why this works. I can't play C++ but, I'm going to keep trying.
+I found the easiest way to accomplish this is a member initializer list https://en.cppreference.com/w/cpp/language/constructor. In my case it looked something like this.
+
+```c++
+    Parser(Lexer lexer, Emitter emitter) : _lexer(lexer), _emitter(emitter), _currentToken(), _peekToken() {
+        _symbols = {};
+		_labelsDeclared = {};
+		_labelsGotoed = {};
+		
+		nextToken();
+        nextToken();
+    }
+```
+
+Lexer and emmiter are initialized with passed in args, but the current token and the peek token are getting set later. I'd normally just set that to Null, but since I can't I either need to use a null pointer reference or I just use the member initializer list and it's doing everything I need it to.
+
+I'm not going to lie, I don't really understand what's going on here, why this works, and I'll admit that when it compiled and ran it felt a little like magic. I can't play C++ but, I'm going to keep trying.
 
 ## Sets
 
