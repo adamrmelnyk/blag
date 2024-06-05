@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>emulator on Adam&#39;s Blag</title>
+    <title>Emulator on Adam&#39;s Blag</title>
     <link>/tags/emulator/</link>
-    <description>Recent content in emulator on Adam&#39;s Blag</description>
+    <description>Recent content in Emulator on Adam&#39;s Blag</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <copyright>Adam Melnyk 2020</copyright>
@@ -499,7 +499,7 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        }
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://github.com/adamrmelnyk/chip_8_emulator/raw/master/examples/debug.gif&#34; alt=&#34;debuggif&#34;&gt;&lt;/p&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img alt=&#34;debuggif&#34; src=&#34;https://github.com/adamrmelnyk/chip_8_emulator/raw/master/examples/debug.gif&#34;&gt;&lt;/p&gt;
 &lt;p&gt;At each press of the enter key, I either load a register, draw, set the address register, or any other operation. This isn&amp;rsquo;t perfect but it will go a long way to understanding what&amp;rsquo;s going on, one step at a time.&lt;/p&gt;
 &lt;h2 id=&#34;whats-next&#34;&gt;What&amp;rsquo;s next&lt;/h2&gt;
 &lt;p&gt;There&amp;rsquo;s a lot left to be desired here in terms of what tools we can offer the CHIP8 programmer, for one, we aren&amp;rsquo;t displaying the op codes, nor are we showing any additional information about state such as memory and register values. Adding a second window might help to display some of this, though it is a little strange to display that separately. We should also add the concept of state so we can replay operations. We probably won&amp;rsquo;t ever be able to recreate the necessary tools that make modern programming ergonomic, but it can definitely be improved.&lt;/p&gt;

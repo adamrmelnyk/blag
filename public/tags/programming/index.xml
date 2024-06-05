@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>programming on Adam&#39;s Blag</title>
+    <title>Programming on Adam&#39;s Blag</title>
     <link>/tags/programming/</link>
-    <description>Recent content in programming on Adam&#39;s Blag</description>
+    <description>Recent content in Programming on Adam&#39;s Blag</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <copyright>Adam Melnyk 2020</copyright>
@@ -53,7 +53,7 @@
 &lt;p&gt;This is actually quite a bit easier than it was previously as it no longer requires a more complicated and rather boilerplate JavaScript setup, provided that you are comfortable doing it in Bash or don&amp;rsquo;t want to do anything particularly complicated.&lt;/p&gt;
 &lt;h2 id=&#34;testing-it-out&#34;&gt;Testing it out&lt;/h2&gt;
 &lt;p&gt;Unlike the previous plugin which required you to restart the gnome shell. You should be able to save run the plugin as soon as you save the file.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;/images/launcher-2.png&#34; alt=&#34;Pop_OS launcher&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;Pop_OS launcher&#34; src=&#34;/images/launcher-2.png&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;skipping-to-the-next-track&#34;&gt;Skipping to the next track&lt;/h2&gt;
 &lt;p&gt;Now that you&amp;rsquo;ve made Spotify pause and play, you can easily make a second script to switch tracks: Simply make a new file in the same directory as you previous script. I&amp;rsquo;ve called mine: &lt;code&gt;popify-next.sh&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;The file contents might look something like:&lt;/p&gt;
@@ -66,7 +66,7 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;dbus-send --print-reply --dest&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Next
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;After you save the script above you should be able to skip to the next track.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;/images/launcher-next.png&#34; alt=&#34;Pop_OS launcher&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;Pop_OS launcher&#34; src=&#34;/images/launcher-next.png&#34;&gt;&lt;/p&gt;
 &lt;p&gt;If you feel like a hacker at this point, it&amp;rsquo;s because you are! So throw on those shades, put on your best black hoodie, and go forth and hack away on some cool plugins. Hack the &lt;del&gt;Planet&lt;/del&gt; OS!&lt;/p&gt;
 &lt;h2 id=&#34;building-more-plugins&#34;&gt;Building more plugins&lt;/h2&gt;
 &lt;p&gt;Hopefully this gives you a starting point for developing new plugins for Pop!_OS. There isn&amp;rsquo;t much official documentation or tutorials on writing plugins other than what&amp;rsquo;s in the github readme, but hopefully this inspires anyone who wanted to give Pop!_OS a try, another reason to checkout it out.&lt;/p&gt;
@@ -154,7 +154,7 @@ Background I&amp;rsquo;ve been running linux on all of my machines for almost 15
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now that we&amp;rsquo;ve made the necessary changes we need to move it to where the rest of the plugins are. I&amp;rsquo;ve called my plugin popify (I know, so clever) but use whatever folder you&amp;rsquo;ve put your files into. You&amp;rsquo;ll need to use sudo because the location requires privileged access.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo cp -r popify/ /usr/lib/pop-shell/launcher/.
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;After copying the files over to the correct directory last thing to do is restart the GNOME shell. There are many ways to do this such as just killing GNOME &lt;code&gt;killall -1 gnome-shell&lt;/code&gt;, but if you&amp;rsquo;re unsure, you can simply reboot your machine and the new plugin will be ready. If you&amp;rsquo;ve done everything right you should be able to see the new launcher when we type pause:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;/images/launcher.png&#34; alt=&#34;Pop_OS launcher&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;Pop_OS launcher&#34; src=&#34;/images/launcher.png&#34;&gt;&lt;/p&gt;
 &lt;p&gt;this should toggle spotify to pause or play. You should also be able to type next and the player should switch songs.&lt;/p&gt;
 &lt;p&gt;If you feel like a hacker at this point, it&amp;rsquo;s because you are! So throw on those shades, put on your best black hoodie, and go forth and hack away on some cool plugins. Hack the &lt;del&gt;Planet&lt;/del&gt; OS!&lt;/p&gt;
 &lt;h2 id=&#34;building-more-plugins&#34;&gt;Building more plugins&lt;/h2&gt;

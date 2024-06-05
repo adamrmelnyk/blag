@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>Monty Hall :: Adam&#39;s Blag</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Simulating the Monty Hall problem in python" />
+<meta name="keywords" content="" />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="/post/monty-hall/" />
+
+
+  
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="/styles.css">
+
+
+
+
+
+
+
+  <link rel="shortcut icon" href="/img/theme-colors/green.png">
+  <link rel="apple-touch-icon" href="/img/theme-colors/green.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+  
+    <meta name="twitter:site" content="" />
+  
+    <meta name="twitter:creator" content="" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Monty Hall">
+<meta property="og:description" content="Simulating the Monty Hall problem in python" />
+<meta property="og:url" content="/post/monty-hall/" />
+<meta property="og:site_name" content="Adam&#39;s Blag" />
+
+  
+    <meta property="og:image" content="/img/favicon/green.png">
+  
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+  <meta property="article:section" content="probability" />
+
+
+  <meta property="article:published_time" content="2024-06-05 14:15:55 -0500 CDT" />
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body class="green">
+
+
+<div class="container full headings--one-size">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="/">
+  <div class="logo">
+    Adam&#39;s Blag
+  </div>
+</a>
+
+    </div>
+    
+      <ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        
+          <li><a href="https://adammelnyk.ca">Contact</a></li>
+        
+      
+      
+    </ul>
+  </li>
+</ul>
+
+    
+    
+  </div>
+  
+    <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="https://adammelnyk.ca">Contact</a></li>
+        
+      
+      
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+<article class="post">
+  <h1 class="post-title">
+    <a href="/post/monty-hall/">Monty Hall</a>
+  </h1>
+  <div class="post-meta">
+    
+      <time class="post-date">
+        2024-06-05 ::
+        
+      </time>
+    
+    
+    
+  </div>
+
+  
+    <span class="post-tags">
+      
+      #<a href="/tags/probability/">probability</a>&nbsp;
+      
+      #<a href="/tags/python/">python</a>&nbsp;
+      
+    </span>
+  
+  
+
+
+  
+
+  <div class="post-content"><div>
+        <p>The Monty Hall problem is a classic game theory and probability puzzle that most people have heard of in their grade school mathematics classes. The problem comes from the TV show &ldquo;Let&rsquo;s
+Make A Deal&rdquo; where a contestant is shown three closed doors. Behind one door is a prize, behind the other two doors are goats. The odds of choosing the prize in this scenario are <em>1 in 3</em>. But there&rsquo;s a catch, because after the contestant has chosen their door, the host Monty Hall, opens one of the goat doors revealing the goats. Now the contestant has a choice, they can keep the same door they&rsquo;ve chosen or, they can switch doors. Now the probability is actually <em>2 in 3</em> but only if you switch doors. This is where the confusion lies for many people, the goats and prizes haven&rsquo;t switched doors, yet <em>somehow</em> by switching doors you have better odds of winning the prize (unless you wanted goats).</p>
+<p>The problem comes up so often because so many are fooled or confused by the seemingly simple looking problem. I should clarify that I mean many people, <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3086893/">pigeons apparently, are not fooled by this problem</a>, so I look forward to further experiments with pigeons and game shows.</p>
+<p>I&rsquo;ve heard this problem dozens of times: math class, stats class, several computer science classes and on a TV sitcom. I&rsquo;ve read several explanations of the problem and after seeing it <a href="https://www.reddit.com/r/explainlikeimfive/search/?q=monty+hall">posted on Reddit for probably the thousandth</a> time where explanations alone don&rsquo;t seem satisfying to some:</p>
+<p><img alt="Many posts on reddit asking about the monty hall problem" src="/images/montyhallreddit.png"></p>
+<p>I thought I would sit down and simulate it instead.</p>
+<h2 id="simulating-the-problem">Simulating the problem<a href="#simulating-the-problem" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>The code is pretty simple and you probably don&rsquo;t need much time to throw it together. Here I simulate the game 100,000 times for each scenario. One where we switch doors every time, and one where we stick with the same choice.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> random
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Game</span>:
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">def</span> __init__(self, num<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span>) <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">None</span>:
+</span></span><span style="display:flex;"><span>       self<span style="color:#f92672">.</span>number_of_doors <span style="color:#f92672">=</span> num
+</span></span><span style="display:flex;"><span>       self<span style="color:#f92672">.</span>prize_door <span style="color:#f92672">=</span> random<span style="color:#f92672">.</span>randint(<span style="color:#ae81ff">1</span>, num)
+</span></span><span style="display:flex;"><span>       self<span style="color:#f92672">.</span>door_chosen <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>
+</span></span><span style="display:flex;"><span>       self<span style="color:#f92672">.</span>remaining_doors <span style="color:#f92672">=</span> []
+</span></span><span style="display:flex;"><span>   
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">pick_door</span>(self, door):
+</span></span><span style="display:flex;"><span>       self<span style="color:#f92672">.</span>door_chosen <span style="color:#f92672">=</span> door
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">switch</span>(self, will_switch):
+</span></span><span style="display:flex;"><span>       <span style="color:#66d9ef">if</span> will_switch:
+</span></span><span style="display:flex;"><span>           self<span style="color:#f92672">.</span>remaining_doors<span style="color:#f92672">.</span>remove(self<span style="color:#f92672">.</span>door_chosen)
+</span></span><span style="display:flex;"><span>           self<span style="color:#f92672">.</span>door_chosen <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>remaining_doors[<span style="color:#ae81ff">0</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">remove_doors</span>(self):
+</span></span><span style="display:flex;"><span>       <span style="color:#75715e"># If the prize door and the chosen door are the same. We need need to keep some other non-winning door</span>
+</span></span><span style="display:flex;"><span>       <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>prize_door <span style="color:#f92672">==</span> self<span style="color:#f92672">.</span>door_chosen:
+</span></span><span style="display:flex;"><span>           exclude <span style="color:#f92672">=</span> [self<span style="color:#f92672">.</span>prize_door]
+</span></span><span style="display:flex;"><span>           other_door <span style="color:#f92672">=</span> random<span style="color:#f92672">.</span>choice(list(set([x <span style="color:#66d9ef">for</span> x <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">1</span>, self<span style="color:#f92672">.</span>number_of_doors)]) <span style="color:#f92672">-</span> set(exclude)))
+</span></span><span style="display:flex;"><span>           self<span style="color:#f92672">.</span>remaining_doors <span style="color:#f92672">=</span> [self<span style="color:#f92672">.</span>door_chosen, other_door]
+</span></span><span style="display:flex;"><span>       <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>           self<span style="color:#f92672">.</span>remaining_doors <span style="color:#f92672">=</span> [self<span style="color:#f92672">.</span>door_chosen, self<span style="color:#f92672">.</span>prize_door]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">is_winner</span>(self):
+</span></span><span style="display:flex;"><span>       <span style="color:#66d9ef">return</span> self<span style="color:#f92672">.</span>door_chosen <span style="color:#f92672">==</span> self<span style="color:#f92672">.</span>prize_door
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">simulate</span>(number_of_simulations):
+</span></span><span style="display:flex;"><span>   total_wins_from_switching <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>   total_wins_from_not_switching <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>   number_of_starting_doors <span style="color:#f92672">=</span> <span style="color:#ae81ff">3</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   <span style="color:#75715e"># Simulations where we switch doors</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">for</span> _ <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">0</span>, number_of_simulations):
+</span></span><span style="display:flex;"><span>       monty <span style="color:#f92672">=</span> Game(number_of_starting_doors)
+</span></span><span style="display:flex;"><span>       door_chosen <span style="color:#f92672">=</span> random<span style="color:#f92672">.</span>randint(<span style="color:#ae81ff">1</span>, number_of_starting_doors)
+</span></span><span style="display:flex;"><span>       monty<span style="color:#f92672">.</span>pick_door(door_chosen)
+</span></span><span style="display:flex;"><span>       monty<span style="color:#f92672">.</span>remove_doors()
+</span></span><span style="display:flex;"><span>       <span style="color:#75715e"># We always switch</span>
+</span></span><span style="display:flex;"><span>       monty<span style="color:#f92672">.</span>switch(<span style="color:#66d9ef">True</span>)
+</span></span><span style="display:flex;"><span>       <span style="color:#66d9ef">if</span> monty<span style="color:#f92672">.</span>is_winner():
+</span></span><span style="display:flex;"><span>           total_wins_from_switching <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   <span style="color:#75715e"># Simulations where we do not switch doors</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">for</span> _ <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">0</span>, number_of_simulations):
+</span></span><span style="display:flex;"><span>       monty <span style="color:#f92672">=</span> Game(number_of_starting_doors)
+</span></span><span style="display:flex;"><span>       door_chosen <span style="color:#f92672">=</span> random<span style="color:#f92672">.</span>randint(<span style="color:#ae81ff">1</span>, number_of_starting_doors)
+</span></span><span style="display:flex;"><span>       monty<span style="color:#f92672">.</span>pick_door(door_chosen)
+</span></span><span style="display:flex;"><span>       monty<span style="color:#f92672">.</span>remove_doors()
+</span></span><span style="display:flex;"><span>       <span style="color:#75715e"># We never switch</span>
+</span></span><span style="display:flex;"><span>       monty<span style="color:#f92672">.</span>switch(<span style="color:#66d9ef">False</span>)
+</span></span><span style="display:flex;"><span>       <span style="color:#66d9ef">if</span> monty<span style="color:#f92672">.</span>is_winner():
+</span></span><span style="display:flex;"><span>           total_wins_from_not_switching <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Win percentage where we switch </span><span style="color:#e6db74">{</span>total_wins_from_switching <span style="color:#f92672">/</span> number_of_simulations<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>   print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Win percentage where we do NOT switch </span><span style="color:#e6db74">{</span>total_wins_from_not_switching <span style="color:#f92672">/</span> number_of_simulations<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>simulate(<span style="color:#ae81ff">100000</span>)
+</span></span></code></pre></div><p>Running this gave me the results:</p>
+<pre tabindex="0"><code>Win percentage where we switch 0.66599
+Win percentage where we do NOT switch 0.3315
+</code></pre><p>The odds are set when you make the choice for the door. The first time you choose you have a 1 in 3 chance. The second time, one door is removed and your chances go up to 2 in 3 because one of the doors is known to be incorrect, so switching will lead you to winning more often. You can make this even more apparent if you change the number of doors that you initially start with.</p>
+<p>Lets say we start with 100 doors in this scenario. 99 goat doors and one prize door. After you&rsquo;ve chosen one, we&rsquo;ll show you all the other doors except for the chosen door and some other door.</p>
+<pre tabindex="0"><code>+---------+    +---------+    +---------+    ...    +---------+
+|         |    |         |    |         |           |         |
+|  Door 1 |    |  Door 2 |    |   Goat  |           | nth Goat|
+|         |    |         |    |         |           |         |
++---------+    +---------+    +---------+    ...    +---------+
+     ^
+     |
+ The chosen
+    door
+</code></pre><p>I&rsquo;ll make a small change to the code and make <code>number_of_starting_doors = 100</code>. When I simulate 100000 plays again I got the following results:</p>
+<pre tabindex="0"><code>Win percentage where we switch 0.99012
+Win percentage where we do NOT switch 0.00991
+</code></pre><p>The first time we choose a door we have a 1 in 100 chance, that&rsquo;s why the win percentage for not switching is ~1%. But choose again and we have a 99 in 100 chance if we switch. The simulation and adding additional doors makes this much more obvious. When you choose to make the switch, it&rsquo;s almost like you&rsquo;re playing a second game. You&rsquo;ve locked in the statistical probability the first time you chose a door so when we reduce the number of doors available to choose from you have a higher chance of winning by choosing to switch.</p>
+<h2 id="further-reading">Further Reading<a href="#further-reading" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<ul>
+<li>&ldquo;Are Birds Smarter Than Mathematicians? Pigeons (Columba livia) Perform Optimally on a Version of the Monty Hall Dilemma&rdquo; <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3086893/">https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3086893/</a></li>
+</ul>
+
+      </div></div>
+
+  
+    
+<div class="pagination">
+    <div class="pagination__title">
+        <span class="pagination__title-h">Read other posts</span>
+        <hr />
+    </div>
+    <div class="pagination__buttons">
+        
+        
+        <span class="button next">
+            <a href="/post/i-cant-program-in-c-plus-plus/">
+                <span class="button__text">I Can&#39;t Program in C&#43;&#43;</span>
+                <span class="button__icon">→</span>
+            </a>
+        </span>
+        
+    </div>
+</div>
+
+  
+
+  
+    
+
+  
+</article>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright copyright--user">
+        <span>Adam Melnyk 2020</span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>

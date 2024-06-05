@@ -14,6 +14,9 @@
 <link rel="canonical" href="/post/creating-launch-plugins-for-pop-os/" />
 
 
+  
+
+
 
 
 
@@ -235,7 +238,7 @@
 </span></span></code></pre></div><p>Now that we&rsquo;ve made the necessary changes we need to move it to where the rest of the plugins are. I&rsquo;ve called my plugin popify (I know, so clever) but use whatever folder you&rsquo;ve put your files into. You&rsquo;ll need to use sudo because the location requires privileged access.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>sudo cp -r popify/ /usr/lib/pop-shell/launcher/.
 </span></span></code></pre></div><p>After copying the files over to the correct directory last thing to do is restart the GNOME shell. There are many ways to do this such as just killing GNOME <code>killall -1 gnome-shell</code>, but if you&rsquo;re unsure, you can simply reboot your machine and the new plugin will be ready. If you&rsquo;ve done everything right you should be able to see the new launcher when we type pause:</p>
-<p><img src="/images/launcher.png" alt="Pop_OS launcher"></p>
+<p><img alt="Pop_OS launcher" src="/images/launcher.png"></p>
 <p>this should toggle spotify to pause or play. You should also be able to type next and the player should switch songs.</p>
 <p>If you feel like a hacker at this point, it&rsquo;s because you are! So throw on those shades, put on your best black hoodie, and go forth and hack away on some cool plugins. Hack the <del>Planet</del> OS!</p>
 <h2 id="building-more-plugins">Building more plugins<a href="#building-more-plugins" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>

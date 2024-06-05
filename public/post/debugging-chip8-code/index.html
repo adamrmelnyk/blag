@@ -14,6 +14,9 @@
 <link rel="canonical" href="/post/debugging-chip8-code/" />
 
 
+  
+
+
 
 
 
@@ -649,7 +652,7 @@
 </span></span><span style="display:flex;"><span>        }
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p><img src="https://github.com/adamrmelnyk/chip_8_emulator/raw/master/examples/debug.gif" alt="debuggif"></p>
+</span></span></code></pre></div><p><img alt="debuggif" src="https://github.com/adamrmelnyk/chip_8_emulator/raw/master/examples/debug.gif"></p>
 <p>At each press of the enter key, I either load a register, draw, set the address register, or any other operation. This isn&rsquo;t perfect but it will go a long way to understanding what&rsquo;s going on, one step at a time.</p>
 <h2 id="whats-next">What&rsquo;s next<a href="#whats-next" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
 <p>There&rsquo;s a lot left to be desired here in terms of what tools we can offer the CHIP8 programmer, for one, we aren&rsquo;t displaying the op codes, nor are we showing any additional information about state such as memory and register values. Adding a second window might help to display some of this, though it is a little strange to display that separately. We should also add the concept of state so we can replay operations. We probably won&rsquo;t ever be able to recreate the necessary tools that make modern programming ergonomic, but it can definitely be improved.</p>

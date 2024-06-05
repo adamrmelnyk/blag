@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>technology on Adam&#39;s Blag</title>
+    <title>Technology on Adam&#39;s Blag</title>
     <link>/tags/technology/</link>
-    <description>Recent content in technology on Adam&#39;s Blag</description>
+    <description>Recent content in Technology on Adam&#39;s Blag</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <copyright>Adam Melnyk 2020</copyright>
@@ -21,7 +21,7 @@
 &lt;h2 id=&#34;creating-a-map&#34;&gt;Creating a Map&lt;/h2&gt;
 &lt;h3 id=&#34;euerka&#34;&gt;Euerka&lt;/h3&gt;
 &lt;p&gt;Eureka was the first map making tool that I found. I found a &lt;a href=&#34;https://www.youtube.com/watch?v=6ZZfIQsXyzo&#34;&gt;tutorial on youtube&lt;/a&gt; that made it look somewhat easy, so I went with it. You can toggle between a few different modes, that let you add rooms, monsters, objects and edit walls, textures, ceilings, as well as adding room effects.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;/images/eureka.png&#34; alt=&#34;Eureka editor&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;Eureka editor&#34; src=&#34;/images/eureka.png&#34;&gt;&lt;/p&gt;
 &lt;h3 id=&#34;doors&#34;&gt;Doors&lt;/h3&gt;
 &lt;p&gt;Luckily there have been some updates on doors since the videos on youtube had been released. It was now as easy as highlighting the lines I needed to make into a door, hitting the &amp;ldquo;Gen&amp;rdquo; button, and selecting &amp;ldquo;door&amp;rdquo;. The first door I made, before I knew about this option, took far too long to make and had a few pitfalls since it&amp;rsquo;s so easy to accidentally click something in the environment and edit another wall you didn&amp;rsquo;t intend to. The same tools are available for a few other features that would normally take a lot more time to make, such as stairs.&lt;/p&gt;
 &lt;h3 id=&#34;adding-textures&#34;&gt;Adding Textures&lt;/h3&gt;
@@ -38,20 +38,20 @@
 &lt;li&gt;Add the file to the TextureX&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;You can see a sample of how the texture looks here (This is the actual size):&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;/images/ADAM.png&#34; alt=&#34;UofA Logo DOOM PNG&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;UofA Logo DOOM PNG&#34; src=&#34;/images/ADAM.png&#34;&gt;&lt;/p&gt;
 &lt;p&gt;The end result of after it&amp;rsquo;s been added:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;/images/entranceTex.png&#34; alt=&#34;Custom Entrance Textures featuring my name&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;Custom Entrance Textures featuring my name&#34; src=&#34;/images/entranceTex.png&#34;&gt;&lt;/p&gt;
 &lt;p&gt;There are limitations to this as well. To avoid the &lt;a href=&#34;https://doom.fandom.com/wiki/Tutti-frutti_effect&#34;&gt;tutti-frutti effect&lt;/a&gt;, it is easiest to just edit existing textures so we won&amp;rsquo;t make a mistake making them in a size that doesn&amp;rsquo;t work well.&lt;/p&gt;
 &lt;p&gt;This part took by far, the longest. Creating textures, importing, converting et al. took longer than I would have expected. I have a lot of respect for the people who are still making doom mods in 2022, this is a ton of work.&lt;/p&gt;
 &lt;h3 id=&#34;laying-out-the-level&#34;&gt;Laying out the level&lt;/h3&gt;
 &lt;p&gt;The idea behind this was primarily to play DOOM while somehow displaying my résumé. So I needed to lay out the level in a way that the user is forced to see the info I put on the wall. I can say that I know almost nothing about level design so the best way I could think to do this is to put monsters where I want the user to look.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;/images/UofADoom.png&#34; alt=&#34;University of Alberta Crest&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;University of Alberta Crest&#34; src=&#34;/images/UofADoom.png&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Perfect, the user faces towards the monsters when they start shooting, and they&amp;rsquo;re forced to see where I went to school and what I studied. Now all that&amp;rsquo;s needed to to keep adding more rooms, and with it, more information from my résumé.&lt;/p&gt;
 &lt;h3 id=&#34;showing-off-my-experience&#34;&gt;Showing off my experience&lt;/h3&gt;
 &lt;p&gt;I need a novel way of showing off my experience, ideally something that takes advantage of it being part of DOOM but, plastering the projects that I&amp;rsquo;ve worked on all over the walls alone isn&amp;rsquo;t going to cut it. It wouldn&amp;rsquo;t be DOOM if there wasn&amp;rsquo;t a secret room somewhere so that&amp;rsquo;s exactly how I&amp;rsquo;m going show this information.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;/images/ol.png&#34; alt=&#34;My workplace from 2016 to 2017&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;My workplace from 2016 to 2017&#34; src=&#34;/images/ol.png&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Here you can see the startup I worked at in 2016 and 2017, but walk through the wall and&amp;hellip;&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;/images/olexp.png&#34; alt=&#34;My experience at Ownlocal&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;My experience at Ownlocal&#34; src=&#34;/images/olexp.png&#34;&gt;&lt;/p&gt;
 &lt;p&gt;You&amp;rsquo;re greeted with some of the things I worked on and the company logo. We can even use Eureka to make this sector &amp;ldquo;secret&amp;rdquo;, which means when we walk into into the room it should let us know that we&amp;rsquo;ve discovered a secret!&lt;/p&gt;
 &lt;h3 id=&#34;ending-the-level&#34;&gt;Ending the Level&lt;/h3&gt;
 &lt;p&gt;If you want to avoid spoilers for&amp;hellip; my résumé, you may want to leave and &lt;a href=&#34;https://github.com/adamrmelnyk/thisResumeRunsDoom&#34;&gt;play the level&lt;/a&gt; before reading further.&lt;/p&gt;
