@@ -118,7 +118,7 @@ Win percentage where we switch 0.99012
 Win percentage where we do NOT switch 0.00991
 ```
 
-The first time we choose a door we have a 1 in 100 chance, that's why the win percentage for not switching is ~1%. But choose again and we have a 99 in 100 chance if we switch. The simulation and adding additional doors makes this much more obvious. When you choose to make the switch, it's almost like you're playing a second game. You've locked in the statistical probability the first time you chose a door so when we reduce the number of doors available to choose from you have a higher chance of winning by choosing to switch.
+The first time we choose a door we have a 1 in 100 chance, that's why the win percentage for not switching is ~1%. But choose again and we have a 99 in 100 chance if we switch. Better explained still, the first time you choose, you're pretty unlikely to choose the correct door if there are 99 wrong doors. When we show all the goat doors but one however, we need to present the contestant a choice that includes the prize door so it's very likely that the door we haven't chosen is the correct door. The simulation and adding additional doors makes this much more obvious. When you choose to make the switch, it's almost like you're playing a second game. You've locked in the statistical probability the first time you chose a door so when we reduce the number of doors available to choose from you have a higher chance of winning by choosing to switch.
 
 ## Further Reading
 
