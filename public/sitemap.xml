@@ -3,15 +3,33 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>/</loc>
-    <lastmod>2024-06-05T14:15:55-05:00</lastmod>
+    <lastmod>2024-07-27T19:36:23-05:00</lastmod>
+  </url><url>
+    <loc>/post/building-the-most-basic-antivirus-software/</loc>
+    <lastmod>2024-07-27T19:36:23-05:00</lastmod>
   </url><url>
     <loc>/categories/</loc>
-    <lastmod>2024-06-05T14:15:55-05:00</lastmod>
-  </url><url>
-    <loc>/post/monty-hall/</loc>
-    <lastmod>2024-06-05T14:15:55-05:00</lastmod>
+    <lastmod>2024-07-27T19:36:23-05:00</lastmod>
   </url><url>
     <loc>/post/</loc>
+    <lastmod>2024-07-27T19:36:23-05:00</lastmod>
+  </url><url>
+    <loc>/tags/programming/</loc>
+    <lastmod>2024-07-27T19:36:23-05:00</lastmod>
+  </url><url>
+    <loc>/tags/rust/</loc>
+    <lastmod>2024-07-27T19:36:23-05:00</lastmod>
+  </url><url>
+    <loc>/tags/</loc>
+    <lastmod>2024-07-27T19:36:23-05:00</lastmod>
+  </url><url>
+    <loc>/categories/technology/</loc>
+    <lastmod>2024-07-27T19:36:23-05:00</lastmod>
+  </url><url>
+    <loc>/tags/tutorial/</loc>
+    <lastmod>2024-07-27T19:36:23-05:00</lastmod>
+  </url><url>
+    <loc>/post/monty-hall/</loc>
     <lastmod>2024-06-05T14:15:55-05:00</lastmod>
   </url><url>
     <loc>/tags/probability/</loc>
@@ -21,9 +39,6 @@
     <lastmod>2024-06-05T14:15:55-05:00</lastmod>
   </url><url>
     <loc>/tags/python/</loc>
-    <lastmod>2024-06-05T14:15:55-05:00</lastmod>
-  </url><url>
-    <loc>/tags/</loc>
     <lastmod>2024-06-05T14:15:55-05:00</lastmod>
   </url><url>
     <loc>/tags/c&#43;&#43;/</loc>
@@ -39,9 +54,6 @@
     <lastmod>2023-11-18T16:42:42-06:00</lastmod>
   </url><url>
     <loc>/categories/programming/</loc>
-    <lastmod>2023-11-18T16:42:42-06:00</lastmod>
-  </url><url>
-    <loc>/categories/technology/</loc>
     <lastmod>2023-11-18T16:42:42-06:00</lastmod>
   </url><url>
     <loc>/post/creating-a-resume-in-doom/</loc>
@@ -75,9 +87,6 @@
     <lastmod>2022-02-16T22:08:48-06:00</lastmod>
   </url><url>
     <loc>/tags/popos/</loc>
-    <lastmod>2022-02-16T22:08:48-06:00</lastmod>
-  </url><url>
-    <loc>/tags/programming/</loc>
     <lastmod>2022-02-16T22:08:48-06:00</lastmod>
   </url><url>
     <loc>/categories/system76/</loc>
@@ -114,9 +123,6 @@
     <lastmod>2020-08-23T15:45:10-05:00</lastmod>
   </url><url>
     <loc>/tags/hexcode/</loc>
-    <lastmod>2020-08-23T15:45:10-05:00</lastmod>
-  </url><url>
-    <loc>/tags/rust/</loc>
     <lastmod>2020-08-23T15:45:10-05:00</lastmod>
   </url><url>
     <loc>/categories/rust/</loc>

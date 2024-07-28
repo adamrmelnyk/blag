@@ -7,7 +7,17 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <copyright>Adam Melnyk 2020</copyright>
-    <lastBuildDate>Wed, 05 Jun 2024 14:15:55 -0500</lastBuildDate><atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 27 Jul 2024 19:36:23 -0500</lastBuildDate><atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Technology</title>
+      <link>/categories/technology/</link>
+      <pubDate>Sat, 27 Jul 2024 19:36:23 -0500</pubDate>
+      
+      <guid>/categories/technology/</guid>
+      <description></description>
+      <content></content>
+    </item>
+    
     <item>
       <title>Probability</title>
       <link>/categories/probability/</link>
@@ -34,16 +44,6 @@
       <pubDate>Sat, 18 Nov 2023 16:42:42 -0600</pubDate>
       
       <guid>/categories/programming/</guid>
-      <description></description>
-      <content></content>
-    </item>
-    
-    <item>
-      <title>Technology</title>
-      <link>/categories/technology/</link>
-      <pubDate>Sat, 18 Nov 2023 16:42:42 -0600</pubDate>
-      
-      <guid>/categories/technology/</guid>
       <description></description>
       <content></content>
     </item>

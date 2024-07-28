@@ -7,7 +7,37 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <copyright>Adam Melnyk 2020</copyright>
-    <lastBuildDate>Wed, 05 Jun 2024 14:15:55 -0500</lastBuildDate><atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 27 Jul 2024 19:36:23 -0500</lastBuildDate><atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Programming</title>
+      <link>/tags/programming/</link>
+      <pubDate>Sat, 27 Jul 2024 19:36:23 -0500</pubDate>
+      
+      <guid>/tags/programming/</guid>
+      <description></description>
+      <content></content>
+    </item>
+    
+    <item>
+      <title>Rust</title>
+      <link>/tags/rust/</link>
+      <pubDate>Sat, 27 Jul 2024 19:36:23 -0500</pubDate>
+      
+      <guid>/tags/rust/</guid>
+      <description></description>
+      <content></content>
+    </item>
+    
+    <item>
+      <title>Tutorial</title>
+      <link>/tags/tutorial/</link>
+      <pubDate>Sat, 27 Jul 2024 19:36:23 -0500</pubDate>
+      
+      <guid>/tags/tutorial/</guid>
+      <description></description>
+      <content></content>
+    </item>
+    
     <item>
       <title>Probability</title>
       <link>/tags/probability/</link>
@@ -109,16 +139,6 @@
     </item>
     
     <item>
-      <title>Programming</title>
-      <link>/tags/programming/</link>
-      <pubDate>Wed, 16 Feb 2022 22:08:48 -0600</pubDate>
-      
-      <guid>/tags/programming/</guid>
-      <description></description>
-      <content></content>
-    </item>
-    
-    <item>
       <title>Browsers</title>
       <link>/tags/browsers/</link>
       <pubDate>Sat, 15 May 2021 19:05:48 -0500</pubDate>
@@ -184,16 +204,6 @@
       <pubDate>Sun, 23 Aug 2020 15:45:10 -0500</pubDate>
       
       <guid>/tags/hexcode/</guid>
-      <description></description>
-      <content></content>
-    </item>
-    
-    <item>
-      <title>Rust</title>
-      <link>/tags/rust/</link>
-      <pubDate>Sun, 23 Aug 2020 15:45:10 -0500</pubDate>
-      
-      <guid>/tags/rust/</guid>
       <description></description>
       <content></content>
     </item>

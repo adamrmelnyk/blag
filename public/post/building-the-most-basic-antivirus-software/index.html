@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>Building A Basic File Scanning Tool With Rust :: Adam&#39;s Blag</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Building a signature scanning antivirus function with rust" />
+<meta name="keywords" content="" />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="/post/building-the-most-basic-antivirus-software/" />
+
+
+  
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="/styles.css">
+
+
+
+
+
+
+
+  <link rel="shortcut icon" href="/img/theme-colors/green.png">
+  <link rel="apple-touch-icon" href="/img/theme-colors/green.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+  
+    <meta name="twitter:site" content="" />
+  
+    <meta name="twitter:creator" content="" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Building A Basic File Scanning Tool With Rust">
+<meta property="og:description" content="Building a signature scanning antivirus function with rust" />
+<meta property="og:url" content="/post/building-the-most-basic-antivirus-software/" />
+<meta property="og:site_name" content="Adam&#39;s Blag" />
+
+  
+    <meta property="og:image" content="/img/favicon/green.png">
+  
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+  <meta property="article:section" content="technology" />
+
+
+  <meta property="article:published_time" content="2024-07-27 19:36:23 -0500 CDT" />
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body class="green">
+
+
+<div class="container full headings--one-size">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="/">
+  <div class="logo">
+    Adam&#39;s Blag
+  </div>
+</a>
+
+    </div>
+    
+      <ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        
+          <li><a href="https://adammelnyk.ca">Contact</a></li>
+        
+      
+      
+    </ul>
+  </li>
+</ul>
+
+    
+    
+  </div>
+  
+    <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="https://adammelnyk.ca">Contact</a></li>
+        
+      
+      
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+<article class="post">
+  <h1 class="post-title">
+    <a href="/post/building-the-most-basic-antivirus-software/">Building A Basic File Scanning Tool With Rust</a>
+  </h1>
+  <div class="post-meta">
+    
+      <time class="post-date">
+        2024-07-27 ::
+        
+      </time>
+    
+    
+    
+  </div>
+
+  
+    <span class="post-tags">
+      
+      #<a href="/tags/programming/">programming</a>&nbsp;
+      
+      #<a href="/tags/rust/">rust</a>&nbsp;
+      
+      #<a href="/tags/tutorial/">tutorial</a>&nbsp;
+      
+    </span>
+  
+  
+
+
+  
+
+  <div class="post-content"><div>
+        <h3 id="bare-bones-scanning">Bare bones scanning<a href="#bare-bones-scanning" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<p>Early AV scanning relied mostly on signature scanning. Mostly looking for string patterns in a file or something as simple as just hashing a file and comparing it against a set of known hashes. For our first pass, we&rsquo;re going to do exactly that. We&rsquo;re going to load up a list of hashes we know to be bad and then we&rsquo;re going to check if a given file matches something in our list of hashes. Easy.</p>
+<p>First we&rsquo;ll make our test sample, which we&rsquo;ll do by just creating a file called sample.txt. which contains only the text: <em>&ldquo;Hello There&rdquo;</em></p>
+<p>Next we&rsquo;ll create the code for the scanner:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">use</span> std::env;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">use</span> std::collections::HashSet;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>    println!(<span style="color:#e6db74">&#34;############### Running scan! ###############&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> args: Vec<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> <span style="color:#f92672">=</span> env::args().collect();
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> file_path <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>args[<span style="color:#ae81ff">1</span>];
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> bytes <span style="color:#f92672">=</span> std::fs::read(file_path).unwrap();
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> file_hash <span style="color:#f92672">=</span> sha256::digest(<span style="color:#f92672">&amp;</span>bytes);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> preset_hashes <span style="color:#f92672">=</span> HashSet::new();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// The Sha256 of our &#34;Hello There&#34; file
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    preset_hashes.insert(<span style="color:#e6db74">&#34;00688350913f2f292943a274b57019d58889eda272370af261c84e78e204743c&#34;</span>.to_string());
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> preset_hashes.contains(<span style="color:#f92672">&amp;</span>file_hash) {
+</span></span><span style="display:flex;"><span>        println!(<span style="color:#e6db74">&#34;We found a match!&#34;</span>)
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>The code is pretty simple so far. We have one single hash. which we&rsquo;re adding to a set of preset hashes. And then we check to see if the file contains the same hash. This isn&rsquo;t exactly what we should be doing by any means, it&rsquo;s more just to illustrate one very simple way to detect malware. We should now be able to compile the rust code with cargo and test it against our sample file.</p>
+<h4 id="testing-our-scanner">Testing our scanner<a href="#testing-our-scanner" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ ./target/release/terriblescanner sample.txt
+</span></span><span style="display:flex;"><span><span style="color:#75715e">############### Running scan! ###############</span>
+</span></span><span style="display:flex;"><span>We found a match!
+</span></span></code></pre></div><p>It works! Well, it works for this one file anyway. If we had a much larger list of hashes we&rsquo;d want to set this code up a little better, however we&rsquo;re not going to do that.</p>
+<h3 id="using-yara-rules">Using Yara rules<a href="#using-yara-rules" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<p>You may have already guessed but, there&rsquo;s a problem with the approach we used above. By simply adding a character after &ldquo;Hello there&rdquo; the hash changes, and the file will evade our scan. It&rsquo;s too basic for even our very basic tutorial. To make this more effective, we need to use a tool like <a href="https://en.wikipedia.org/wiki/YARA">Yara</a>. Yara is a tool for signature scanning that will let us do a lot more than simple hashing. Yara will let us write more complicated rules to identify potentially unwanted files.</p>
+<h4 id="installing-yara">Installing yara<a href="#installing-yara" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h4>
+<p>We&rsquo;ll need to install yara first before we can use the libraries. For our uses we&rsquo;ll need to use the latest version as well since it&rsquo;s required by the library we&rsquo;re using. At the time of writing, I used:</p>
+<ul>
+<li>yara 4.5.1</li>
+<li>yara-rust 0.28.0 (<a href="https://github.com/Hugal31/yara-rust">https://github.com/Hugal31/yara-rust</a>)</li>
+</ul>
+<h4 id="install">Install<a href="#install" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h4>
+<p>Run the following commands in a terminal:</p>
+<ol>
+<li>sudo apt update</li>
+<li>sudo apt install build-essential automake libtool make pkg-config</li>
+<li>wget <a href="https://github.com/VirusTotal/yara/archive/refs/tags/v4.5.1.tar.gz">https://github.com/VirusTotal/yara/archive/refs/tags/v4.5.1.tar.gz</a></li>
+<li>tar -xzf v4.5.1.tar.gz</li>
+<li>cd yara-4.5.1/</li>
+<li>./bootstrap.sh</li>
+<li>./configure</li>
+<li>make</li>
+<li>sudo make install</li>
+<li>sudo ldconfig</li>
+<li>yara --version</li>
+</ol>
+<p>If the last step gives you the matching version number: 4.5.1 then you&rsquo;ve successfully installed yara.</p>
+<p><em><strong>Note that these installation instructions may not work for you depending on your setup</strong></em></p>
+<p>Before we do any compiling, we&rsquo;re also going to have to set an environment variable which will be needed when we try to compile our rust binary:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>export YARA_LIBRARY_PATH<span style="color:#f92672">=</span>/usr/local/lib/libyara.so
+</span></span></code></pre></div><p>The above line <em>should</em> work however, you may want to double check that is the correct location of libyara.so which is needed for compilation.</p>
+<p><em><strong>It absolutely will not work without this step!</strong></em> so make sure you do this.</p>
+<h4 id="writing-yara-rules">Writing yara rules<a href="#writing-yara-rules" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h4>
+<p>First we&rsquo;ll need to write a simple rule to test against. Our first rule will be looking for the String &ldquo;Hello There&rdquo;, anywhere in the file. We&rsquo;ll call this rule GeneralKenobi.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>rule GeneralKenobi
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    strings:
+</span></span><span style="display:flex;"><span>        $hello_there = &#34;Hello There&#34;
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>    condition:
+</span></span><span style="display:flex;"><span>        $hello_there
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Simply explained this rule is triggered by a single condition, when the string $hello_there is found in the file.</p>
+<h4 id="writing-our-scanner-using-yara">Writing our scanner using yara<a href="#writing-our-scanner-using-yara" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h4>
+<p>Take a look at <a href="https://github.com/Hugal31/yara-rust">the example code</a> and we can use almost exactly the same code for our scanner. The code should now look something like this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">use</span> std::env;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">use</span> yara::Compiler;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">DEFAULT_YARA_FILE</span>: <span style="color:#66d9ef">&amp;</span><span style="color:#66d9ef">str</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;rules.yara&#34;</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">DEFAULT_TIMEOUT</span>: <span style="color:#66d9ef">i32</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">10</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">scan_file</span>(file_path: <span style="color:#66d9ef">&amp;</span><span style="color:#66d9ef">str</span>) {
+</span></span><span style="display:flex;"><span>    println!(<span style="color:#e6db74">&#34;We are scanning file </span><span style="color:#e6db74">{file_path}</span><span style="color:#e6db74">&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> compiler <span style="color:#f92672">=</span> Compiler::new().unwrap();
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> compiler <span style="color:#f92672">=</span> compiler
+</span></span><span style="display:flex;"><span>        .add_rules_file(<span style="color:#66d9ef">DEFAULT_YARA_FILE</span>)
+</span></span><span style="display:flex;"><span>        .expect(<span style="color:#e6db74">&#34;Adds rules file&#34;</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> rules <span style="color:#f92672">=</span> compiler
+</span></span><span style="display:flex;"><span>        .compile_rules()
+</span></span><span style="display:flex;"><span>        .expect(<span style="color:#e6db74">&#34;Compiled rules&#34;</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> results <span style="color:#f92672">=</span> rules
+</span></span><span style="display:flex;"><span>        .scan_file(file_path, <span style="color:#66d9ef">DEFAULT_TIMEOUT</span>)
+</span></span><span style="display:flex;"><span>        .expect(<span style="color:#e6db74">&#34;Scanned file&#34;</span>);
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> r <span style="color:#66d9ef">in</span> results.iter() {
+</span></span><span style="display:flex;"><span>        println!(<span style="color:#e6db74">&#34;</span><span style="color:#e6db74">{0}</span><span style="color:#e6db74">&#34;</span>, r.identifier);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>    println!(<span style="color:#e6db74">&#34;############### Running scan! ###############&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> args: Vec<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> <span style="color:#f92672">=</span> env::args().collect();
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> file_path <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>args[<span style="color:#ae81ff">1</span>];
+</span></span><span style="display:flex;"><span>    scan_file(file_path)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>We probably don&rsquo;t want to be writing our own rules. One of the advantages of using yara is that it is widely adopted so we can use rules that detect files others have seen in the wild. We can easily modify our code so that we can import more than one yara rules file. For the purposes of this tutorial, I have used <a href="https://raw.githubusercontent.com/HydraDragonAntivirus/HydraDragonAntivirus/main/yara/comment_lines.yar">this set of yara rules</a> which is quite a large rule set.</p>
+<p>because we could be adding many more rule sets, we&rsquo;re going to add an array of rule files and iterate over our list of rules files. The final code should look like this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">use</span> std::env;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">use</span> yara::Compiler;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">DEFAULT_YARA_FILE</span>: <span style="color:#66d9ef">&amp;</span><span style="color:#66d9ef">str</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;rules.yara&#34;</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">OTHER_YARA_FILE</span>: <span style="color:#66d9ef">&amp;</span><span style="color:#66d9ef">str</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;otherrules.yara&#34;</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">DEFAULT_TIMEOUT</span>: <span style="color:#66d9ef">i32</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">10</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">RULES_FILES</span>: <span style="color:#66d9ef">&amp;</span>[<span style="color:#f92672">&amp;</span><span style="color:#66d9ef">str</span>] <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>[
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">DEFAULT_YARA_FILE</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">OTHER_YARA_FILE</span>
+</span></span><span style="display:flex;"><span>];
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">scan_file</span>(file_path: <span style="color:#66d9ef">&amp;</span><span style="color:#66d9ef">str</span>) {
+</span></span><span style="display:flex;"><span>    println!(<span style="color:#e6db74">&#34;We are scanning file </span><span style="color:#e6db74">{file_path}</span><span style="color:#e6db74">&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> compiler <span style="color:#f92672">=</span> Compiler::new().unwrap();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">&amp;</span>rule_file <span style="color:#66d9ef">in</span> <span style="color:#66d9ef">RULES_FILES</span> {
+</span></span><span style="display:flex;"><span>        compiler <span style="color:#f92672">=</span> compiler
+</span></span><span style="display:flex;"><span>            .add_rules_file(<span style="color:#f92672">&amp;</span>rule_file)
+</span></span><span style="display:flex;"><span>            .expect(<span style="color:#e6db74">&#34;Adds rules file&#34;</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> rules <span style="color:#f92672">=</span> compiler
+</span></span><span style="display:flex;"><span>        .compile_rules()
+</span></span><span style="display:flex;"><span>        .expect(<span style="color:#e6db74">&#34;Compiled rules&#34;</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> results <span style="color:#f92672">=</span> rules
+</span></span><span style="display:flex;"><span>        .scan_file(file_path, <span style="color:#66d9ef">DEFAULT_TIMEOUT</span>)
+</span></span><span style="display:flex;"><span>        .expect(<span style="color:#e6db74">&#34;Scanned file&#34;</span>);
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> r <span style="color:#66d9ef">in</span> results.iter() {
+</span></span><span style="display:flex;"><span>        println!(<span style="color:#e6db74">&#34;Rule Triggered: </span><span style="color:#e6db74">{0}</span><span style="color:#e6db74">&#34;</span>, r.identifier);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>    println!(<span style="color:#e6db74">&#34;############### Running scan! ###############&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> args: Vec<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> <span style="color:#f92672">=</span> env::args().collect();
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> file_path <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>args[<span style="color:#ae81ff">1</span>];
+</span></span><span style="display:flex;"><span>    scan_file(file_path)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Both sets of  signatures should be available now so we can test it once again and see if the custom rule we added is still triggered by the sample file.</p>
+<h4 id="testing-the-scan">Testing the scan<a href="#testing-the-scan" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h4>
+<p>We want to test that our new rules work for the file we changed. So any changes to the file so long as it still contains the &ldquo;Hello There&rdquo; text should work.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Hello There$$$$
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ ./target/release/basicAv sample.txt
+</span></span><span style="display:flex;"><span><span style="color:#75715e">############### Running scan! ###############</span>
+</span></span><span style="display:flex;"><span>We are scanning file sample.txt
+</span></span><span style="display:flex;"><span>Rule Triggered GeneralKenobi
+</span></span></code></pre></div><p>And there we have it! We built a very simple av scanning function that can check if a single file triggers a predetermined set of yara rules.</p>
+<h3 id="further-reading">Further reading<a href="#further-reading" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<ul>
+<li>Info on writing Yara rules <a href="https://github.com/VirusTotal/yara/blob/master/docs/writingrules.rst">https://github.com/VirusTotal/yara/blob/master/docs/writingrules.rst</a></li>
+</ul>
+
+      </div></div>
+
+  
+    
+<div class="pagination">
+    <div class="pagination__title">
+        <span class="pagination__title-h">Read other posts</span>
+        <hr />
+    </div>
+    <div class="pagination__buttons">
+        
+        
+        <span class="button next">
+            <a href="/post/monty-hall/">
+                <span class="button__text">Monty Hall</span>
+                <span class="button__icon">→</span>
+            </a>
+        </span>
+        
+    </div>
+</div>
+
+  
+
+  
+    
+
+  
+</article>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright copyright--user">
+        <span>Adam Melnyk 2020</span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>
