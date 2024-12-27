@@ -14,7 +14,8 @@
       <pubDate>Sat, 27 Jul 2024 19:36:23 -0500</pubDate>
       
       <guid>/post/building-the-most-basic-antivirus-software/</guid>
-      <description>Bare bones scanning Early AV scanning relied mostly on signature scanning. Mostly looking for string patterns in a file or something as simple as just hashing a file and comparing it against a set of known hashes. For our first pass, we&amp;rsquo;re going to do exactly that. We&amp;rsquo;re going to load up a list of hashes we know to be bad and then we&amp;rsquo;re going to check if a given file matches something in our list of hashes.</description>
+      <description>&lt;h3 id=&#34;bare-bones-scanning&#34;&gt;Bare bones scanning&lt;/h3&gt;
+&lt;p&gt;Early AV scanning relied mostly on signature scanning. Mostly looking for string patterns in a file or something as simple as just hashing a file and comparing it against a set of known hashes. For our first pass, we&amp;rsquo;re going to do exactly that. We&amp;rsquo;re going to load up a list of hashes we know to be bad and then we&amp;rsquo;re going to check if a given file matches something in our list of hashes. Easy.&lt;/p&gt;</description>
       <content>&lt;h3 id=&#34;bare-bones-scanning&#34;&gt;Bare bones scanning&lt;/h3&gt;
 &lt;p&gt;Early AV scanning relied mostly on signature scanning. Mostly looking for string patterns in a file or something as simple as just hashing a file and comparing it against a set of known hashes. For our first pass, we&amp;rsquo;re going to do exactly that. We&amp;rsquo;re going to load up a list of hashes we know to be bad and then we&amp;rsquo;re going to check if a given file matches something in our list of hashes. Easy.&lt;/p&gt;
 &lt;p&gt;First we&amp;rsquo;ll make our test sample, which we&amp;rsquo;ll do by just creating a file called sample.txt. which contains only the text: &lt;em&gt;&amp;ldquo;Hello There&amp;rdquo;&lt;/em&gt;&lt;/p&gt;

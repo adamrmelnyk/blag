@@ -14,9 +14,18 @@
       <pubDate>Sat, 15 May 2021 19:05:48 -0500</pubDate>
       
       <guid>/post/browser/</guid>
-      <description>Lynx may be the oldest, currently maintained browser around. Though it looks nothing like a modern browser and will probably break trying to load any react based webpage, I still think it&amp;rsquo;s one of the most underrated and underutilized browsers, which is why I still find myself using it on an almost daily basis.
-What Lynx offers:
-VI (and Emacs) bindings its own dotfile (.lynxrc) distraction free reading by default explicitly asks your permission to keep each cookie no images, CSS, or Javascript makes you feel like a hacker Simple user interface Like everything else in the terminal, the user interface for lynx is all keyboard based.</description>
+      <description>&lt;p&gt;Lynx may be the oldest, currently maintained browser around. Though it looks nothing like a modern browser and will probably break trying to load any react based webpage, I still think it&amp;rsquo;s one of the most underrated and underutilized browsers, which is why I still find myself using it on an almost daily basis.&lt;/p&gt;
+&lt;p&gt;What Lynx offers:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;VI (and Emacs) bindings&lt;/li&gt;
+&lt;li&gt;its own dotfile (.lynxrc)&lt;/li&gt;
+&lt;li&gt;distraction free reading by default&lt;/li&gt;
+&lt;li&gt;explicitly asks your permission to keep each cookie&lt;/li&gt;
+&lt;li&gt;no images, CSS, or Javascript&lt;/li&gt;
+&lt;li&gt;makes you feel like a hacker&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;simple-user-interface&#34;&gt;Simple user interface&lt;/h2&gt;
+&lt;p&gt;Like everything else in the terminal, the user interface for lynx is all keyboard based. &lt;code&gt;Q&lt;/code&gt; quits, the arrow keys move your cursor to the next, clickable link, and the space bar will scroll you down to the next page. Everything else is listed at the bottom of the terminal.&lt;/p&gt;</description>
       <content>&lt;p&gt;Lynx may be the oldest, currently maintained browser around. Though it looks nothing like a modern browser and will probably break trying to load any react based webpage, I still think it&amp;rsquo;s one of the most underrated and underutilized browsers, which is why I still find myself using it on an almost daily basis.&lt;/p&gt;
 &lt;p&gt;What Lynx offers:&lt;/p&gt;
 &lt;ul&gt;

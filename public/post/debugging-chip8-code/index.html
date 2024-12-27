@@ -14,19 +14,50 @@
 <link rel="canonical" href="/post/debugging-chip8-code/" />
 
 
-  
-
-
-
 
 
 
   
+  <link rel="stylesheet" href="/css/buttons.min.2bc533403a27dfe0e93105a92502b42ce4587e2e4a87d9f7d349e51e16e09478.css">
+
   
+  <link rel="stylesheet" href="/css/code.min.00125962708925857e7b66dbc58391d55be1191a3d0ce2034de8c9cd2c481c36.css">
+
   
+  <link rel="stylesheet" href="/css/fonts.min.4881f0c525f3ce2a1864fb6e96676396cebe1e6fcef1933e8e1dde7041004fb5.css">
+
   
+  <link rel="stylesheet" href="/css/footer.min.2e3eb191baee58dd05a9f0104ac1fab0827bca7c64dafe0b2579f934c33a1d69.css">
+
   
-  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/css/gist.min.a751e8b0abe1ba8bc53ced52a38b19d8950fe78ca29454ea8c2595cf26aad5c0.css">
+
+  
+  <link rel="stylesheet" href="/css/header.min.b6fb4423cf82a9f9d7abc9cd010223fa3d70a6526a3f28f8e17d814c06e18f9e.css">
+
+  
+  <link rel="stylesheet" href="/css/main.min.fe8dc560fccb53a458b0db19ccb7b265764ac46b68596b7e099c6793054dd457.css">
+
+  
+  <link rel="stylesheet" href="/css/menu.min.83637a90d903026bc280d3f82f96ceb06c5fc72b7c1a8d686afb5bbf818a29f7.css">
+
+  
+  <link rel="stylesheet" href="/css/pagination.min.82f6400eae7c7c6dc3c866733c2ec0579e4089608fea69400ff85b3880aa0d3c.css">
+
+  
+  <link rel="stylesheet" href="/css/post.min.fc74ca360273c1d828da3c02b8174eba435607b369d98418ccc6f2243cd4e75d.css">
+
+  
+  <link rel="stylesheet" href="/css/prism.min.9023bbc24533d09e97a51a0a42a5a7bfe4c591ae167c5551fb1d2191d11977c0.css">
+
+  
+  <link rel="stylesheet" href="/css/syntax.min.cc789ed9377260d7949ea4c18781fc58959a89287210fe4edbff44ebfc1511b6.css">
+
+  
+  <link rel="stylesheet" href="/css/terminal.min.7513e45baa4648a42babad8ba81f3dded41854772e32ded4317bc4c2f2d4e3a0.css">
+
+  
+  <link rel="stylesheet" href="/css/terms.min.b81791663c3790e738e571cdbf802312390d30e4b1d8dc9d814a5b5454d0ac11.css">
 
 
 
@@ -34,9 +65,8 @@
 
 
 
-  <link rel="shortcut icon" href="/img/theme-colors/green.png">
-  <link rel="apple-touch-icon" href="/img/theme-colors/green.png">
-
+<link rel="shortcut icon" href="/favicon.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
 
 <meta name="twitter:card" content="summary" />
@@ -55,9 +85,7 @@
 <meta property="og:url" content="/post/debugging-chip8-code/" />
 <meta property="og:site_name" content="Adam&#39;s Blag" />
 
-  
-    <meta property="og:image" content="/img/favicon/green.png">
-  
+  <meta property="og:image" content="/og-image.png">
 
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="627">
@@ -81,10 +109,10 @@
 
 
 </head>
-<body class="green">
+<body>
 
 
-<div class="container full headings--one-size">
+<div class="container full">
 
   <header class="header">
   <div class="header__inner">
@@ -120,7 +148,7 @@
     
       
         
-          <li><a href="https://adammelnyk.ca">Contact</a></li>
+          <li><a href="https://adammelnyk.ca" >Contact</a></li>
         
       
       
@@ -138,16 +166,7 @@
   <h1 class="post-title">
     <a href="/post/debugging-chip8-code/">Debugging CHIP8 code</a>
   </h1>
-  <div class="post-meta">
-    
-      <time class="post-date">
-        2020-08-23 ::
-        
-      </time>
-    
-    
-    
-  </div>
+  <div class="post-meta"><time class="post-date">2020-08-23</time></div>
 
   
     <span class="post-tags">
@@ -170,56 +189,56 @@
   <div class="post-content"><div>
         <p>The first time I wrote a program in hexidecimal or assembly was using a made up, educational cpu called Pep8, this was before I had read anything about how to properly organize code, programming practices, and before I had read <a href="https://www.amazon.com/Clean-Code-Handbook-Software-Craftsmanship/dp/0132350882">clean code</a>. Over the last month and a half, I&rsquo;ve been working on a <a href="https://en.wikipedia.org/wiki/CHIP-8">CHIP8</a> emulator, which you can find <a href="https://github.com/adamrmelnyk/chip_8_emulator">here</a>, so for the first time in a while, I&rsquo;m revisiting old topics and old books on computer architecture. Now that the project is largely complete, what&rsquo;s left is to test it out, and the best way to do that, is to mess around with it and see what I can build for myself using the chip8 instruction set.</p>
 <p>As I wrote many small programs to test each of the operations of the emulator, I ran into a number of scenarios where I&rsquo;d end up re-writing instructions after parts of the code had moved around a lot. In my day to day work, I spend time thinking a lot about how to best organize my code. It&rsquo;s not enough to have it work, it&rsquo;s important to organize it as well so that it will be easier to maintain, reduce complexity, and be readable for engineers who may not be familiar with it. This got me thinking about how alien it was to debug CHIP8 programs and made me wonder whether or not there existed a &ldquo;Clean Hex Code&rdquo; or a &ldquo;Clean assembly code&rdquo; or perhaps something more akin to Dijkstra&rsquo;s <a href="https://en.wikipedia.org/wiki/Structured_programming">Structured Programming</a> for CHIP8 code.</p>
-<h2 id="debugging-is-hard">Debugging is hard<a href="#debugging-is-hard" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<h2 id="debugging-is-hard">Debugging is hard<a href="#debugging-is-hard" class="hanchor" ariaLabel="Anchor">#</a> </h2>
 <p>Debugging is challenging when I write code in Java, Rust, Javascript etc. That&rsquo;s why it&rsquo;s so important that all modern languages have their own IDE&rsquo;s, editors, plugins, and other tools to aid the programmer in development. Even the C language, designed around the same time as CHIP8, has it&rsquo;s own tools that people use today. So when I encounter a bug in my CHIP8 program, I&rsquo;m really left to my own devices. Aside from the fact that any time I encounter an error, I need to determine whether or not the error resides in the emulator I&rsquo;ve written, or the assembly itself. Debugging the hex code is much more challenging for much less code.</p>
 <p>To edit my CHIP8 programs I used ghex, a simple editor that I had used in the past to inspect binaries. There may be better tools out there but this was one that I am familiar with. Here&rsquo;s a simple program with the breakdown so we can follow what&rsquo;s going on.</p>
 <table>
-<thead>
-<tr>
-<th>row</th>
-<th>op</th>
-<th>op</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>0x200</td>
-<td>A2</td>
-<td>06</td>
-<td>Set our address register to begin reading at location 206</td>
-</tr>
-<tr>
-<td>0x202</td>
-<td>D0</td>
-<td>05</td>
-<td>Draw at (0,0), 5 bytes starting from the location in memory specified by the address register</td>
-</tr>
-<tr>
-<td>0x204</td>
-<td>00</td>
-<td>00</td>
-<td>Halt</td>
-</tr>
-<tr>
-<td>0x206</td>
-<td>FF</td>
-<td>C3</td>
-<td>The bytes that will be drawn</td>
-</tr>
-<tr>
-<td>0x208</td>
-<td>FF</td>
-<td>C3</td>
-<td></td>
-</tr>
-<tr>
-<td>0x210</td>
-<td>00</td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th>row</th>
+          <th>op</th>
+          <th>op</th>
+          <th>Description</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>0x200</td>
+          <td>A2</td>
+          <td>06</td>
+          <td>Set our address register to begin reading at location 206</td>
+      </tr>
+      <tr>
+          <td>0x202</td>
+          <td>D0</td>
+          <td>05</td>
+          <td>Draw at (0,0), 5 bytes starting from the location in memory specified by the address register</td>
+      </tr>
+      <tr>
+          <td>0x204</td>
+          <td>00</td>
+          <td>00</td>
+          <td>Halt</td>
+      </tr>
+      <tr>
+          <td>0x206</td>
+          <td>FF</td>
+          <td>C3</td>
+          <td>The bytes that will be drawn</td>
+      </tr>
+      <tr>
+          <td>0x208</td>
+          <td>FF</td>
+          <td>C3</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>0x210</td>
+          <td>00</td>
+          <td></td>
+          <td></td>
+      </tr>
+  </tbody>
 </table>
 <p>In this small program, what we&rsquo;re doing is printing a single letter to the top right hand corner of the screen. In this case, the letter &ldquo;A&rdquo;. We load the address of where we want to start reading our letter from, into register 0, Then draw from five locations in memory beginning at the location stored in register 0. I should also note that although I am creating this letter myself after the Halt operation, CHIP8 loads sprites for letters and numbers in the first 512 address spaces so we could actually make this easier on ourselves by using the sprites given to us.</p>
 <p>The result looks like this:</p>
@@ -230,70 +249,70 @@
 </span></span><span style="display:flex;"><span>// **    ** 0xC3 0b1100_0011
 </span></span></code></pre></div><p>The next thing I wanted to do was put a &ldquo;+&rdquo; sign next to the A. To do this I just repeat what I did before. Add the sprite for the plus after the A. Then I&rsquo;ll just draw once more.</p>
 <table>
-<thead>
-<tr>
-<th>row</th>
-<th>op</th>
-<th>op</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>0x200</td>
-<td>A2</td>
-<td>06</td>
-<td>Set our address register to begin reading at location 206</td>
-</tr>
-<tr>
-<td>0x202</td>
-<td>D0</td>
-<td>05</td>
-<td>Draw the A</td>
-</tr>
-<tr>
-<td>0x204</td>
-<td>D0</td>
-<td>06</td>
-<td>Draw the +</td>
-</tr>
-<tr>
-<td>0x206</td>
-<td>00</td>
-<td>00</td>
-<td>Halt</td>
-</tr>
-<tr>
-<td>0x208</td>
-<td>FF</td>
-<td>C3</td>
-<td>The A Sprite</td>
-</tr>
-<tr>
-<td>0x20A</td>
-<td>FF</td>
-<td>C3</td>
-<td></td>
-</tr>
-<tr>
-<td>0x20C</td>
-<td>18</td>
-<td>18</td>
-<td>The + Sprite</td>
-</tr>
-<tr>
-<td>0x20E</td>
-<td>FF</td>
-<td>FF</td>
-<td></td>
-</tr>
-<tr>
-<td>0x210</td>
-<td>18</td>
-<td>18</td>
-<td></td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th>row</th>
+          <th>op</th>
+          <th>op</th>
+          <th>Description</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>0x200</td>
+          <td>A2</td>
+          <td>06</td>
+          <td>Set our address register to begin reading at location 206</td>
+      </tr>
+      <tr>
+          <td>0x202</td>
+          <td>D0</td>
+          <td>05</td>
+          <td>Draw the A</td>
+      </tr>
+      <tr>
+          <td>0x204</td>
+          <td>D0</td>
+          <td>06</td>
+          <td>Draw the +</td>
+      </tr>
+      <tr>
+          <td>0x206</td>
+          <td>00</td>
+          <td>00</td>
+          <td>Halt</td>
+      </tr>
+      <tr>
+          <td>0x208</td>
+          <td>FF</td>
+          <td>C3</td>
+          <td>The A Sprite</td>
+      </tr>
+      <tr>
+          <td>0x20A</td>
+          <td>FF</td>
+          <td>C3</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>0x20C</td>
+          <td>18</td>
+          <td>18</td>
+          <td>The + Sprite</td>
+      </tr>
+      <tr>
+          <td>0x20E</td>
+          <td>FF</td>
+          <td>FF</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>0x210</td>
+          <td>18</td>
+          <td>18</td>
+          <td></td>
+      </tr>
+  </tbody>
 </table>
 <p>This should produce and A, and then a &ldquo;+&rdquo; that looks like this:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>//    **    0x18 0b0001_1000
@@ -313,324 +332,324 @@
 </ul>
 <p>Here&rsquo;s what the working solution looks like:</p>
 <table>
-<thead>
-<tr>
-<th>row</th>
-<th>op</th>
-<th>op</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>0x200</td>
-<td>61</td>
-<td>0A</td>
-<td>Load 0x0A into register 0x1</td>
-</tr>
-<tr>
-<td>0x202</td>
-<td>A2</td>
-<td>0E</td>
-<td>Set the address register to 0x214</td>
-</tr>
-<tr>
-<td>0x204</td>
-<td>D0</td>
-<td>05</td>
-<td>Draw from location (x,y) in register x = 0x1, y = 0x0, 5 addressess starting from the location of the address register</td>
-</tr>
-<tr>
-<td>0x206</td>
-<td>A2</td>
-<td>13</td>
-<td>Set the address register to 0x219</td>
-</tr>
-<tr>
-<td>0x208</td>
-<td>D1</td>
-<td>06</td>
-<td>Draw from location (x,y) in register x = 0x1, y = 0x0, 6 addressess</td>
-</tr>
-<tr>
-<td>0x20A</td>
-<td>F0</td>
-<td>0A</td>
-<td>Set key press to register 0 (Waits for keypress)</td>
-</tr>
-<tr>
-<td>0x20C</td>
-<td>00</td>
-<td>00</td>
-<td>Halt</td>
-</tr>
-<tr>
-<td>0x20E</td>
-<td>FF</td>
-<td>C3</td>
-<td>Start of A sprite</td>
-</tr>
-<tr>
-<td>0x210</td>
-<td>FF</td>
-<td>C3</td>
-<td></td>
-</tr>
-<tr>
-<td>0x212</td>
-<td>C3</td>
-<td>18</td>
-<td>End of A sprite, beginning of + sprite</td>
-</tr>
-<tr>
-<td>0x214</td>
-<td>18</td>
-<td>FF</td>
-<td></td>
-</tr>
-<tr>
-<td>0x216</td>
-<td>FF</td>
-<td>18</td>
-<td></td>
-</tr>
-<tr>
-<td>0x218</td>
-<td>18</td>
-<td></td>
-<td>End of + sprite</td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th>row</th>
+          <th>op</th>
+          <th>op</th>
+          <th>Description</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>0x200</td>
+          <td>61</td>
+          <td>0A</td>
+          <td>Load 0x0A into register 0x1</td>
+      </tr>
+      <tr>
+          <td>0x202</td>
+          <td>A2</td>
+          <td>0E</td>
+          <td>Set the address register to 0x214</td>
+      </tr>
+      <tr>
+          <td>0x204</td>
+          <td>D0</td>
+          <td>05</td>
+          <td>Draw from location (x,y) in register x = 0x1, y = 0x0, 5 addressess starting from the location of the address register</td>
+      </tr>
+      <tr>
+          <td>0x206</td>
+          <td>A2</td>
+          <td>13</td>
+          <td>Set the address register to 0x219</td>
+      </tr>
+      <tr>
+          <td>0x208</td>
+          <td>D1</td>
+          <td>06</td>
+          <td>Draw from location (x,y) in register x = 0x1, y = 0x0, 6 addressess</td>
+      </tr>
+      <tr>
+          <td>0x20A</td>
+          <td>F0</td>
+          <td>0A</td>
+          <td>Set key press to register 0 (Waits for keypress)</td>
+      </tr>
+      <tr>
+          <td>0x20C</td>
+          <td>00</td>
+          <td>00</td>
+          <td>Halt</td>
+      </tr>
+      <tr>
+          <td>0x20E</td>
+          <td>FF</td>
+          <td>C3</td>
+          <td>Start of A sprite</td>
+      </tr>
+      <tr>
+          <td>0x210</td>
+          <td>FF</td>
+          <td>C3</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>0x212</td>
+          <td>C3</td>
+          <td>18</td>
+          <td>End of A sprite, beginning of + sprite</td>
+      </tr>
+      <tr>
+          <td>0x214</td>
+          <td>18</td>
+          <td>FF</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>0x216</td>
+          <td>FF</td>
+          <td>18</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>0x218</td>
+          <td>18</td>
+          <td></td>
+          <td>End of + sprite</td>
+      </tr>
+  </tbody>
 </table>
 <p>Let&rsquo;s say we aren&rsquo;t quite finished though, we want to print another &ldquo;A&rdquo; on the display. We&rsquo;ll have to make more changes, and for a second time, go back and change the addresses of where we start reading our sprites.</p>
 <p>The finished product now looks like this:</p>
 <table>
-<thead>
-<tr>
-<th>row</th>
-<th>op</th>
-<th>op</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>0x200</td>
-<td>61</td>
-<td>0A</td>
-<td>Load 0x0A into register 0x1</td>
-</tr>
-<tr>
-<td>0x202</td>
-<td>62</td>
-<td>14</td>
-<td>Load 0x14 into register 0x2</td>
-</tr>
-<tr>
-<td>0x204</td>
-<td>A2</td>
-<td>14</td>
-<td>Set the address register to 0x214</td>
-</tr>
-<tr>
-<td>0x206</td>
-<td>D0</td>
-<td>05</td>
-<td>Draw from location (x,y) in register x = 0x1, y = 0x0, 5 addressess starting from the location of the address register</td>
-</tr>
-<tr>
-<td>0x208</td>
-<td>A2</td>
-<td>19</td>
-<td>Set the address register to 0x219</td>
-</tr>
-<tr>
-<td>0x20A</td>
-<td>D1</td>
-<td>06</td>
-<td>Draw from location (x,y) in register x = 0x1, y = 0x0, 6 addressess</td>
-</tr>
-<tr>
-<td>0x20C</td>
-<td>A2</td>
-<td>14</td>
-<td>set address register to 0x214</td>
-</tr>
-<tr>
-<td>0x20E</td>
-<td>D2</td>
-<td>05</td>
-<td>Draw from location (x,y) in register x = 0x2, y = 0x0, 6 addressess</td>
-</tr>
-<tr>
-<td>0x210</td>
-<td>F0</td>
-<td>0A</td>
-<td>Set key press to register 0 (Waits for keypress)</td>
-</tr>
-<tr>
-<td>0x212</td>
-<td>00</td>
-<td>00</td>
-<td>Halt</td>
-</tr>
-<tr>
-<td>0x214</td>
-<td>FF</td>
-<td>C3</td>
-<td>Start of A sprite</td>
-</tr>
-<tr>
-<td>0x216</td>
-<td>FF</td>
-<td>C3</td>
-<td></td>
-</tr>
-<tr>
-<td>0x218</td>
-<td>C3</td>
-<td>18</td>
-<td>End of A sprite, beginning of + sprite</td>
-</tr>
-<tr>
-<td>0x21A</td>
-<td>18</td>
-<td>FF</td>
-<td></td>
-</tr>
-<tr>
-<td>0x21C</td>
-<td>FF</td>
-<td>18</td>
-<td></td>
-</tr>
-<tr>
-<td>0x21E</td>
-<td>18</td>
-<td></td>
-<td>End of + sprite</td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th>row</th>
+          <th>op</th>
+          <th>op</th>
+          <th>Description</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>0x200</td>
+          <td>61</td>
+          <td>0A</td>
+          <td>Load 0x0A into register 0x1</td>
+      </tr>
+      <tr>
+          <td>0x202</td>
+          <td>62</td>
+          <td>14</td>
+          <td>Load 0x14 into register 0x2</td>
+      </tr>
+      <tr>
+          <td>0x204</td>
+          <td>A2</td>
+          <td>14</td>
+          <td>Set the address register to 0x214</td>
+      </tr>
+      <tr>
+          <td>0x206</td>
+          <td>D0</td>
+          <td>05</td>
+          <td>Draw from location (x,y) in register x = 0x1, y = 0x0, 5 addressess starting from the location of the address register</td>
+      </tr>
+      <tr>
+          <td>0x208</td>
+          <td>A2</td>
+          <td>19</td>
+          <td>Set the address register to 0x219</td>
+      </tr>
+      <tr>
+          <td>0x20A</td>
+          <td>D1</td>
+          <td>06</td>
+          <td>Draw from location (x,y) in register x = 0x1, y = 0x0, 6 addressess</td>
+      </tr>
+      <tr>
+          <td>0x20C</td>
+          <td>A2</td>
+          <td>14</td>
+          <td>set address register to 0x214</td>
+      </tr>
+      <tr>
+          <td>0x20E</td>
+          <td>D2</td>
+          <td>05</td>
+          <td>Draw from location (x,y) in register x = 0x2, y = 0x0, 6 addressess</td>
+      </tr>
+      <tr>
+          <td>0x210</td>
+          <td>F0</td>
+          <td>0A</td>
+          <td>Set key press to register 0 (Waits for keypress)</td>
+      </tr>
+      <tr>
+          <td>0x212</td>
+          <td>00</td>
+          <td>00</td>
+          <td>Halt</td>
+      </tr>
+      <tr>
+          <td>0x214</td>
+          <td>FF</td>
+          <td>C3</td>
+          <td>Start of A sprite</td>
+      </tr>
+      <tr>
+          <td>0x216</td>
+          <td>FF</td>
+          <td>C3</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>0x218</td>
+          <td>C3</td>
+          <td>18</td>
+          <td>End of A sprite, beginning of + sprite</td>
+      </tr>
+      <tr>
+          <td>0x21A</td>
+          <td>18</td>
+          <td>FF</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>0x21C</td>
+          <td>FF</td>
+          <td>18</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>0x21E</td>
+          <td>18</td>
+          <td></td>
+          <td>End of + sprite</td>
+      </tr>
+  </tbody>
 </table>
-<h3 id="how-to-avoid-rewriting-everything">How to avoid rewriting everything<a href="#how-to-avoid-rewriting-everything" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<h3 id="how-to-avoid-rewriting-everything">How to avoid rewriting everything<a href="#how-to-avoid-rewriting-everything" class="hanchor" ariaLabel="Anchor">#</a> </h3>
 <p>What this example progarm above illustrates is that we really need to plan things ahead otherwise we&rsquo;re going to end up needing to rewrite code. So what&rsquo;s that solution to all of this? Because this is a small program, we could probably get away with having more space in between where our sprites are stored and where we execute our program.</p>
 <table>
-<thead>
-<tr>
-<th>row</th>
-<th>op</th>
-<th>op</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>0x200</td>
-<td>61</td>
-<td>0A</td>
-<td>Load 0x0A into register 0x1</td>
-</tr>
-<tr>
-<td>0x202</td>
-<td>62</td>
-<td>14</td>
-<td>Load 0x14 into register 0x2</td>
-</tr>
-<tr>
-<td>0x204</td>
-<td>A5</td>
-<td>00</td>
-<td>Set the address register to 0x500</td>
-</tr>
-<tr>
-<td>0x206</td>
-<td>D0</td>
-<td>05</td>
-<td>Draw from location (x,y) in register x = 0x1, y = 0x0, 5 addressess starting from the location of the address register</td>
-</tr>
-<tr>
-<td>0x208</td>
-<td>A5</td>
-<td>05</td>
-<td>Set the address register to 0x505</td>
-</tr>
-<tr>
-<td>0x20A</td>
-<td>D1</td>
-<td>06</td>
-<td>Draw from location (x,y) in register x = 0x1, y = 0x0, 6 addressess</td>
-</tr>
-<tr>
-<td>0x20C</td>
-<td>A5</td>
-<td>00</td>
-<td>set address register to 0x500</td>
-</tr>
-<tr>
-<td>0x20E</td>
-<td>D2</td>
-<td>05</td>
-<td>Draw from location (x,y) in register x = 0x2, y = 0x0, 6 addressess</td>
-</tr>
-<tr>
-<td>0x210</td>
-<td>F0</td>
-<td>0A</td>
-<td>Set key press to register 0 (Waits for keypress)</td>
-</tr>
-<tr>
-<td>0x212</td>
-<td>00</td>
-<td>00</td>
-<td>Halt</td>
-</tr>
-<tr>
-<td>&hellip;..</td>
-<td>..</td>
-<td>..</td>
-<td>&hellip;.</td>
-</tr>
-<tr>
-<td>0x500</td>
-<td>FF</td>
-<td>C3</td>
-<td>Start of A sprite</td>
-</tr>
-<tr>
-<td>0x502</td>
-<td>FF</td>
-<td>C3</td>
-<td></td>
-</tr>
-<tr>
-<td>0x504</td>
-<td>C3</td>
-<td>18</td>
-<td>End of A sprite, beginning of + sprite</td>
-</tr>
-<tr>
-<td>0x506</td>
-<td>18</td>
-<td>FF</td>
-<td></td>
-</tr>
-<tr>
-<td>0x508</td>
-<td>FF</td>
-<td>18</td>
-<td></td>
-</tr>
-<tr>
-<td>0x50A</td>
-<td>18</td>
-<td></td>
-<td>End of + sprite</td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th>row</th>
+          <th>op</th>
+          <th>op</th>
+          <th>Description</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>0x200</td>
+          <td>61</td>
+          <td>0A</td>
+          <td>Load 0x0A into register 0x1</td>
+      </tr>
+      <tr>
+          <td>0x202</td>
+          <td>62</td>
+          <td>14</td>
+          <td>Load 0x14 into register 0x2</td>
+      </tr>
+      <tr>
+          <td>0x204</td>
+          <td>A5</td>
+          <td>00</td>
+          <td>Set the address register to 0x500</td>
+      </tr>
+      <tr>
+          <td>0x206</td>
+          <td>D0</td>
+          <td>05</td>
+          <td>Draw from location (x,y) in register x = 0x1, y = 0x0, 5 addressess starting from the location of the address register</td>
+      </tr>
+      <tr>
+          <td>0x208</td>
+          <td>A5</td>
+          <td>05</td>
+          <td>Set the address register to 0x505</td>
+      </tr>
+      <tr>
+          <td>0x20A</td>
+          <td>D1</td>
+          <td>06</td>
+          <td>Draw from location (x,y) in register x = 0x1, y = 0x0, 6 addressess</td>
+      </tr>
+      <tr>
+          <td>0x20C</td>
+          <td>A5</td>
+          <td>00</td>
+          <td>set address register to 0x500</td>
+      </tr>
+      <tr>
+          <td>0x20E</td>
+          <td>D2</td>
+          <td>05</td>
+          <td>Draw from location (x,y) in register x = 0x2, y = 0x0, 6 addressess</td>
+      </tr>
+      <tr>
+          <td>0x210</td>
+          <td>F0</td>
+          <td>0A</td>
+          <td>Set key press to register 0 (Waits for keypress)</td>
+      </tr>
+      <tr>
+          <td>0x212</td>
+          <td>00</td>
+          <td>00</td>
+          <td>Halt</td>
+      </tr>
+      <tr>
+          <td>&hellip;..</td>
+          <td>..</td>
+          <td>..</td>
+          <td>&hellip;.</td>
+      </tr>
+      <tr>
+          <td>0x500</td>
+          <td>FF</td>
+          <td>C3</td>
+          <td>Start of A sprite</td>
+      </tr>
+      <tr>
+          <td>0x502</td>
+          <td>FF</td>
+          <td>C3</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>0x504</td>
+          <td>C3</td>
+          <td>18</td>
+          <td>End of A sprite, beginning of + sprite</td>
+      </tr>
+      <tr>
+          <td>0x506</td>
+          <td>18</td>
+          <td>FF</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>0x508</td>
+          <td>FF</td>
+          <td>18</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>0x50A</td>
+          <td>18</td>
+          <td></td>
+          <td>End of + sprite</td>
+      </tr>
+  </tbody>
 </table>
 <p>One thing you might notice about hexeditors is that they default to overwrite instead of insert mode. This default isn&rsquo;t very helpful in most situations but, it&rsquo;s perfect for editing hexcode, it makes sense that we don&rsquo;t want other code to be moved around too much as we require that our sprites or future method calls stay in place.</p>
 <p>After moving our sprites down to location <code>0x500</code>, we now have a little more room to work with, so we can add some extra operations in between before we need to worry. The caveat is that in a larger one we&rsquo;d need to be more efficient with our space as our memory constraints are a lot lower than more modern machines.</p>
-<h3 id="adding-a-debugger">Adding a debugger<a href="#adding-a-debugger" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<h3 id="adding-a-debugger">Adding a debugger<a href="#adding-a-debugger" class="hanchor" ariaLabel="Anchor">#</a> </h3>
 <p>After overcoming a few actual bugs within the emulator itself, I ran into some bugs with my code much like the ones above. Unfortunately for us, there are very few tools to help us debug. There&rsquo;s no CHIP8 IDE that will let us know that we didn&rsquo;t load anything into the register we&rsquo;re going to read from, or that we&rsquo;re going to read from the wrong place in memory. Because this is an emulator, we&rsquo;re no longer limited by the orginal technology of CHIP8, we can add our own debugging tools. To help overcome these challenges, I added a debugger which would halt the execution cycle, waiting for enter to be pressed, exiting debug mode, or exit the emulator itself which looks like this:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-Rust" data-lang="Rust"><span style="display:flex;"><span><span style="color:#e6db74">/// Loop until a valid key is pressed
 </span></span></span><span style="display:flex;"><span><span style="color:#e6db74"></span><span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">wait_on_debug_input</span>(<span style="color:#f92672">&amp;</span><span style="color:#66d9ef">mut</span> self) {
@@ -652,9 +671,9 @@
 </span></span><span style="display:flex;"><span>        }
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p><img alt="debuggif" src="https://github.com/adamrmelnyk/chip_8_emulator/raw/master/examples/debug.gif"></p>
+</span></span></code></pre></div><p><img src="https://github.com/adamrmelnyk/chip_8_emulator/raw/master/examples/debug.gif" alt="debuggif"></p>
 <p>At each press of the enter key, I either load a register, draw, set the address register, or any other operation. This isn&rsquo;t perfect but it will go a long way to understanding what&rsquo;s going on, one step at a time.</p>
-<h2 id="whats-next">What&rsquo;s next<a href="#whats-next" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<h2 id="whats-next">What&rsquo;s next<a href="#whats-next" class="hanchor" ariaLabel="Anchor">#</a> </h2>
 <p>There&rsquo;s a lot left to be desired here in terms of what tools we can offer the CHIP8 programmer, for one, we aren&rsquo;t displaying the op codes, nor are we showing any additional information about state such as memory and register values. Adding a second window might help to display some of this, though it is a little strange to display that separately. We should also add the concept of state so we can replay operations. We probably won&rsquo;t ever be able to recreate the necessary tools that make modern programming ergonomic, but it can definitely be improved.</p>
 
       </div></div>
@@ -662,29 +681,27 @@
   
     
 <div class="pagination">
-    <div class="pagination__title">
-        <span class="pagination__title-h">Read other posts</span>
-        <hr />
-    </div>
-    <div class="pagination__buttons">
-        
-        <span class="button previous">
-            <a href="/post/creating-launch-plugins-for-pop-os/">
-                <span class="button__icon">←</span>
-                <span class="button__text">Creating Launch Plugins for Pop!_OS</span>
-            </a>
-        </span>
-        
-        
-        <span class="button next">
-            <a href="/post/scraping-wikipedia-with-rust/">
-                <span class="button__text">Scraping Wikipedia With Rust</span>
-                <span class="button__icon">→</span>
-            </a>
-        </span>
-        
-    </div>
+  <div class="pagination__title">
+    <span class="pagination__title-h"></span>
+    <hr />
+  </div>
+  <div class="pagination__buttons">
+    
+      <a href="/post/creating-launch-plugins-for-pop-os/" class="button inline prev">
+        Creating Launch Plugins for Pop!_OS
+      </a>
+    
+    
+      ::
+    
+    
+      <a href="/post/scraping-wikipedia-with-rust/" class="button inline next">
+        Scraping Wikipedia With Rust
+      </a>
+    
+  </div>
 </div>
+
 
   
 

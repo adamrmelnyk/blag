@@ -14,19 +14,50 @@
 <link rel="canonical" href="/post/creating-a-resume-in-doom/" />
 
 
-  
-
-
-
 
 
 
   
+  <link rel="stylesheet" href="/css/buttons.min.2bc533403a27dfe0e93105a92502b42ce4587e2e4a87d9f7d349e51e16e09478.css">
+
   
+  <link rel="stylesheet" href="/css/code.min.00125962708925857e7b66dbc58391d55be1191a3d0ce2034de8c9cd2c481c36.css">
+
   
+  <link rel="stylesheet" href="/css/fonts.min.4881f0c525f3ce2a1864fb6e96676396cebe1e6fcef1933e8e1dde7041004fb5.css">
+
   
+  <link rel="stylesheet" href="/css/footer.min.2e3eb191baee58dd05a9f0104ac1fab0827bca7c64dafe0b2579f934c33a1d69.css">
+
   
-  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/css/gist.min.a751e8b0abe1ba8bc53ced52a38b19d8950fe78ca29454ea8c2595cf26aad5c0.css">
+
+  
+  <link rel="stylesheet" href="/css/header.min.b6fb4423cf82a9f9d7abc9cd010223fa3d70a6526a3f28f8e17d814c06e18f9e.css">
+
+  
+  <link rel="stylesheet" href="/css/main.min.fe8dc560fccb53a458b0db19ccb7b265764ac46b68596b7e099c6793054dd457.css">
+
+  
+  <link rel="stylesheet" href="/css/menu.min.83637a90d903026bc280d3f82f96ceb06c5fc72b7c1a8d686afb5bbf818a29f7.css">
+
+  
+  <link rel="stylesheet" href="/css/pagination.min.82f6400eae7c7c6dc3c866733c2ec0579e4089608fea69400ff85b3880aa0d3c.css">
+
+  
+  <link rel="stylesheet" href="/css/post.min.fc74ca360273c1d828da3c02b8174eba435607b369d98418ccc6f2243cd4e75d.css">
+
+  
+  <link rel="stylesheet" href="/css/prism.min.9023bbc24533d09e97a51a0a42a5a7bfe4c591ae167c5551fb1d2191d11977c0.css">
+
+  
+  <link rel="stylesheet" href="/css/syntax.min.cc789ed9377260d7949ea4c18781fc58959a89287210fe4edbff44ebfc1511b6.css">
+
+  
+  <link rel="stylesheet" href="/css/terminal.min.7513e45baa4648a42babad8ba81f3dded41854772e32ded4317bc4c2f2d4e3a0.css">
+
+  
+  <link rel="stylesheet" href="/css/terms.min.b81791663c3790e738e571cdbf802312390d30e4b1d8dc9d814a5b5454d0ac11.css">
 
 
 
@@ -34,9 +65,8 @@
 
 
 
-  <link rel="shortcut icon" href="/img/theme-colors/green.png">
-  <link rel="apple-touch-icon" href="/img/theme-colors/green.png">
-
+<link rel="shortcut icon" href="/favicon.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
 
 <meta name="twitter:card" content="summary" />
@@ -55,9 +85,7 @@
 <meta property="og:url" content="/post/creating-a-resume-in-doom/" />
 <meta property="og:site_name" content="Adam&#39;s Blag" />
 
-  
-    <meta property="og:image" content="/img/favicon/green.png">
-  
+  <meta property="og:image" content="/og-image.png">
 
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="627">
@@ -81,10 +109,10 @@
 
 
 </head>
-<body class="green">
+<body>
 
 
-<div class="container full headings--one-size">
+<div class="container full">
 
   <header class="header">
   <div class="header__inner">
@@ -120,7 +148,7 @@
     
       
         
-          <li><a href="https://adammelnyk.ca">Contact</a></li>
+          <li><a href="https://adammelnyk.ca" >Contact</a></li>
         
       
       
@@ -138,16 +166,7 @@
   <h1 class="post-title">
     <a href="/post/creating-a-resume-in-doom/">Creating a Résumé in Doom</a>
   </h1>
-  <div class="post-meta">
-    
-      <time class="post-date">
-        2022-09-20 ::
-        
-      </time>
-    
-    
-    
-  </div>
+  <div class="post-meta"><time class="post-date">2022-09-20</time></div>
 
   
     <span class="post-tags">
@@ -166,16 +185,16 @@
   
 
   <div class="post-content"><div>
-        <h2 id="crafting-an-effective-résumé">Crafting an effective Résumé<a href="#crafting-an-effective-résumé" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+        <h2 id="crafting-an-effective-résumé">Crafting an effective Résumé<a href="#crafting-an-effective-résumé" class="hanchor" ariaLabel="Anchor">#</a> </h2>
 <p>My current résumé looks professional and lays out all the information I need to convey to potential employers. I made it with a LaTeX template that I&rsquo;ve modified over the years to suit my needs. This format allows me to comment out information like employers from years ago that I don&rsquo;t want to include, skills that aren&rsquo;t relevant, and of course <a href="https://github.com/adamrmelnyk/Resume">it&rsquo;s on github</a>, so I&rsquo;m not trying to remember what some bullet point used to say, or sifting through 10 versions of the same document.</p>
 <p><strong>But we&rsquo;re not here to talk about that</strong>. This is about a <strong>DOOM</strong> résumé, whatever that hell that is. It does none of the above. It&rsquo;s built into a DOOM WAD file. It is absurdly difficult to edit, requires constant testing while developing, installing programs, knowledge of the command line, and oh&hellip; there are monsters trying to kill you while you try to learn where I was working from 2017 to 2021, so it&rsquo;s not easy to read either.</p>
-<h2 id="creating-a-map">Creating a Map<a href="#creating-a-map" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
-<h3 id="euerka">Euerka<a href="#euerka" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<h2 id="creating-a-map">Creating a Map<a href="#creating-a-map" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<h3 id="euerka">Euerka<a href="#euerka" class="hanchor" ariaLabel="Anchor">#</a> </h3>
 <p>Eureka was the first map making tool that I found. I found a <a href="https://www.youtube.com/watch?v=6ZZfIQsXyzo">tutorial on youtube</a> that made it look somewhat easy, so I went with it. You can toggle between a few different modes, that let you add rooms, monsters, objects and edit walls, textures, ceilings, as well as adding room effects.</p>
-<p><img alt="Eureka editor" src="/images/eureka.png"></p>
-<h3 id="doors">Doors<a href="#doors" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<p><img src="/images/eureka.png" alt="Eureka editor"></p>
+<h3 id="doors">Doors<a href="#doors" class="hanchor" ariaLabel="Anchor">#</a> </h3>
 <p>Luckily there have been some updates on doors since the videos on youtube had been released. It was now as easy as highlighting the lines I needed to make into a door, hitting the &ldquo;Gen&rdquo; button, and selecting &ldquo;door&rdquo;. The first door I made, before I knew about this option, took far too long to make and had a few pitfalls since it&rsquo;s so easy to accidentally click something in the environment and edit another wall you didn&rsquo;t intend to. The same tools are available for a few other features that would normally take a lot more time to make, such as stairs.</p>
-<h3 id="adding-textures">Adding Textures<a href="#adding-textures" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<h3 id="adding-textures">Adding Textures<a href="#adding-textures" class="hanchor" ariaLabel="Anchor">#</a> </h3>
 <p>The only way I could think of adding my resume info, was to throw the information up on the walls as you go through the level. Unfortunately, adding textures required a completely different program. Although Eureka had great tools for building maps and setting objects down in your map, it didn&rsquo;t seem to have any way of easily adding textures or files. In comes <a href="https://slade.mancubus.net/index.php?page=downloads">Slade</a>. This editor allows you to edit, add, and remove the files inside of the WAD.</p>
 <p>It does however, require a lot of steps:</p>
 <ul>
@@ -189,60 +208,58 @@
 <li>Add the file to the TextureX</li>
 </ul>
 <p>You can see a sample of how the texture looks here (This is the actual size):</p>
-<p><img alt="UofA Logo DOOM PNG" src="/images/ADAM.png"></p>
+<p><img src="/images/ADAM.png" alt="UofA Logo DOOM PNG"></p>
 <p>The end result of after it&rsquo;s been added:</p>
-<p><img alt="Custom Entrance Textures featuring my name" src="/images/entranceTex.png"></p>
+<p><img src="/images/entranceTex.png" alt="Custom Entrance Textures featuring my name"></p>
 <p>There are limitations to this as well. To avoid the <a href="https://doom.fandom.com/wiki/Tutti-frutti_effect">tutti-frutti effect</a>, it is easiest to just edit existing textures so we won&rsquo;t make a mistake making them in a size that doesn&rsquo;t work well.</p>
 <p>This part took by far, the longest. Creating textures, importing, converting et al. took longer than I would have expected. I have a lot of respect for the people who are still making doom mods in 2022, this is a ton of work.</p>
-<h3 id="laying-out-the-level">Laying out the level<a href="#laying-out-the-level" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<h3 id="laying-out-the-level">Laying out the level<a href="#laying-out-the-level" class="hanchor" ariaLabel="Anchor">#</a> </h3>
 <p>The idea behind this was primarily to play DOOM while somehow displaying my résumé. So I needed to lay out the level in a way that the user is forced to see the info I put on the wall. I can say that I know almost nothing about level design so the best way I could think to do this is to put monsters where I want the user to look.</p>
-<p><img alt="University of Alberta Crest" src="/images/UofADoom.png"></p>
+<p><img src="/images/UofADoom.png" alt="University of Alberta Crest"></p>
 <p>Perfect, the user faces towards the monsters when they start shooting, and they&rsquo;re forced to see where I went to school and what I studied. Now all that&rsquo;s needed to to keep adding more rooms, and with it, more information from my résumé.</p>
-<h3 id="showing-off-my-experience">Showing off my experience<a href="#showing-off-my-experience" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<h3 id="showing-off-my-experience">Showing off my experience<a href="#showing-off-my-experience" class="hanchor" ariaLabel="Anchor">#</a> </h3>
 <p>I need a novel way of showing off my experience, ideally something that takes advantage of it being part of DOOM but, plastering the projects that I&rsquo;ve worked on all over the walls alone isn&rsquo;t going to cut it. It wouldn&rsquo;t be DOOM if there wasn&rsquo;t a secret room somewhere so that&rsquo;s exactly how I&rsquo;m going show this information.</p>
-<p><img alt="My workplace from 2016 to 2017" src="/images/ol.png"></p>
+<p><img src="/images/ol.png" alt="My workplace from 2016 to 2017"></p>
 <p>Here you can see the startup I worked at in 2016 and 2017, but walk through the wall and&hellip;</p>
-<p><img alt="My experience at Ownlocal" src="/images/olexp.png"></p>
+<p><img src="/images/olexp.png" alt="My experience at Ownlocal"></p>
 <p>You&rsquo;re greeted with some of the things I worked on and the company logo. We can even use Eureka to make this sector &ldquo;secret&rdquo;, which means when we walk into into the room it should let us know that we&rsquo;ve discovered a secret!</p>
-<h3 id="ending-the-level">Ending the Level<a href="#ending-the-level" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<h3 id="ending-the-level">Ending the Level<a href="#ending-the-level" class="hanchor" ariaLabel="Anchor">#</a> </h3>
 <p>If you want to avoid spoilers for&hellip; my résumé, you may want to leave and <a href="https://github.com/adamrmelnyk/thisResumeRunsDoom">play the level</a> before reading further.</p>
 <p>One of my favorite endings of DOOM was the end of DOOM Zero, where you walk into a coffin only to be crushed. Luckily, Eureka came with the right tools to do exactly this. You can set an area to give damage and then exit, this combined with using &ldquo;gen&rdquo; to make a hallway into a crusher, I had my ending. the player walks down a hallway towards a Skull button, only to be crushed by hallway before they can reach it.</p>
-<h2 id="want-to-see-my-actual-résumé">Want to see my actual résumé?<a href="#want-to-see-my-actual-résumé" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<h2 id="want-to-see-my-actual-résumé">Want to see my actual résumé?<a href="#want-to-see-my-actual-résumé" class="hanchor" ariaLabel="Anchor">#</a> </h2>
 <p>You can find it <a href="https://github.com/adamrmelnyk/Resume/blob/master/resume.pdf">here</a></p>
-<h2 id="just-want-to-watch">Just want to watch?<a href="#just-want-to-watch" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<h2 id="just-want-to-watch">Just want to watch?<a href="#just-want-to-watch" class="hanchor" ariaLabel="Anchor">#</a> </h2>
 <p>I took a quick screen capture of the level er&hellip; résumé. You can watch it <a href="https://www.youtube.com/watch?v=_lUSQOMB0No">here</a></p>
-<h2 id="or-are-you-ready-to-play">Or are you ready to play?<a href="#or-are-you-ready-to-play" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<h2 id="or-are-you-ready-to-play">Or are you ready to play?<a href="#or-are-you-ready-to-play" class="hanchor" ariaLabel="Anchor">#</a> </h2>
 <p>You can find the rest of the info you need <a href="https://github.com/adamrmelnyk/thisResumeRunsDoom">here</a>.</p>
-<h1 id="-rip-and-tear-">~~ <strong>Rip and Tear</strong> ~~<a href="#-rip-and-tear-" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+<h1 id="-rip-and-tear-">~~ <strong>Rip and Tear</strong> ~~<a href="#-rip-and-tear-" class="hanchor" ariaLabel="Anchor">#</a> </h1>
 
       </div></div>
 
   
     
 <div class="pagination">
-    <div class="pagination__title">
-        <span class="pagination__title-h">Read other posts</span>
-        <hr />
-    </div>
-    <div class="pagination__buttons">
-        
-        <span class="button previous">
-            <a href="/post/i-cant-program-in-c-plus-plus/">
-                <span class="button__icon">←</span>
-                <span class="button__text">I Can&#39;t Program in C&#43;&#43;</span>
-            </a>
-        </span>
-        
-        
-        <span class="button next">
-            <a href="/post/creating-launch-plugins-for-pop-os-updated/">
-                <span class="button__text">Creating Launch Plugins for Pop Os [Updated for 21.10]</span>
-                <span class="button__icon">→</span>
-            </a>
-        </span>
-        
-    </div>
+  <div class="pagination__title">
+    <span class="pagination__title-h"></span>
+    <hr />
+  </div>
+  <div class="pagination__buttons">
+    
+      <a href="/post/i-cant-program-in-c-plus-plus/" class="button inline prev">
+        I Can&#39;t Program in C&#43;&#43;
+      </a>
+    
+    
+      ::
+    
+    
+      <a href="/post/creating-launch-plugins-for-pop-os-updated/" class="button inline next">
+        Creating Launch Plugins for Pop Os [Updated for 21.10]
+      </a>
+    
+  </div>
 </div>
+
 
   
 

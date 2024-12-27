@@ -14,19 +14,50 @@
 <link rel="canonical" href="/post/the-art-of-computer-programming/" />
 
 
-  
-
-
-
 
 
 
   
+  <link rel="stylesheet" href="/css/buttons.min.2bc533403a27dfe0e93105a92502b42ce4587e2e4a87d9f7d349e51e16e09478.css">
+
   
+  <link rel="stylesheet" href="/css/code.min.00125962708925857e7b66dbc58391d55be1191a3d0ce2034de8c9cd2c481c36.css">
+
   
+  <link rel="stylesheet" href="/css/fonts.min.4881f0c525f3ce2a1864fb6e96676396cebe1e6fcef1933e8e1dde7041004fb5.css">
+
   
+  <link rel="stylesheet" href="/css/footer.min.2e3eb191baee58dd05a9f0104ac1fab0827bca7c64dafe0b2579f934c33a1d69.css">
+
   
-  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/css/gist.min.a751e8b0abe1ba8bc53ced52a38b19d8950fe78ca29454ea8c2595cf26aad5c0.css">
+
+  
+  <link rel="stylesheet" href="/css/header.min.b6fb4423cf82a9f9d7abc9cd010223fa3d70a6526a3f28f8e17d814c06e18f9e.css">
+
+  
+  <link rel="stylesheet" href="/css/main.min.fe8dc560fccb53a458b0db19ccb7b265764ac46b68596b7e099c6793054dd457.css">
+
+  
+  <link rel="stylesheet" href="/css/menu.min.83637a90d903026bc280d3f82f96ceb06c5fc72b7c1a8d686afb5bbf818a29f7.css">
+
+  
+  <link rel="stylesheet" href="/css/pagination.min.82f6400eae7c7c6dc3c866733c2ec0579e4089608fea69400ff85b3880aa0d3c.css">
+
+  
+  <link rel="stylesheet" href="/css/post.min.fc74ca360273c1d828da3c02b8174eba435607b369d98418ccc6f2243cd4e75d.css">
+
+  
+  <link rel="stylesheet" href="/css/prism.min.9023bbc24533d09e97a51a0a42a5a7bfe4c591ae167c5551fb1d2191d11977c0.css">
+
+  
+  <link rel="stylesheet" href="/css/syntax.min.cc789ed9377260d7949ea4c18781fc58959a89287210fe4edbff44ebfc1511b6.css">
+
+  
+  <link rel="stylesheet" href="/css/terminal.min.7513e45baa4648a42babad8ba81f3dded41854772e32ded4317bc4c2f2d4e3a0.css">
+
+  
+  <link rel="stylesheet" href="/css/terms.min.b81791663c3790e738e571cdbf802312390d30e4b1d8dc9d814a5b5454d0ac11.css">
 
 
 
@@ -34,9 +65,8 @@
 
 
 
-  <link rel="shortcut icon" href="/img/theme-colors/green.png">
-  <link rel="apple-touch-icon" href="/img/theme-colors/green.png">
-
+<link rel="shortcut icon" href="/favicon.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
 
 <meta name="twitter:card" content="summary" />
@@ -55,9 +85,7 @@
 <meta property="og:url" content="/post/the-art-of-computer-programming/" />
 <meta property="og:site_name" content="Adam&#39;s Blag" />
 
-  
-    <meta property="og:image" content="/img/favicon/green.png">
-  
+  <meta property="og:image" content="/og-image.png">
 
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="627">
@@ -79,10 +107,10 @@
 
 
 </head>
-<body class="green">
+<body>
 
 
-<div class="container full headings--one-size">
+<div class="container full">
 
   <header class="header">
   <div class="header__inner">
@@ -118,7 +146,7 @@
     
       
         
-          <li><a href="https://adammelnyk.ca">Contact</a></li>
+          <li><a href="https://adammelnyk.ca" >Contact</a></li>
         
       
       
@@ -136,16 +164,7 @@
   <h1 class="post-title">
     <a href="/post/the-art-of-computer-programming/">The Art of Computer Programming</a>
   </h1>
-  <div class="post-meta">
-    
-      <time class="post-date">
-        2018-08-25 ::
-        
-      </time>
-    
-    
-    
-  </div>
+  <div class="post-meta"><time class="post-date">2018-08-25</time></div>
 
   
     <span class="post-tags">
@@ -166,7 +185,7 @@
   <div class="post-content"><div>
         <p>An attempt at making my way through one of the most infamous computer science books</p>
 <p>I was recently gifted the first volume of Donald Knuth&rsquo;s: &ldquo;The Art of Computer Programming&rdquo;. Being the computer geek that I am, I have never been so excited yet, intimidated about sitting down and working through what some people would call a Reference book.</p>
-<h2 id="reading-the-book">Reading the book<a href="#reading-the-book" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<h2 id="reading-the-book">Reading the book<a href="#reading-the-book" class="hanchor" ariaLabel="Anchor">#</a> </h2>
 <p>The biggest misconception that I had about this book was that I thought it would be more like a reference book, something you can quickly open, flip to the table of contents, and then over to page 254 for linked lists (or linked allocation in this case) and learn everything there is to know about linked lists. As stated by peers, Stack Overflow posts, Reddit, and Hacker News users, it&rsquo;s not something you would want to actually go about reading through. It&rsquo;s long, highly technical, and full of math equations. I suspect that the average reader would quickly get lost the first time Knuth shows off an algorithm in a custom assembly language written specifically for this book (yes, really). To put this more plainly: <em>Reading through TAOCP is an NP hard problem</em>. Naturally, I couldn&rsquo;t wait to read through it. So how should we go about reading the book? Luckily for us Knuth provides the reader with instructions, and of course, being the computer scientist that he is, a helpful algorithm flow chart to guide the reader through the process of reading the books which looks something like this:</p>
 <pre tabindex="0"><code>           +
            |
@@ -203,7 +222,7 @@
            |                                        |
            +----------------------------------------+
 </code></pre><p>The flow chart and written procedure following this contains other suggestions on how to read through the book based on if you&rsquo;ve read through it before or just based on what your interests are.</p>
-<h3 id="exercises">Exercises<a href="#exercises" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<h3 id="exercises">Exercises<a href="#exercises" class="hanchor" ariaLabel="Anchor">#</a> </h3>
 <p>A large portion of this book is dedicated to exercises as well as the included solutions in the back. <em>Ugh, homework</em>. One of the more helpful things that Knuth does is break down the relative difficulty of each problem using this notation:</p>
 <pre tabindex="0"><code>00 Immediate                        &gt; Recommended
 10 Simple (one minute)                M Mathematically oriented
@@ -212,13 +231,13 @@
 40 Term Project
 50 Research problem
 </code></pre><p>In his reasoning for breaking down exercises this way, Knuth includes an anecdote about how Richard Bellman&rsquo;s book <em>Dynamic Programming</em> mixed trivial problems with research problems with no indication about which problems were solvable or not. <em>I bet his students loved that</em>. Though I wanted to get a lot out of this book the first time round I don&rsquo;t expect to go through all of these. Probably the easier ones to get the idea of it, but also doing a little bit of searching about the more Research type problems is certainly interesting.</p>
-<h2 id="induction-combinations-harmonic-numbers-and-other-basic-concepts">Induction, Combinations, Harmonic numbers, and Other Basic Concepts<a href="#induction-combinations-harmonic-numbers-and-other-basic-concepts" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<h2 id="induction-combinations-harmonic-numbers-and-other-basic-concepts">Induction, Combinations, Harmonic numbers, and Other Basic Concepts<a href="#induction-combinations-harmonic-numbers-and-other-basic-concepts" class="hanchor" ariaLabel="Anchor">#</a> </h2>
 <p>This is where I imagine most people would stop. After a lengthy dissection of what algorithms are as well as the history behind the word Algorithm, Section 1.2 includes a lot of the foundational math behind computer sciences, induction, permutations and combinations, harmonic numbers, and elementary number theory; All the things you tried to wrap your head around in Algorithms I through III that you thought you could forget about have come back with a vengeance. I&rsquo;ll admit that when I started reading the introduction to this chapter and flipped through the next 10 pages or so I considered picking up some supplementary materials on the math involved. After some searching I came across some of his other works and I almost picked up his book on <a href="https://www.amazon.com/dp/0201558025/">concrete mathematics</a>. It was at this point that my adventures in computer science had started to look a lot like <a href="https://www.youtube.com/watch?v=AbSehcT19u0">this</a>. I resisted the temptation a bit and pressed on which I&rsquo;m glad I did because two paragraphs down Knuth suggests you lightly skim this the first time you read through the book otherwise you might never get around to reading the actual computer science topics. <em>Hmmm&hellip; yeah that checks out</em></p>
-<h2 id="mix">MIX<a href="#mix" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<h2 id="mix">MIX<a href="#mix" class="hanchor" ariaLabel="Anchor">#</a> </h2>
 <p>Not only did Knuth have to <a href="https://en.wikipedia.org/wiki/TeX#History">create a typesetting language after the second edition of the second volume was created</a> but he also set about creating an instruction set and assembly language for a made up machine called MIX, reasoning that programming languages tend to influence the way that an engineer might code so having a more pure language to work with might solve that issue. <em><a href="https://www.youtube.com/watch?v=AbSehcT19u0">Hmm&hellip; That sounds familiar</a></em>. You can find the entire set of instructions and diagram of the machine architecture <a href="https://en.wikipedia.org/wiki/MIX">here</a> although if you can find a copy of the book I recommend looking at the diagram given in the book itself because it&rsquo;s beautiful. What I found particularly interesting is that this architecture is actually supported by <a href="https://gcc.gnu.org/onlinedocs/gcc/MMIX-Options.html">gcc</a> meaning we can compile code for the theoretical computer. Knuth describes this computer, the MIX 1009 that runs MIX assembly code as:</p>
 <p><em>MIX is very much like nearly every computer of the 1960&rsquo;s and 70&rsquo;s, except that it is, perhaps, nicer.</em></p>
 <p>There you have it. Throw out that new Macbook pro you bought for $3000 and <em>rm -rf</em> that Vue JS project you&rsquo;ve been working on because it&rsquo;s time we threw something new into the MIX! Knuth does admit that at this point MIX is a bit antequated so naturally he notes that a new version, dubbed <a href="http://mmix.cs.hm.edu/index.html">MMIX</a>, based on RISC, has been created and will likely be included in subsequent editions of the book&hellip; just as soon as they get around to rewriting all of the algorithms in MMMIX assembly.</p>
-<h2 id="concluding-thoughts">Concluding Thoughts<a href="#concluding-thoughts" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<h2 id="concluding-thoughts">Concluding Thoughts<a href="#concluding-thoughts" class="hanchor" ariaLabel="Anchor">#</a> </h2>
 <p>Though the book provides a very comprehensive and deep dive into every topic, the book is still missing some information. Completing this book proved to be an impossible task for Knuth and others; before Knuth can document everything, previous parts of it have already started to go out of date and the various <em>&ldquo;Under construction&rdquo;</em> sections throughout the book highlight just how quickly, and how much information there really is about this field of study. This doesn&rsquo;t come as particularly surprising to anyone who&rsquo;s spent time trying to include the newest npm module into their web project, only to find out it&rsquo;s unsupported three months later. I spent the better part of 4 years studying computer science in school yet barely scratched the surface of what the field has to offer and years later I&rsquo;m still finding the need to learn more about it. At times it can feel overwhelming just trying to keep up with learning the basics of the newest language, the hottest Javascript framework or the the newest trends. Software engineering, web development, and computer sciences are moving at blazingly fast speeds with nary an end in sight. Even at it&rsquo;s most basic levels described here in the first volume, it&rsquo;s still being worked on let alone the work on the remaining volumes following volume 4, which have yet to be released.</p>
 <p>So why read this then? Though the book is quite old I still think that there is a lot of value in reading through it. Much of it is still relevant today as data structures and basic algorithms (the underpinning of everything we still use daily) have not changed much, and more than that; Knuth is actually a fantastic writer. Though the material may be heavy, Knuth has a sort of dry humor that I&rsquo;ve come to appreciate that has made reading this volume enjoyable. Though I don&rsquo;t think that <a href="https://www.businessinsider.com/bill-gates-loves-donald-knuth-the-art-of-computer-programming-2016-4">reading TAOCP alone will get you a job</a>, I recommend reading TAOCP for anyone who wishes to pique their intellectual curiosities about the field of computer science.</p>
       </div></div>
@@ -226,29 +245,27 @@
   
     
 <div class="pagination">
-    <div class="pagination__title">
-        <span class="pagination__title-h">Read other posts</span>
-        <hr />
-    </div>
-    <div class="pagination__buttons">
-        
-        <span class="button previous">
-            <a href="/post/functional-programming-in-racket/">
-                <span class="button__icon">←</span>
-                <span class="button__text">Functional Programming in Racket</span>
-            </a>
-        </span>
-        
-        
-        <span class="button next">
-            <a href="/post/reading-parquet-files-java/">
-                <span class="button__text">Reading Parquet Files With Java</span>
-                <span class="button__icon">→</span>
-            </a>
-        </span>
-        
-    </div>
+  <div class="pagination__title">
+    <span class="pagination__title-h"></span>
+    <hr />
+  </div>
+  <div class="pagination__buttons">
+    
+      <a href="/post/functional-programming-in-racket/" class="button inline prev">
+        Functional Programming in Racket
+      </a>
+    
+    
+      ::
+    
+    
+      <a href="/post/reading-parquet-files-java/" class="button inline next">
+        Reading Parquet Files With Java
+      </a>
+    
+  </div>
 </div>
+
 
   
 

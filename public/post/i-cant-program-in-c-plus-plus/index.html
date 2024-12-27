@@ -14,19 +14,50 @@
 <link rel="canonical" href="/post/i-cant-program-in-c-plus-plus/" />
 
 
-  
-
-
-
 
 
 
   
+  <link rel="stylesheet" href="/css/buttons.min.2bc533403a27dfe0e93105a92502b42ce4587e2e4a87d9f7d349e51e16e09478.css">
+
   
+  <link rel="stylesheet" href="/css/code.min.00125962708925857e7b66dbc58391d55be1191a3d0ce2034de8c9cd2c481c36.css">
+
   
+  <link rel="stylesheet" href="/css/fonts.min.4881f0c525f3ce2a1864fb6e96676396cebe1e6fcef1933e8e1dde7041004fb5.css">
+
   
+  <link rel="stylesheet" href="/css/footer.min.2e3eb191baee58dd05a9f0104ac1fab0827bca7c64dafe0b2579f934c33a1d69.css">
+
   
-  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/css/gist.min.a751e8b0abe1ba8bc53ced52a38b19d8950fe78ca29454ea8c2595cf26aad5c0.css">
+
+  
+  <link rel="stylesheet" href="/css/header.min.b6fb4423cf82a9f9d7abc9cd010223fa3d70a6526a3f28f8e17d814c06e18f9e.css">
+
+  
+  <link rel="stylesheet" href="/css/main.min.fe8dc560fccb53a458b0db19ccb7b265764ac46b68596b7e099c6793054dd457.css">
+
+  
+  <link rel="stylesheet" href="/css/menu.min.83637a90d903026bc280d3f82f96ceb06c5fc72b7c1a8d686afb5bbf818a29f7.css">
+
+  
+  <link rel="stylesheet" href="/css/pagination.min.82f6400eae7c7c6dc3c866733c2ec0579e4089608fea69400ff85b3880aa0d3c.css">
+
+  
+  <link rel="stylesheet" href="/css/post.min.fc74ca360273c1d828da3c02b8174eba435607b369d98418ccc6f2243cd4e75d.css">
+
+  
+  <link rel="stylesheet" href="/css/prism.min.9023bbc24533d09e97a51a0a42a5a7bfe4c591ae167c5551fb1d2191d11977c0.css">
+
+  
+  <link rel="stylesheet" href="/css/syntax.min.cc789ed9377260d7949ea4c18781fc58959a89287210fe4edbff44ebfc1511b6.css">
+
+  
+  <link rel="stylesheet" href="/css/terminal.min.7513e45baa4648a42babad8ba81f3dded41854772e32ded4317bc4c2f2d4e3a0.css">
+
+  
+  <link rel="stylesheet" href="/css/terms.min.b81791663c3790e738e571cdbf802312390d30e4b1d8dc9d814a5b5454d0ac11.css">
 
 
 
@@ -34,9 +65,8 @@
 
 
 
-  <link rel="shortcut icon" href="/img/theme-colors/green.png">
-  <link rel="apple-touch-icon" href="/img/theme-colors/green.png">
-
+<link rel="shortcut icon" href="/favicon.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
 
 <meta name="twitter:card" content="summary" />
@@ -55,9 +85,7 @@
 <meta property="og:url" content="/post/i-cant-program-in-c-plus-plus/" />
 <meta property="og:site_name" content="Adam&#39;s Blag" />
 
-  
-    <meta property="og:image" content="/img/favicon/green.png">
-  
+  <meta property="og:image" content="/og-image.png">
 
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="627">
@@ -83,10 +111,10 @@
 
 
 </head>
-<body class="green">
+<body>
 
 
-<div class="container full headings--one-size">
+<div class="container full">
 
   <header class="header">
   <div class="header__inner">
@@ -122,7 +150,7 @@
     
       
         
-          <li><a href="https://adammelnyk.ca">Contact</a></li>
+          <li><a href="https://adammelnyk.ca" >Contact</a></li>
         
       
       
@@ -140,16 +168,7 @@
   <h1 class="post-title">
     <a href="/post/i-cant-program-in-c-plus-plus/">I Can&rsquo;t Program in C++</a>
   </h1>
-  <div class="post-meta">
-    
-      <time class="post-date">
-        2023-11-18 ::
-        
-      </time>
-    
-    
-    
-  </div>
+  <div class="post-meta"><time class="post-date">2023-11-18</time></div>
 
   
     <span class="post-tags">
@@ -170,9 +189,9 @@
 <p>I&rsquo;ve found myself in a similar position a few times when I&rsquo;m thrown into a new project at work or something of my own design where I&rsquo;m using a language I&rsquo;m not familiar with. I&rsquo;ve used enough programming languages to know to how to generally code in just about any language just by following patterns left for me&hellip; Ok maybe not <code>APL</code>, seriously wtf is this language:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-apl" data-lang="apl"><span style="display:flex;"><span>life <span style="color:#66d9ef">←</span> <span style="color:#66d9ef">{</span><span style="color:#f92672">⊃</span><span style="color:#ae81ff">1</span> ⍵ <span style="color:#f92672">∨</span><span style="color:#a6e22e">.</span><span style="color:#f92672">∧</span> <span style="color:#ae81ff">3</span> <span style="color:#ae81ff">4</span> <span style="color:#f92672">=</span> <span style="color:#f92672">+</span><span style="color:#a6e22e">/</span> <span style="color:#f92672">+</span><span style="color:#a6e22e">⌿</span> <span style="color:#ae81ff">¯1</span> <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">1</span> <span style="color:#a6e22e">∘.</span><span style="color:#f92672">⊖</span> <span style="color:#ae81ff">¯1</span> <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">⌽</span><span style="color:#a6e22e">¨</span> <span style="color:#f92672">⊂</span>⍵<span style="color:#66d9ef">}</span>
 </span></span></code></pre></div><p>The code I end up writing however, is something that is always&hellip; not quite idiomatic. My first efforts coding in any new language tend to miss some of the <em>best</em> ways to accomplish a task. Sure it&rsquo;s going to work, but I&rsquo;m probably missing some key feature of the language that would simplify everything for me. It can also take time to get proficient at using a language to the point were you stop needing to look up basic syntax and you can just get working. Some languages like python or ruby are so simple that you can pick up the basics of the language quickly, and before you know it you feel like you&rsquo;re an expert. C++ is not one of those languages, or so I am told. Recently I found myself in a situation where I need to do a bit of C/C++ development professionally, and rather than just jump in to the code base I wanted to see if I could learn a little before I started cranking out code. All of this is just a really long winded way of saying: Fake it &rsquo;til you make it, so I&rsquo;m going to do just that.</p>
-<h2 id="picking-a-project">Picking a project<a href="#picking-a-project" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<h2 id="picking-a-project">Picking a project<a href="#picking-a-project" class="hanchor" ariaLabel="Anchor">#</a> </h2>
 <p>A blog post I&rsquo;ve always gone back to when I want to challenge myself is Austin Henley&rsquo;s <a href="https://austinhenley.com/blog/challengingprojects.html">&ldquo;Challenging projects every programmer should try&rdquo;</a>. So today I&rsquo;m going to make a BASIC compiler in C++. I suspect that when I&rsquo;m done I probably still won&rsquo;t be able to program in C++, but I&rsquo;ll know enough that it should compile and run. I&rsquo;m following along with <a href="https://austinhenley.com/blog/teenytinycompiler1.html">the tutorial for building a BASIC</a> which is written in python, but it should be pretty simple to follow along in C++.</p>
-<h2 id="strings">Strings<a href="#strings" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<h2 id="strings">Strings<a href="#strings" class="hanchor" ariaLabel="Anchor">#</a> </h2>
 <p>I don&rsquo;t know any thing about C++ at all so, first thing is first, what is wrong here:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span>    _currentChar <span style="color:#f92672">=</span> <span style="color:#960050;background-color:#1e0010">&#39;&#39;</span>;
 </span></span></code></pre></div><p>Unlike in python <code>''</code> is not allowed for an empty character. This needs to be changed to <code>_currentChar = '\0';</code>. Interesting.</p>
@@ -194,7 +213,7 @@
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>string tokenText <span style="color:#f92672">=</span> _source.substr(startPosition, tokenLength);
 </span></span></code></pre></div><p>because I needed the length, it just became easier to have counters wherever I used substring.</p>
-<h2 id="enums">Enums<a href="#enums" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<h2 id="enums">Enums<a href="#enums" class="hanchor" ariaLabel="Anchor">#</a> </h2>
 <p>enums are a lot easier to work with in python, period. In python you can just check if a string is a member of the enum class. Not so in C++, there is no built in way of determining if a string is a valid enum of some type. You need to map it all out yourself. That means creating methods like:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#66d9ef">bool</span> <span style="color:#a6e22e">isKeyword</span>(<span style="color:#66d9ef">const</span> std<span style="color:#f92672">::</span>string<span style="color:#f92672">&amp;</span> str) {
 </span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">static</span> <span style="color:#66d9ef">const</span> std<span style="color:#f92672">::</span>unordered_set<span style="color:#f92672">&lt;</span>std<span style="color:#f92672">::</span>string<span style="color:#f92672">&gt;</span> keywordSet <span style="color:#f92672">=</span> {
@@ -216,7 +235,7 @@
 </span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">case</span> LABEL: <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;LABEL&#34;</span>;
 </span></span><span style="display:flex;"><span>        <span style="color:#75715e">// etc
 </span></span></span></code></pre></div><p>This process is a lot more manual than I had anticipated and the way I am going about it at least, seems to be prone to error. Inevitably I&rsquo;ll add a new enum and forget to add it to one of the corresponding methods.</p>
-<h2 id="objects">Objects<a href="#objects" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<h2 id="objects">Objects<a href="#objects" class="hanchor" ariaLabel="Anchor">#</a> </h2>
 <p>Want to initialize an object as Null or None like you might do in Python on Java?</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MyObject</span> {}
 </span></span><span style="display:flex;"><span>
@@ -241,7 +260,7 @@
 </span></span><span style="display:flex;"><span>    }
 </span></span></code></pre></div><p>Lexer and emmiter are initialized with passed in args, but the current token and the peek token are getting set later. I&rsquo;d normally just set that to Null, but since I can&rsquo;t I either need to use a null pointer reference or I just use the member initializer list and it&rsquo;s doing everything I need it to.</p>
 <p>I&rsquo;m not going to lie, I don&rsquo;t really understand what&rsquo;s going on here, why this works, and I&rsquo;ll admit that when it compiled and ran it felt a little like magic. I can&rsquo;t play C++ but, I&rsquo;m going to keep trying.</p>
-<h2 id="sets">Sets<a href="#sets" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<h2 id="sets">Sets<a href="#sets" class="hanchor" ariaLabel="Anchor">#</a> </h2>
 <p>Sets. Checking if an element is in a set seems so unnecessarily complicated when compared to python. In python you may simply just do something like:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">if</span> <span style="color:#e6db74">&#34;myemelent&#34;</span> <span style="color:#f92672">in</span> mySet:
 </span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#34;we found it&#34;</span>)
@@ -250,7 +269,7 @@
 </span></span><span style="display:flex;"><span>    cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;we found it&#34;</span>;
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>This is fine, but it&rsquo;s a little confusing the first few times because you have to realize that having the <code>!=</code> means that you&rsquo;ve found something that matches your element and <code>== mySet.end()</code> means that you haven&rsquo;t found what you&rsquo;re looking for. This sort of feels like the opposite of every other language I&rsquo;ve used so I needed to remap my brain a little bit.</p>
-<h2 id="thoughts">Thoughts<a href="#thoughts" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<h2 id="thoughts">Thoughts<a href="#thoughts" class="hanchor" ariaLabel="Anchor">#</a> </h2>
 <p>I&rsquo;m not quite done learning C++, in fact even after finishing the transpiler, I feel that I&rsquo;m still nowhere near proficient in the language. It reminds me a lot of when I was trying to learn how to code in rust. I felt like was relearning how to program, and I feel that way a lot about c++. Many established patterns that I used in OO programming get thrown out the window. It has it&rsquo;s own advantages, but so far only made me appreciate all the niceties of Java and Python that I&rsquo;ve come to enjoy.</p>
 
       </div></div>
@@ -258,29 +277,27 @@
   
     
 <div class="pagination">
-    <div class="pagination__title">
-        <span class="pagination__title-h">Read other posts</span>
-        <hr />
-    </div>
-    <div class="pagination__buttons">
-        
-        <span class="button previous">
-            <a href="/post/monty-hall/">
-                <span class="button__icon">←</span>
-                <span class="button__text">Monty Hall</span>
-            </a>
-        </span>
-        
-        
-        <span class="button next">
-            <a href="/post/creating-a-resume-in-doom/">
-                <span class="button__text">Creating a Résumé in Doom</span>
-                <span class="button__icon">→</span>
-            </a>
-        </span>
-        
-    </div>
+  <div class="pagination__title">
+    <span class="pagination__title-h"></span>
+    <hr />
+  </div>
+  <div class="pagination__buttons">
+    
+      <a href="/post/monty-hall/" class="button inline prev">
+        Monty Hall
+      </a>
+    
+    
+      ::
+    
+    
+      <a href="/post/creating-a-resume-in-doom/" class="button inline next">
+        Creating a Résumé in Doom
+      </a>
+    
+  </div>
 </div>
+
 
   
 

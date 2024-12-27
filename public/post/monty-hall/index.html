@@ -14,19 +14,50 @@
 <link rel="canonical" href="/post/monty-hall/" />
 
 
-  
-
-
-
 
 
 
   
+  <link rel="stylesheet" href="/css/buttons.min.2bc533403a27dfe0e93105a92502b42ce4587e2e4a87d9f7d349e51e16e09478.css">
+
   
+  <link rel="stylesheet" href="/css/code.min.00125962708925857e7b66dbc58391d55be1191a3d0ce2034de8c9cd2c481c36.css">
+
   
+  <link rel="stylesheet" href="/css/fonts.min.4881f0c525f3ce2a1864fb6e96676396cebe1e6fcef1933e8e1dde7041004fb5.css">
+
   
+  <link rel="stylesheet" href="/css/footer.min.2e3eb191baee58dd05a9f0104ac1fab0827bca7c64dafe0b2579f934c33a1d69.css">
+
   
-  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/css/gist.min.a751e8b0abe1ba8bc53ced52a38b19d8950fe78ca29454ea8c2595cf26aad5c0.css">
+
+  
+  <link rel="stylesheet" href="/css/header.min.b6fb4423cf82a9f9d7abc9cd010223fa3d70a6526a3f28f8e17d814c06e18f9e.css">
+
+  
+  <link rel="stylesheet" href="/css/main.min.fe8dc560fccb53a458b0db19ccb7b265764ac46b68596b7e099c6793054dd457.css">
+
+  
+  <link rel="stylesheet" href="/css/menu.min.83637a90d903026bc280d3f82f96ceb06c5fc72b7c1a8d686afb5bbf818a29f7.css">
+
+  
+  <link rel="stylesheet" href="/css/pagination.min.82f6400eae7c7c6dc3c866733c2ec0579e4089608fea69400ff85b3880aa0d3c.css">
+
+  
+  <link rel="stylesheet" href="/css/post.min.fc74ca360273c1d828da3c02b8174eba435607b369d98418ccc6f2243cd4e75d.css">
+
+  
+  <link rel="stylesheet" href="/css/prism.min.9023bbc24533d09e97a51a0a42a5a7bfe4c591ae167c5551fb1d2191d11977c0.css">
+
+  
+  <link rel="stylesheet" href="/css/syntax.min.cc789ed9377260d7949ea4c18781fc58959a89287210fe4edbff44ebfc1511b6.css">
+
+  
+  <link rel="stylesheet" href="/css/terminal.min.7513e45baa4648a42babad8ba81f3dded41854772e32ded4317bc4c2f2d4e3a0.css">
+
+  
+  <link rel="stylesheet" href="/css/terms.min.b81791663c3790e738e571cdbf802312390d30e4b1d8dc9d814a5b5454d0ac11.css">
 
 
 
@@ -34,9 +65,8 @@
 
 
 
-  <link rel="shortcut icon" href="/img/theme-colors/green.png">
-  <link rel="apple-touch-icon" href="/img/theme-colors/green.png">
-
+<link rel="shortcut icon" href="/favicon.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
 
 <meta name="twitter:card" content="summary" />
@@ -55,9 +85,7 @@
 <meta property="og:url" content="/post/monty-hall/" />
 <meta property="og:site_name" content="Adam&#39;s Blag" />
 
-  
-    <meta property="og:image" content="/img/favicon/green.png">
-  
+  <meta property="og:image" content="/og-image.png">
 
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="627">
@@ -79,10 +107,10 @@
 
 
 </head>
-<body class="green">
+<body>
 
 
-<div class="container full headings--one-size">
+<div class="container full">
 
   <header class="header">
   <div class="header__inner">
@@ -118,7 +146,7 @@
     
       
         
-          <li><a href="https://adammelnyk.ca">Contact</a></li>
+          <li><a href="https://adammelnyk.ca" >Contact</a></li>
         
       
       
@@ -136,16 +164,7 @@
   <h1 class="post-title">
     <a href="/post/monty-hall/">Monty Hall</a>
   </h1>
-  <div class="post-meta">
-    
-      <time class="post-date">
-        2024-06-05 ::
-        
-      </time>
-    
-    
-    
-  </div>
+  <div class="post-meta"><time class="post-date">2024-06-05</time></div>
 
   
     <span class="post-tags">
@@ -165,10 +184,10 @@
         <p>The Monty Hall problem is a classic game theory and probability puzzle that most people have heard of in their grade school mathematics classes. The problem comes from the TV show &ldquo;Let&rsquo;s
 Make A Deal&rdquo; where a contestant is shown three closed doors. Behind one door is a prize, behind the other two doors are goats. The odds of choosing the prize in this scenario are <em>1 in 3</em>. But there&rsquo;s a catch, because after the contestant has chosen their door, the host Monty Hall, opens one of the goat doors revealing the goats. Now the contestant has a choice, they can keep the same door they&rsquo;ve chosen or, they can switch doors. Now the probability is actually <em>2 in 3</em> but only if you switch doors. This is where the confusion lies for many people, the goats and prizes haven&rsquo;t switched doors, yet <em>somehow</em> by switching doors you have better odds of winning the prize (unless you wanted goats).</p>
 <p>The problem comes up so often because so many are fooled or confused by the seemingly simple looking problem. I should clarify that I mean many people, <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3086893/">pigeons apparently, are not fooled by this problem</a>, so I look forward to further experiments with pigeons and game shows.</p>
-<p>I&rsquo;ve heard this problem dozens of times: math class, stats class, several computer science classes and on a TV sitcom. I&rsquo;ve read several explanations of the problem and after seeing it <a href="https://www.reddit.com/r/explainlikeimfive/search/?q=monty+hall">posted on Reddit for probably the thousandth</a> time where explanations alone don&rsquo;t seem satisfying to some:</p>
-<p><img alt="Many posts on reddit asking about the monty hall problem" src="/images/montyhallreddit.png"></p>
+<p>I&rsquo;ve heard this problem dozens of times: math class, stats class, several computer science classes and on a TV sitcom. I&rsquo;ve read several explanations of the problem and after seeing it <a href="https://www.reddit.com/r/explainlikeimfive/search/?q=monty&#43;hall">posted on Reddit for probably the thousandth</a> time where explanations alone don&rsquo;t seem satisfying to some:</p>
+<p><img src="/images/montyhallreddit.png" alt="Many posts on reddit asking about the monty hall problem"></p>
 <p>I thought I would sit down and simulate it instead.</p>
-<h2 id="simulating-the-problem">Simulating the problem<a href="#simulating-the-problem" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<h2 id="simulating-the-problem">Simulating the problem<a href="#simulating-the-problem" class="hanchor" ariaLabel="Anchor">#</a> </h2>
 <p>The code is pretty simple and you probably don&rsquo;t need much time to throw it together. Here I simulate the game 100,000 times for each scenario. One where we switch doors every time, and one where we stick with the same choice.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> random
 </span></span><span style="display:flex;"><span>
@@ -248,7 +267,7 @@ Win percentage where we do NOT switch 0.3315
 <pre tabindex="0"><code>Win percentage where we switch 0.99012
 Win percentage where we do NOT switch 0.00991
 </code></pre><p>The first time we choose a door we have a 1 in 100 chance, that&rsquo;s why the win percentage for not switching is ~1%. But choose again and we have a 99 in 100 chance if we switch. Better explained still, the first time you choose, you&rsquo;re pretty unlikely to choose the correct door if there are 99 wrong doors. When we show all the goat doors but one however, we need to present the contestant a choice that includes the prize door so it&rsquo;s very likely that the door we haven&rsquo;t chosen is the correct door. The simulation and adding additional doors makes this much more obvious. When you choose to make the switch, it&rsquo;s almost like you&rsquo;re playing a second game. You&rsquo;ve locked in the statistical probability the first time you chose a door so when we reduce the number of doors available to choose from you have a higher chance of winning by choosing to switch.</p>
-<h2 id="further-reading">Further Reading<a href="#further-reading" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<h2 id="further-reading">Further Reading<a href="#further-reading" class="hanchor" ariaLabel="Anchor">#</a> </h2>
 <ul>
 <li>&ldquo;Are Birds Smarter Than Mathematicians? Pigeons (Columba livia) Perform Optimally on a Version of the Monty Hall Dilemma&rdquo; <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3086893/">https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3086893/</a></li>
 </ul>
@@ -258,29 +277,27 @@ Win percentage where we do NOT switch 0.00991
   
     
 <div class="pagination">
-    <div class="pagination__title">
-        <span class="pagination__title-h">Read other posts</span>
-        <hr />
-    </div>
-    <div class="pagination__buttons">
-        
-        <span class="button previous">
-            <a href="/post/building-the-most-basic-antivirus-software/">
-                <span class="button__icon">←</span>
-                <span class="button__text">Building A Basic File Scanning Tool With Rust</span>
-            </a>
-        </span>
-        
-        
-        <span class="button next">
-            <a href="/post/i-cant-program-in-c-plus-plus/">
-                <span class="button__text">I Can&#39;t Program in C&#43;&#43;</span>
-                <span class="button__icon">→</span>
-            </a>
-        </span>
-        
-    </div>
+  <div class="pagination__title">
+    <span class="pagination__title-h"></span>
+    <hr />
+  </div>
+  <div class="pagination__buttons">
+    
+      <a href="/post/building-the-most-basic-antivirus-software/" class="button inline prev">
+        Building A Basic File Scanning Tool With Rust
+      </a>
+    
+    
+      ::
+    
+    
+      <a href="/post/i-cant-program-in-c-plus-plus/" class="button inline next">
+        I Can&#39;t Program in C&#43;&#43;
+      </a>
+    
+  </div>
 </div>
+
 
   
 

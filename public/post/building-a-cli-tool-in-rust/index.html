@@ -14,19 +14,50 @@
 <link rel="canonical" href="/post/building-a-cli-tool-in-rust/" />
 
 
-  
-
-
-
 
 
 
   
+  <link rel="stylesheet" href="/css/buttons.min.2bc533403a27dfe0e93105a92502b42ce4587e2e4a87d9f7d349e51e16e09478.css">
+
   
+  <link rel="stylesheet" href="/css/code.min.00125962708925857e7b66dbc58391d55be1191a3d0ce2034de8c9cd2c481c36.css">
+
   
+  <link rel="stylesheet" href="/css/fonts.min.4881f0c525f3ce2a1864fb6e96676396cebe1e6fcef1933e8e1dde7041004fb5.css">
+
   
+  <link rel="stylesheet" href="/css/footer.min.2e3eb191baee58dd05a9f0104ac1fab0827bca7c64dafe0b2579f934c33a1d69.css">
+
   
-  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/css/gist.min.a751e8b0abe1ba8bc53ced52a38b19d8950fe78ca29454ea8c2595cf26aad5c0.css">
+
+  
+  <link rel="stylesheet" href="/css/header.min.b6fb4423cf82a9f9d7abc9cd010223fa3d70a6526a3f28f8e17d814c06e18f9e.css">
+
+  
+  <link rel="stylesheet" href="/css/main.min.fe8dc560fccb53a458b0db19ccb7b265764ac46b68596b7e099c6793054dd457.css">
+
+  
+  <link rel="stylesheet" href="/css/menu.min.83637a90d903026bc280d3f82f96ceb06c5fc72b7c1a8d686afb5bbf818a29f7.css">
+
+  
+  <link rel="stylesheet" href="/css/pagination.min.82f6400eae7c7c6dc3c866733c2ec0579e4089608fea69400ff85b3880aa0d3c.css">
+
+  
+  <link rel="stylesheet" href="/css/post.min.fc74ca360273c1d828da3c02b8174eba435607b369d98418ccc6f2243cd4e75d.css">
+
+  
+  <link rel="stylesheet" href="/css/prism.min.9023bbc24533d09e97a51a0a42a5a7bfe4c591ae167c5551fb1d2191d11977c0.css">
+
+  
+  <link rel="stylesheet" href="/css/syntax.min.cc789ed9377260d7949ea4c18781fc58959a89287210fe4edbff44ebfc1511b6.css">
+
+  
+  <link rel="stylesheet" href="/css/terminal.min.7513e45baa4648a42babad8ba81f3dded41854772e32ded4317bc4c2f2d4e3a0.css">
+
+  
+  <link rel="stylesheet" href="/css/terms.min.b81791663c3790e738e571cdbf802312390d30e4b1d8dc9d814a5b5454d0ac11.css">
 
 
 
@@ -34,9 +65,8 @@
 
 
 
-  <link rel="shortcut icon" href="/img/theme-colors/green.png">
-  <link rel="apple-touch-icon" href="/img/theme-colors/green.png">
-
+<link rel="shortcut icon" href="/favicon.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
 
 <meta name="twitter:card" content="summary" />
@@ -55,9 +85,7 @@
 <meta property="og:url" content="/post/building-a-cli-tool-in-rust/" />
 <meta property="og:site_name" content="Adam&#39;s Blag" />
 
-  
-    <meta property="og:image" content="/img/favicon/green.png">
-  
+  <meta property="og:image" content="/og-image.png">
 
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="627">
@@ -79,10 +107,10 @@
 
 
 </head>
-<body class="green">
+<body>
 
 
-<div class="container full headings--one-size">
+<div class="container full">
 
   <header class="header">
   <div class="header__inner">
@@ -118,7 +146,7 @@
     
       
         
-          <li><a href="https://adammelnyk.ca">Contact</a></li>
+          <li><a href="https://adammelnyk.ca" >Contact</a></li>
         
       
       
@@ -136,16 +164,7 @@
   <h1 class="post-title">
     <a href="/post/building-a-cli-tool-in-rust/">Building a Cli Tool in Rust</a>
   </h1>
-  <div class="post-meta">
-    
-      <time class="post-date">
-        2020-05-02 ::
-        
-      </time>
-    
-    
-    
-  </div>
+  <div class="post-meta"><time class="post-date">2020-05-02</time></div>
 
   
     <span class="post-tags">
@@ -171,8 +190,8 @@
 <li>Build something I might actually use</li>
 <li>Pass the time during a pandemic</li>
 </ul>
-<h2 id="building-the-tool">Building the Tool<a href="#building-the-tool" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
-<h3 id="setting-up-the-project">Setting up the project<a href="#setting-up-the-project" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<h2 id="building-the-tool">Building the Tool<a href="#building-the-tool" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<h3 id="setting-up-the-project">Setting up the project<a href="#setting-up-the-project" class="hanchor" ariaLabel="Anchor">#</a> </h3>
 <p>Rust has some great tooling that is really easy to use and setup. Once you have Rust installed you can use cargo to start a new project like so:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>cargo new sonos_tool
 </span></span></code></pre></div><p>Running it is just one more step, just <code>cd</code> into the directory and then use <code>cargo run</code></p>
@@ -181,14 +200,14 @@
 </span></span><span style="display:flex;"><span>    Finished dev <span style="color:#f92672">[</span>unoptimized + debuginfo<span style="color:#f92672">]</span> target<span style="color:#f92672">(</span>s<span style="color:#f92672">)</span> in 6.61s
 </span></span><span style="display:flex;"><span>     Running <span style="color:#e6db74">`</span>target/debug/sonos_tool<span style="color:#e6db74">`</span>
 </span></span><span style="display:flex;"><span>Hello, world!
-</span></span></code></pre></div><h3 id="adding-dependencies">Adding dependencies<a href="#adding-dependencies" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+</span></span></code></pre></div><h3 id="adding-dependencies">Adding dependencies<a href="#adding-dependencies" class="hanchor" ariaLabel="Anchor">#</a> </h3>
 <p>Before going further we’ll need to add a few dependencies to our <code>Cargo.toml</code> file:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>[dependencies]
 </span></span><span style="display:flex;"><span>sonor = &#34;0.1.2&#34;
 </span></span><span style="display:flex;"><span>tokio = { version = &#34;0.2&#34;, features = [&#34;macros&#34;, &#34;time&#34;]}
 </span></span><span style="display:flex;"><span>futures = &#34;0.3&#34;
 </span></span><span style="display:flex;"><span>structopt = { version = &#34;0.3&#34;, default-features = false }
-</span></span></code></pre></div><h3 id="running-a-single-command-from-sonor">Running a single command from sonor<a href="#running-a-single-command-from-sonor" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+</span></span></code></pre></div><h3 id="running-a-single-command-from-sonor">Running a single command from sonor<a href="#running-a-single-command-from-sonor" class="hanchor" ariaLabel="Anchor">#</a> </h3>
 <p>The first thing I want to do is the most basic thing I can find with sonor. The sonor repo has some examples so we’re going to start a little smaller and then expand upon it a little bit. Looking at the example the first thing we can do is find a speaker and return the name. So we can replace the main method with something like this:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-Rust" data-lang="Rust"><span style="display:flex;"><span><span style="color:#75715e">#[tokio::main]</span>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">async</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">main</span>() -&gt; Result<span style="color:#f92672">&lt;</span>(), sonor::Error<span style="color:#f92672">&gt;</span> {
@@ -203,7 +222,7 @@
 </span></span><span style="display:flex;"><span>     Running <span style="color:#e6db74">`</span>target/debug/sonos_tool<span style="color:#e6db74">`</span>
 </span></span><span style="display:flex;"><span>Name: Bedroom
 </span></span></code></pre></div><p>The library makes working with your sonos speakers easy as pie, we just need add more functions, and then make it usable as a command line tool.</p>
-<h3 id="adding-functionality">Adding functionality<a href="#adding-functionality" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<h3 id="adding-functionality">Adding functionality<a href="#adding-functionality" class="hanchor" ariaLabel="Anchor">#</a> </h3>
 <p>Now that we can find the speaker we can use any of these commands at our disposal. All we need to do is make the commands available from the command line somehow and match them up with the appropriate speaker function.</p>
 <p>Unless you want to dig into the docs to see what else we can do, the <code>speaker.rs</code> file has all the commands we can access and some good examples on how one might use what’s available. To start with we should add some basic functionality that we might need: <code>Play</code>, <code>Pause</code>, and because we’re going to need to know the names of what’s available, an <code>Info</code> command used for discovery.</p>
 <p>To make things easier on ourselves, the first thing we can do is take a look at the <a href="https://docs.rs/structopt/0.3.14/structopt/"><code>structop</code> crate</a> which will be helpful for listing the available commands.</p>
@@ -233,7 +252,7 @@
 </span></span><span style="display:flex;"><span>    pause
 </span></span><span style="display:flex;"><span>    play
 </span></span></code></pre></div><p>Without needing to do anything else at all, Structop gives us a help command (we can use <code>-h</code> as well), as well as a <code>--version</code> command, and some helpful info.</p>
-<h3 id="adding-some-better-documentation-to-the-command-line-tool">Adding some better documentation to the command line tool<a href="#adding-some-better-documentation-to-the-command-line-tool" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<h3 id="adding-some-better-documentation-to-the-command-line-tool">Adding some better documentation to the command line tool<a href="#adding-some-better-documentation-to-the-command-line-tool" class="hanchor" ariaLabel="Anchor">#</a> </h3>
 <p>We aren’t making use of everything structop gives us however. Looking at the docs we can add the annotations which will build out the rest of this info for us.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-Rust" data-lang="Rust"><span style="display:flex;"><span><span style="color:#75715e">#[derive(StructOpt)]</span>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">enum</span> <span style="color:#a6e22e">Cli</span> {
@@ -286,7 +305,7 @@
 </span></span><span style="display:flex;"><span>        name: String,
 </span></span><span style="display:flex;"><span>    },
 </span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><h3 id="making-use-of-the-commands">Making use of the commands<a href="#making-use-of-the-commands" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+</span></span></code></pre></div><h3 id="making-use-of-the-commands">Making use of the commands<a href="#making-use-of-the-commands" class="hanchor" ariaLabel="Anchor">#</a> </h3>
 <p>Now that we have the commands laid out we just need to parse our command line arguments and then implement the three functions. For our functions we can implement them similarly to the first method where we printed our speakers name however, this time we’ll need to provide a param to specify which speaker we will be sending the command to.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-Rust" data-lang="Rust"><span style="display:flex;"><span><span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">play</span>(name: String) -&gt; Result<span style="color:#f92672">&lt;</span>(), sonor::Error<span style="color:#f92672">&gt;</span> {
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> speaker <span style="color:#f92672">=</span> sonor::find(<span style="color:#f92672">&amp;</span>name, Duration::from_secs(<span style="color:#ae81ff">2</span>)).<span style="color:#66d9ef">await</span><span style="color:#f92672">?</span>
@@ -353,7 +372,7 @@
 </span></span><span style="display:flex;"><span>    Ok(())
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>The main difference here is we need to use <code>sonor::discover</code> to find our speakers before we can do anything, the rest is fairly self explanatory. For each device we find we want to print it’s name, the volume, and if it’s playing, display the track.</p>
-<h3 id="putting-it-all-together">Putting it all together<a href="#putting-it-all-together" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<h3 id="putting-it-all-together">Putting it all together<a href="#putting-it-all-together" class="hanchor" ariaLabel="Anchor">#</a> </h3>
 <p>Now that we have our methods we just need to call set them up in our main method</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-Rust" data-lang="Rust"><span style="display:flex;"><span><span style="color:#75715e">#[tokio::main]</span>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">async</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">main</span>() -&gt; Result<span style="color:#f92672">&lt;</span>(), sonor::Error<span style="color:#f92672">&gt;</span> {
@@ -365,7 +384,7 @@
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>The first thing you may notice is how we pass the name that we defined in our enum above, to each <code>match</code> arm. The second thing is that each of these async methods, like the methods from sonor are all async and as such will need <code>.await</code> to be executed. Without this, nothing will happen. Luckily Rust will prevent us from doing this, as you’ll be able to see if you remove one of them and try to build the project.</p>
-<h3 id="running-the-basic-program">Running the basic program<a href="#running-the-basic-program" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<h3 id="running-the-basic-program">Running the basic program<a href="#running-the-basic-program" class="hanchor" ariaLabel="Anchor">#</a> </h3>
 <p>Now that our barebones tool is finished, we can try it out. Running the info command should give you something like this, depending on what your speakers are named:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-Shell" data-lang="Shell"><span style="display:flex;"><span>$ ./target/debug/sonos_tool info
 </span></span><span style="display:flex;"><span>Room: LivingRoom
@@ -381,21 +400,21 @@
 </span></span><span style="display:flex;"><span>Volume: <span style="color:#ae81ff">23</span>
 </span></span><span style="display:flex;"><span>----------
 </span></span></code></pre></div><p>Testing the pause and play functions will be a little different because you’ll need to actually turn on your speakers to test that it works but can be executed similarly <code>$ ./target/debug/sonos_tool play Bedroom</code>.</p>
-<h3 id="missing-features">Missing features<a href="#missing-features" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<h3 id="missing-features">Missing features<a href="#missing-features" class="hanchor" ariaLabel="Anchor">#</a> </h3>
 <p>This was put together relatively quickly so there’s a lot left that we can add. Looking in the Speaker implementation there are a ton of other features to be added that we can play around with.</p>
-<h4 id="better-error-handling">Better Error handling<a href="#better-error-handling" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h4>
+<h4 id="better-error-handling">Better Error handling<a href="#better-error-handling" class="hanchor" ariaLabel="Anchor">#</a> </h4>
 <p>All of our functions are using <code>.expect()</code> right now. What this means is that when we give them a room that can’t be found, the tool will panic and stop.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-Shell" data-lang="Shell"><span style="display:flex;"><span>$ ./target/debug/sonos_tool play asdf
 </span></span><span style="display:flex;"><span>thread <span style="color:#e6db74">&#39;main&#39;</span> panicked at <span style="color:#e6db74">&#39;room exists&#39;</span>, src/main.rs:152:19
 </span></span><span style="display:flex;"><span>note: run with <span style="color:#e6db74">`</span>RUST_BACKTRACE<span style="color:#f92672">=</span>1<span style="color:#e6db74">`</span> environment variable to display a backtrace
 </span></span></code></pre></div><p>It would be much better if we removed this and handled the error gracefully.</p>
-<h4 id="missing-functionality">Missing functionality<a href="#missing-functionality" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h4>
+<h4 id="missing-functionality">Missing functionality<a href="#missing-functionality" class="hanchor" ariaLabel="Anchor">#</a> </h4>
 <p>There are still a lot of functions that we need to set up, we should be able to set the volume, stop, change our equalization, bass, treble etc. All of these should be relatively trivial to implement but would make this tool much more useful.</p>
-<h4 id="integrate-with-your-music-services">Integrate with your music services<a href="#integrate-with-your-music-services" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h4>
+<h4 id="integrate-with-your-music-services">Integrate with your music services<a href="#integrate-with-your-music-services" class="hanchor" ariaLabel="Anchor">#</a> </h4>
 <p>Right now we can manipulate the speakers themselves but we don’t have a way of getting them to play specific songs or podcasts. We’d need to do that from the app.</p>
-<h4 id="tests">Tests<a href="#tests" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h4>
+<h4 id="tests">Tests<a href="#tests" class="hanchor" ariaLabel="Anchor">#</a> </h4>
 <p>The tool might be small right now, but adding anything else might start making it harder to maintain, adding some tests will help us make sure that all of our features keep working as we add to it.</p>
-<h2 id="concluding-thoughts">Concluding Thoughts<a href="#concluding-thoughts" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<h2 id="concluding-thoughts">Concluding Thoughts<a href="#concluding-thoughts" class="hanchor" ariaLabel="Anchor">#</a> </h2>
 <p>Rust has a reputation for having a steep learning curve, but I hope that this post made it seem at least a little more approachable. Though my experience with the language as of writing this is fairly limited, I found this relatively simple to put together, and I hope that you will too. Async features were no more difficult to use than other normal functions. Structop really made making a Cli tool much simpler as well, giving us a simple way to set up a command line tool and expand it as needed.</p>
 
       </div></div>
@@ -403,29 +422,27 @@
   
     
 <div class="pagination">
-    <div class="pagination__title">
-        <span class="pagination__title-h">Read other posts</span>
-        <hr />
-    </div>
-    <div class="pagination__buttons">
-        
-        <span class="button previous">
-            <a href="/post/scraping-wikipedia-with-rust/">
-                <span class="button__icon">←</span>
-                <span class="button__text">Scraping Wikipedia With Rust</span>
-            </a>
-        </span>
-        
-        
-        <span class="button next">
-            <a href="/post/taocp-vol-2-seminumerical-algorithms/">
-                <span class="button__text">Random Numbers</span>
-                <span class="button__icon">→</span>
-            </a>
-        </span>
-        
-    </div>
+  <div class="pagination__title">
+    <span class="pagination__title-h"></span>
+    <hr />
+  </div>
+  <div class="pagination__buttons">
+    
+      <a href="/post/scraping-wikipedia-with-rust/" class="button inline prev">
+        Scraping Wikipedia With Rust
+      </a>
+    
+    
+      ::
+    
+    
+      <a href="/post/taocp-vol-2-seminumerical-algorithms/" class="button inline next">
+        Random Numbers
+      </a>
+    
+  </div>
 </div>
+
 
   
 
