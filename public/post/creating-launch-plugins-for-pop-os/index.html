@@ -18,49 +18,46 @@
 
 
   
-  <link rel="stylesheet" href="/css/buttons.min.2bc533403a27dfe0e93105a92502b42ce4587e2e4a87d9f7d349e51e16e09478.css">
+  <link rel="stylesheet" href="/css/buttons.min.86f6b4c106b6c6eb690ae5203d36b442c1f66f718ff4e8164fa86cf6c61ad641.css">
 
   
-  <link rel="stylesheet" href="/css/code.min.00125962708925857e7b66dbc58391d55be1191a3d0ce2034de8c9cd2c481c36.css">
+  <link rel="stylesheet" href="/css/code.min.c4581949edab7810737609fc5568852bcd908945f14561e366dcd2300a370545.css">
 
   
-  <link rel="stylesheet" href="/css/fonts.min.4881f0c525f3ce2a1864fb6e96676396cebe1e6fcef1933e8e1dde7041004fb5.css">
+  <link rel="stylesheet" href="/css/fonts.min.5bb7ed13e1d00d8ff39ea84af26737007eb5051b157b86fc24487c94f3dc8bbe.css">
 
   
-  <link rel="stylesheet" href="/css/footer.min.2e3eb191baee58dd05a9f0104ac1fab0827bca7c64dafe0b2579f934c33a1d69.css">
+  <link rel="stylesheet" href="/css/footer.min.eb8dfc2c6a7eafa36cd3ba92d63e69e849e2200e0002a228d137f236b09ecd75.css">
 
   
   <link rel="stylesheet" href="/css/gist.min.a751e8b0abe1ba8bc53ced52a38b19d8950fe78ca29454ea8c2595cf26aad5c0.css">
 
   
-  <link rel="stylesheet" href="/css/header.min.b6fb4423cf82a9f9d7abc9cd010223fa3d70a6526a3f28f8e17d814c06e18f9e.css">
+  <link rel="stylesheet" href="/css/header.min.75c7eb0e2872d95ff48109c6647d0223a38db52e2561dd87966eb5fc7c6bdac6.css">
 
   
-  <link rel="stylesheet" href="/css/main.min.fe8dc560fccb53a458b0db19ccb7b265764ac46b68596b7e099c6793054dd457.css">
+  <link rel="stylesheet" href="/css/main.min.36833afd348409fc6c3d09d0897c5833d9d5bf1ff31f5e60ea3ee42ce2b1268c.css">
 
   
-  <link rel="stylesheet" href="/css/menu.min.83637a90d903026bc280d3f82f96ceb06c5fc72b7c1a8d686afb5bbf818a29f7.css">
+  <link rel="stylesheet" href="/css/menu.min.3c17467ebeb3d38663dce68f71f519901124fa5cbb4519b2fb0667a21e9aca39.css">
 
   
-  <link rel="stylesheet" href="/css/pagination.min.82f6400eae7c7c6dc3c866733c2ec0579e4089608fea69400ff85b3880aa0d3c.css">
+  <link rel="stylesheet" href="/css/pagination.min.bbb986dbce00a5ce5aca0504b7925fc1c581992a4bf57f163e5d69cc1db7d836.css">
 
   
-  <link rel="stylesheet" href="/css/post.min.fc74ca360273c1d828da3c02b8174eba435607b369d98418ccc6f2243cd4e75d.css">
+  <link rel="stylesheet" href="/css/post.min.e6dddd258e64c83e05cec0cd49c05216742d42fc8ecbfbe6b67083412b609bd3.css">
 
   
-  <link rel="stylesheet" href="/css/prism.min.9023bbc24533d09e97a51a0a42a5a7bfe4c591ae167c5551fb1d2191d11977c0.css">
+  <link rel="stylesheet" href="/css/syntax.min.a2cc694a9b481f15d41722bffc2cc54eea4c4f74fd9072b0b33253604c22606e.css">
 
   
-  <link rel="stylesheet" href="/css/syntax.min.cc789ed9377260d7949ea4c18781fc58959a89287210fe4edbff44ebfc1511b6.css">
-
-  
-  <link rel="stylesheet" href="/css/terminal.min.7513e45baa4648a42babad8ba81f3dded41854772e32ded4317bc4c2f2d4e3a0.css">
+  <link rel="stylesheet" href="/css/terminal.min.e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.css">
 
   
   <link rel="stylesheet" href="/css/terms.min.b81791663c3790e738e571cdbf802312390d30e4b1d8dc9d814a5b5454d0ac11.css">
 
 
-
+<link rel="stylesheet" href="/terminal.css">
 
 
 
@@ -204,7 +201,7 @@
 <h3 id="adapting-the-plugin-to-use-with-spotify-instead">Adapting the plugin to use with Spotify instead<a href="#adapting-the-plugin-to-use-with-spotify-instead" class="hanchor" ariaLabel="Anchor">#</a> </h3>
 <p>Adapting the plugin for our purposes is actually relatively little work. The launcher plugin we&rsquo;re looking at, just has a list of ID&rsquo;s that map to some command that can be executed in a shell, so the first thing we need to do is change those commands.</p>
 <p>The App class contains a constructor with default selections. We want to change that to something like this:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span>    <span style="color:#a6e22e">constructor</span>() {
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span>    <span style="color:#a6e22e">constructor</span>() {
 </span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">last_query</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;&#34;</span>
 </span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">shell_only</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span>
 </span></span><span style="display:flex;"><span>
@@ -223,7 +220,7 @@
 </span></span><span style="display:flex;"><span>        ]
 </span></span><span style="display:flex;"><span>    }
 </span></span></code></pre></div><p>If you walk through the code you&rsquo;ll see that it contains a function called <code>submit()</code> that reads the id codes from above and executes a command. We can change the variable being set by the switches above to something like:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span>    <span style="color:#a6e22e">submit</span>(<span style="color:#a6e22e">id</span>) {
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span>    <span style="color:#a6e22e">submit</span>(<span style="color:#a6e22e">id</span>) {
 </span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">cmd</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">switch</span> (<span style="color:#a6e22e">id</span>) {
@@ -237,7 +234,7 @@
 </span></span></code></pre></div><p><strong>NOTE:</strong> I&rsquo;ve also removed the line <code>let sinks = pactl_sinks()</code> above as well as the associated function <code>pactl_sinks()</code> since it&rsquo;s only related to pulse audio and not necessary for our spotify plugin.</p>
 <p>If you&rsquo;re curious about what the commands above do, you can try running spotify and then plugging them in your terminal yourself. The first toggles pausing and playing spotify, the second switches to the next song.</p>
 <p>The code for utilizing spotify is actually a bit simpler as well. We can just execute the string <code>cmd</code> instead of going through a loop.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">cmd</span>) {
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">cmd</span>) {
 </span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">try</span> {
 </span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">GLib</span>.<span style="color:#a6e22e">spawn_command_line_async</span>(<span style="color:#e6db74">`</span><span style="color:#e6db74">${</span><span style="color:#a6e22e">cmd</span><span style="color:#e6db74">}</span><span style="color:#e6db74">`</span>)
 </span></span><span style="display:flex;"><span>            } <span style="color:#66d9ef">catch</span> (<span style="color:#a6e22e">e</span>) {
@@ -248,14 +245,14 @@
 </span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">send</span>({ <span style="color:#a6e22e">event</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;close&#34;</span> })
 </span></span><span style="display:flex;"><span>    }
 </span></span></code></pre></div><p>There&rsquo;s one thing left to change, we need to change the <code>meta.json</code> file to something that makes a little more sense:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
 </span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;name&#34;</span>: <span style="color:#e6db74">&#34;Spotify Control&#34;</span>,
 </span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;description&#34;</span>: <span style="color:#e6db74">&#34;Control Spotify Play and Track selection&#34;</span>,
 </span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;exec&#34;</span>: <span style="color:#e6db74">&#34;main.js&#34;</span>,
 </span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;icon&#34;</span>: <span style="color:#e6db74">&#34;multimedia-volume-control&#34;</span>
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>Now that we&rsquo;ve made the necessary changes we need to move it to where the rest of the plugins are. I&rsquo;ve called my plugin popify (I know, so clever) but use whatever folder you&rsquo;ve put your files into. You&rsquo;ll need to use sudo because the location requires privileged access.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>sudo cp -r popify/ /usr/lib/pop-shell/launcher/.
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>sudo cp -r popify/ /usr/lib/pop-shell/launcher/.
 </span></span></code></pre></div><p>After copying the files over to the correct directory last thing to do is restart the GNOME shell. There are many ways to do this such as just killing GNOME <code>killall -1 gnome-shell</code>, but if you&rsquo;re unsure, you can simply reboot your machine and the new plugin will be ready. If you&rsquo;ve done everything right you should be able to see the new launcher when we type pause:</p>
 <p><img src="/images/launcher.png" alt="Pop_OS launcher"></p>
 <p>this should toggle spotify to pause or play. You should also be able to type next and the player should switch songs.</p>
@@ -275,7 +272,7 @@
   <div class="pagination__buttons">
     
       <a href="/post/browser/" class="button inline prev">
-        Why I use Lynx
+        &lt; [<span class="button__text">Why I use Lynx</span>]
       </a>
     
     
@@ -283,7 +280,7 @@
     
     
       <a href="/post/debugging-chip8-code/" class="button inline next">
-        Debugging CHIP8 code
+         [<span class="button__text">Debugging CHIP8 code</span>] &gt;
       </a>
     
   </div>

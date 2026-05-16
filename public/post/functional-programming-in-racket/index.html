@@ -18,49 +18,46 @@
 
 
   
-  <link rel="stylesheet" href="/css/buttons.min.2bc533403a27dfe0e93105a92502b42ce4587e2e4a87d9f7d349e51e16e09478.css">
+  <link rel="stylesheet" href="/css/buttons.min.86f6b4c106b6c6eb690ae5203d36b442c1f66f718ff4e8164fa86cf6c61ad641.css">
 
   
-  <link rel="stylesheet" href="/css/code.min.00125962708925857e7b66dbc58391d55be1191a3d0ce2034de8c9cd2c481c36.css">
+  <link rel="stylesheet" href="/css/code.min.c4581949edab7810737609fc5568852bcd908945f14561e366dcd2300a370545.css">
 
   
-  <link rel="stylesheet" href="/css/fonts.min.4881f0c525f3ce2a1864fb6e96676396cebe1e6fcef1933e8e1dde7041004fb5.css">
+  <link rel="stylesheet" href="/css/fonts.min.5bb7ed13e1d00d8ff39ea84af26737007eb5051b157b86fc24487c94f3dc8bbe.css">
 
   
-  <link rel="stylesheet" href="/css/footer.min.2e3eb191baee58dd05a9f0104ac1fab0827bca7c64dafe0b2579f934c33a1d69.css">
+  <link rel="stylesheet" href="/css/footer.min.eb8dfc2c6a7eafa36cd3ba92d63e69e849e2200e0002a228d137f236b09ecd75.css">
 
   
   <link rel="stylesheet" href="/css/gist.min.a751e8b0abe1ba8bc53ced52a38b19d8950fe78ca29454ea8c2595cf26aad5c0.css">
 
   
-  <link rel="stylesheet" href="/css/header.min.b6fb4423cf82a9f9d7abc9cd010223fa3d70a6526a3f28f8e17d814c06e18f9e.css">
+  <link rel="stylesheet" href="/css/header.min.75c7eb0e2872d95ff48109c6647d0223a38db52e2561dd87966eb5fc7c6bdac6.css">
 
   
-  <link rel="stylesheet" href="/css/main.min.fe8dc560fccb53a458b0db19ccb7b265764ac46b68596b7e099c6793054dd457.css">
+  <link rel="stylesheet" href="/css/main.min.36833afd348409fc6c3d09d0897c5833d9d5bf1ff31f5e60ea3ee42ce2b1268c.css">
 
   
-  <link rel="stylesheet" href="/css/menu.min.83637a90d903026bc280d3f82f96ceb06c5fc72b7c1a8d686afb5bbf818a29f7.css">
+  <link rel="stylesheet" href="/css/menu.min.3c17467ebeb3d38663dce68f71f519901124fa5cbb4519b2fb0667a21e9aca39.css">
 
   
-  <link rel="stylesheet" href="/css/pagination.min.82f6400eae7c7c6dc3c866733c2ec0579e4089608fea69400ff85b3880aa0d3c.css">
+  <link rel="stylesheet" href="/css/pagination.min.bbb986dbce00a5ce5aca0504b7925fc1c581992a4bf57f163e5d69cc1db7d836.css">
 
   
-  <link rel="stylesheet" href="/css/post.min.fc74ca360273c1d828da3c02b8174eba435607b369d98418ccc6f2243cd4e75d.css">
+  <link rel="stylesheet" href="/css/post.min.e6dddd258e64c83e05cec0cd49c05216742d42fc8ecbfbe6b67083412b609bd3.css">
 
   
-  <link rel="stylesheet" href="/css/prism.min.9023bbc24533d09e97a51a0a42a5a7bfe4c591ae167c5551fb1d2191d11977c0.css">
+  <link rel="stylesheet" href="/css/syntax.min.a2cc694a9b481f15d41722bffc2cc54eea4c4f74fd9072b0b33253604c22606e.css">
 
   
-  <link rel="stylesheet" href="/css/syntax.min.cc789ed9377260d7949ea4c18781fc58959a89287210fe4edbff44ebfc1511b6.css">
-
-  
-  <link rel="stylesheet" href="/css/terminal.min.7513e45baa4648a42babad8ba81f3dded41854772e32ded4317bc4c2f2d4e3a0.css">
+  <link rel="stylesheet" href="/css/terminal.min.e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.css">
 
   
   <link rel="stylesheet" href="/css/terms.min.b81791663c3790e738e571cdbf802312390d30e4b1d8dc9d814a5b5454d0ac11.css">
 
 
-
+<link rel="stylesheet" href="/terminal.css">
 
 
 
@@ -190,7 +187,7 @@
 <p>Almost two years ago, I found about about the Racket language and worked through the <a href="https://beautifulracket.com/">Beautiful Racket</a> tutorial. I found the language to actually be pretty fun to work with and was interested in writing a DSL which Racket was built for. Though I have used Clojure and scala before as well, I had written more code in Racket as well as some Chez-Scheme (which is quite similar) in school. Between that and <a href="https://twitter.com/ID_AA_Carmack/status/577877590070919168">John Carmacks tweet from a few years ago</a>, Racket seemed like a good choice.</p>
 <h1 id="getting-started">Getting started<a href="#getting-started" class="hanchor" ariaLabel="Anchor">#</a> </h1>
 <p>Before I start building something I want to get a feel for the language so I started by making a simple FizzBuzz function. The code is simple enough to read, define the function, which loops through 0 to some given argument and prints when certain conditions are met. I&rsquo;m not sure if this is idiomatic Racket but I&rsquo;m not concerned about that just yet.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-scheme" data-lang="scheme"><span style="display:flex;"><span><span style="color:#f92672">#</span>lang racket
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-scheme" data-lang="scheme"><span style="display:flex;"><span><span style="color:#f92672">#</span>lang racket
 </span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">define </span>(<span style="color:#a6e22e">fizz-buzz</span> num)
 </span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">for</span> ([i num])
 </span></span><span style="display:flex;"><span>    (<span style="color:#a6e22e">cond</span>
@@ -206,7 +203,7 @@
 <h1 id="getting-started-a-few-things-i-noticed">Getting started: A few things I noticed<a href="#getting-started-a-few-things-i-noticed" class="hanchor" ariaLabel="Anchor">#</a> </h1>
 <ul>
 <li>
-<p>The guide is actually pretty thorough, giving examples of by showing how functions in the standard language can be formed using other calls which I feel is really in the spirit of using a recursive language. <!-- raw HTML omitted --></p>
+<p>The guide is actually pretty thorough, giving examples of by showing how functions in the standard language can be formed using other calls which I feel is really in the spirit of using a recursive language. </p>
 </li>
 <li>
 <p>Development in Dr Racket, although dated looking is nice. The interactive shell at the bottom makes it easy to experiment while you&rsquo;re building without having to rebuild or reload the file. Hitting <code>Ctrl + ?</code> in the shell will also give you suggestions for words. I thought that tab completion was working at some point as well but, when I updated to the latest version of DrRacket it seemed to stop working for whatever reason.</p>
@@ -227,7 +224,7 @@
 <p>Though most OO languages have some aspects of functional programming with lambdas, it&rsquo;s nowhere near as intuitive. Treating functions are arguments allows you to things you would never even think about in Object Oriented programming. Instead of checking if an argument was a string or an Integer, casting it and then applying the correct function we check if it&rsquo;s a string and pass the function along to the two arguments. This isn&rsquo;t something unique to Racket, but it is something that I appreciated a lot the longer I used it. The example taken from the docs here, shows off just how easy it is:</p>
 </li>
 </ul>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-scheme" data-lang="scheme"><span style="display:flex;"><span>(<span style="color:#66d9ef">define </span>(<span style="color:#a6e22e">double</span> v)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-scheme" data-lang="scheme"><span style="display:flex;"><span>(<span style="color:#66d9ef">define </span>(<span style="color:#a6e22e">double</span> v)
 </span></span><span style="display:flex;"><span>    ((<span style="color:#66d9ef">if </span>(string? v) string-append +) v v))
 </span></span></code></pre></div><ul>
 <li>Racket is almost syntax-less; whereas many languages have different structures, rules and often shortcuts for defining variables, checking conditionals, creating switches, or creating functions is all the same. Not having to look up syntax greatly simplified the process of learning the language.</li>
@@ -238,8 +235,8 @@
 <p>This may have not been the best choice for the first thing I should try to build, but I wanted to pick something somewhat off the beaten path to see what kind of problems I might run into. I thought I might run into issues with bracket completion, but that never really happened even though there wasn&rsquo;t any bracket completion turned on. The majority of the issues that I ran into where more or less around using functions properly such as returning an expression or passing in the correct types to a function as even though the language is untyped there are functions that return errors if passed the wrong type of data.</p>
 <h2 id="getting-to-work">Getting to work<a href="#getting-to-work" class="hanchor" ariaLabel="Anchor">#</a> </h2>
 <p>Bytes can be read using <code>read-bytes</code> and passes an input port which in this case was made from opening a file, and reads bytes in octal. I won&rsquo;t include the entire script here, just enough to show off the simplicity of Racket.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-scheme" data-lang="scheme"><span style="display:flex;"><span>(<span style="color:#66d9ef">define </span>in (open-input-file <span style="color:#e6db74">&#34;gif.gif&#34;</span>))
-</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-scheme" data-lang="scheme"><span style="display:flex;"><span><span style="color:#f92672">#</span>lang racket
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-scheme" data-lang="scheme"><span style="display:flex;"><span>(<span style="color:#66d9ef">define </span>in (open-input-file <span style="color:#e6db74">&#34;gif.gif&#34;</span>))
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-scheme" data-lang="scheme"><span style="display:flex;"><span><span style="color:#f92672">#</span>lang racket
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">define </span>(<span style="color:#a6e22e">size-of-color-table-from-packed-field</span> bstr bytes-before-pf)
 </span></span><span style="display:flex;"><span>  (<span style="color:#66d9ef">define </span>packed-field (<span style="color:#a6e22e">extract-packed-field</span> bstr bytes-before-pf))
@@ -254,7 +251,7 @@
 </span></span><span style="display:flex;"><span>         extract-packed-field)
 </span></span></code></pre></div><h3 id="testing">Testing<a href="#testing" class="hanchor" ariaLabel="Anchor">#</a> </h3>
 <p>If I&rsquo;m going to want to use this for anything useful, a good test suite is an important consideration. Luckily testing was pretty straightforward as well, just make sure you provide the functions you intend to expose and <a href="https://docs.racket-lang.org/rackunit/index.html">rackUnit</a> provides easy methods for testing.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-scheme" data-lang="scheme"><span style="display:flex;"><span><span style="color:#f92672">#</span>lang racket
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-scheme" data-lang="scheme"><span style="display:flex;"><span><span style="color:#f92672">#</span>lang racket
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>(<span style="color:#a6e22e">require</span> rackunit <span style="color:#e6db74">&#34;readgif.rkt&#34;</span>)
 </span></span><span style="display:flex;"><span>
@@ -271,7 +268,7 @@
 </span></span></code></pre></div><p>You of course don&rsquo;t need all of this, the <code>check-equal?</code> is enough, but being able to organize the test suites like this is nice if you want to run just one of them. Though I don&rsquo;t know exactly how complicated a larger test suite would be overall, I&rsquo;m happy with the minimal test framework that racket provides.</p>
 <h2 id="web-development">Web development<a href="#web-development" class="hanchor" ariaLabel="Anchor">#</a> </h2>
 <p>The majority of my experience is in web development so the next step was to create a small website or an api. I had heard that Hackernews was written in racket or, more accurately, written arc, a language written in Racket, so I wanted to see how easy it would be to write a webpage in racket. The docs again shine through here with instant web servlets:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-scheme" data-lang="scheme"><span style="display:flex;"><span><span style="color:#f92672">#</span>lang web-server/insta
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-scheme" data-lang="scheme"><span style="display:flex;"><span><span style="color:#f92672">#</span>lang web-server/insta
 </span></span><span style="display:flex;"><span> 
 </span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">define </span>(<span style="color:#a6e22e">start</span> req)
 </span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">response/xexpr</span>
@@ -284,7 +281,7 @@
 </ul>
 <h3 id="taking-spin-for-a-whirl">Taking Spin for a whirl<a href="#taking-spin-for-a-whirl" class="hanchor" ariaLabel="Anchor">#</a> </h3>
 <p>I decided to take a look at spin mostly because it reminded me a lot of the minimalist framework <a href="http://sinatrarb.com/">Sinatra</a> which I have used before.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-scheme" data-lang="scheme"><span style="display:flex;"><span><span style="color:#f92672">#</span>lang racket
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-scheme" data-lang="scheme"><span style="display:flex;"><span><span style="color:#f92672">#</span>lang racket
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>(<span style="color:#a6e22e">require</span> (<span style="color:#a6e22e">planet</span> dmac/spin))
 </span></span><span style="display:flex;"><span>(<span style="color:#a6e22e">require</span> web-server/templates)
@@ -299,7 +296,7 @@
 </span></span></code></pre></div><p>Boom! This was more what I was looking for: Throw down some routes and then then the use whatever logic needs to run. The framework also includes templating and the like if you need something a little more complicated but there doesn&rsquo;t really seem to be anything in the way of react, rails, spring, or anything in the realm of fully fleshed out web frameworks. That really shouldn&rsquo;t be that surprising considering how small the user base is, and what the typical use case for the language is, so I didn&rsquo;t go much further in the way of creating a more robust web application though there is a static site generator <a href="https://docs.racket-lang.org/frog/index.html">Frog</a>. Though I probably won&rsquo;t consider moving over to Frog from the current static site generator I use for this site: <a href="https://gohugo.io/">Hugo</a>. It looked like it had some thorough documentation and room for customization.</p>
 <h3 id="making-web-requests">Making web requests<a href="#making-web-requests" class="hanchor" ariaLabel="Anchor">#</a> </h3>
 <p>A lot of applications depend on making calls to third party apis, so I wanted to see what parsing json was like. There are a number of useful libraries for making <a href="https://github.com/jackfirth/racket-request">rest requests</a> with racket, but I wanted to use just the base language. There were a few different ways to make requests but I found this to be the most intuitive and relevant to the majority of my use cases.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-scheme" data-lang="scheme"><span style="display:flex;"><span><span style="color:#f92672">#</span>lang racket
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-scheme" data-lang="scheme"><span style="display:flex;"><span><span style="color:#f92672">#</span>lang racket
 </span></span><span style="display:flex;"><span>(<span style="color:#a6e22e">require</span> net/http-client
 </span></span><span style="display:flex;"><span>         json)
 </span></span><span style="display:flex;"><span>
@@ -325,7 +322,7 @@
   <div class="pagination__buttons">
     
       <a href="/post/taocp-vol-2-seminumerical-algorithms/" class="button inline prev">
-        Random Numbers
+        &lt; [<span class="button__text">Random Numbers</span>]
       </a>
     
     
@@ -333,7 +330,7 @@
     
     
       <a href="/post/the-art-of-computer-programming/" class="button inline next">
-        The Art of Computer Programming
+         [<span class="button__text">The Art of Computer Programming</span>] &gt;
       </a>
     
   </div>
